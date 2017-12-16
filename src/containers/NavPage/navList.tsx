@@ -1,0 +1,32 @@
+import * as React from 'react';
+import * as History from 'history';
+import List from 'material-ui/List';
+import Expander from './expander';
+import NestedListItem from './nestedListItem';
+import IconListItem from './iconListItem';
+
+interface NavListProps {
+    history: History.History;
+    closeDrawer: () => void;
+}
+
+export default class extends React.Component<NavListProps> {
+
+    nav(link: string) {
+        this.props.history.push(link);
+        if (this.props.closeDrawer && window.innerWidth < 1024) { this.props.closeDrawer(); }
+    }
+
+    render() {
+        return (
+            <List>
+                <IconListItem mainText="Dashboard" icon="dashboard" onClick={() => this.nav('/')} />
+                <IconListItem mainText="POS" icon="grid_on" onClick={() => this.nav('/')} />
+                <IconListItem mainText="Documents" icon="folder" onClick={() => this.nav('/documents')} />
+                <Expander mainText="Management" >
+                    <NestedListItem label="Document Types" onClick={() => this.nav('/')} />
+                </Expander>
+            </List>
+        );
+    }
+}
