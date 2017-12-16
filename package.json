@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "history": "^4.7.2",
+    "immutable": "^3.8.2",
     "material-ui": "^1.0.0-beta.23",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
@@ -14,6 +15,7 @@
     "react-scripts-ts": "2.8.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
+    "typed-immutable-record": "0.0.6",
     "typeface-roboto": "0.0.45"
   },
   "scripts": {

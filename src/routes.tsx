@@ -3,6 +3,7 @@ import DashboardPage from './containers/DashboardPage';
 import NavPage from './containers/NavPage';
 import AboutPage from './containers/AboutPage';
 import DocumentsPage from './containers/DocumentsPage';
+import TasksPage from './containers/TasksPage';
 import { Route } from 'react-router-dom';
 
 export const routes = (
@@ -13,6 +14,7 @@ export const subRoutes = (
     <div>
         <Route exact path="/" component={DashboardPage} />
         <Route exact path="/documents" component={DocumentsPage} />
+        <Route exact path="/tasks" component={TasksPage} />
         <Route exact path="/about" component={AboutPage} />
     </div>
 );
