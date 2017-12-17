@@ -11,7 +11,7 @@ export const routes = (
 );
 
 export const subRoutes = (
-    <div>
+    <div style={{ height: '100%', display: 'flex', flexFlow: 'column' }}>
         <Route exact path="/" component={DashboardPage} />
         <Route exact path="/documents" component={DocumentsPage} />
         <Route exact path="/tasks" component={TasksPage} />

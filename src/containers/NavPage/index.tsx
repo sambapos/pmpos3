@@ -70,13 +70,12 @@ const decorate = withStyles(({ palette, spacing, breakpoints, mixins, transition
     content: {
         width: '100%',
         flexGrow: 1,
-        backgroundColor: palette.background.default,
+        backgroundColor: palette.background.contentFrame,
         padding: spacing.unit * 3,
         transition: transitions.create('margin', {
             easing: transitions.easing.sharp,
             duration: transitions.duration.leavingScreen,
         }),
-        height: 'calc(100% - 56px)',
         marginTop: 56,
         [breakpoints.up('md')]: {
             content: {
