@@ -7,7 +7,7 @@ import { List } from 'immutable';
 export interface ApplicationState {
     client: Client.ClientState;
     tasks: List<Tasks.TaskRecord>;
-    documents: List<Documents.DocumentRecord>;
+    documents: Documents.State;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using

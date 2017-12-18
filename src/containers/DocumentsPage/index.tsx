@@ -2,12 +2,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as DocumentStore from '../../store/Documents';
 import { RouteComponentProps } from 'react-router';
-import { List } from 'immutable';
 import { WithStyles } from 'material-ui';
 import decorate, { Style } from './style';
+import * as moment from 'moment';
+import { ApplicationState } from '../../store/index';
 
 export type PageProps =
-    { documents: List<DocumentStore.DocumentRecord> }
+    DocumentStore.State
     & WithStyles<keyof Style>
     & typeof DocumentStore.actionCreators
     & RouteComponentProps<{}>;
@@ -15,14 +16,37 @@ export type PageProps =
 class DocumentsPage extends React.Component<PageProps, {}> {
     public render() {
         return (
-            <h3>
-                Documents
-            </h3>
+            <div>
+                <h3>Documents</h3>
+                <button onClick={() => this.props.addDocument()}>Add Document</button>
+                <ul>
+                    {
+                        this.props.documents.map(document => {
+                            return (
+                                <li key={document && document.id}>
+                                    <a
+                                        href="#"
+                                        onClick={(e) => {
+                                            if (document) { this.props.history.push('/document/' + document.id); }
+                                            e.preventDefault();
+                                        }}
+                                    >
+                                        {document && moment(document.date).format('LLLL')}
+                                    </a>
+                                </li>
+                            );
+                        })
+                    }
+                </ul>
+            </div>
         );
     }
 }
 
-const mapStateToProps = state => ({ documents: state.documents });
+const mapStateToProps = (state: ApplicationState) => ({
+    documents: state.documents.documents,
+    document: state.documents.document
+});
 
 export default decorate(connect(
     mapStateToProps,
