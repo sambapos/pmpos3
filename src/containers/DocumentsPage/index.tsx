@@ -1,8 +1,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../store';
-import * as ClientStore from '../../store/Client';
-import { PageProps } from '../PageProps';
+import * as DocumentStore from '../../store/Documents';
+import { RouteComponentProps } from 'react-router';
+import { List } from 'immutable';
+import { WithStyles } from 'material-ui';
+import decorate, { Style } from './style';
+
+export type PageProps =
+    { documents: List<DocumentStore.DocumentRecord> }
+    & WithStyles<keyof Style>
+    & typeof DocumentStore.actionCreators
+    & RouteComponentProps<{}>;
 
 class DocumentsPage extends React.Component<PageProps, {}> {
     public render() {
@@ -14,7 +22,9 @@ class DocumentsPage extends React.Component<PageProps, {}> {
     }
 }
 
-export default connect(
-    (state: ApplicationState) => state.client,
-    ClientStore.actionCreators
-)(DocumentsPage);
+const mapStateToProps = state => ({ documents: state.documents });
+
+export default decorate(connect(
+    mapStateToProps,
+    DocumentStore.actionCreators
+)(DocumentsPage));

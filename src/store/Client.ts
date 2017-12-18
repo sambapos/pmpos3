@@ -3,7 +3,6 @@ import { Reducer } from 'redux';
 export interface ClientState {
     languageName: string;
     enthusiasmLevel: number;
-    documents: Document[];
 }
 
 interface IncrementEnthusiasmAction {
@@ -24,8 +23,7 @@ export const actionCreators = {
 
 const unloadedState: ClientState = {
     languageName: 'aa',
-    enthusiasmLevel: 1,
-    documents: []
+    enthusiasmLevel: 1
 };
 
 export const reducer: Reducer<ClientState> = (state: ClientState, action: KnownAction) => {
