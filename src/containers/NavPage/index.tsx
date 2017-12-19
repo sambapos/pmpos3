@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import withStyles, { WithStyles } from 'material-ui/styles/withStyles';
+import { WithStyles } from 'material-ui/styles/withStyles';
 import Typography from 'material-ui/Typography';
 import Drawer from 'material-ui/Drawer';
 import AppBar from 'material-ui/AppBar';
@@ -14,101 +14,14 @@ import NavList from './navList';
 import { subRoutes } from '../../routes';
 import { RouteComponentProps } from 'react-router';
 import { ListItem, ListItemText } from 'material-ui';
+import decorate, { Style } from './style';
 
-const drawerWidth = 240;
+type NavPageProps = WithStyles<keyof Style> & RouteComponentProps<{}>;
 
-const decorate = withStyles(({ palette, spacing, breakpoints, mixins, transitions }) => ({
-    root: {
-        width: '100%',
-        height: '100%',
-        zIndex: 1,
-        overflow: 'hidden' as 'hidden',
-    },
-    appFrame: {
-        position: 'relative' as 'relative',
-        display: 'flex',
-        width: '100%',
-        height: '100%',
-    },
-    appBar: {
-        position: 'absolute' as 'absolute',
-        transition: transitions.create(['margin', 'width'], {
-            easing: transitions.easing.sharp,
-            duration: transitions.duration.leavingScreen,
-        }),
-    },
-    appBarShift: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        [breakpoints.down('md')]: {
-            width: '100%',
-        },
-        transition: transitions.create(['margin', 'width'], {
-            easing: transitions.easing.easeOut,
-            duration: transitions.duration.enteringScreen,
-        }),
-    },
-    'appBarShift-left': {
-        marginLeft: drawerWidth,
-    },
-    'appBarShift-right': {
-        marginRight: drawerWidth,
-    },
-    navIconHide: {
-        [breakpoints.up('md')]: {
-            display: 'none',
-        },
-    },
-    drawerHeader: mixins.toolbar,
-    drawerPaper: {
-        width: 250,
-        [breakpoints.up('md')]: {
-            width: drawerWidth,
-            // position: 'relative',
-            height: '100%',
-        },
-    },
-    content: {
-        width: '100%',
-        flexGrow: 1,
-        backgroundColor: palette.background.contentFrame,
-        padding: spacing.unit * 3,
-        transition: transitions.create('margin', {
-            easing: transitions.easing.sharp,
-            duration: transitions.duration.leavingScreen,
-        }),
-        marginTop: 56,
-        [breakpoints.up('md')]: {
-            content: {
-                height: 'calc(100% - 64px)',
-                marginTop: 64,
-            },
-        },
-    },
-    contentShift: {
-        transition: transitions.create('margin', {
-            easing: transitions.easing.easeOut,
-            duration: transitions.duration.enteringScreen,
-        }),
-    },
-    'contentShift-left': {
-        [breakpoints.up('md')]: {
-            marginLeft: drawerWidth,
-        }
-    },
-    'contentShift-right': {
-        [breakpoints.up('md')]: {
-            marginRight: drawerWidth,
-        }
-    },
-}));
-
-class NavPage extends React.Component<WithStyles<'root' | 'appFrame' | 'appBar'
-    | 'appBarShift' | 'appBarShift-left' | 'appBarShift-right'
-    | 'navIconHide' | 'drawerHeader' | 'drawerPaper' | 'content'
-    | 'contentShift' | 'contentShift-left' | 'contentShift-right'> & RouteComponentProps<{}>> {
+class NavPage extends React.Component<NavPageProps> {
     state = {
         open: false,
-        anchor: 'left'
+        anchor: 'Left'
     };
 
     handleDrawerToggle = () => {
@@ -151,7 +64,7 @@ class NavPage extends React.Component<WithStyles<'root' | 'appFrame' | 'appBar'
                     <AppBar
                         className={classNames(classes.appBar, {
                             [classes.appBarShift]: open,
-                            [classes[`appBarShift-${anchor}`]]: open,
+                            [classes[`appBarShift${anchor}`]]: open,
                         })}
                     >
                         <Toolbar>
@@ -170,7 +83,7 @@ class NavPage extends React.Component<WithStyles<'root' | 'appFrame' | 'appBar'
                     <Hidden mdUp>
                         <Drawer
                             type="temporary"
-                            anchor={'left'}
+                            anchor="left"
                             open={this.state.open}
                             classes={{
                                 paper: classes.drawerPaper,
@@ -198,7 +111,7 @@ class NavPage extends React.Component<WithStyles<'root' | 'appFrame' | 'appBar'
                     <main
                         className={classNames(classes.content, {
                             [classes.contentShift]: open,
-                            [classes[`contentShift-${anchor}`]]: open,
+                            [classes[`contentShift${anchor}`]]: open,
                         })}
                     >
                         {subRoutes}

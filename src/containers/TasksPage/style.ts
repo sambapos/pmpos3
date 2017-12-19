@@ -23,7 +23,7 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     },
     paper: {
         [breakpoints.down('sm')]: {
-            marginTop: spacing.unit * 3,
+            marginTop: spacing.unit,
         },
         [breakpoints.up('sm')]: {
             marginLeft: spacing.unit * 3,
