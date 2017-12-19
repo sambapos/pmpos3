@@ -5,12 +5,8 @@ const drawerWidth = 240;
 export interface Style {
     root: any;
     appFrame: any;
-    appBar: any;
-    appBarShift: any;
-    appBarShiftLeft: any;
-    appBarShiftRight: any;
-    navIconHide: any;
     drawerHeader: any;
+    drawerCaption: any;
     drawerPaper: any;
     content: any;
     contentShift: any;
@@ -31,35 +27,11 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
         width: '100%',
         height: '100%',
     },
-    appBar: {
-        position: 'absolute' as 'absolute',
-        transition: transitions.create(['margin', 'width'], {
-            easing: transitions.easing.sharp,
-            duration: transitions.duration.leavingScreen,
-        }),
-    },
-    appBarShift: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        [breakpoints.down('md')]: {
-            width: '100%',
-        },
-        transition: transitions.create(['margin', 'width'], {
-            easing: transitions.easing.easeOut,
-            duration: transitions.duration.enteringScreen,
-        }),
-    },
-    appBarShiftLeft: {
-        marginLeft: drawerWidth,
-    },
-    appBarShiftRight: {
-        marginRight: drawerWidth,
-    },
-    navIconHide: {
-        [breakpoints.up('md')]: {
-            display: 'none',
-        },
-    },
     drawerHeader: mixins.toolbar,
+    drawerCaption: {
+        paddingTop: '18px',
+        paddingLeft: '16px'
+    },
     drawerPaper: {
         width: 250,
         [breakpoints.up('md')]: {

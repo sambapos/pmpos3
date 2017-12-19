@@ -2,8 +2,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
 import * as ClientStore from '../../store/Client';
-import { PageProps } from '../PageProps';
 import { Button } from 'material-ui';
+import { RouteComponentProps } from 'react-router';
+
+export type PageProps =
+    ClientStore.ClientState
+    & typeof ClientStore.actionCreators
+    & RouteComponentProps<{}>;
 
 class HomePage extends React.Component<PageProps> {
     public render() {

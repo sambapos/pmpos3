@@ -7,6 +7,7 @@ import { List } from 'immutable';
 import { WithStyles } from 'material-ui';
 
 import decorate, { Style } from './style';
+import TopBar from '../TopBar';
 import AddTask from './AddTask';
 import TaskList from './TaskList';
 
@@ -28,6 +29,7 @@ class TasksPage extends React.Component<TasksPageProps, {}> {
     public render() {
         return (
             <div className={this.props.classes.content}>
+                <TopBar title="Tasks" />
                 <AddTask addTask={(title: string) => this.addTask(title)} />
                 <TaskList tasks={this.props.tasks} />
             </div>
