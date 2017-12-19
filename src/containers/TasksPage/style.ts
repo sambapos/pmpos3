@@ -26,7 +26,7 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
             marginTop: spacing.unit,
         },
         [breakpoints.up('sm')]: {
-            marginLeft: spacing.unit * 3,
+            marginLeft: spacing.unit * 2,
         },
 
         flex: '1 1 auto',

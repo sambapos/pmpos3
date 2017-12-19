@@ -27,10 +27,18 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
         width: '100%',
         height: '100%',
     },
-    drawerHeader: mixins.toolbar,
+    drawerHeader: {
+        minHeight: '56px',
+        [breakpoints.up('sm')]: {
+            minHeight: '64px'
+        },
+    },
     drawerCaption: {
         paddingTop: '18px',
-        paddingLeft: '16px'
+        paddingLeft: '16px',
+        [breakpoints.up('sm')]: {
+            paddingTop: '22px'
+        },
     },
     drawerPaper: {
         width: 250,

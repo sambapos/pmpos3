@@ -6,6 +6,7 @@ import { WithStyles } from 'material-ui';
 import decorate, { Style } from './style';
 import * as moment from 'moment';
 import { ApplicationState } from '../../store/index';
+import TopBar from '../TopBar';
 
 export type PageProps =
     DocumentStore.State
@@ -21,7 +22,7 @@ class DocumentsPage extends React.Component<PageProps, {}> {
         if (!this.props.isInitialized) { return <div>Loading</div>; }
         return (
             <div>
-                <h3>Document</h3>
+                <TopBar title="Document" />
                 <p>{this.props.document.id}</p>
                 <p>{moment(this.props.document.date).format('LLLL')}</p>
             </div>

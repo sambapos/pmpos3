@@ -6,6 +6,7 @@ import { WithStyles } from 'material-ui';
 import decorate, { Style } from './style';
 import * as moment from 'moment';
 import { ApplicationState } from '../../store/index';
+import TopBar from '../TopBar';
 
 export type PageProps =
     DocumentStore.State
@@ -17,7 +18,7 @@ class DocumentsPage extends React.Component<PageProps, {}> {
     public render() {
         return (
             <div>
-                <h3>Documents</h3>
+                <TopBar title="Documents" />
                 <button onClick={() => this.props.addDocument()}>Add Document</button>
                 <ul>
                     {

@@ -4,6 +4,8 @@ import { ApplicationState } from '../../store';
 import * as ClientStore from '../../store/Client';
 import { Button } from 'material-ui';
 import { RouteComponentProps } from 'react-router';
+import TopBar from '../TopBar';
+import Typography from 'material-ui/Typography/Typography';
 
 export type PageProps =
     ClientStore.ClientState
@@ -14,12 +16,12 @@ class HomePage extends React.Component<PageProps> {
     public render() {
         return (
             <div>
-                <h3>
-                    About PM-POS 2.0
-                </h3>
-                <p>
-                    PoC's and Tests for next SambaPOS versions.
-                </p>
+                <TopBar title="About PM-POS 2.0" />
+                <Typography type="body2">
+                    This project contains some PoC's and Tests to demonstrate
+                    some features of future SambaPOS versions.
+                </Typography>
+                <br />
                 <Button raised onClick={() => this.props.IncrementEnthusiasm()}>
                     HMR Test {this.props.enthusiasmLevel}
                 </Button>
