@@ -22,9 +22,27 @@ class DocumentsPage extends React.Component<PageProps, {}> {
         if (!this.props.isInitialized) { return <div>Loading</div>; }
         return (
             <div>
-                <TopBar title="Document" />
+                <TopBar
+                    title="Document"
+                    menuCommand={{ icon: 'close', onClick: () => { this.props.history.goBack(); } }}
+                />
                 <p>{this.props.document.id}</p>
                 <p>{moment(this.props.document.date).format('LLLL')}</p>
+                <button
+                    onClick={
+                        () => {
+                            this.props.addExchange(this.props.document.id);
+                        }
+                    }
+                >Add Exchange
+                </button>
+                <ul>
+                    {
+                        this.props.document.exchanges.map(x => {
+                            return (<li key={x.id}>{x.id}</li>);
+                        })
+                    }
+                </ul>
             </div>
         );
     }

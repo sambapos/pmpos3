@@ -16,6 +16,8 @@
     "react-scripts-ts": "2.8.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
+    "transit-immutable-js": "^0.7.0",
+    "transit-js": "^0.8.846",
     "typed-immutable-record": "0.0.6",
     "typeface-roboto": "0.0.45"
   },

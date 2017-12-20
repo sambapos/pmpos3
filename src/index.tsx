@@ -7,15 +7,20 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import { createBrowserHistory } from 'history';
 import configureStore from './configureStore';
-
-import { ApplicationState } from './store';
 import * as RoutesModule from './routes';
+import { saveState, loadState } from './localStorage';
+
 let routes = RoutesModule.routes;
 
 const history = createBrowserHistory();
-// tslint:disable-next-line:no-any
-const initialState = (window as any).initialReduxState as ApplicationState;
+const initialState = loadState();
 const store = configureStore(history, initialState);
+
+store.subscribe(() => {
+  saveState(store.getState());
+});
+
+console.log(store.getState());
 
 function renderApp() {
   // This code starts up the React app when it runs in a browser. It sets up the routing configuration

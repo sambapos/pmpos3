@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { AppBar, Toolbar, IconButton, Typography, WithStyles } from 'material-ui';
+import { AppBar, Toolbar, Typography, WithStyles } from 'material-ui';
 import classNames from 'classnames';
 import decorate, { Style } from './style';
 import * as ClientStore from '../../store/Client';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/index';
+import MenuButton, { MenuCommand } from './MenuButton';
 
 interface TopBarProps {
     title: string;
+    menuCommand: MenuCommand;
 }
 
 type Props =
@@ -18,6 +20,9 @@ type Props =
 
 const topBar = (props: Props) => {
     let anchor = 'Left';
+    let menuCommand = props.menuCommand
+        ? props.menuCommand
+        : { icon: 'menu', onClick: () => { props.ToggleDrawer(); } };
     return (
         <AppBar
             className={classNames(props.classes.appBar, {
@@ -25,14 +30,8 @@ const topBar = (props: Props) => {
                 [props.classes[`appBarShift${anchor}`]]: props.drawerOpen,
             })}
         >
-            <Toolbar>
-                <IconButton
-                    color="contrast"
-                    aria-label="open drawer"
-                    onClick={() => props.ToggleDrawer()}
-                >
-                    <i className="material-icons">menu</i>
-                </IconButton>
+            <Toolbar disableGutters={!props.drawerOpen}>
+                <MenuButton command={menuCommand} />
                 <Typography
                     type="title"
                     color="inherit"
@@ -44,7 +43,7 @@ const topBar = (props: Props) => {
     );
 };
 
-export default decorate<{ title: string }>(connect(
+export default decorate<{ title: string, menuCommand?: MenuCommand }>(connect(
     (state: ApplicationState) => state.client,
     ClientStore.actionCreators
 )(topBar));
