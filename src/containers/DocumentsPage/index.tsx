@@ -7,9 +7,10 @@ import decorate, { Style } from './style';
 import * as moment from 'moment';
 import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
+import { List } from 'immutable';
 
 export type PageProps =
-    DocumentStore.State
+    { documents: List<Map<any, any>>, document: Map<any, any> }
     & WithStyles<keyof Style>
     & typeof DocumentStore.actionCreators
     & RouteComponentProps<{}>;
@@ -24,15 +25,17 @@ class DocumentsPage extends React.Component<PageProps, {}> {
                     {
                         this.props.documents.map(document => {
                             return (
-                                <li key={document && document.id}>
+                                <li key={document && document.get('id')}>
                                     <a
                                         href="#"
                                         onClick={(e) => {
-                                            if (document) { this.props.history.push('/document/' + document.id); }
+                                            if (document) {
+                                                this.props.history.push('/document/' + document.get('id'));
+                                            }
                                             e.preventDefault();
                                         }}
                                     >
-                                        {document && moment(document.date).format('LLLL')}
+                                        {document && moment(document.get('date')).format('LLLL')}
                                     </a>
                                 </li>
                             );
@@ -45,8 +48,8 @@ class DocumentsPage extends React.Component<PageProps, {}> {
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-    documents: state.documents.documents,
-    document: state.documents.document
+    documents: state.documents.get('documents'),
+    document: state.documents.get('document')
 });
 
 export default decorate(connect(

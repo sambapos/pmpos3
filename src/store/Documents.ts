@@ -1,38 +1,7 @@
 import { Reducer } from 'redux';
-import { List, fromJS } from 'immutable';
-import { makeTypedFactory, TypedRecord } from 'typed-immutable-record';
+import { fromJS } from 'immutable';
 import { AppThunkAction } from './appThunkAction';
 import { uuidv4 } from './uuid';
-import Document from '../models/Document';
-import Exchange from '../models/Exchange';
-
-interface ExchangeRecord extends TypedRecord<ExchangeRecord>, Exchange { }
-
-export const makeExchange = makeTypedFactory<Exchange, ExchangeRecord>({
-    id: ''
-});
-
-interface DocumentRecord extends TypedRecord<DocumentRecord>, Document { }
-
-export const makeDocument = makeTypedFactory<Document, DocumentRecord>({
-    id: '',
-    date: new Date(),
-    exchanges: [] as ExchangeRecord[]
-});
-
-export interface State {
-    documents: List<DocumentRecord>;
-    document: DocumentRecord;
-    isInitialized: boolean;
-}
-
-export interface StateRecord extends TypedRecord<StateRecord>, State { }
-
-export const makeState = makeTypedFactory<State, StateRecord>({
-    documents: List<DocumentRecord>(),
-    document: makeDocument(),
-    isInitialized: false
-});
 
 type AddDocumentAction = {
     type: 'ADD_DOCUMENT'
@@ -41,7 +10,7 @@ type AddDocumentAction = {
 type LoadDocumentAction = {
     type: 'LOAD_DOCUMENT'
     documentId: String
-    payload: Promise<DocumentRecord>
+    payload: Promise<Map<any, any>>
 };
 
 type LoadDocumentRequestAction = {
@@ -49,7 +18,7 @@ type LoadDocumentRequestAction = {
 };
 type LoadDocumentSuccessAction = {
     type: 'LOAD_DOCUMENT_SUCCESS'
-    payload: DocumentRecord
+    payload: Map<any, any>
 };
 type LoadDocumentFailAction = {
     type: 'LOAD_DOCUMENT_FAIL'
@@ -64,31 +33,35 @@ type KnownActions = AddDocumentAction
     | LoadDocumentAction | LoadDocumentRequestAction | LoadDocumentSuccessAction | LoadDocumentFailAction
     | AddExchangeAction;
 
-export const reducer: Reducer<StateRecord> = (
-    state: StateRecord = makeState(),
+export const reducer: Reducer<Map<any, any>> = (
+    state: Map<any, any> = fromJS({
+        documents: [],
+        isInitialized: false,
+        document: {}
+    }),
     action: KnownActions
-): StateRecord => {
+) => {
     switch (action.type) {
         case 'ADD_DOCUMENT':
             {
-                let doc = makeDocument(fromJS({
+                let doc = fromJS({
                     id: uuidv4(),
                     date: new Date(),
-                    exchanges: [] as ExchangeRecord[]
-                }));
-                console.log(doc);
-                let docs = state.documents.push(doc);
+                    exchanges: []
+                });
+                let docs = state.get('documents').push(doc);
                 return state.set('documents', docs);
             }
         case 'LOAD_DOCUMENT_REQUEST': {
             return state
-                .set('document', makeDocument())
+                .set('document', new Map<any, any>())
                 .set('isInitialized', false);
         }
         case 'LOAD_DOCUMENT_SUCCESS': {
-            return state
+            let result = state
                 .set('document', action.payload)
                 .set('isInitialized', true);
+            return result;
         }
         case 'LOAD_DOCUMENT_FAIL': {
             return state
@@ -96,11 +69,11 @@ export const reducer: Reducer<StateRecord> = (
         }
         case 'ADD_EXCHANGE': {
             let newDoc;
-            let exchange = makeExchange(fromJS({
+            let exchange = fromJS({
                 id: uuidv4()
-            }));
-            let docs = state.documents.update(
-                state.documents.findIndex(doc => {
+            });
+            let docs = state.get('documents').update(
+                state.get('documents').findIndex(doc => {
                     return doc ? doc.get('id') === action.documentId : false;
                 }),
                 doc => {
@@ -123,9 +96,9 @@ export const actionCreators = {
     loadDocument: (id: String): AppThunkAction<KnownActions> => (dispatch, getState) => {
         dispatch({
             type: 'LOAD_DOCUMENT', documentId: id,
-            payload: new Promise<DocumentRecord>(resolve => {
-                let doc = getState().documents.documents.find(x => x ? x.id === id : false);
-                resolve(doc);
+            payload: new Promise<Map<any, any>>(resolve => {
+                let doc = getState().documents.get('documents').find(x => x ? x.get('id') === id : false);
+                resolve(new Map(doc));
             })
         });
     },

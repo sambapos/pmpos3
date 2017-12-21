@@ -2,10 +2,9 @@ import * as React from 'react';
 import { WithStyles, Paper, Table, TableHead, TableRow, TableCell, TableBody } from 'material-ui';
 import decorate, { Style } from './style';
 import { List } from 'immutable';
-import { TaskRecord } from '../../store/Tasks';
 
 interface TaskListProps {
-    tasks: List<TaskRecord>;
+    tasks: List<Map<any, any>>;
 }
 
 type Props = TaskListProps & WithStyles<keyof Style>;
@@ -24,9 +23,9 @@ const TaskList = (props: Props) => {
                     {
                         props.tasks.map(x => {
                             return (
-                                <TableRow hover key={x ? x.id : ''}>
-                                    <TableCell>{x && x.title}</TableCell>
-                                    <TableCell numeric>{x && x.estimate}</TableCell>
+                                <TableRow hover key={x ? x.get('id') : ''}>
+                                    <TableCell>{x && x.get('title')}</TableCell>
+                                    <TableCell numeric>{x && x.get('estimate')}</TableCell>
                                 </TableRow>
                             );
                         })

@@ -9,7 +9,10 @@ import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
 
 export type PageProps =
-    DocumentStore.State
+    {
+        isInitialized: boolean,
+        document: Map<any, any>
+    }
     & WithStyles<keyof Style>
     & typeof DocumentStore.actionCreators
     & RouteComponentProps<{ id: string }>;
@@ -19,27 +22,27 @@ class DocumentsPage extends React.Component<PageProps, {}> {
         this.props.loadDocument(this.props.match.params.id);
     }
     public render() {
-        if (!this.props.isInitialized) { return <div>Loading</div>; }
+        if (!this.props.isInitialized || !this.props.document) { return <div>Loading</div>; }
         return (
             <div>
                 <TopBar
                     title="Document"
                     menuCommand={{ icon: 'close', onClick: () => { this.props.history.goBack(); } }}
                 />
-                <p>{this.props.document.id}</p>
-                <p>{moment(this.props.document.date).format('LLLL')}</p>
+                <p>{this.props.document.get('id')}</p>
+                <p>{moment(this.props.document.get('date')).format('LLLL')}</p>
                 <button
                     onClick={
                         () => {
-                            this.props.addExchange(this.props.document.id);
+                            this.props.addExchange(this.props.document.get('id'));
                         }
                     }
                 >Add Exchange
                 </button>
                 <ul>
                     {
-                        this.props.document.exchanges.map(x => {
-                            return (<li key={x.id}>{x.id}</li>);
+                        this.props.document.get('exchanges').map(x => {
+                            return (<li key={x.get('id')}>{x.get('id')}</li>);
                         })
                     }
                 </ul>
@@ -49,8 +52,8 @@ class DocumentsPage extends React.Component<PageProps, {}> {
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-    document: state.documents.document,
-    isInitialized: state.documents.isInitialized
+    document: state.documents.get('document'),
+    isInitialized: state.documents.get('isInitialized')
 });
 
 export default decorate(connect(

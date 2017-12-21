@@ -6,7 +6,8 @@ export const loadState = () => {
         if (serializedState === null) {
             return undefined;
         }
-        return transit.fromJSON(serializedState);
+        let result = transit.fromJSON(serializedState);
+        return result;
     } catch (err) {
         return undefined;
     }

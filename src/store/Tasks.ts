@@ -1,17 +1,7 @@
 import { Reducer } from 'redux';
-import { List } from 'immutable';
-import { makeTypedFactory, TypedRecord } from 'typed-immutable-record';
+import { List, fromJS } from 'immutable';
 import { AppThunkAction } from './appThunkAction';
 import { uuidv4 } from './uuid';
-
-export interface TaskRecord extends TypedRecord<TaskRecord>, Task { }
-
-const makeTask = makeTypedFactory<Task, TaskRecord>({
-    id: '',
-    title: '',
-    estimate: undefined,
-    date: new Date()
-});
 
 type AddTaskAction = {
     type: 'ADD_TASK',
@@ -26,13 +16,13 @@ type SetTaskEstimateAction = {
 
 type TasksAction = AddTaskAction | SetTaskEstimateAction;
 
-export const reducer: Reducer<List<TaskRecord>> = (
-    state: List<TaskRecord> = List<TaskRecord>(),
+export const reducer: Reducer<List<Map<any, any>>> = (
+    state: List<Map<any, any>> = List<Map<any, any>>(),
     action: TasksAction
-): List<TaskRecord> => {
+): List<Map<any, any>> => {
     switch (action.type) {
         case 'ADD_TASK':
-            return state.push(makeTask({ id: uuidv4(), title: action.title, estimate: 0, date: new Date() }));
+            return state.push(fromJS({ id: uuidv4(), title: action.title, estimate: 0, date: new Date() }));
         case 'SET_TASK_ESTIMATE':
             const newTask = state
                 .get(action.index)
