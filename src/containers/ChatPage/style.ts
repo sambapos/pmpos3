@@ -12,7 +12,7 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
         flex: '1 1 auto'
     },
     content: {
-        overflowY: 'auto',
-        flex: '1 1 auto'
+        flex: '1 1 auto',
+        overflowY: 'auto'
     }
 }));

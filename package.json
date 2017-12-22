@@ -5,6 +5,8 @@
   "dependencies": {
     "history": "^4.7.2",
     "immutable": "^3.8.2",
+    "ipfs": "^0.27.5",
+    "ipfs-pubsub-room": "^1.1.4",
     "material-ui": "^1.0.0-beta.23",
     "moment": "^2.20.0",
     "react": "^16.2.0",
@@ -19,7 +21,13 @@
     "transit-immutable-js": "^0.7.0",
     "transit-js": "^0.8.846",
     "typed-immutable-record": "0.0.6",
-    "typeface-roboto": "0.0.45"
+    "typeface-roboto": "0.0.45",
+    "y-array": "^10.1.4",
+    "y-indexeddb": "^8.1.9",
+    "y-ipfs-connector": "^2.1.2",
+    "y-memory": "^8.0.9",
+    "y-text": "^9.5.1",
+    "yjs": "^12.3.3"
   },
   "scripts": {
     "start": "react-scripts-ts start",
