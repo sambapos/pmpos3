@@ -3,6 +3,7 @@ import { withStyles } from 'material-ui';
 export interface Style {
     root: any;
     content: any;
+    footer: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints, mixins, transitions }): Style => ({
@@ -13,6 +14,19 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
     },
     content: {
         flex: '1 1 auto',
-        overflowY: 'auto'
+        overflowY: 'auto',
+        [breakpoints.up('sm')]: {
+            maxWidth: '600px',
+            width: '100%',
+            alignSelf: 'center'
+        },
+    },
+    footer: {
+        [breakpoints.up('sm')]: {
+            maxWidth: '600px',
+            width: '100%',
+            alignSelf: 'center',
+        },
+        flex: '1 1 auto'
     }
 }));

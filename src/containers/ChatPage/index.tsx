@@ -2,11 +2,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
 import * as ChatStore from '../../store/Chat';
-import { WithStyles, Button, List as MList, ListItem } from 'material-ui';
+import { WithStyles, List as MList, ListItem, Input, IconButton } from 'material-ui';
 import { RouteComponentProps } from 'react-router';
 import decorate, { Style } from './style';
 import TopBar from '../TopBar';
 import { List } from 'immutable';
+import Paper from 'material-ui/Paper/Paper';
+import Divider from 'material-ui/Divider/Divider';
 
 export type PageProps =
     { chat: List<Map<any, any>> }
@@ -17,7 +19,6 @@ export type PageProps =
 class ChatPage extends React.Component<PageProps, { message: string, enabled: boolean }> {
     constructor(props: PageProps) {
         super(props);
-        console.log('created!!!!!!');
         this.state = { message: '', enabled: false };
     }
 
@@ -30,10 +31,10 @@ class ChatPage extends React.Component<PageProps, { message: string, enabled: bo
 
     public render() {
         return (
-            <div className={this.props.classes.root}>
+            <Paper className={this.props.classes.root}>
                 <TopBar title="Chat" />
                 <div className={this.props.classes.content} id="chatDiv">
-                    <MList>
+                    <MList dense>
                         {
                             this.props.chat.map(x => {
                                 return x && (
@@ -44,27 +45,35 @@ class ChatPage extends React.Component<PageProps, { message: string, enabled: bo
                             })
                         }
                     </MList>
-
                 </div>
-                <input
-                    value={this.state.message}
-                    onKeyDown={e => {
-                        if (e.key === 'Enter') {
-                            (window as any).yChat.share.chat.push([this.state.message]);
-                            this.setState({ message: '' });
+                <Divider />
+                <div className={this.props.classes.footer}>
+                    <Input
+                        id="password"
+                        style={{ width: '100%', alignItems: 'center', marginLeft: '8px' }}
+                        placeholder="Type your message"
+                        value={this.state.message}
+                        disableUnderline
+                        onKeyDown={e => {
+                            if (e.key === 'Enter') {
+                                (window as any).yChat.share.chat.push([this.state.message]);
+                                this.setState({ message: '' });
+                            }
+                        }}
+                        onChange={(e) => this.setState({ message: e.target.value })}
+                        endAdornment={
+                            <IconButton
+                                onClick={() => {
+                                    (window as any).yChat.share.chat.push([this.state.message]);
+                                    this.setState({ message: '' });
+                                }}
+                            >
+                                <i className="material-icons">send</i>
+                            </IconButton>
                         }
-                    }}
-                    onChange={(e) => this.setState({ message: e.target.value })}
-                />
-                <Button
-                    raised
-                    onClick={() => {
-                        (window as any).yChat.share.chat.push([this.state.message]);
-                        this.setState({ message: '' });
-                    }}
-                >Send
-                </Button>
-            </div>
+                    />
+                </div>
+            </Paper>
         );
     }
 }

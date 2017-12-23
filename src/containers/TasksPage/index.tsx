@@ -27,10 +27,12 @@ class TasksPage extends React.Component<TasksPageProps, {}> {
 
     public render() {
         return (
-            <div className={this.props.classes.content}>
+            <div className={this.props.classes.root}>
                 <TopBar title="Tasks" />
-                <AddTask addTask={(title: string) => this.addTask(title)} />
-                <TaskList tasks={this.props.tasks} />
+                <div className={this.props.classes.content}>
+                    <AddTask addTask={(title: string) => this.addTask(title)} />
+                    <TaskList tasks={this.props.tasks} />
+                </div>
             </div>
         );
     }
