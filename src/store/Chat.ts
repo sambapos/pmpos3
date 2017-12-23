@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { List, fromJS } from 'immutable';
+import { List as IList, Map as IMap, fromJS } from 'immutable';
 import { AppThunkAction } from './appThunkAction';
 import { uuidv4 } from './uuid';
 
@@ -14,10 +14,10 @@ type ClearMessagesAction = {
 
 type KnownActions = AddMessageAction | ClearMessagesAction;
 
-export const reducer: Reducer<List<Map<any, any>>> = (
-    state: List<Map<any, any>> = List<Map<any, any>>(),
+export const reducer: Reducer<IList<IMap<any, any>>> = (
+    state: IList<IMap<any, any>> = IList<IMap<any, any>>(),
     action: KnownActions
-): List<Map<any, any>> => {
+): IList<IMap<any, any>> => {
     switch (action.type) {
         case 'ADD_MESSAGE':
             return state.push(fromJS({

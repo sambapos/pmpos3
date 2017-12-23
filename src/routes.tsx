@@ -6,6 +6,7 @@ import DocumentsPage from './containers/DocumentsPage';
 import DocumentPage from './containers/DocumentPage';
 import TasksPage from './containers/TasksPage';
 import ChatPage from './containers/ChatPage';
+import BlocksPage from './containers/BlocksPage';
 import { Route } from 'react-router-dom';
 
 export const routes = (
@@ -20,6 +21,7 @@ export const subRoutes = (
         <Route exact path="/document/:id" component={DocumentPage} />
         <Route exact path="/tasks" component={TasksPage} />
         <Route exact path="/chat" component={ChatPage} />
+        <Route exact path="/blocks" component={BlocksPage} />
         <Route exact path="/about" component={AboutPage} />
     </div>
 );

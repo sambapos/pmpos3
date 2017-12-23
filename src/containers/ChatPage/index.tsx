@@ -6,12 +6,12 @@ import { WithStyles, List as MList, ListItem, Input, IconButton } from 'material
 import { RouteComponentProps } from 'react-router';
 import decorate, { Style } from './style';
 import TopBar from '../TopBar';
-import { List } from 'immutable';
+import { List as IList, Map as IMap } from 'immutable';
 import Paper from 'material-ui/Paper/Paper';
 import Divider from 'material-ui/Divider/Divider';
 
 export type PageProps =
-    { chat: List<Map<any, any>> }
+    { chat: IList<IMap<any, any>> }
     & WithStyles<keyof Style>
     & typeof ChatStore.actionCreators
     & RouteComponentProps<{}>;
@@ -49,14 +49,13 @@ class ChatPage extends React.Component<PageProps, { message: string, enabled: bo
                 <Divider />
                 <div className={this.props.classes.footer}>
                     <Input
-                        id="password"
                         style={{ width: '100%', alignItems: 'center', marginLeft: '8px' }}
                         placeholder="Type your message"
                         value={this.state.message}
                         disableUnderline
                         onKeyDown={e => {
                             if (e.key === 'Enter') {
-                                (window as any).yChat.share.chat.push([this.state.message]);
+                                (window as any).protocol.share.chat.push([this.state.message]);
                                 this.setState({ message: '' });
                             }
                         }}
@@ -64,7 +63,7 @@ class ChatPage extends React.Component<PageProps, { message: string, enabled: bo
                         endAdornment={
                             <IconButton
                                 onClick={() => {
-                                    (window as any).yChat.share.chat.push([this.state.message]);
+                                    (window as any).protocol.share.chat.push([this.state.message]);
                                     this.setState({ message: '' });
                                 }}
                             >

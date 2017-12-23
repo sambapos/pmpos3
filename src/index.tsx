@@ -7,21 +7,21 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import { createBrowserHistory } from 'history';
 import configureStore from './configureStore';
-import configureChat from './configureChat';
+import configureProtocol from './configureProtocol';
 import * as RoutesModule from './routes';
-import { saveState, loadState } from './localStorage';
+import { saveState } from './localStorage';
 
 let routes = RoutesModule.routes;
 
 const history = createBrowserHistory();
-const initialState = loadState();
+const initialState = undefined; // loadState();
 const store = configureStore(history, initialState);
 
 store.subscribe(() => {
   saveState(store.getState());
 });
 
-configureChat(store);
+configureProtocol(store);
 
 function renderApp() {
   // This code starts up the React app when it runs in a browser. It sets up the routing configuration

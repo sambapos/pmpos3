@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { List, fromJS } from 'immutable';
+import { List as IList, Map as IMap, fromJS } from 'immutable';
 import { AppThunkAction } from './appThunkAction';
 import { uuidv4 } from './uuid';
 
@@ -16,18 +16,21 @@ type SetTaskEstimateAction = {
 
 type TasksAction = AddTaskAction | SetTaskEstimateAction;
 
-export const reducer: Reducer<List<Map<any, any>>> = (
-    state: List<Map<any, any>> = List<Map<any, any>>(),
+export const reducer: Reducer<IList<IMap<any, any>>> = (
+    state: IList<IMap<any, any>> = IList<IMap<any, any>>(),
     action: TasksAction
-): List<Map<any, any>> => {
+): IList<IMap<any, any>> => {
     switch (action.type) {
         case 'ADD_TASK':
             return state.push(fromJS({ id: uuidv4(), title: action.title, estimate: 0, date: new Date() }));
         case 'SET_TASK_ESTIMATE':
-            const newTask = state
-                .get(action.index)
-                .set('estimate', action.estimate);
-            return state.set(action.index, newTask);
+            const currentTask = state.get(action.index);
+            if (currentTask) {
+                const newTask =
+                    currentTask.set('estimate', action.estimate);
+                return state.set(action.index, newTask);
+            }
+            return state;
         default:
             return state;
     }
