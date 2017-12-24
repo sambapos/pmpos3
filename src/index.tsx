@@ -9,12 +9,12 @@ import { createBrowserHistory } from 'history';
 import configureStore from './configureStore';
 import configureProtocol from './configureProtocol';
 import * as RoutesModule from './routes';
-import { saveState } from './localStorage';
+import { saveState, loadState } from './localStorage';
 
 let routes = RoutesModule.routes;
 
 const history = createBrowserHistory();
-const initialState = undefined; // loadState();
+const initialState = loadState();
 const store = configureStore(history, initialState);
 
 store.subscribe(() => {

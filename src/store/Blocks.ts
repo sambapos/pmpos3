@@ -17,13 +17,15 @@ export const reducer: Reducer<IMap<string, IList<any>>> = (
 ): IMap<string, IList<any>> => {
     switch (action.type) {
         case 'ADD_BLOCK':
-            let block = state.get(action.id);
-            if (!block) { block = IList<any>(); }
-            block = block.push(fromJS({
+            let actions = state.get(action.id);
+            if (!actions) { actions = IList<any>(); }
+            let act = fromJS({
                 id: uuidv4(),
                 payload: action.payload
-            }));
-            return state.set(action.id, block);
+            });
+            console.log('add_block_action', act);
+            actions = actions.push(act);
+            return state.set(action.id, actions);
         default:
             return state;
     }

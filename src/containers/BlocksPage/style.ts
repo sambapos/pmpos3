@@ -4,6 +4,7 @@ export interface Style {
     root: any;
     content: any;
     footer: any;
+    listItem: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints, mixins, transitions }): Style => ({
@@ -20,6 +21,9 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
             width: '100%',
             alignSelf: 'center'
         },
+    },
+    listItem: {
+        padding: spacing.unit
     },
     footer: {
         [breakpoints.up('sm')]: {

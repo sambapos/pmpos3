@@ -1,16 +1,19 @@
 import * as IPFS from 'ipfs';
-import * as Y from 'yjs';
-import yArray from 'y-array';
-import yMap from 'y-map';
-import yMemory from 'y-memory';
-// import yIndexedDb from 'y-indexeddb';
-import yIpfsConnector from 'y-ipfs-connector';
+import Y from 'yjs/dist/y';
+import yMemory from 'y-memory/dist/y-memory';
+import yArray from 'y-array/dist/y-array';
+import yMap from 'y-map/dist/y-map';
+import ipfsConnector from 'y-ipfs-connector';
+
 import { Store } from 'redux';
 import { ApplicationState } from './store/index';
 
 export default function configureChat(store: Store<ApplicationState>) {
 
-    Y.extend(yMap, yArray, yMemory, yIpfsConnector);
+    yMemory(Y);
+    yArray(Y);
+    yMap(Y);
+    ipfsConnector(Y);
 
     const ipfs = new IPFS({
         repo: repo(),
@@ -33,7 +36,7 @@ export default function configureChat(store: Store<ApplicationState>) {
     });
 
     function repo() {
-        return 'ipfs/pubsub-demo/'; // + Math.random();
+        return 'ipfs/pubsub-demo/' + Math.random();
     }
 
     Y({
@@ -42,7 +45,7 @@ export default function configureChat(store: Store<ApplicationState>) {
         },
         connector: {
             name: 'ipfs',
-            room: 'chat-example',
+            room: 'pmpos-protocol',
             ipfs: ipfs
         },
         share: {
@@ -61,8 +64,16 @@ export default function configureChat(store: Store<ApplicationState>) {
         });
 
         y.share.blocks.observeDeep(event => {
+            console.log('block event', event);
             if (event.type === 'add') {
-                store.dispatch({ type: 'ADD_BLOCK', id: event.name, payload: event.value });
+                store.dispatch({
+                    type: 'ADD_BLOCK', id: event.name,
+                    payload: { type: 'CREATE_BLOCK', data: JSON.stringify({ bid: event.name }) }
+                });
+            } else if (event.type === 'insert') {
+                event.values.forEach(element => {
+                    store.dispatch({ type: 'ADD_BLOCK', id: event.path[0], payload: element });
+                });
             }
         });
     });
