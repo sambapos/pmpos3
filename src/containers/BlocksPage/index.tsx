@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
 import * as BlocksStore from '../../store/Blocks';
 import { uuidv4 } from '../../store/uuid';
-import { WithStyles, List as MList, Input, IconButton, Select, MenuItem, ListItem } from 'material-ui';
+import { WithStyles, Input, IconButton, Select, MenuItem } from 'material-ui';
 import { RouteComponentProps } from 'react-router';
 import decorate, { Style } from './style';
 import TopBar from '../TopBar';
@@ -11,7 +11,7 @@ import { Map as IMap, List as IList } from 'immutable';
 import Paper from 'material-ui/Paper/Paper';
 import Divider from 'material-ui/Divider/Divider';
 import Y from 'yjs/dist/y';
-import Typography from 'material-ui/Typography/Typography';
+import BlockList from './BlockList';
 
 export type PageProps =
     { blocks: IMap<string, IList<any>> }
@@ -23,23 +23,6 @@ class BlocksPage extends React.Component<PageProps, { type: string, data: string
     constructor(props: PageProps) {
         super(props);
         this.state = { type: '', data: '', bid: '' };
-    }
-
-    public displayActions(actions: IMap<string, any>) {
-        return (
-            <Typography key={actions.get('id')}>
-                <Divider />
-                aid:{actions.get('id')}
-                <br />
-                {this.displayPayload(actions.get('payload'))}
-            </Typography>);
-    }
-
-    public displayPayload(payload: IMap<string, any>) {
-        if (!payload || !payload.entrySeq) { return <div>payload</div>; }
-        return payload.entrySeq().map(x => {
-            return <div key={x[0]}>{x[0] + ':' + x[1]}</div>;
-        });
     }
 
     public handleNewBlock() {
@@ -74,29 +57,11 @@ class BlocksPage extends React.Component<PageProps, { type: string, data: string
             <Paper className={this.props.classes.root}>
                 <TopBar title="Blocks" />
                 <div className={this.props.classes.content}>
-                    <MList dense>
-                        {
-                            this.props.blocks.entrySeq().map(([bid, actions]) => {
-                                return (
-                                    <ListItem
-                                        button
-                                        key={bid}
-                                        onClick={() => this.setState({ bid })}
-                                    >
-                                        <Paper className={this.props.classes.listItem}>
-                                            {this.state.bid && bid === this.state.bid
-                                                ? <Typography type="body2">bid:{bid}</Typography>
-                                                : <Typography>bid:{bid}</Typography>
-                                            }
-                                            {actions.toSeq().map(action =>
-                                                this.displayActions(action)
-                                            )}
-                                        </Paper>
-                                    </ListItem>
-                                );
-                            })
-                        }
-                    </MList>
+                    <BlockList
+                        blocks={this.props.blocks}
+                        onClick={bid => this.setState({ bid })}
+                        selectedBid={this.state.bid}
+                    />
                 </div>
                 <Divider />
                 <div className={this.props.classes.footer}>
@@ -108,7 +73,7 @@ class BlocksPage extends React.Component<PageProps, { type: string, data: string
                         input={<Input placeholder="Select action type" />}
                     >
                         <MenuItem value="CREATE_BLOCK">Create Block</MenuItem>
-                        <MenuItem value="TAG_BLOCK">Tag Block</MenuItem>
+                        <MenuItem value="SET_BLOCK_TAG">Tag Block</MenuItem>
                     </Select>
                     <Divider />
                     <Input

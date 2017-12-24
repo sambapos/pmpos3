@@ -67,12 +67,15 @@ export default function configureChat(store: Store<ApplicationState>) {
             console.log('block event', event);
             if (event.type === 'add') {
                 store.dispatch({
-                    type: 'ADD_BLOCK', id: event.name,
-                    payload: { type: 'CREATE_BLOCK', data: JSON.stringify({ bid: event.name }) }
+                    type: 'REGISTER_BLOCK_ACTION', id: event.name,
+                    payload: { type: 'CREATE_BLOCK', data: JSON.stringify({ bid: event.name }) },
+                });
+                event.value.toArray().forEach(element => {
+                    store.dispatch({ type: 'REGISTER_BLOCK_ACTION', id: event.name, payload: element });
                 });
             } else if (event.type === 'insert') {
                 event.values.forEach(element => {
-                    store.dispatch({ type: 'ADD_BLOCK', id: event.path[0], payload: element });
+                    store.dispatch({ type: 'REGISTER_BLOCK_ACTION', id: event.path[0], payload: element });
                 });
             }
         });
