@@ -18,7 +18,7 @@ class HomePage extends React.Component<PageProps> {
             <div>
                 <TopBar title="About PM-POS 2.0" />
                 <Typography type="body2">
-                    This project contains some PoC's and Tests to demonstrate
+                    This project contains PoC's and Tests to demonstrate
                     some features of future SambaPOS versions.
                 </Typography>
                 <br />

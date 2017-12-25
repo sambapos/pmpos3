@@ -66,9 +66,9 @@ class BlocksPage extends React.Component<PageProps, { type: string, data: string
                 <Divider />
                 <div className={this.props.classes.footer}>
                     <Select
+                        className={this.props.classes.footerSelect}
                         disableUnderline
                         value={this.state.type}
-                        style={{ width: '100%', alignItems: 'center', marginLeft: '8px' }}
                         onChange={(e) => this.setState({ type: e.target.value })}
                         input={<Input placeholder="Select action type" />}
                     >
@@ -77,7 +77,7 @@ class BlocksPage extends React.Component<PageProps, { type: string, data: string
                     </Select>
                     <Divider />
                     <Input
-                        style={{ width: '100%', alignItems: 'center', marginLeft: '8px' }}
+                        className={this.props.classes.footerInput}
                         placeholder="Type action data"
                         value={this.state.data}
                         disableUnderline

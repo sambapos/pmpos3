@@ -8,13 +8,14 @@ import Divider from 'material-ui/Divider';
 
 import NavList from './navList';
 import { subRoutes } from '../../routes';
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps, Route } from 'react-router';
 import { ListItem, ListItemText, Typography } from 'material-ui';
 import decorate, { Style } from './style';
 
 import * as ClientStore from '../../store/Client';
 import { ApplicationState } from '../../store/index';
 import { connect } from 'react-redux';
+import LoginPage from '../LoginPage';
 
 type NavPageProps = ClientStore.ClientState
     & WithStyles<keyof Style>
@@ -50,6 +51,7 @@ class NavPage extends React.Component<NavPageProps> {
                 </div>
                 <Divider />
                 <NavList
+                    loggedInUser={this.props.loggedInUser}
                     history={this.props.history}
                     closeDrawer={this.closeDrawer}
                 />
@@ -105,7 +107,11 @@ class NavPage extends React.Component<NavPageProps> {
                             [classes[`contentShift${anchor}`]]: this.props.drawerOpen,
                         })}
                     >
-                        {subRoutes}
+                        {
+                            this.props.loggedInUser
+                                ? subRoutes
+                                : <div style={{ height: '100%', display: 'flex' }}><Route component={LoginPage} /></div>
+                        }
                     </main>
 
                 </div>

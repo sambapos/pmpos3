@@ -68,7 +68,7 @@ export default function configureChat(store: Store<ApplicationState>) {
             if (event.type === 'add') {
                 store.dispatch({
                     type: 'REGISTER_BLOCK_ACTION', id: event.name,
-                    payload: { type: 'CREATE_BLOCK', data: JSON.stringify({ bid: event.name }) },
+                    payload: { type: 'CREATE_BLOCK', data: JSON.stringify({ bid: event.name, time: Date.now() }) },
                 });
                 event.value.toArray().forEach(element => {
                     store.dispatch({ type: 'REGISTER_BLOCK_ACTION', id: event.name, payload: element });
