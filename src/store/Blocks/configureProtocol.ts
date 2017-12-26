@@ -3,13 +3,11 @@ import Y from 'yjs/dist/y';
 import yMemory from 'y-memory/dist/y-memory';
 import yArray from 'y-array/dist/y-array';
 import yMap from 'y-map/dist/y-map';
-import yIndexeddb from 'y-indexeddb/dist/y-indexeddb';
-import ipfsConnector from 'y-ipfs-connector';
+import * as ipfsConnector from '../../lib/y-ipfs-connector';
 
 yMemory(Y);
 yArray(Y);
 yMap(Y);
-yIndexeddb(Y);
 ipfsConnector(Y);
 
 import { ApplicationState } from '../index';
@@ -22,7 +20,7 @@ export default (
     cb: (protocol: any) => void) => {
 
     const ipfs = new IPFS({
-        // repo: 'ipfs/PM-POS/' + terminalId + '/' + (user ? user : Math.random()),
+        repo: 'ipfs/PM-POS/' + terminalId + '/' + (user ? user : Math.random()),
         EXPERIMENTAL: {
             pubsub: true
         },
@@ -46,7 +44,7 @@ export default (
 
     Y({
         db: {
-            name: 'indexeddb'
+            name: 'memory'
         },
         connector: {
             name: 'ipfs',
@@ -58,6 +56,8 @@ export default (
             actionLog: 'Map'
         }
     }).then((y) => {
+
+        y.share.chat.toArray().forEach(x => console.log(x));
 
         y.share.chat.observe(event => {
             console.log('chat event', event);
