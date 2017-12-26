@@ -3,11 +3,13 @@ import Y from 'yjs/dist/y';
 import yMemory from 'y-memory/dist/y-memory';
 import yArray from 'y-array/dist/y-array';
 import yMap from 'y-map/dist/y-map';
+import yIndexeddb from 'y-indexeddb/dist/y-indexeddb';
 import ipfsConnector from 'y-ipfs-connector';
 
 yMemory(Y);
 yArray(Y);
 yMap(Y);
+yIndexeddb(Y);
 ipfsConnector(Y);
 
 import { ApplicationState } from '../index';
@@ -20,7 +22,7 @@ export default (
     cb: (protocol: any) => void) => {
 
     const ipfs = new IPFS({
-        repo: 'ipfs/PM-POS/' + terminalId + '/' + (user ? user : Math.random()),
+        // repo: 'ipfs/PM-POS/' + terminalId + '/' + (user ? user : Math.random()),
         EXPERIMENTAL: {
             pubsub: true
         },
@@ -35,6 +37,7 @@ export default (
 
     ipfs.once('ready', () => {
         ipfs.id((err, info) => {
+            console.log('ipfs', info);
             if (err) {
                 throw err;
             }
@@ -43,7 +46,7 @@ export default (
 
     Y({
         db: {
-            name: 'memory'
+            name: 'indexeddb'
         },
         connector: {
             name: 'ipfs',
@@ -57,6 +60,7 @@ export default (
     }).then((y) => {
 
         y.share.chat.observe(event => {
+            console.log('chat event', event);
             if (event.type === 'insert') {
                 for (let i = 0; i < event.length; i++) {
                     dispatch({
@@ -71,7 +75,6 @@ export default (
         });
 
         y.share.actionLog.observeDeep(event => {
-            console.log('block event', event);
             if (event.type === 'add') {
                 event.value.toArray().forEach(element => {
                     dispatch({

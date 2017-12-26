@@ -26,6 +26,7 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
             maxWidth: '600px',
             width: '100%',
             alignSelf: 'center',
-        }
+        },
+        flex: 'none'
     }
 }));

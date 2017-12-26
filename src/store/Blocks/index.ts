@@ -62,7 +62,6 @@ export const actionCreators = {
         data: string
     ): AppThunkAction<KnownActions> => (dispatch, getState) => {
         let actionLog = getState().blocks.get('protocol').share.actionLog;
-        console.log('action_log', actionLog);
 
         let bid = blockId;
         if (type === 'CREATE_BLOCK') {
@@ -71,8 +70,6 @@ export const actionCreators = {
         }
 
         let actions = actionLog.get(bid);
-        console.log('log', actions);
-
         if (!actions) {
             actionLog.set(bid, Y.Array);
             actions = actionLog.get(bid);
@@ -80,6 +77,7 @@ export const actionCreators = {
         actions.push([{
             id: uuidv4(),
             time: Date.now(),
+            user: getState().client.loggedInUser,
             blockId: bid,
             type: type,
             data: objectify(data)

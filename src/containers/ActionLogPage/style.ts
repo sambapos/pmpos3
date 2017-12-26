@@ -42,6 +42,7 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
             alignSelf: 'center',
         },
         display: 'flex',
-        flexFlow: 'column'
+        flexFlow: 'column',
+        flex: 'none'
     }
 }));
