@@ -2,7 +2,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
 import * as BlocksStore from '../../store/Blocks';
-import { uuidv4 } from '../../store/uuid';
 import { WithStyles, Input, IconButton, Select, MenuItem } from 'material-ui';
 import { RouteComponentProps } from 'react-router';
 import decorate, { Style } from './style';
@@ -10,13 +9,11 @@ import TopBar from '../TopBar';
 import { Map as IMap, List as IList } from 'immutable';
 import Paper from 'material-ui/Paper/Paper';
 import Divider from 'material-ui/Divider/Divider';
-import Y from 'yjs/dist/y';
 import BlockList from './BlockList';
 
 export type PageProps =
     {
-        blocks: IMap<string, IList<any>>,
-        protocol: any
+        actionLogs: IMap<string, IList<any>>
     }
     & WithStyles<keyof Style>
     & typeof BlocksStore.actionCreators
@@ -29,20 +26,7 @@ class BlocksPage extends React.Component<PageProps, { type: string, data: string
     }
 
     public handleNewBlock() {
-        console.log('blocks', this.props.protocol.share.actionLog);
-        let actionLog = this.props.protocol.share.actionLog;
-        let bid = this.state.type === 'CREATE_BLOCK' ? uuidv4() : this.state.bid;
-        let actions = actionLog.get(bid);
-        console.log('log', actions);
-        if (!actions) {
-            actionLog.set(bid, Y.Array);
-        } else {
-            actions.push([{
-                bid,
-                type: this.state.type,
-                data: this.objectify(this.state.data)
-            }]);
-        }
+        this.props.registerBlock(this.state.type, this.state.bid, this.state.data);
         this.setState({ type: '', data: '' });
     }
 
@@ -61,7 +45,7 @@ class BlocksPage extends React.Component<PageProps, { type: string, data: string
                 <TopBar title="Blocks" />
                 <div className={this.props.classes.content}>
                     <BlockList
-                        blocks={this.props.blocks}
+                        blocks={this.props.actionLogs}
                         onClick={bid => this.setState({ bid })}
                         selectedBid={this.state.bid}
                     />
@@ -103,8 +87,7 @@ class BlocksPage extends React.Component<PageProps, { type: string, data: string
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-    blocks: state.blocks.get('log'),
-    protocol: state.blocks.get('protocol')
+    actionLogs: state.blocks.get('log')
 });
 
 export default decorate(connect(

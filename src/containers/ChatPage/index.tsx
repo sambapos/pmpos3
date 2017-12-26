@@ -9,10 +9,9 @@ import TopBar from '../TopBar';
 import { List as IList, Map as IMap } from 'immutable';
 import Paper from 'material-ui/Paper/Paper';
 import Divider from 'material-ui/Divider/Divider';
-import { uuidv4 } from '../../store/uuid';
 
 export type PageProps =
-    { chat: IList<IMap<any, any>>, protocol: any, loggedInUser: string }
+    { chat: IList<IMap<any, any>>, loggedInUser: string }
     & WithStyles<keyof Style>
     & typeof BlockStore.actionCreators
     & RouteComponentProps<{}>;
@@ -31,7 +30,6 @@ class ChatPage extends React.Component<PageProps, { message: string, enabled: bo
     }
 
     public render() {
-        console.log('props', this.props);
         return (
             <Paper className={this.props.classes.root}>
                 <TopBar title="Chat" />
@@ -57,11 +55,7 @@ class ChatPage extends React.Component<PageProps, { message: string, enabled: bo
                         disableUnderline
                         onKeyDown={e => {
                             if (e.key === 'Enter') {
-                                this.props.protocol.share.chat.push([{
-                                    id: uuidv4(),
-                                    message: this.state.message,
-                                    user: this.props.loggedInUser
-                                }]);
+                                this.props.addMessage(this.state.message);
                                 this.setState({ message: '' });
                             }
                         }}
@@ -69,9 +63,7 @@ class ChatPage extends React.Component<PageProps, { message: string, enabled: bo
                         endAdornment={
                             <IconButton
                                 onClick={() => {
-                                    this.props.protocol.share.chat.push([{
-                                        message: this.state.message, user: this.props.loggedInUser
-                                    }]);
+                                    this.props.addMessage(this.state.message);
                                     this.setState({ message: '' });
                                 }}
                             >
@@ -87,7 +79,6 @@ class ChatPage extends React.Component<PageProps, { message: string, enabled: bo
 
 const mapStateToProps = (state: ApplicationState) => ({
     chat: state.blocks.get('chat'),
-    protocol: state.blocks.get('protocol'),
     loggedInUser: state.client.loggedInUser
 });
 

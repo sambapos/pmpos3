@@ -5,22 +5,22 @@ import yArray from 'y-array/dist/y-array';
 import yMap from 'y-map/dist/y-map';
 import ipfsConnector from 'y-ipfs-connector';
 
-import { Store } from 'redux';
-import { ApplicationState } from './store/index';
-
 yMemory(Y);
 yArray(Y);
 yMap(Y);
 ipfsConnector(Y);
 
-export default function configure(store: Store<ApplicationState>, user: string) {
+import { ApplicationState } from '../index';
+import { KnownActions } from './KnownActions';
 
-    if ((<any>window).protocol) {
-        (<any>window).protocol.disconnect();
-    }
+export default (
+    terminalId: string, user: string,
+    dispatch: (action: KnownActions) => void,
+    getState: () => ApplicationState,
+    cb: (protocol: any) => void) => {
 
     const ipfs = new IPFS({
-        repo: repo(),
+        repo: 'ipfs/PM-POS/' + terminalId + '/' + (user ? user : Math.random()),
         EXPERIMENTAL: {
             pubsub: true
         },
@@ -35,13 +35,11 @@ export default function configure(store: Store<ApplicationState>, user: string) 
 
     ipfs.once('ready', () => {
         ipfs.id((err, info) => {
-            if (err) { throw err; }
+            if (err) {
+                throw err;
+            }
         });
     });
-
-    function repo() {
-        return 'ipfs/pubsub-demo/' + user ? user : Math.random();
-    }
 
     Y({
         db: {
@@ -54,34 +52,44 @@ export default function configure(store: Store<ApplicationState>, user: string) 
         },
         share: {
             chat: 'Array',
-            actions: 'Map'
+            actionLog: 'Map'
         }
     }).then((y) => {
-        (<any>window).protocol = y;
 
         y.share.chat.observe(event => {
             if (event.type === 'insert') {
                 for (let i = 0; i < event.length; i++) {
-                    store.dispatch({ type: 'ADD_MESSAGE', message: event.values[i] });
+                    dispatch({
+                        type: 'ADD_MESSAGE',
+                        date: event.values[i].date,
+                        message: event.values[i].message,
+                        user: event.values[i].user,
+                        id: event.values[i].id
+                    });
                 }
             }
         });
 
-        y.share.actions.observeDeep(event => {
+        y.share.actionLog.observeDeep(event => {
             console.log('block event', event);
             if (event.type === 'add') {
-                store.dispatch({
-                    type: 'REGISTER_BLOCK_ACTION', id: event.name,
-                    payload: { type: 'CREATE_BLOCK', data: JSON.stringify({ bid: event.name, time: Date.now() }) },
-                });
                 event.value.toArray().forEach(element => {
-                    store.dispatch({ type: 'REGISTER_BLOCK_ACTION', id: event.name, payload: element });
+                    dispatch({
+                        type: 'REGISTER_BLOCK_ACTION',
+                        blockId: event.name,
+                        payload: element
+                    });
                 });
             } else if (event.type === 'insert') {
                 event.values.forEach(element => {
-                    store.dispatch({ type: 'REGISTER_BLOCK_ACTION', id: event.path[0], payload: element });
+                    dispatch({
+                        type: 'REGISTER_BLOCK_ACTION',
+                        blockId: event.path[0],
+                        payload: element
+                    });
                 });
             }
         });
+        cb(y);
     });
-}
+};

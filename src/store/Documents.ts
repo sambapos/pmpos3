@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import { fromJS } from 'immutable';
 import { AppThunkAction } from './appThunkAction';
-import { uuidv4 } from './uuid';
+import { uuidv4 } from '../lib/uuid';
 
 type AddDocumentAction = {
     type: 'ADD_DOCUMENT'

@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import { List as IList, Map as IMap, fromJS } from 'immutable';
 import { AppThunkAction } from './appThunkAction';
-import { uuidv4 } from './uuid';
+import { uuidv4 } from '../lib/uuid';
 
 type AddTaskAction = {
     type: 'ADD_TASK',

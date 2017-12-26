@@ -7,10 +7,9 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import { createBrowserHistory } from 'history';
 import configureStore from './configureStore';
-// import configureProtocol from './configureProtocol';
 import * as RoutesModule from './routes';
 import { saveState } from './localStorage';
-import { uuidv4 } from './store/uuid';
+import { uuidv4 } from './lib/uuid';
 
 let routes = RoutesModule.routes;
 
@@ -28,8 +27,6 @@ if (!terminalId) {
   localStorage.setItem('terminalId', terminalId as string);
 }
 store.dispatch({ type: 'SET_TERMINAL_ID', terminalId });
-
-// configureProtocol(store);
 
 function renderApp() {
   // This code starts up the React app when it runs in a browser. It sets up the routing configuration
