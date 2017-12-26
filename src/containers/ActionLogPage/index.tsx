@@ -9,24 +9,22 @@ import TopBar from '../TopBar';
 import { Map as IMap, List as IList } from 'immutable';
 import Paper from 'material-ui/Paper/Paper';
 import Divider from 'material-ui/Divider/Divider';
-import BlockList from './BlockList';
+import ActionLogList from './ActionLogList';
 
 export type PageProps =
-    {
-        actionLogs: IMap<string, IList<any>>
-    }
+    { actionLogs: IMap<string, IList<any>> }
     & WithStyles<keyof Style>
     & typeof BlocksStore.actionCreators
     & RouteComponentProps<{}>;
 
-class BlocksPage extends React.Component<PageProps, { type: string, data: string, bid: string }> {
+class ActionLogPage extends React.Component<PageProps, { type: string, data: string, bid: string }> {
     constructor(props: PageProps) {
         super(props);
         this.state = { type: '', data: '', bid: '' };
     }
 
     public handleNewBlock() {
-        this.props.registerBlock(this.state.type, this.state.bid, this.state.data);
+        this.props.registerBlockAction(this.state.type, this.state.bid, this.state.data);
         this.setState({ type: '', data: '' });
     }
 
@@ -42,9 +40,9 @@ class BlocksPage extends React.Component<PageProps, { type: string, data: string
     public render() {
         return (
             <Paper className={this.props.classes.root}>
-                <TopBar title="Blocks" />
+                <TopBar title="Action Log" />
                 <div className={this.props.classes.content}>
-                    <BlockList
+                    <ActionLogList
                         blocks={this.props.actionLogs}
                         onClick={bid => this.setState({ bid })}
                         selectedBid={this.state.bid}
@@ -93,4 +91,4 @@ const mapStateToProps = (state: ApplicationState) => ({
 export default decorate(connect(
     mapStateToProps,
     BlocksStore.actionCreators
-)(BlocksPage));
+)(ActionLogPage));

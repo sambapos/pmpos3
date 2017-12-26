@@ -2,7 +2,7 @@ import * as React from 'react';
 import { List } from 'immutable';
 import { WithStyles, ListItem, Paper } from 'material-ui';
 import decorate, { Style } from './style';
-import BlockHeader from './BlockHeader';
+import ActionLogHeader from './ActionLogHeader';
 import Actions from './Actions';
 
 const BlockListItem = (props: {
@@ -17,7 +17,7 @@ const BlockListItem = (props: {
             onClick={props.onClick}
         >
             <Paper className={props.classes.listItem}>
-                <BlockHeader
+                <ActionLogHeader
                     bid={props.bid}
                     isSelected={props.isSelected}
                 />

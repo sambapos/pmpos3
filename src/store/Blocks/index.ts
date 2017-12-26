@@ -56,7 +56,7 @@ export const actionCreators = {
             user: getState().client.loggedInUser
         }]);
     },
-    registerBlock: (
+    registerBlockAction: (
         type: string,
         blockId: string,
         data: string

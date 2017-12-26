@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { List } from 'material-ui';
 import { Map as IMap, List as IList } from 'immutable';
-import BlockListItem from './BlockListItem';
+import ActionLogListItem from './ActionLogListItem';
 
 export default (props: {
     blocks: IMap<string, IList<any>>,
@@ -13,7 +13,7 @@ export default (props: {
             {
                 props.blocks.entrySeq().map(([bid, actions]) => {
                     return (
-                        <BlockListItem
+                        <ActionLogListItem
                             key={bid}
                             bid={bid}
                             actions={actions}
