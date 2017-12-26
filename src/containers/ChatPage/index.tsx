@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
-import * as ChatStore from '../../store/Chat';
+import * as BlockStore from '../../store/Blocks';
 import { WithStyles, List as MList, ListItem, Input, IconButton } from 'material-ui';
 import { RouteComponentProps } from 'react-router';
 import decorate, { Style } from './style';
@@ -9,11 +9,12 @@ import TopBar from '../TopBar';
 import { List as IList, Map as IMap } from 'immutable';
 import Paper from 'material-ui/Paper/Paper';
 import Divider from 'material-ui/Divider/Divider';
+import { uuidv4 } from '../../store/uuid';
 
 export type PageProps =
-    { chat: IList<IMap<any, any>> }
+    { chat: IList<IMap<any, any>>, protocol: any, loggedInUser: string }
     & WithStyles<keyof Style>
-    & typeof ChatStore.actionCreators
+    & typeof BlockStore.actionCreators
     & RouteComponentProps<{}>;
 
 class ChatPage extends React.Component<PageProps, { message: string, enabled: boolean }> {
@@ -30,6 +31,7 @@ class ChatPage extends React.Component<PageProps, { message: string, enabled: bo
     }
 
     public render() {
+        console.log('props', this.props);
         return (
             <Paper className={this.props.classes.root}>
                 <TopBar title="Chat" />
@@ -39,7 +41,7 @@ class ChatPage extends React.Component<PageProps, { message: string, enabled: bo
                             this.props.chat.map(x => {
                                 return x && (
                                     <ListItem key={x.get('id')}>
-                                        {x.get('message')}
+                                        {`${x.get('user')}:${x.get('message')}`}
                                     </ListItem>
                                 );
                             })
@@ -50,12 +52,16 @@ class ChatPage extends React.Component<PageProps, { message: string, enabled: bo
                 <div className={this.props.classes.footer}>
                     <Input
                         style={{ width: '100%', alignItems: 'center', marginLeft: '8px' }}
-                        placeholder="Type your message"
+                        placeholder={`${this.props.loggedInUser}:Type your message`}
                         value={this.state.message}
                         disableUnderline
                         onKeyDown={e => {
                             if (e.key === 'Enter') {
-                                (window as any).protocol.share.chat.push([this.state.message]);
+                                this.props.protocol.share.chat.push([{
+                                    id: uuidv4(),
+                                    message: this.state.message,
+                                    user: this.props.loggedInUser
+                                }]);
                                 this.setState({ message: '' });
                             }
                         }}
@@ -63,7 +69,9 @@ class ChatPage extends React.Component<PageProps, { message: string, enabled: bo
                         endAdornment={
                             <IconButton
                                 onClick={() => {
-                                    (window as any).protocol.share.chat.push([this.state.message]);
+                                    this.props.protocol.share.chat.push([{
+                                        message: this.state.message, user: this.props.loggedInUser
+                                    }]);
                                     this.setState({ message: '' });
                                 }}
                             >
@@ -77,9 +85,13 @@ class ChatPage extends React.Component<PageProps, { message: string, enabled: bo
     }
 }
 
-const mapStateToProps = (state: ApplicationState) => ({ chat: state.chat });
+const mapStateToProps = (state: ApplicationState) => ({
+    chat: state.blocks.get('chat'),
+    protocol: state.blocks.get('protocol'),
+    loggedInUser: state.client.loggedInUser
+});
 
 export default decorate(connect(
     mapStateToProps,
-    ChatStore.actionCreators
+    BlockStore.actionCreators
 )(ChatPage));

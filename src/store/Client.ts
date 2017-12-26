@@ -5,6 +5,7 @@ export interface ClientState {
     enthusiasmLevel: number;
     drawerOpen: boolean;
     loggedInUser: string;
+    terminalId: string;
 }
 
 interface IncrementEnthusiasmAction {
@@ -25,14 +26,20 @@ interface SetLoggedInUserAction {
     user: string;
 }
 
+interface SetTerminalIdAction {
+    type: 'SET_TERMINAL_ID';
+    terminalId: string;
+}
+
 type KnownAction = IncrementEnthusiasmAction |
     DecrementEnthusiasmAction | ToggleDrawerAction
-    | SetLoggedInUserAction;
+    | SetLoggedInUserAction | SetTerminalIdAction;
 
 export const actionCreators = {
     IncrementEnthusiasm: () => <IncrementEnthusiasmAction>{ type: 'INCREMENT_ENTHUSIASM' },
     DecrementEnthusiasm: () => <DecrementEnthusiasmAction>{ type: 'DECREMENT_ENTHUSIASM' },
     SetLoggedInUser: (user: string) => <SetLoggedInUserAction>{ type: 'SET_LOGGEDIN_USER', user },
+    SetTerminalId: (terminalId: string) => <SetTerminalIdAction>{ type: 'SET_TERMINAL_ID', terminalId },
     ToggleDrawer: (forceClose?: boolean) => <ToggleDrawerAction>{ type: 'TOGGLE_DRAWER', forceClose },
 };
 
@@ -40,7 +47,8 @@ const unloadedState: ClientState = {
     languageName: 'aa',
     enthusiasmLevel: 1,
     drawerOpen: false,
-    loggedInUser: ''
+    loggedInUser: '',
+    terminalId: ''
 };
 
 export const reducer: Reducer<ClientState> = (state: ClientState, action: KnownAction) => {
@@ -53,6 +61,8 @@ export const reducer: Reducer<ClientState> = (state: ClientState, action: KnownA
             return { ...state, drawerOpen: !action.forceClose && !state.drawerOpen };
         case 'SET_LOGGEDIN_USER':
             return { ...state, loggedInUser: action.user };
+        case 'SET_TERMINAL_ID':
+            return { ...state, terminalId: action.terminalId };
         default: return state || unloadedState;
     }
 };

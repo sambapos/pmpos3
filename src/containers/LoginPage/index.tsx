@@ -1,7 +1,9 @@
 import * as React from 'react';
+import * as Extender from '../../lib/Extender';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
 import * as ClientStore from '../../store/Client';
+import * as BlockStore from '../../store/Blocks';
 import { WithStyles } from 'material-ui';
 import { RouteComponentProps } from 'react-router';
 import decorate, { Style } from './style';
@@ -9,10 +11,12 @@ import TopBar from '../TopBar';
 import Typography from 'material-ui/Typography/Typography';
 import LoginControl from './LoginControl';
 
+type DispatchType = typeof ClientStore.actionCreators & typeof BlockStore.actionCreators;
+
 export type PageProps =
     ClientStore.ClientState
     & WithStyles<keyof Style>
-    & typeof ClientStore.actionCreators
+    & DispatchType
     & RouteComponentProps<{}>;
 
 class LoginPage extends React.Component<PageProps, {}> {
@@ -25,6 +29,7 @@ class LoginPage extends React.Component<PageProps, {}> {
                     <LoginControl
                         onPinEntered={pin => {
                             this.props.SetLoggedInUser(pin);
+                            this.props.connectProtocol(this.props.terminalId, pin);
                             if (pin && pin !== '' && this.props.location.pathname === '/login') {
                                 this.props.history.push('/');
                             }
@@ -38,5 +43,5 @@ class LoginPage extends React.Component<PageProps, {}> {
 
 export default decorate(connect(
     (state: ApplicationState) => state.client,
-    ClientStore.actionCreators
+    Extender.extend(ClientStore.actionCreators, BlockStore.actionCreators)
 )(LoginPage));

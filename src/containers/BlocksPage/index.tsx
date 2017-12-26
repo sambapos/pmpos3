@@ -14,7 +14,10 @@ import Y from 'yjs/dist/y';
 import BlockList from './BlockList';
 
 export type PageProps =
-    { blocks: IMap<string, IList<any>> }
+    {
+        blocks: IMap<string, IList<any>>,
+        protocol: any
+    }
     & WithStyles<keyof Style>
     & typeof BlocksStore.actionCreators
     & RouteComponentProps<{}>;
@@ -26,13 +29,13 @@ class BlocksPage extends React.Component<PageProps, { type: string, data: string
     }
 
     public handleNewBlock() {
-        console.log('blocks', (window as any).protocol.share.blocks);
-        let blocks = (window as any).protocol.share.blocks;
+        console.log('blocks', this.props.protocol.share.actionLog);
+        let actionLog = this.props.protocol.share.actionLog;
         let bid = this.state.type === 'CREATE_BLOCK' ? uuidv4() : this.state.bid;
-        let actions = blocks.get(bid);
-        console.log('actions', actions);
+        let actions = actionLog.get(bid);
+        console.log('log', actions);
         if (!actions) {
-            blocks.set(bid, Y.Array);
+            actionLog.set(bid, Y.Array);
         } else {
             actions.push([{
                 bid,
@@ -99,7 +102,10 @@ class BlocksPage extends React.Component<PageProps, { type: string, data: string
     }
 }
 
-const mapStateToProps = (state: ApplicationState) => ({ blocks: state.blocks });
+const mapStateToProps = (state: ApplicationState) => ({
+    blocks: state.blocks.get('log'),
+    protocol: state.blocks.get('protocol')
+});
 
 export default decorate(connect(
     mapStateToProps,

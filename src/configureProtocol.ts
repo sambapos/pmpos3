@@ -8,12 +8,16 @@ import ipfsConnector from 'y-ipfs-connector';
 import { Store } from 'redux';
 import { ApplicationState } from './store/index';
 
-export default function configureChat(store: Store<ApplicationState>) {
+yMemory(Y);
+yArray(Y);
+yMap(Y);
+ipfsConnector(Y);
 
-    yMemory(Y);
-    yArray(Y);
-    yMap(Y);
-    ipfsConnector(Y);
+export default function configure(store: Store<ApplicationState>, user: string) {
+
+    if ((<any>window).protocol) {
+        (<any>window).protocol.disconnect();
+    }
 
     const ipfs = new IPFS({
         repo: repo(),
@@ -36,7 +40,7 @@ export default function configureChat(store: Store<ApplicationState>) {
     });
 
     function repo() {
-        return 'ipfs/pubsub-demo/' + Math.random();
+        return 'ipfs/pubsub-demo/' + user ? user : Math.random();
     }
 
     Y({
@@ -50,7 +54,7 @@ export default function configureChat(store: Store<ApplicationState>) {
         },
         share: {
             chat: 'Array',
-            blocks: 'Map'
+            actions: 'Map'
         }
     }).then((y) => {
         (<any>window).protocol = y;
@@ -63,7 +67,7 @@ export default function configureChat(store: Store<ApplicationState>) {
             }
         });
 
-        y.share.blocks.observeDeep(event => {
+        y.share.actions.observeDeep(event => {
             console.log('block event', event);
             if (event.type === 'add') {
                 store.dispatch({
