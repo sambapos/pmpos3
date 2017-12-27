@@ -4,6 +4,8 @@ import NavPage from './containers/NavPage';
 import AboutPage from './containers/AboutPage';
 import DocumentsPage from './containers/DocumentsPage';
 import DocumentPage from './containers/DocumentPage';
+import BlocksPage from './containers/BlocksPage';
+import BlockPage from './containers/BlockPage';
 import TasksPage from './containers/TasksPage';
 import ChatPage from './containers/ChatPage';
 import ActionLogPage from './containers/ActionLogPage';
@@ -18,6 +20,8 @@ export const subRoutes = (
     <div style={{ height: '100%', display: 'flex' }}>
         <Route exact path="/" component={DashboardPage} />
         <Route exact path="/index.html" component={DashboardPage} />
+        <Route exact path="/blocks" component={BlocksPage} />
+        <Route exact path="/block/:id" component={BlockPage} />
         <Route exact path="/documents" component={DocumentsPage} />
         <Route exact path="/document/:id" component={DocumentPage} />
         <Route exact path="/tasks" component={TasksPage} />

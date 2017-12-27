@@ -37,7 +37,7 @@ export default class extends React.Component<NavListProps> {
                 <Divider />
                 <IconListItem mainText="Dashboard" icon="dashboard" onClick={() => this.nav('/')} />
                 <IconListItem mainText="POS" icon="grid_on" onClick={() => this.nav('/')} />
-                <IconListItem mainText="Documents" icon="description" onClick={() => this.nav('/documents')} />
+                <IconListItem mainText="Blocks" icon="description" onClick={() => this.nav('/blocks')} />
                 <IconListItem mainText="Tasks" icon="toc" onClick={() => this.nav('/tasks')} />
                 <IconListItem mainText="Chat" icon="chat" onClick={() => this.nav('/chat')} />
                 <IconListItem mainText="Action Log" icon="short_text" onClick={() => this.nav('/actionlog')} />

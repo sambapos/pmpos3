@@ -1,8 +1,28 @@
+import Block from '../../models/Block';
 
 type RegisterBlockActionAction = {
     type: 'REGISTER_BLOCK_ACTION',
     blockId: string
     payload: any
+};
+
+type LoadBlockAction = {
+    type: 'LOAD_BLOCK'
+    blockId: string
+    payload: Promise<Block>
+};
+
+type LoadBlockSuccessAction = {
+    type: 'LOAD_BLOCK_SUCCESS'
+    payload: Block
+};
+
+type LoadBlockRequestAction = {
+    type: 'LOAD_BLOCK_REQUEST'
+};
+
+type LoadBlockFailAction = {
+    type: 'LOAD_BLOCK_FAIL'
 };
 
 type ConnectProtocolAction = {
@@ -43,4 +63,5 @@ type SetBlockTagAction = { type: 'SET_BLOCK_TAG' } & CustomAction;
 
 export type KnownActions = RegisterBlockActionAction | AddMessageAction
     | ConnectProtocolAction | ConnectProtocolRequestAction | ConnectProtocolSuccessAction | ConnectProtocolFailAction
+    | LoadBlockAction | LoadBlockRequestAction | LoadBlockSuccessAction | LoadBlockFailAction
     | CreateBlockAction | SetBlockTagAction;

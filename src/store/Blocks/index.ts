@@ -7,11 +7,14 @@ import { fail } from 'assert';
 import configureProtocol from './configureProtocol';
 import objectify from './objectify';
 import { KnownActions } from './KnownActions';
+import Block from '../../models/Block';
 
 const initialState = fromJS({
+    chat: [],
     log: {},
     items: {},
-    chat: [],
+    item: undefined,
+    isLoading: false,
     connected: false,
     protocol: undefined
 });
@@ -30,6 +33,17 @@ export const reducer: Reducer<IMap<string, any>> = (
                 date: action.date
             }));
             return state.set('chat', messages);
+        case 'LOAD_BLOCK_REQUEST':
+            return state
+                .set('item', undefined)
+                .set('isLoading', true);
+        case 'LOAD_BLOCK_FAIL':
+            return state.set('isLoading', false);
+        case 'LOAD_BLOCK_SUCCESS':
+            console.log('ls', action.payload);
+            return state
+                .set('item', action.payload)
+                .set('isLoading', false);
         case 'REGISTER_BLOCK_ACTION':
             let actions = state.getIn(['log', action.blockId]);
             if (!actions) { actions = IList<any>(); }
@@ -44,16 +58,19 @@ export const reducer: Reducer<IMap<string, any>> = (
         case 'CONNECT_PROTOCOL_FAIL':
             return state.set('connected', false);
         case 'CREATE_BLOCK': {
-            let block = fromJS({
+            let block = {
                 id: action.data.id
-            });
+            };
             return state.setIn(['items', action.data.id], block);
         }
         case 'SET_BLOCK_TAG': {
             let block = state.getIn(['items', action.blockId]);
+            if (!block.tags) {
+                block.tags = {};
+            }
             for (const prop in action.data) {
                 if (action.data.hasOwnProperty(prop)) {
-                    block = block.setIn(['tags', prop], action.data[prop]);
+                    block.tags[prop] = action.data[prop];
                 }
             }
             return state.setIn(['items', action.blockId], block);
@@ -98,6 +115,18 @@ export const actionCreators = {
             type: type,
             data: objectify(data)
         }]);
+    },
+    loadBlock: (blockId: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
+        dispatch({
+            type: 'LOAD_BLOCK',
+            blockId,
+            payload: new Promise<Block>((resolve, reject) => {
+                let block = getState().blocks.getIn(['items', blockId]);
+                if (block) {
+                    resolve(block);
+                } else { reject(); }
+            })
+        });
     },
     connectProtocol: (terminalId: string, user: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
         let currentProtocol = getState().blocks.get('protocol');
