@@ -4,9 +4,13 @@ export interface Style {
     card: any;
     content: any;
     paper: any;
+    blockTags: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
+    blockTags: {
+        display: 'inline-flex'
+    },
     card: {
         minWidth: 275,
     },

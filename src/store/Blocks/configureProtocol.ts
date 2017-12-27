@@ -39,7 +39,6 @@ export default (
 
     ipfs.once('ready', () => {
         ipfs.id((err, info) => {
-            console.log('ipfs', info);
             if (err) {
                 throw err;
             }
@@ -64,7 +63,6 @@ export default (
         y.share.chat.toArray().forEach(x => dispatchChatEvent(dispatch, x));
 
         y.share.chat.observe(event => {
-            console.log('chat event', event);
             if (event.type === 'insert') {
                 for (let i = 0; i < event.length; i++) {
                     dispatchChatEvent(dispatch, event.values[i]);

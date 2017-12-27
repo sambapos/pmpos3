@@ -7,6 +7,7 @@ import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
 import Block from '../../models/Block';
+import BlockTags from './BlockTags';
 
 export type PageProps =
     {
@@ -30,6 +31,7 @@ class BlockPage extends React.Component<PageProps, {}> {
                     menuCommand={{ icon: 'close', onClick: () => { this.props.history.goBack(); } }}
                 />
                 <p>{this.props.block.id}</p>
+                <BlockTags block={this.props.block} />
             </div>
         );
     }

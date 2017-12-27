@@ -40,7 +40,6 @@ export const reducer: Reducer<IMap<string, any>> = (
         case 'LOAD_BLOCK_FAIL':
             return state.set('isLoading', false);
         case 'LOAD_BLOCK_SUCCESS':
-            console.log('ls', action.payload);
             return state
                 .set('item', action.payload)
                 .set('isLoading', false);
