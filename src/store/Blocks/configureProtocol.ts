@@ -3,11 +3,15 @@ import Y from 'yjs/dist/y';
 import yMemory from 'y-memory/dist/y-memory';
 import yArray from 'y-array/dist/y-array';
 import yMap from 'y-map/dist/y-map';
-import * as ipfsConnector from '../../lib/y-ipfs-connector';
+import yIndexedDb from 'y-indexeddb/dist/y-indexeddb';
+//import * as ipfsConnector from '../../lib/y-ipfs-connector';
+
+import ipfsConnector from 'y-ipfs-connector';
 
 yMemory(Y);
 yArray(Y);
 yMap(Y);
+yIndexedDb(Y);
 ipfsConnector(Y);
 
 import { ApplicationState } from '../index';
@@ -20,7 +24,7 @@ export default (
     cb: (protocol: any) => void) => {
 
     const ipfs = new IPFS({
-        repo: 'ipfs/PM-POS/' + terminalId + '/' + (user ? user : Math.random()),
+        // repo: 'ipfs/PM-POS/' + terminalId + '/' + (user ? user : Math.random()),
         EXPERIMENTAL: {
             pubsub: true
         },
@@ -44,7 +48,7 @@ export default (
 
     Y({
         db: {
-            name: 'memory'
+            name: 'indexeddb'
         },
         connector: {
             name: 'ipfs',
@@ -57,42 +61,51 @@ export default (
         }
     }).then((y) => {
 
-        y.share.chat.toArray().forEach(x => console.log(x));
+        y.share.chat.toArray().forEach(x => dispatchChatEvent(dispatch, x));
 
         y.share.chat.observe(event => {
             console.log('chat event', event);
             if (event.type === 'insert') {
                 for (let i = 0; i < event.length; i++) {
-                    dispatch({
-                        type: 'ADD_MESSAGE',
-                        date: event.values[i].date,
-                        message: event.values[i].message,
-                        user: event.values[i].user,
-                        id: event.values[i].id
-                    });
+                    dispatchChatEvent(dispatch, event.values[i]);
                 }
             }
         });
 
+        y.share.actionLog.keys().forEach(k => {
+            y.share.actionLog.get(k).toArray().forEach(element => {
+                dispatchActionLogEvent(dispatch, k, element);
+            });
+        });
         y.share.actionLog.observeDeep(event => {
             if (event.type === 'add') {
                 event.value.toArray().forEach(element => {
-                    dispatch({
-                        type: 'REGISTER_BLOCK_ACTION',
-                        blockId: event.name,
-                        payload: element
-                    });
+                    dispatchActionLogEvent(dispatch, event.name, element);
                 });
             } else if (event.type === 'insert') {
                 event.values.forEach(element => {
-                    dispatch({
-                        type: 'REGISTER_BLOCK_ACTION',
-                        blockId: event.path[0],
-                        payload: element
-                    });
+                    dispatchActionLogEvent(dispatch, event.path[0], element);
                 });
             }
         });
         cb(y);
     });
 };
+
+function dispatchChatEvent(dispatch: any, value: any) {
+    dispatch({
+        type: 'ADD_MESSAGE',
+        date: value.date,
+        message: value.message,
+        user: value.user,
+        id: value.id
+    });
+}
+
+function dispatchActionLogEvent(dispatch: any, key: any, value: any) {
+    dispatch({
+        type: 'REGISTER_BLOCK_ACTION',
+        blockId: key,
+        payload: value
+    });
+}

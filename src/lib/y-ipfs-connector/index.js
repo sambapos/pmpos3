@@ -138,6 +138,7 @@ function extend(Y) {
     _processQueue(item, callback) {
       const from = item.from
       const message = item.message
+      console.log('from', item);
       if (from.substring(0, from.indexOf('@')) === this._ipfsUserId) {
         // ignore message from self
         callback()
