@@ -12,7 +12,8 @@ const initialState = fromJS({
     log: {},
     items: {},
     chat: [],
-    connected: false
+    connected: false,
+    protocol: undefined
 });
 
 export const reducer: Reducer<IMap<string, any>> = (
@@ -42,6 +43,21 @@ export const reducer: Reducer<IMap<string, any>> = (
             return state.set('connected', false);
         case 'CONNECT_PROTOCOL_FAIL':
             return state.set('connected', false);
+        case 'CREATE_BLOCK': {
+            let block = fromJS({
+                id: action.data.id
+            });
+            return state.setIn(['items', action.data.id], block);
+        }
+        case 'SET_BLOCK_TAG': {
+            let block = state.getIn(['items', action.blockId]);
+            for (const prop in action.data) {
+                if (action.data.hasOwnProperty(prop)) {
+                    block = block.setIn(['tags', prop], action.data[prop]);
+                }
+            }
+            return state.setIn(['items', action.blockId], block);
+        }
         default:
             return state;
     }
@@ -51,7 +67,7 @@ export const actionCreators = {
     addMessage: (message: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
         getState().blocks.get('protocol').share.chat.push([{
             id: uuidv4(),
-            date: Date.now(),
+            date: new Date().getTime(),
             message: message,
             user: getState().client.loggedInUser
         }]);
@@ -66,7 +82,7 @@ export const actionCreators = {
         let bid = blockId;
         if (type === 'CREATE_BLOCK') {
             bid = uuidv4();
-            data = 'bid:' + bid;
+            data = 'id:' + bid;
         }
 
         let actions = actionLog.get(bid);
@@ -76,18 +92,17 @@ export const actionCreators = {
         }
         actions.push([{
             id: uuidv4(),
-            time: Date.now(),
+            time: new Date().getTime(),
             user: getState().client.loggedInUser,
             blockId: bid,
             type: type,
             data: objectify(data)
         }]);
-
     },
     connectProtocol: (terminalId: string, user: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
         let currentProtocol = getState().blocks.get('protocol');
         if (currentProtocol) {
-            currentProtocol.close();
+            return;
         }
 
         dispatch({

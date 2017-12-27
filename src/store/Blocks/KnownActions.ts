@@ -33,5 +33,14 @@ type AddMessageAction = {
     date: number
 };
 
+type CustomAction = {
+    blockId: string
+    data: any
+};
+
+type CreateBlockAction = { type: 'CREATE_BLOCK' } & CustomAction;
+type SetBlockTagAction = { type: 'SET_BLOCK_TAG' } & CustomAction;
+
 export type KnownActions = RegisterBlockActionAction | AddMessageAction
-    | ConnectProtocolAction | ConnectProtocolRequestAction | ConnectProtocolSuccessAction | ConnectProtocolFailAction;
+    | ConnectProtocolAction | ConnectProtocolRequestAction | ConnectProtocolSuccessAction | ConnectProtocolFailAction
+    | CreateBlockAction | SetBlockTagAction;

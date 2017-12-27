@@ -4,7 +4,7 @@ import yMemory from 'y-memory/dist/y-memory';
 import yArray from 'y-array/dist/y-array';
 import yMap from 'y-map/dist/y-map';
 import yIndexedDb from 'y-indexeddb/dist/y-indexeddb';
-//import * as ipfsConnector from '../../lib/y-ipfs-connector';
+// import * as ipfsConnector from '../../lib/y-ipfs-connector';
 
 import ipfsConnector from 'y-ipfs-connector';
 
@@ -107,5 +107,14 @@ function dispatchActionLogEvent(dispatch: any, key: any, value: any) {
         type: 'REGISTER_BLOCK_ACTION',
         blockId: key,
         payload: value
+    });
+    dispatchPayload(dispatch, value);
+}
+
+function dispatchPayload(dispatch: any, payload: any) {
+    dispatch({
+        type: payload.type,
+        blockId: payload.blockId,
+        data: JSON.parse(payload.data)
     });
 }

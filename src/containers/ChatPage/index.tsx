@@ -38,8 +38,8 @@ class ChatPage extends React.Component<PageProps, { message: string, enabled: bo
                         {
                             this.props.chat.map(x => {
                                 return x && (
-                                    <ListItem key={x.get('id')}>
-                                        {`${x.get('user')}:${x.get('message')}`}
+                                    <ListItem dense key={x.get('id')}>
+                                        {x.get('user') + ': ' + x.get('message')}
                                     </ListItem>
                                 );
                             })
