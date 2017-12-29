@@ -4,9 +4,9 @@ import yMemory from 'y-memory/dist/y-memory';
 import yArray from 'y-array/dist/y-array';
 import yMap from 'y-map/dist/y-map';
 import yIndexedDb from 'y-indexeddb/dist/y-indexeddb';
-// import * as ipfsConnector from '../../lib/y-ipfs-connector';
+import * as ipfsConnector from '../../lib/y-ipfs-connector';
 
-import ipfsConnector from 'y-ipfs-connector';
+// import ipfsConnector from 'y-ipfs-connector';
 
 yMemory(Y);
 yArray(Y);
@@ -24,7 +24,7 @@ export default (
     cb: (protocol: any) => void) => {
 
     const ipfs = new IPFS({
-        // repo: 'ipfs/PM-POS/' + terminalId + '/' + (user ? user : Math.random()),
+        repo: 'ipfs/PM-POS/' + terminalId + '/' + (user ? user : Math.random()),
         EXPERIMENTAL: {
             pubsub: true
         },
@@ -47,7 +47,7 @@ export default (
 
     Y({
         db: {
-            name: 'indexeddb'
+            name: 'memory'
         },
         connector: {
             name: 'ipfs',
@@ -93,7 +93,7 @@ export default (
 function dispatchChatEvent(dispatch: any, value: any) {
     dispatch({
         type: 'ADD_MESSAGE',
-        date: value.date,
+        time: value.time,
         message: value.message,
         user: value.user,
         id: value.id

@@ -20,9 +20,6 @@ export type PageProps =
     & RouteComponentProps<{}>;
 
 class LoginPage extends React.Component<PageProps, {}> {
-    componentDidMount() {
-        this.props.connectProtocol(this.props.terminalId, '');
-    }
     public render() {
         return (
             <div className={this.props.classes.root}>
@@ -32,6 +29,7 @@ class LoginPage extends React.Component<PageProps, {}> {
                     <LoginControl
                         onPinEntered={pin => {
                             this.props.SetLoggedInUser(pin);
+                            this.props.connectProtocol(this.props.terminalId, pin);
                             if (pin && pin !== '' && this.props.location.pathname === '/login') {
                                 this.props.history.push('/');
                             }

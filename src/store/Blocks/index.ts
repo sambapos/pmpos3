@@ -16,6 +16,7 @@ const initialState = fromJS({
     item: undefined,
     isLoading: false,
     connected: false,
+    updateFlag: false,
     protocol: undefined
 });
 
@@ -30,7 +31,7 @@ export const reducer: Reducer<IMap<string, any>> = (
                 id: action.id,
                 message: action.message,
                 user: action.user,
-                date: action.date
+                time: action.time
             }));
             return state.set('chat', messages);
         case 'LOAD_BLOCK_REQUEST':
@@ -83,7 +84,7 @@ export const actionCreators = {
     addMessage: (message: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
         getState().blocks.get('protocol').share.chat.push([{
             id: uuidv4(),
-            date: new Date().getTime(),
+            time: new Date().getTime(),
             message: message,
             user: getState().client.loggedInUser
         }]);
@@ -120,7 +121,9 @@ export const actionCreators = {
             type: 'LOAD_BLOCK',
             blockId,
             payload: new Promise<Block>((resolve, reject) => {
+                let currentBlock = getState().blocks.get('item');
                 let block = getState().blocks.getIn(['items', blockId]);
+                console.log('compare', currentBlock === block);
                 if (block) {
                     resolve(block);
                 } else { reject(); }

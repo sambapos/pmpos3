@@ -8,6 +8,7 @@ import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
 import Block from '../../models/Block';
 import BlockTags from './BlockTags';
+import Paper from 'material-ui/Paper/Paper';
 
 export type PageProps =
     {
@@ -25,13 +26,15 @@ class BlockPage extends React.Component<PageProps, {}> {
     public render() {
         if (this.props.isLoading || !this.props.block) { return <div>Loading</div>; }
         return (
-            <div>
+            <div className={this.props.classes.content}>
                 <TopBar
                     title="Block"
                     menuCommand={{ icon: 'close', onClick: () => { this.props.history.goBack(); } }}
                 />
-                <p>{this.props.block.id}</p>
-                <BlockTags block={this.props.block} />
+                <Paper className={this.props.classes.paper}>
+                    <p>{this.props.block.id}</p>
+                    <BlockTags block={this.props.block} />
+                </Paper>
             </div>
         );
     }

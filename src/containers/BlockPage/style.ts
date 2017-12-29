@@ -5,17 +5,24 @@ export interface Style {
     content: any;
     paper: any;
     blockTags: any;
+    blockTag: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     blockTags: {
-        display: 'inline-flex'
+        display: 'inline-flex',
+        flexWrap: 'wrap'
+    },
+    blockTag: {
+        marginBottom: spacing.unit,
+        marginRight: spacing.unit
     },
     card: {
         minWidth: 275,
     },
     content: {
         height: '100%',
+        width: '100%',
         display: 'flex',
         [breakpoints.down('sm')]: {
             flexFlow: 'column'
@@ -27,13 +34,12 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     },
     paper: {
         [breakpoints.down('sm')]: {
-            marginTop: spacing.unit * 3,
+            marginTop: spacing.unit,
+            width: '100%'
         },
         [breakpoints.up('sm')]: {
             marginLeft: spacing.unit * 3,
         },
-
-        flex: '1 1 auto',
-        overflowX: 'auto' as 'auto',
+        padding: spacing.unit
     }
 }));

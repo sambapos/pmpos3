@@ -9,7 +9,11 @@ const BlockTags = (props: { block: Block } & WithStyles<keyof Style>) => {
     return (
         <div className={props.classes.blockTags}>
             {Object.keys(props.block.tags).map(prop => {
-                return <Chip key={prop} label={`${prop}: ${props.block.tags[prop]}`} />;
+                return <Chip
+                    className={props.classes.blockTag}
+                    key={prop}
+                    label={`${prop}: ${props.block.tags[prop]}`}
+                />;
             })}
         </div>
     );

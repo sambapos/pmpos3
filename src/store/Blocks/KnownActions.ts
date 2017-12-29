@@ -50,7 +50,7 @@ type AddMessageAction = {
     id: string
     user: string
     message: string
-    date: number
+    time: number
 };
 
 type CustomAction = {
