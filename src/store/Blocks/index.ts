@@ -121,9 +121,7 @@ export const actionCreators = {
             type: 'LOAD_BLOCK',
             blockId,
             payload: new Promise<Block>((resolve, reject) => {
-                let currentBlock = getState().blocks.get('item');
                 let block = getState().blocks.getIn(['items', blockId]);
-                console.log('compare', currentBlock === block);
                 if (block) {
                     resolve(block);
                 } else { reject(); }
