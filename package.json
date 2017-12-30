@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "history": "^4.7.2",
-    "immutable": "^4.0.0-rc.9",
+    "immutable": "^3.8.2",
     "ipfs": "^0.27.5",
     "ipfs-pubsub-room": "^1.1.4",
     "material-ui": "^1.0.0-beta.23",

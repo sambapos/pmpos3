@@ -10,6 +10,8 @@ import TasksPage from './containers/TasksPage';
 import ChatPage from './containers/ChatPage';
 import ActionLogPage from './containers/ActionLogPage';
 import LoginPage from './containers/LoginPage';
+import CardsPage from './containers/CardsPage';
+import CardPage from './containers/CardPage';
 import { Route } from 'react-router-dom';
 
 export const routes = (
@@ -29,5 +31,7 @@ export const subRoutes = (
         <Route exact path="/actionlog" component={ActionLogPage} />
         <Route exact path="/about" component={AboutPage} />
         <Route exact path="/login" component={LoginPage} />
+        <Route exact path="/cards" component={CardsPage} />
+        <Route exact path="/card/:id?" component={CardPage} />
     </div>
 );

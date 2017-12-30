@@ -11,7 +11,7 @@ export default (props: {
     return (
         <List dense>
             {
-                props.blocks.entrySeq().map(([bid, actions]) => {
+                props.blocks.entrySeq().map(([bid, actions]: any[]) => {
                     return (
                         <ActionLogListItem
                             key={bid}

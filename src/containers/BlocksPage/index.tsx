@@ -22,7 +22,7 @@ class BlocksPage extends React.Component<PageProps, {}> {
                 <TopBar title="Blocks" />
                 <ul>
                     {
-                        this.props.blocks.entrySeq().map(([id, block]) => {
+                        this.props.blocks.entrySeq().map(([id, block]: any[]) => {
                             return (
                                 <li key={id}>
                                     <a

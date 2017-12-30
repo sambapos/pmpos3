@@ -2,8 +2,9 @@ import * as Client from './Client';
 import * as Tasks from './Tasks';
 import * as Documents from './Documents';
 import * as Blocks from './Blocks';
-import * as Cards from './Cards';
+import * as Cards from './Cards/index';
 import { List, Map } from 'immutable';
+import { StateRecord } from './Cards/models';
 
 // The top-level state object
 export interface ApplicationState {
@@ -11,7 +12,7 @@ export interface ApplicationState {
     tasks: List<Map<any, any>>;
     documents: Map<any, any>;
     blocks: Map<string, any>;
-    cards: Cards.StateRecord;
+    cards: StateRecord;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using

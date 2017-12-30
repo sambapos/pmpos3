@@ -2,9 +2,8 @@ import { Reducer } from 'redux';
 import { Map as IMap, List } from 'immutable';
 import { AppThunkAction } from '../appThunkAction';
 import { uuidv4 } from '../../lib/uuid';
-import { CardRecord, makeCard, Card } from '../../models/Card';
-import { TypedRecord } from 'typed-immutable-record/dist/src/typed.record';
-import { makeTypedFactory } from 'typed-immutable-record/dist/src/typed.factory';
+import { ActionRecord, StateRecord, CardDataRecord, CommitRecord, CardRecord } from './models';
+import { makeCard, makeState, makeAction, makeCommit, makeCardData } from './makers';
 
 type AddCardAction = {
     type: 'ADD_CARD'
@@ -38,58 +37,6 @@ type LoadCardFailAction = {
 
 type KnownActions = AddCardAction | AddPendingActionAction | CommitCardAction
     | LoadCardAction | LoadCardRequestAction | LoadCardSuccessAction | LoadCardFailAction;
-
-interface Action {
-    actionType: string;
-    data: any;
-}
-
-interface ActionRecord extends TypedRecord<ActionRecord>, Action { }
-
-const makeAction = makeTypedFactory<Action, ActionRecord>({
-    actionType: '',
-    data: {}
-});
-
-interface Commit {
-    state: CardRecord;
-    actions: List<ActionRecord>;
-}
-
-interface CommitRecord extends TypedRecord<CommitRecord>, Commit { }
-
-const makeCommit = makeTypedFactory<Commit, CommitRecord>({
-    state: makeCard(),
-    actions: List<ActionRecord>()
-});
-
-interface CardData {
-    card: CardRecord;
-    commits: List<CommitRecord>;
-}
-
-interface CardDataRecord extends TypedRecord<CardDataRecord>, CardData { }
-
-const makeCardData = makeTypedFactory<CardData, CardDataRecord>({
-    card: makeCard(),
-    commits: List<CommitRecord>()
-});
-
-interface State {
-    cardDataMap: IMap<string, CardDataRecord>;
-    currentCard: CardRecord;
-    pendingActions: List<ActionRecord>;
-    isLoaded: boolean;
-}
-
-export interface StateRecord extends TypedRecord<StateRecord>, State { }
-
-const makeState = makeTypedFactory<State, StateRecord>({
-    cardDataMap: IMap<string, CardDataRecord>(),
-    currentCard: makeCard(),
-    pendingActions: List<ActionRecord>(),
-    isLoaded: false
-});
 
 const cardReducer = (
     state: CardRecord = makeCard(),
@@ -136,10 +83,14 @@ export const reducer: Reducer<StateRecord> = (
                 .set('currentCard', cardReducer(undefined, cardCreateAction));
         }
         case 'COMMIT_CARD': {
-            let card = state.get('currentCard') as CardRecord;
+            let actions = state.pendingActions;
+            if (actions.count() === 0) {
+                return resetCurrentCard(state);
+            }
+            let card = state.currentCard;
             let commit = makeCommit({
                 state: card,
-                actions: state.get('pendingActions')
+                actions: actions
             });
             let cardData = state.getIn(['cardDataMap', card.id]) as CardDataRecord ||
                 makeCardData({
@@ -148,17 +99,12 @@ export const reducer: Reducer<StateRecord> = (
             cardData = cardData
                 .set('card', card)
                 .update('commits', list => list.push(commit));
-            return state
-                .set('isLoaded', false)
-                .set('pendingActions', state.pendingActions.clear())
-                .set('currentCard', makeCard())
+            state = state
                 .setIn(['cardDataMap', card.id], cardData);
+            return resetCurrentCard(state);
         }
         case 'LOAD_CARD_REQUEST': {
-            return state
-                .set('currentCard', makeCard())
-                .set('pendingActions', state.pendingActions.clear())
-                .set('isLoaded', false);
+            return resetCurrentCard(state);
         }
         case 'LOAD_CARD_SUCCESS': {
             let result = state
@@ -175,6 +121,13 @@ export const reducer: Reducer<StateRecord> = (
     }
 };
 
+function resetCurrentCard(state: StateRecord) {
+    return state
+        .set('currentCard', makeCard())
+        .set('pendingActions', state.pendingActions.clear())
+        .set('isLoaded', false);
+}
+
 export const actionCreators = {
     addCard: (): AppThunkAction<KnownActions> => (dispatch, getState) => {
         dispatch({
@@ -186,10 +139,10 @@ export const actionCreators = {
             type: 'COMMIT_CARD'
         });
     },
-    executeCardAction: (actionType: string, data: string):
+    executeCardAction: (actionType: string, data: any):
         AppThunkAction<KnownActions> => (dispatch, getState) => {
             let actionData = makeAction({
-                actionType, data: JSON.parse(data)
+                actionType, data
             });
             dispatch({
                 type: 'ADD_PENDING_ACTION', action: actionData
