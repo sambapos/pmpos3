@@ -1,4 +1,4 @@
-import { TypedRecord } from 'typed-immutable-record';
+import { TypedRecord } from '../../lib/typed-record';
 import { Map as IMap, List } from 'immutable';
 
 export interface Card {
@@ -17,6 +17,7 @@ export interface Action {
 export interface ActionRecord extends TypedRecord<ActionRecord>, Action { }
 
 export interface Commit {
+    id: string;
     state: CardRecord;
     actions: List<ActionRecord>;
 }
@@ -31,10 +32,11 @@ export interface CardData {
 export interface CardDataRecord extends TypedRecord<CardDataRecord>, CardData { }
 
 export interface State {
-    cardDataMap: IMap<string, CardDataRecord>;
-    currentCard: CardRecord;
+    cards: List<CardRecord>;
+    currentCardData: CardDataRecord;
     pendingActions: List<ActionRecord>;
     isLoaded: boolean;
+    protocol: any;
 }
 
 export interface StateRecord extends TypedRecord<StateRecord>, State { }

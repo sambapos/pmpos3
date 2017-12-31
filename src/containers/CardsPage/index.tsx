@@ -5,13 +5,12 @@ import { RouteComponentProps } from 'react-router';
 import { WithStyles } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
-import { Map as IMap } from 'immutable';
+import { List } from 'immutable';
 import TopBar from '../TopBar';
-import { CardData, CardDataRecord } from '../../store/Cards/models';
-import { makeDeepCardData } from '../../store/Cards/makers';
+import { CardRecord } from '../../store/Cards/models';
 
 export type PageProps =
-    { cards: IMap<string, CardDataRecord> }
+    { cards: List<CardRecord> }
     & WithStyles<keyof Style>
     & typeof CardStore.actionCreators
     & RouteComponentProps<{}>;
@@ -30,25 +29,19 @@ class CardsPage extends React.Component<PageProps, {}> {
                 </button>
                 <ul>
                     {
-                        this.props.cards.entrySeq().map(([id, map]: any[]) => {
-                            return (
-                                <li key={id}>
+                        this.props.cards.map(card => {
+                            return card && (
+                                <li key={card.id}>
                                     <a
                                         href="#"
                                         onClick={(e) => {
-                                            let card = this.props.cards.get(id);
-                                            console.log('cardDataRecord1', card);
-                                            let js = card.toJS() as CardData;
-                                            console.log('cardData', js);
-                                            let cardDataRecord = makeDeepCardData(js);
-                                            console.log('cardDataRecord2', cardDataRecord);
-                                            this.props.history.push('/card/' + id);
+                                            this.props.history.push('/card/' + card.id);
                                             e.preventDefault();
                                         }}
                                     >
-                                        {id}
+                                        {card.id}
                                         <br />
-                                        {map.card.time}
+                                        {card.time}
                                     </a>
                                 </li>
                             );
@@ -59,8 +52,9 @@ class CardsPage extends React.Component<PageProps, {}> {
         );
     }
 }
+
 const mapStateToProps = (state: ApplicationState) => ({
-    cards: state.cards.cardDataMap
+    cards: state.cards.cards
 });
 
 export default decorate(connect(

@@ -1,4 +1,4 @@
-import { makeTypedFactory } from 'typed-immutable-record';
+import { makeTypedFactory } from '../../lib/typed-record';
 import {
     Action, ActionRecord, Commit, CommitRecord, Card,
     CardRecord, CardData, CardDataRecord, State, StateRecord
@@ -17,6 +17,7 @@ export const makeAction = makeTypedFactory<Action, ActionRecord>({
 });
 
 export const makeCommit = makeTypedFactory<Commit, CommitRecord>({
+    id: '',
     state: makeCard(),
     actions: List<ActionRecord>()
 });
@@ -27,10 +28,11 @@ export const makeCardData = makeTypedFactory<CardData, CardDataRecord>({
 });
 
 export const makeState = makeTypedFactory<State, StateRecord>({
-    cardDataMap: IMap<string, CardDataRecord>(),
-    currentCard: makeCard(),
+    currentCardData: makeCardData(),
     pendingActions: List<ActionRecord>(),
-    isLoaded: false
+    cards: List<CardRecord>(),
+    isLoaded: false,
+    protocol: undefined
 });
 
 export const makeDeepCardData = (cardData: CardData): CardDataRecord => {
@@ -44,6 +46,7 @@ export const makeDeepCardData = (cardData: CardData): CardDataRecord => {
 
 export const makeDeepCommit = (commit: Commit): CommitRecord => {
     return makeCommit({
+        id: commit.id,
         state: makeDeepCard(commit.state),
         actions: List<ActionRecord>(commit.actions.map(action => makeAction(action)))
     });

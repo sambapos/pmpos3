@@ -56,12 +56,20 @@ export default (
         },
         share: {
             chat: 'Array',
-            actionLog: 'Map'
+            actionLog: 'Map',
+            commits: 'Map'
         }
     }).then((y) => {
+        dispatchCommitProtocol(dispatch, y.share.commits);
+
+        dispatchCommitEvent(dispatch);
+
+        y.share.commits.observe(event => {
+            console.log('event', event);
+            dispatchCommitEvent(dispatch);
+        });
 
         y.share.chat.toArray().forEach(x => dispatchChatEvent(dispatch, x));
-
         y.share.chat.observe(event => {
             if (event.type === 'insert') {
                 for (let i = 0; i < event.length; i++) {
@@ -89,6 +97,19 @@ export default (
         cb(y);
     });
 };
+
+function dispatchCommitProtocol(dispatch: any, protocol: any) {
+    dispatch({
+        type: 'SET_COMMIT_PROTOCOL',
+        protocol
+    });
+}
+
+function dispatchCommitEvent(dispatch: any) {
+    dispatch({
+        type: 'COMMIT_RECEIVED'
+    });
+}
 
 function dispatchChatEvent(dispatch: any, value: any) {
     dispatch({

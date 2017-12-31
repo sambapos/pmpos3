@@ -2,8 +2,17 @@ import { Reducer } from 'redux';
 import { Map as IMap, List } from 'immutable';
 import { AppThunkAction } from '../appThunkAction';
 import { uuidv4 } from '../../lib/uuid';
-import { ActionRecord, StateRecord, CardDataRecord, CommitRecord, CardRecord } from './models';
-import { makeCard, makeState, makeAction, makeCommit, makeCardData } from './makers';
+import { ActionRecord, StateRecord, CardRecord, CardDataRecord, CommitRecord } from './models';
+import { makeCard, makeState, makeAction, makeCardData, makeDeepCard, makeDeepCardData } from './makers';
+
+type SetCommitProtocolAction = {
+    type: 'SET_COMMIT_PROTOCOL',
+    protocol: any
+};
+
+type CommitReceivedAction = {
+    type: 'COMMIT_RECEIVED'
+};
 
 type AddCardAction = {
     type: 'ADD_CARD'
@@ -21,7 +30,7 @@ type AddPendingActionAction = {
 type LoadCardAction = {
     type: 'LOAD_CARD'
     cardId: String
-    payload: Promise<CardRecord>
+    payload: Promise<CardDataRecord>
 };
 
 type LoadCardRequestAction = {
@@ -29,14 +38,15 @@ type LoadCardRequestAction = {
 };
 type LoadCardSuccessAction = {
     type: 'LOAD_CARD_SUCCESS'
-    payload: CardRecord
+    payload: CardDataRecord
 };
 type LoadCardFailAction = {
     type: 'LOAD_DOCUMENT_FAIL'
 };
 
-type KnownActions = AddCardAction | AddPendingActionAction | CommitCardAction
-    | LoadCardAction | LoadCardRequestAction | LoadCardSuccessAction | LoadCardFailAction;
+type KnownActions = AddCardAction | AddPendingActionAction | CommitCardAction | CommitReceivedAction
+    | LoadCardAction | LoadCardRequestAction | LoadCardSuccessAction | LoadCardFailAction
+    | SetCommitProtocolAction;
 
 const cardReducer = (
     state: CardRecord = makeCard(),
@@ -65,7 +75,7 @@ export const reducer: Reducer<StateRecord> = (
     switch (action.type) {
         case 'ADD_PENDING_ACTION': {
             return state
-                .update('currentCard', current => {
+                .updateIn(['currentCardData', 'card'], current => {
                     return cardReducer(current, action.action);
                 })
                 .update('pendingActions', list => list.push(action.action));
@@ -80,27 +90,19 @@ export const reducer: Reducer<StateRecord> = (
             return state
                 .set('isLoaded', true)
                 .set('pendingActions', state.pendingActions.clear().push(cardCreateAction))
-                .set('currentCard', cardReducer(undefined, cardCreateAction));
+                .setIn(['currentCardData', 'card'], cardReducer(undefined, cardCreateAction));
+        }
+        case 'SET_COMMIT_PROTOCOL': {
+            return state.set('protocol', action.protocol);
+        }
+        case 'COMMIT_RECEIVED': {
+            return state.update('cards', list => {
+                return List<CardRecord>(state.protocol.keys().map(key => {
+                    return makeDeepCard(state.protocol.get(key).card);
+                }));
+            });
         }
         case 'COMMIT_CARD': {
-            let actions = state.pendingActions;
-            if (actions.count() === 0) {
-                return resetCurrentCard(state);
-            }
-            let card = state.currentCard;
-            let commit = makeCommit({
-                state: card,
-                actions: actions
-            });
-            let cardData = state.getIn(['cardDataMap', card.id]) as CardDataRecord ||
-                makeCardData({
-                    card, commits: List<CommitRecord>()
-                });
-            cardData = cardData
-                .set('card', card)
-                .update('commits', list => list.push(commit));
-            state = state
-                .setIn(['cardDataMap', card.id], cardData);
             return resetCurrentCard(state);
         }
         case 'LOAD_CARD_REQUEST': {
@@ -108,7 +110,7 @@ export const reducer: Reducer<StateRecord> = (
         }
         case 'LOAD_CARD_SUCCESS': {
             let result = state
-                .set('currentCard', action.payload)
+                .set('currentCardData', action.payload)
                 .set('isLoaded', true);
             return result;
         }
@@ -123,7 +125,7 @@ export const reducer: Reducer<StateRecord> = (
 
 function resetCurrentCard(state: StateRecord) {
     return state
-        .set('currentCard', makeCard())
+        .set('currentCardData', makeCardData())
         .set('pendingActions', state.pendingActions.clear())
         .set('isLoaded', false);
 }
@@ -152,9 +154,14 @@ export const actionCreators = {
         dispatch({
             type: 'LOAD_CARD',
             cardId: id,
-            payload: new Promise<CardRecord>(resolve => {
-                let card = getState().cards.cardDataMap.getIn([id, 'card']);
-                resolve(card);
+            payload: new Promise<CardDataRecord>(resolve => {
+                let cardData = makeDeepCardData(getState().cards.protocol.get(id));
+                let cardActions = cardData.commits.flatMap((x: CommitRecord) => x.actions);
+                let card = cardActions.reduce(
+                    (c: CardRecord, action: ActionRecord) => cardReducer(c, action),
+                    makeCard());
+                cardData = cardData.set('card', card);
+                resolve(cardData);
             })
         });
     }
