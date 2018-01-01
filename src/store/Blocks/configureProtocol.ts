@@ -16,6 +16,7 @@ ipfsConnector(Y);
 
 import { ApplicationState } from '../index';
 import { KnownActions } from './KnownActions';
+import { Commit } from '../Cards/models';
 
 export default (
     terminalId: string, user: string,
@@ -57,16 +58,16 @@ export default (
         share: {
             chat: 'Array',
             actionLog: 'Map',
-            commits: 'Map'
+            commits: 'Array'
         }
     }).then((y) => {
         dispatchCommitProtocol(dispatch, y.share.commits);
 
-        dispatchCommitEvent(dispatch);
+        dispatchCommitEvent(dispatch, y.share.commits.toArray());
 
         y.share.commits.observe(event => {
             console.log('event', event);
-            dispatchCommitEvent(dispatch);
+            dispatchCommitEvent(dispatch, event.values);
         });
 
         y.share.chat.toArray().forEach(x => dispatchChatEvent(dispatch, x));
@@ -105,9 +106,10 @@ function dispatchCommitProtocol(dispatch: any, protocol: any) {
     });
 }
 
-function dispatchCommitEvent(dispatch: any) {
+function dispatchCommitEvent(dispatch: any, values: Commit[]) {
     dispatch({
-        type: 'COMMIT_RECEIVED'
+        type: 'COMMIT_RECEIVED',
+        values
     });
 }
 

@@ -1,9 +1,8 @@
 import { Reducer } from 'redux';
-import { Map as IMap, List } from 'immutable';
 import { AppThunkAction } from '../appThunkAction';
 import { uuidv4 } from '../../lib/uuid';
-import { ActionRecord, StateRecord, CardRecord, CardDataRecord, CommitRecord } from './models';
-import { makeCard, makeState, makeAction, makeCardData, makeDeepCard, makeDeepCardData } from './makers';
+import { ActionRecord, StateRecord, CardRecord, Commit } from './models';
+import CommitList from './CommitList';
 
 type SetCommitProtocolAction = {
     type: 'SET_COMMIT_PROTOCOL',
@@ -11,7 +10,8 @@ type SetCommitProtocolAction = {
 };
 
 type CommitReceivedAction = {
-    type: 'COMMIT_RECEIVED'
+    type: 'COMMIT_RECEIVED',
+    values: Commit[]
 };
 
 type AddCardAction = {
@@ -30,16 +30,18 @@ type AddPendingActionAction = {
 type LoadCardAction = {
     type: 'LOAD_CARD'
     cardId: String
-    payload: Promise<CardDataRecord>
+    payload: Promise<CardRecord>
 };
 
 type LoadCardRequestAction = {
     type: 'LOAD_CARD_REQUEST'
 };
+
 type LoadCardSuccessAction = {
     type: 'LOAD_CARD_SUCCESS'
-    payload: CardDataRecord
+    payload: CardRecord
 };
+
 type LoadCardFailAction = {
     type: 'LOAD_DOCUMENT_FAIL'
 };
@@ -48,40 +50,22 @@ type KnownActions = AddCardAction | AddPendingActionAction | CommitCardAction | 
     | LoadCardAction | LoadCardRequestAction | LoadCardSuccessAction | LoadCardFailAction
     | SetCommitProtocolAction;
 
-const cardReducer = (
-    state: CardRecord = makeCard(),
-    action: ActionRecord
-) => {
-    switch (action.actionType) {
-        case 'CREATE_CARD': {
-            return makeCard({
-                id: action.data.id,
-                time: action.data.time,
-                tags: IMap<string, string>()
-            });
-        }
-        case 'SET_CARD_TAG': {
-            return state.setIn(['tags', action.data.tagName], action.data.tagValue);
-        }
-        default:
-            return state;
-    }
-};
+const commitList = new CommitList();
 
 export const reducer: Reducer<StateRecord> = (
-    state: StateRecord = makeState(),
+    state: StateRecord = new StateRecord(),
     action: KnownActions
 ) => {
     switch (action.type) {
         case 'ADD_PENDING_ACTION': {
             return state
-                .updateIn(['currentCardData', 'card'], current => {
-                    return cardReducer(current, action.action);
+                .update('currentCard', current => {
+                    return commitList.applyAction(current, action.action);
                 })
                 .update('pendingActions', list => list.push(action.action));
         }
         case 'ADD_CARD': {
-            let cardCreateAction = makeAction({
+            let cardCreateAction = new ActionRecord({
                 actionType: 'CREATE_CARD', data: {
                     id: uuidv4(),
                     time: new Date().getTime()
@@ -90,17 +74,14 @@ export const reducer: Reducer<StateRecord> = (
             return state
                 .set('isLoaded', true)
                 .set('pendingActions', state.pendingActions.clear().push(cardCreateAction))
-                .setIn(['currentCardData', 'card'], cardReducer(undefined, cardCreateAction));
+                .set('currentCard', commitList.applyAction(undefined, cardCreateAction));
         }
         case 'SET_COMMIT_PROTOCOL': {
             return state.set('protocol', action.protocol);
         }
         case 'COMMIT_RECEIVED': {
-            return state.update('cards', list => {
-                return List<CardRecord>(state.protocol.keys().map(key => {
-                    return makeDeepCard(state.protocol.get(key).card);
-                }));
-            });
+            commitList.addCommits(action.values);
+            return state.set('cards', commitList.getCards());
         }
         case 'COMMIT_CARD': {
             return resetCurrentCard(state);
@@ -110,7 +91,7 @@ export const reducer: Reducer<StateRecord> = (
         }
         case 'LOAD_CARD_SUCCESS': {
             let result = state
-                .set('currentCardData', action.payload)
+                .set('currentCard', action.payload)
                 .set('isLoaded', true);
             return result;
         }
@@ -125,7 +106,7 @@ export const reducer: Reducer<StateRecord> = (
 
 function resetCurrentCard(state: StateRecord) {
     return state
-        .set('currentCardData', makeCardData())
+        .set('currentCard', new CardRecord())
         .set('pendingActions', state.pendingActions.clear())
         .set('isLoaded', false);
 }
@@ -137,13 +118,25 @@ export const actionCreators = {
         });
     },
     commitCard: (): AppThunkAction<KnownActions> => (dispatch, getState) => {
+        const state = getState().cards;
+
+        if (state.pendingActions.count() > 0) {
+            let commit = {
+                id: uuidv4(),
+                cardId: state.currentCard.id,
+                state: state.currentCard.toJS(),
+                actions: state.pendingActions
+            };
+            state.protocol.push([commit]);
+        }
+
         dispatch({
             type: 'COMMIT_CARD'
         });
     },
     executeCardAction: (actionType: string, data: any):
         AppThunkAction<KnownActions> => (dispatch, getState) => {
-            let actionData = makeAction({
+            let actionData = new ActionRecord({
                 actionType, data
             });
             dispatch({
@@ -154,14 +147,8 @@ export const actionCreators = {
         dispatch({
             type: 'LOAD_CARD',
             cardId: id,
-            payload: new Promise<CardDataRecord>(resolve => {
-                let cardData = makeDeepCardData(getState().cards.protocol.get(id));
-                let cardActions = cardData.commits.flatMap((x: CommitRecord) => x.actions);
-                let card = cardActions.reduce(
-                    (c: CardRecord, action: ActionRecord) => cardReducer(c, action),
-                    makeCard());
-                cardData = cardData.set('card', card);
-                resolve(cardData);
+            payload: new Promise<CardRecord>(resolve => {
+                resolve(commitList.getCard(id));
             })
         });
     }
