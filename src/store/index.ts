@@ -1,18 +1,16 @@
 import * as Client from './Client';
 import * as Tasks from './Tasks';
-import * as Documents from './Documents';
-import * as Blocks from './Blocks';
 import * as Cards from './Cards/index';
 import { List, Map } from 'immutable';
-import { StateRecord } from './Cards/models';
+import * as CardModels from './Cards/models';
+import * as Chat from './Chat';
 
 // The top-level state object
 export interface ApplicationState {
     client: Client.ClientState;
     tasks: List<Map<any, any>>;
-    documents: Map<any, any>;
-    blocks: Map<string, any>;
-    cards: StateRecord;
+    cards: CardModels.StateRecord;
+    chat: Chat.StateRecord;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -21,7 +19,6 @@ export interface ApplicationState {
 export const reducers = {
     client: Client.reducer,
     tasks: Tasks.reducer,
-    documents: Documents.reducer,
-    blocks: Blocks.reducer,
-    cards: Cards.reducer
+    cards: Cards.reducer,
+    chat: Chat.reducer
 };

@@ -4,7 +4,7 @@ import yMemory from 'y-memory/dist/y-memory';
 import yArray from 'y-array/dist/y-array';
 import yMap from 'y-map/dist/y-map';
 import yIndexedDb from 'y-indexeddb/dist/y-indexeddb';
-import * as ipfsConnector from '../../lib/y-ipfs-connector';
+import * as ipfsConnector from '../lib/y-ipfs-connector';
 
 // import ipfsConnector from 'y-ipfs-connector';
 
@@ -14,13 +14,12 @@ yMap(Y);
 yIndexedDb(Y);
 ipfsConnector(Y);
 
-import { ApplicationState } from '../index';
-import { KnownActions } from './KnownActions';
-import { Commit } from '../Cards/models';
+import { ApplicationState } from './index';
+import { Commit } from './Cards/models';
 
 export default (
     terminalId: string, user: string,
-    dispatch: (action: KnownActions) => void,
+    dispatch: (action: any) => void,
     getState: () => ApplicationState,
     cb: (protocol: any) => void) => {
 
@@ -57,14 +56,12 @@ export default (
         },
         share: {
             chat: 'Array',
-            actionLog: 'Map',
             commits: 'Array'
         }
     }).then((y) => {
         dispatchCommitProtocol(dispatch, y.share.commits);
 
         dispatchCommitEvent(dispatch, y.share.commits.toArray());
-
         y.share.commits.observe(event => {
             console.log('event', event);
             dispatchCommitEvent(dispatch, event.values);
@@ -76,23 +73,6 @@ export default (
                 for (let i = 0; i < event.length; i++) {
                     dispatchChatEvent(dispatch, event.values[i]);
                 }
-            }
-        });
-
-        y.share.actionLog.keys().forEach(k => {
-            y.share.actionLog.get(k).toArray().forEach(element => {
-                dispatchActionLogEvent(dispatch, k, element);
-            });
-        });
-        y.share.actionLog.observeDeep(event => {
-            if (event.type === 'add') {
-                event.value.toArray().forEach(element => {
-                    dispatchActionLogEvent(dispatch, event.name, element);
-                });
-            } else if (event.type === 'insert') {
-                event.values.forEach(element => {
-                    dispatchActionLogEvent(dispatch, event.path[0], element);
-                });
             }
         });
         cb(y);
@@ -119,23 +99,7 @@ function dispatchChatEvent(dispatch: any, value: any) {
         time: value.time,
         message: value.message,
         user: value.user,
-        id: value.id
-    });
-}
-
-function dispatchActionLogEvent(dispatch: any, key: any, value: any) {
-    dispatch({
-        type: 'REGISTER_BLOCK_ACTION',
-        blockId: key,
-        payload: value
-    });
-    dispatchPayload(dispatch, value);
-}
-
-function dispatchPayload(dispatch: any, payload: any) {
-    dispatch({
-        type: payload.type,
-        blockId: payload.blockId,
-        data: JSON.parse(payload.data)
+        id: value.id,
+        lamport: value.lamport
     });
 }

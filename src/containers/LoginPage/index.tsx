@@ -3,7 +3,7 @@ import * as Extender from '../../lib/Extender';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
 import * as ClientStore from '../../store/Client';
-import * as BlockStore from '../../store/Blocks';
+import * as ChatStore from '../../store/Chat';
 import { WithStyles } from 'material-ui';
 import { RouteComponentProps } from 'react-router';
 import decorate, { Style } from './style';
@@ -11,7 +11,7 @@ import TopBar from '../TopBar';
 import Typography from 'material-ui/Typography/Typography';
 import LoginControl from './LoginControl';
 
-type DispatchType = typeof ClientStore.actionCreators & typeof BlockStore.actionCreators;
+type DispatchType = typeof ClientStore.actionCreators & typeof ChatStore.actionCreators;
 
 export type PageProps =
     ClientStore.ClientState
@@ -43,5 +43,5 @@ class LoginPage extends React.Component<PageProps, {}> {
 
 export default decorate(connect(
     (state: ApplicationState) => state.client,
-    Extender.extend(ClientStore.actionCreators, BlockStore.actionCreators)
+    Extender.extend(ClientStore.actionCreators, ChatStore.actionCreators)
 )(LoginPage));
