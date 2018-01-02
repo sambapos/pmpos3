@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import { AppThunkAction } from '../appThunkAction';
 import { uuidv4 } from '../../lib/uuid';
 import { StateRecord, Commit } from './models';
-import CommitList from './CommitList';
+import CardList from './CardList';
 import { CardRecord } from '../../models/Card';
 import { ActionRecord } from '../../models/Action';
 
@@ -52,7 +52,7 @@ type KnownActions = AddCardAction | AddPendingActionAction | CommitCardAction | 
     | LoadCardAction | LoadCardRequestAction | LoadCardSuccessAction | LoadCardFailAction
     | SetCommitProtocolAction;
 
-const commitList = new CommitList();
+const cardList = new CardList();
 
 export const reducer: Reducer<StateRecord> = (
     state: StateRecord = new StateRecord(),
@@ -62,7 +62,7 @@ export const reducer: Reducer<StateRecord> = (
         case 'ADD_PENDING_ACTION': {
             return state
                 .update('currentCard', current => {
-                    return commitList.applyAction(current, action.action);
+                    return cardList.applyAction(current, action.action);
                 })
                 .update('pendingActions', list => list.push(action.action));
         }
@@ -76,14 +76,14 @@ export const reducer: Reducer<StateRecord> = (
             return state
                 .set('isLoaded', true)
                 .set('pendingActions', state.pendingActions.clear().push(cardCreateAction))
-                .set('currentCard', commitList.applyAction(undefined, cardCreateAction));
+                .set('currentCard', cardList.applyAction(undefined, cardCreateAction));
         }
         case 'SET_COMMIT_PROTOCOL': {
             return state.set('protocol', action.protocol);
         }
         case 'COMMIT_RECEIVED': {
-            commitList.addCommits(action.values);
-            return state.set('cards', commitList.getCards());
+            cardList.addCommits(action.values);
+            return state.set('cards', cardList.getCards());
         }
         case 'COMMIT_CARD': {
             return resetCurrentCard(state);
@@ -141,7 +141,7 @@ export const actionCreators = {
             let actionData = new ActionRecord({
                 actionType,
                 data,
-                concurrencyData: commitList.readConcurrencyData(actionType, getState().cards.currentCard, data)
+                concurrencyData: cardList.readConcurrencyData(actionType, getState().cards.currentCard, data)
             });
             dispatch({
                 type: 'ADD_PENDING_ACTION', action: actionData
@@ -152,7 +152,7 @@ export const actionCreators = {
             type: 'LOAD_CARD',
             cardId: id,
             payload: new Promise<CardRecord>(resolve => {
-                resolve(commitList.getCard(id));
+                resolve(cardList.getCard(id));
             })
         });
     }

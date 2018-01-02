@@ -7,6 +7,8 @@ export interface Style {
     appBarShift: any;
     appBarShiftLeft: any;
     appBarShiftRight: any;
+    toolbar: any;
+    flex: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints, mixins, transitions }): Style => ({
@@ -32,5 +34,11 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
     },
     appBarShiftRight: {
         marginRight: drawerWidth,
+    },
+    toolbar: {
+        width: '100%',
+    },
+    flex: {
+        flex: 1,
     }
 }));

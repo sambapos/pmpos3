@@ -4,7 +4,7 @@ import { cardOperations } from '../../modules/CardOperations';
 import { ActionRecord } from '../../models/Action';
 import { CardRecord } from '../../models/Card';
 
-export default class CommitList {
+export default class CardList {
 
     commits: IMap<string, List<CommitRecord>>;
     cards: IMap<string, CardRecord>;

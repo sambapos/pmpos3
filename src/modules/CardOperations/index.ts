@@ -27,6 +27,9 @@ class CardOperations {
         let operation = this.operations.get(action.actionType);
         return operation !== undefined && operation.canApply !== undefined && operation.canApply(card, action);
     }
+    getOperations() {
+        return Array.from(this.operations.values()).filter(x => x.description);
+    }
 }
 
 export const cardOperations: CardOperations = new CardOperations();

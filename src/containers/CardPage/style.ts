@@ -4,6 +4,7 @@ export interface Style {
     card: any;
     content: any;
     paper: any;
+    modal: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
@@ -20,6 +21,18 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
             width: '900px',
             alignSelf: 'center'
         },
+    },
+    modal: {
+        position: 'absolute',
+        width: '80%',
+        maxWidth: spacing.unit * 50,
+        top: `50%`,
+        left: `50%`,
+        transform: `translate(-50%, -50%)`,
+        border: '1px solid #e5e5e5',
+        backgroundColor: '#fff',
+        boxShadow: '0 5px 15px rgba(0, 0, 0, .5)',
+        padding: spacing.unit * 3,
     },
     paper: {
         [breakpoints.down('sm')]: {
