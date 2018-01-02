@@ -1,7 +1,10 @@
-import { CommitRecord, CardRecord, ActionRecord, Commit } from './models';
+import { CommitRecord, Commit } from './models';
 import { List, Map as IMap } from 'immutable';
+import { cardOperations } from '../../modules/CardOperations';
+import { ActionRecord } from '../../models/Action';
+import { CardRecord } from '../../models/Card';
 
-export default class CardList {
+export default class CommitList {
     commits: IMap<string, List<CommitRecord>>;
     cards: IMap<string, CardRecord>;
 
@@ -42,21 +45,11 @@ export default class CardList {
 }
 
 const cardReducer = (
-    state: CardRecord = new CardRecord(),
+    card: CardRecord = new CardRecord(),
     action: ActionRecord
 ) => {
-    switch (action.actionType) {
-        case 'CREATE_CARD': {
-            return new CardRecord({
-                id: action.data.id,
-                time: action.data.time,
-                tags: IMap<string, string>()
-            });
-        }
-        case 'SET_CARD_TAG': {
-            return state.setIn(['tags', action.data.tagName], action.data.tagValue);
-        }
-        default:
-            return state;
+    if (cardOperations.canHandle(action)) {
+        return cardOperations.reduce(card, action);
     }
+    return card;
 };

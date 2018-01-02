@@ -7,8 +7,9 @@ import decorate, { Style } from './style';
 import * as moment from 'moment';
 import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
-import { ActionRecord, CardRecord } from '../../store/Cards/models';
 import { List } from 'immutable';
+import { ActionRecord } from '../../models/Action';
+import { CardRecord } from '../../models/Card';
 
 export type PageProps =
     {

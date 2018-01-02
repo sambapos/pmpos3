@@ -7,7 +7,7 @@ import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import { List } from 'immutable';
 import TopBar from '../TopBar';
-import { CardRecord } from '../../store/Cards/models';
+import { CardRecord } from '../../models/Card';
 
 export type PageProps =
     { cards: List<CardRecord> }

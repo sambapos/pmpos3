@@ -1,24 +1,6 @@
-import { Map as IMap, List, Record } from 'immutable';
-
-export interface Card {
-    id: string;
-    time: number;
-    tags: IMap<string, string>;
-}
-
-export class CardRecord extends Record<Card>({
-    id: '', time: 0, tags: IMap<string, string>()
-}) { }
-
-export interface Action {
-    actionType: string;
-    data: any;
-}
-
-export class ActionRecord extends Record<Action>({
-    actionType: '',
-    data: {}
-}) { }
+import { List, Record } from 'immutable';
+import { ActionRecord } from '../../models/Action';
+import { CardRecord } from '../../models/Card';
 
 export interface Commit {
     id: string;

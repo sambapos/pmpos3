@@ -1,8 +1,10 @@
 import { Reducer } from 'redux';
 import { AppThunkAction } from '../appThunkAction';
 import { uuidv4 } from '../../lib/uuid';
-import { ActionRecord, StateRecord, CardRecord, Commit } from './models';
+import { StateRecord, Commit } from './models';
 import CommitList from './CommitList';
+import { CardRecord } from '../../models/Card';
+import { ActionRecord } from '../../models/Action';
 
 type SetCommitProtocolAction = {
     type: 'SET_COMMIT_PROTOCOL',

@@ -63,7 +63,6 @@ export default (
 
         dispatchCommitEvent(dispatch, y.share.commits.toArray());
         y.share.commits.observe(event => {
-            console.log('event', event);
             dispatchCommitEvent(dispatch, event.values);
         });
 

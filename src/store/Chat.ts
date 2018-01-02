@@ -37,7 +37,7 @@ type AddMessageAction = {
     lamport: number
 };
 
-interface Message {
+export interface Message {
     id: string;
     message: string;
     user: string;
@@ -56,7 +56,7 @@ export class StateRecord extends Record<State>({
     protocol: undefined,
     messages: IList<Message>(),
     connected: false,
-    lamport: 0
+    lamport: 1
 }) { }
 
 type KnownActions = AddMessageAction | IncLamportAction

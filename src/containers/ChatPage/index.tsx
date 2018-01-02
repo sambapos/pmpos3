@@ -32,6 +32,12 @@ class ChatPage extends React.Component<PageProps, {
         }
     }
 
+    sort(a: ChatStore.Message, b: ChatStore.Message) {
+        return a.lamport !== b.lamport
+            ? a.lamport - b.lamport
+            : a.time - b.time;
+    }
+
     public render() {
         return (
             <Paper className={this.props.classes.root}>
@@ -39,7 +45,7 @@ class ChatPage extends React.Component<PageProps, {
                 <div className={this.props.classes.content} id="chatDiv">
                     <MList dense>
                         {
-                            this.props.chat.messages.sort((x1, x2) => x1.time - x2.time).map(x => {
+                            this.props.chat.messages.sort((x1, x2) => this.sort(x1, x2)).map(x => {
                                 return x && (
                                     <ListItem dense key={x.id}>
                                         <Typography>
