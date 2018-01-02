@@ -5,6 +5,7 @@ import { ActionRecord } from '../../models/Action';
 import { CardRecord } from '../../models/Card';
 
 export default class CommitList {
+
     commits: IMap<string, List<CommitRecord>>;
     cards: IMap<string, CardRecord>;
 
@@ -13,8 +14,23 @@ export default class CommitList {
         this.cards = IMap<string, CardRecord>();
     }
 
-    applyAction(card: CardRecord | undefined, action: ActionRecord): CardRecord {
-        return cardReducer(card, action);
+    readConcurrencyData(actionType: string, card: CardRecord, actionData: any): any {
+        return cardOperations.getConcurrencyData(actionType, card, actionData);
+    }
+
+    applyAction(card: CardRecord = new CardRecord(), action: ActionRecord): CardRecord {
+        if (cardOperations.canHandle(action)) {
+            return cardOperations.reduce(card, action);
+        }
+        return card;
+    }
+
+    actionReduce = (card: CardRecord, action: ActionRecord) => {
+        return this.applyAction(card, action);
+    }
+
+    commitReduce = (card: CardRecord, commit: CommitRecord) => {
+        return commit.actions.reduce(this.actionReduce, card);
     }
 
     addCommit(commit: Commit) {
@@ -24,10 +40,9 @@ export default class CommitList {
         });
         this.cards = this.cards.update(commit.cardId, cardRecord => {
             let commits = this.commits.get(commit.cardId) as List<CommitRecord>;
-            let actions = commits.sort((a, b) => a.time - b.time).flatMap((x: CommitRecord) => x.actions);
-            return actions.reduce(
-                (c: CardRecord, action: ActionRecord) => cardReducer(c, action),
-                new CardRecord());
+            return commits
+                .sort((a, b) => a.time - b.time)
+                .reduce(this.commitReduce, new CardRecord());
         });
     }
 
@@ -43,13 +58,3 @@ export default class CommitList {
         return this.cards.get(id) as CardRecord;
     }
 }
-
-const cardReducer = (
-    card: CardRecord = new CardRecord(),
-    action: ActionRecord
-) => {
-    if (cardOperations.canHandle(action)) {
-        return cardOperations.reduce(card, action);
-    }
-    return card;
-};

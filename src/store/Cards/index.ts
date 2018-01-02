@@ -139,7 +139,9 @@ export const actionCreators = {
     executeCardAction: (actionType: string, data: any):
         AppThunkAction<KnownActions> => (dispatch, getState) => {
             let actionData = new ActionRecord({
-                actionType, data
+                actionType,
+                data,
+                concurrencyData: commitList.readConcurrencyData(actionType, getState().cards.currentCard, data)
             });
             dispatch({
                 type: 'ADD_PENDING_ACTION', action: actionData
