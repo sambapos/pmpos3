@@ -13,5 +13,5 @@ export class ActionRecord extends Record<Action>({
     cardId: '',
     actionType: '',
     data: {},
-    concurrencyData: {}
+    concurrencyData: undefined
 }) { }

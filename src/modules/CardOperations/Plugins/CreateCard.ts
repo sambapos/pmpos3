@@ -6,7 +6,7 @@ export default class CreateCard extends CardOperation {
         return data.id;
     }
     constructor() {
-        super('CREATE_CARD', 'Add new Card');
+        super('CREATE_CARD', 'Create Card');
     }
     readConcurrencyData(card: CardRecord, actionData: any) {
         return undefined;

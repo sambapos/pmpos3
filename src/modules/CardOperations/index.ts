@@ -20,8 +20,21 @@ class CardOperations {
     }
     reduce(card: CardRecord, action: ActionRecord): CardRecord {
         let operation = this.operations.get(action.actionType);
-        if (operation) { return operation.reduce(card, action.data); }
+        if (operation) {
+            return this.reduceAll(card, action, operation);
+        }
         return card;
+    }
+    reduceAll(card: CardRecord, action: ActionRecord, operation: CardOperation): CardRecord {
+        if (!action.cardId || action.cardId === card.id) {
+            return operation.reduce(card, action.data);
+        } else {
+            return card.update('cards', cards => {
+                return cards.map(c => {
+                    return this.reduceAll(c, action, operation);
+                });
+            });
+        }
     }
     canReduce(card: CardRecord, action: ActionRecord): boolean {
         let operation = this.operations.get(action.actionType);
