@@ -41,7 +41,7 @@ const topBar = (props: Props) => {
                     {props.title}
                 </Typography>
                 {props.secondaryCommands && props.secondaryCommands.map(x => {
-                    return <MenuButton key={x.icon} command={x} />;
+                    return <MenuButton key={x.icon} command={x} menuItems={x.menuItems} />;
                 })}
             </Toolbar>
         </AppBar>

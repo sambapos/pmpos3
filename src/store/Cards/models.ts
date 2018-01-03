@@ -7,6 +7,8 @@ export interface Commit {
     cardId: string;
     time: number;
     state: CardRecord;
+    terminalId: string;
+    user: string;
     actions: List<ActionRecord>;
 }
 
@@ -15,6 +17,8 @@ export class CommitRecord extends Record<Commit>({
     cardId: '',
     time: new Date().getTime(),
     state: new CardRecord(),
+    terminalId: '',
+    user: '',
     actions: List<ActionRecord>()
 }) { }
 

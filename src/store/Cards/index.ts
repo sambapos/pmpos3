@@ -75,6 +75,7 @@ export const reducer: Reducer<StateRecord> = (
             });
             return state
                 .set('isLoaded', true)
+                .set('currentCommits', undefined)
                 .set('pendingActions', state.pendingActions.clear().push(cardCreateAction))
                 .set('currentCard', cardList.applyAction(undefined, cardCreateAction));
         }
@@ -128,6 +129,8 @@ export const actionCreators = {
             let commit = {
                 id: uuidv4(),
                 time: new Date().getTime(),
+                terminalId: getState().client.terminalId,
+                user: getState().client.loggedInUser,
                 cardId: state.currentCard.id,
                 state: state.currentCard.toJS(),
                 actions: state.pendingActions.toJS()
@@ -139,11 +142,11 @@ export const actionCreators = {
             type: 'COMMIT_CARD'
         });
     },
-    executeCardAction: (actionType: string, data: any):
+    addPendingAction: (card: CardRecord, actionType: string, data: any):
         AppThunkAction<KnownActions> => (dispatch, getState) => {
-            let card = getState().cards.currentCard;
             let actionData = new ActionRecord({
                 id: uuidv4(),
+                cardId: card.id,
                 actionType,
                 data,
                 concurrencyData: cardList.readConcurrencyData(actionType, card, data)

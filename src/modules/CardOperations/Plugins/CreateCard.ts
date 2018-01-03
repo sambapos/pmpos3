@@ -6,15 +6,19 @@ export default class CreateCard extends CardOperation {
         return data.id;
     }
     constructor() {
-        super('CREATE_CARD');
+        super('CREATE_CARD', 'Add new Card');
     }
     readConcurrencyData(card: CardRecord, actionData: any) {
         return undefined;
     }
     reduce(card: CardRecord, data: any): CardRecord {
-        return new CardRecord({
+        let result = new CardRecord({
             id: data.id,
             time: data.time
         });
+        if (card.id) {
+            result = card.update('cards', list => list.push(result));
+        }
+        return result;
     }
 }

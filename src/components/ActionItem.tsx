@@ -12,6 +12,7 @@ export default (props: ActionItemProps) => {
         <div>
             <Divider />
             <Typography type="body2">{props.action.actionType}</Typography>
+            <Typography type="body1">ci:{props.action.cardId}</Typography>
             <div>{Object.keys(props.action.data).map(key => {
                 return (<div key={key}>
                     <Typography type="body1">{key}: {props.action.data[key]}</Typography>
