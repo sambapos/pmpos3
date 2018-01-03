@@ -3,6 +3,7 @@ import { List, Map as IMap } from 'immutable';
 import { cardOperations } from '../../modules/CardOperations';
 import { ActionRecord } from '../../models/Action';
 import { CardRecord } from '../../models/Card';
+import { makeDeepCommit } from './makers';
 
 export default class CardList {
 
@@ -25,6 +26,10 @@ export default class CardList {
         return card;
     }
 
+    canApplyAction(card: CardRecord, action: ActionRecord): boolean {
+        return cardOperations.canApplyAction(card, action);
+    }
+
     actionReduce = (card: CardRecord, action: ActionRecord) => {
         return this.applyAction(card, action);
     }
@@ -36,7 +41,7 @@ export default class CardList {
     addCommit(commit: Commit) {
         this.commits = this.commits.update(commit.cardId, list => {
             if (!list) { list = List<CommitRecord>(); }
-            return list.push(new CommitRecord(commit));
+            return list.push(makeDeepCommit(commit));
         });
         this.cards = this.cards.update(commit.cardId, cardRecord => {
             let commits = this.commits.get(commit.cardId) as List<CommitRecord>;
@@ -56,5 +61,9 @@ export default class CardList {
 
     getCard(id: string): CardRecord {
         return this.cards.get(id) as CardRecord;
+    }
+
+    getCommits(id: string): List<CommitRecord> | undefined {
+        return this.commits.get(id);
     }
 }

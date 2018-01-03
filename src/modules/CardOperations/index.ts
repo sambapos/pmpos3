@@ -20,12 +20,17 @@ class CardOperations {
     }
     reduce(card: CardRecord, action: ActionRecord): CardRecord {
         let operation = this.operations.get(action.actionType);
-        if (operation) { return operation.apply(card, action.data); }
+        if (operation) { return operation.reduce(card, action.data); }
         return card;
     }
     canReduce(card: CardRecord, action: ActionRecord): boolean {
         let operation = this.operations.get(action.actionType);
-        return operation !== undefined && operation.canApply !== undefined && operation.canApply(card, action);
+        return operation !== undefined && operation.canReduce !== undefined && operation.canReduce(card, action);
+    }
+    canApplyAction(card: CardRecord, action: ActionRecord): boolean {
+        let operation = this.operations.get(action.actionType);
+        if (!operation) { return false; }
+        return operation.canApply(card, action.data);
     }
     getOperations() {
         return Array.from(this.operations.values()).filter(x => x.description);

@@ -81,10 +81,7 @@ class NavPage extends React.Component<NavPageProps> {
                             classes={{
                                 paper: classes.drawerPaper,
                             }}
-                            onRequestClose={this.handleDrawerToggle}
-                            ModalProps={{
-                                keepMounted: true, // Better open performance on mobile.
-                            }}
+                            onClose={this.handleDrawerToggle}
                         >
                             {drawer}
                         </Drawer>

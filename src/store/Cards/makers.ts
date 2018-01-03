@@ -17,6 +17,7 @@ export const makeDeepCardData = (cardData: CardData): CardDataRecord => {
 export const makeDeepCommit = (commit: Commit): CommitRecord => {
     return new CommitRecord({
         id: commit.id,
+        time: commit.time,
         cardId: commit.cardId,
         state: makeDeepCard(commit.state),
         actions: List<ActionRecord>(commit.actions.map(action => new ActionRecord(action)))

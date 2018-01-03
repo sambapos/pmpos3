@@ -47,7 +47,7 @@ export default (
 
     Y({
         db: {
-            name: 'memory'
+            name: 'indexeddb'
         },
         connector: {
             name: 'ipfs',

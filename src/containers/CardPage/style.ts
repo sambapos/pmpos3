@@ -5,15 +5,25 @@ export interface Style {
     content: any;
     paper: any;
     modal: any;
+    root: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     card: {
         minWidth: 275,
+        padding: spacing.unit,
+        marginBottom: spacing.unit
+    },
+    root: {
+        display: 'flex',
+        flexFlow: 'column',
+        flex: '1 1 auto',
+        padding: spacing.unit
     },
     content: {
         height: '100%',
         display: 'flex',
+        overflowX: 'auto',
         [breakpoints.down('sm')]: {
             flexFlow: 'column'
         },

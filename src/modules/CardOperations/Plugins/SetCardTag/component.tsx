@@ -7,26 +7,36 @@ import Typography from 'material-ui/Typography/Typography';
 export default class extends React.Component<
     {
         handler: (actionType: string, data: any) => void,
-        actionName: string
+        actionName: string,
+        current?: any
     },
     { tagName: string, tagValue: string }> {
     constructor(props: any) {
         super(props);
         this.state = { tagName: '', tagValue: '' };
     }
+    componentDidMount() {
+        if (this.props.current) {
+            this.setState({
+                tagName: this.props.current.tagName,
+                tagValue: this.props.current.tagValue
+            });
+        }
+    }
+
     render() {
         return (
             <div>
                 <CardContent>
                     <Typography type="headline">Set Card Tag</Typography>
-                    <TextField
+                    {!this.props.current && <TextField
                         label="Tag Name"
                         value={this.state.tagName}
                         onChange={e => this.setState({ tagName: e.target.value })}
-                    />
+                    />}
                     <br />
                     <TextField
-                        label="Tag Value"
+                        label={this.props.current ? this.props.current.tagName : 'Tag Value'}
                         value={this.state.tagValue}
                         onChange={e => this.setState({ tagValue: e.target.value })}
                     />

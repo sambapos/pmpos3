@@ -45,7 +45,7 @@ type LoadCardSuccessAction = {
 };
 
 type LoadCardFailAction = {
-    type: 'LOAD_DOCUMENT_FAIL'
+    type: 'LOAD_CARD_FAIL'
 };
 
 type KnownActions = AddCardAction | AddPendingActionAction | CommitCardAction | CommitReceivedAction
@@ -94,10 +94,11 @@ export const reducer: Reducer<StateRecord> = (
         case 'LOAD_CARD_SUCCESS': {
             let result = state
                 .set('currentCard', action.payload)
+                .set('currentCommits', cardList.getCommits(action.payload.id))
                 .set('isLoaded', true);
             return result;
         }
-        case 'LOAD_DOCUMENT_FAIL': {
+        case 'LOAD_CARD_FAIL': {
             return state
                 .set('isLoaded', false);
         }
@@ -110,6 +111,7 @@ function resetCurrentCard(state: StateRecord) {
     return state
         .set('currentCard', new CardRecord())
         .set('pendingActions', state.pendingActions.clear())
+        .set('currentCommits', undefined)
         .set('isLoaded', false);
 }
 
@@ -125,9 +127,10 @@ export const actionCreators = {
         if (state.pendingActions.count() > 0) {
             let commit = {
                 id: uuidv4(),
+                time: new Date().getTime(),
                 cardId: state.currentCard.id,
                 state: state.currentCard.toJS(),
-                actions: state.pendingActions
+                actions: state.pendingActions.toJS()
             };
             state.protocol.push([commit]);
         }
@@ -138,21 +141,30 @@ export const actionCreators = {
     },
     executeCardAction: (actionType: string, data: any):
         AppThunkAction<KnownActions> => (dispatch, getState) => {
+            let card = getState().cards.currentCard;
             let actionData = new ActionRecord({
+                id: uuidv4(),
                 actionType,
                 data,
-                concurrencyData: cardList.readConcurrencyData(actionType, getState().cards.currentCard, data)
+                concurrencyData: cardList.readConcurrencyData(actionType, card, data)
             });
-            dispatch({
-                type: 'ADD_PENDING_ACTION', action: actionData
-            });
+            if (cardList.canApplyAction(card, actionData)) {
+                dispatch({
+                    type: 'ADD_PENDING_ACTION', action: actionData
+                });
+            }
         },
     loadCard: (id: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
         dispatch({
             type: 'LOAD_CARD',
             cardId: id,
-            payload: new Promise<CardRecord>(resolve => {
-                resolve(cardList.getCard(id));
+            payload: new Promise<CardRecord>((resolve, reject) => {
+                let card = cardList.getCard(id);
+                if (!card) {
+                    reject(`${id} not found`);
+                } else {
+                    resolve(card);
+                }
             })
         });
     }

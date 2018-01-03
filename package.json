@@ -1,13 +1,13 @@
 {
-  "name": "pmpos2",
-  "version": "0.2.0",
+  "name": "pmpos3",
+  "version": "0.3.1",
   "private": true,
   "dependencies": {
     "history": "^4.7.2",
     "immutable": "^4.0.0-rc.9",
     "ipfs": "^0.27.5",
     "ipfs-pubsub-room": "^1.1.4",
-    "material-ui": "^1.0.0-beta.23",
+    "material-ui": "^1.0.0-beta.26",
     "moment": "^2.20.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

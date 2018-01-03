@@ -31,6 +31,7 @@ export class CardDataRecord extends Record<CardData>({
 export interface State {
     cards: List<CardRecord>;
     currentCard: CardRecord;
+    currentCommits: List<CommitRecord> | undefined;
     pendingActions: List<ActionRecord>;
     isLoaded: boolean;
     protocol: any;
@@ -39,6 +40,7 @@ export interface State {
 export class StateRecord extends Record<State>({
     currentCard: new CardRecord(),
     pendingActions: List<ActionRecord>(),
+    currentCommits: List<CommitRecord>(),
     cards: List<CardRecord>(),
     isLoaded: false,
     protocol: undefined
