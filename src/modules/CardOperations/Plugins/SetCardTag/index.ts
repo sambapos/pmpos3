@@ -1,6 +1,6 @@
 import * as React from 'react';
 import CardOperation from '../../CardOperation';
-import { CardRecord } from '../../../../models/Card';
+import { CardRecord, CardTagRecord } from '../../../../models/Card';
 import { ActionRecord } from '../../../../models/Action';
 import TagEditor from './component';
 
@@ -15,22 +15,26 @@ export default class SetCardTag extends CardOperation {
         return React.createElement(TagEditor, { handler, actionName: this.type, current });
     }
 
-    readConcurrencyData(card: CardRecord, actionData: any) {
-        return card.getIn(['tags', actionData.tagName]);
+    readConcurrencyData(card: CardRecord, data: CardTagRecord) {
+        return card.getIn(['tags', data.name]);
     }
 
-    reduce(card: CardRecord, data: any): CardRecord {
-        return card.setIn(['tags', data.tagName], data.tagValue);
+    reduce(card: CardRecord, data: CardTagRecord): CardRecord {
+        return card.setIn(['tags', data.name], new CardTagRecord(data));
     }
 
     canReduceCard(card: CardRecord, action: ActionRecord): boolean {
-        let current = this.readConcurrencyData(card, action.data);
-        return !current || current === action.concurrencyData;
+        let current = this.readConcurrencyData(card, action.data) as CardTagRecord;
+        return !current || current.value === action.concurrencyData.value;
     }
 
-    canApply(card: CardRecord, data: any): boolean {
-        if (!data.tagName) { return false; }
-        let currentValue = card.getIn(['tags', data.tagName]);
-        return currentValue !== data.tagValue;
+    canApply(card: CardRecord, data: CardTagRecord): boolean {
+        if (!data.name) { return false; }
+        let currentValue = card.getIn(['tags', data.name]) as CardTagRecord;
+        return !currentValue
+            || currentValue.value !== data.value
+            || currentValue.quantity !== data.quantity
+            || currentValue.debit !== data.debit
+            || currentValue.credit !== data.credit;
     }
 }

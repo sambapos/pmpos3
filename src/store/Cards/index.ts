@@ -163,6 +163,7 @@ export const actionCreators = {
             cardId: id,
             payload: new Promise<CardRecord>((resolve, reject) => {
                 let card = cardList.getCard(id);
+                console.log(card);
                 if (!card) {
                     reject(`${id} not found`);
                 } else {

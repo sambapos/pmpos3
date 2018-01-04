@@ -8,6 +8,7 @@ export default (props: { card: CardRecord }) => {
         <div>
             <Typography>{props.card.id}</Typography>
             <Typography>{moment(props.card.time).format('LLLL')}</Typography>
+            <Typography>Balance:{props.card.balance}</Typography>
         </div>
     );
 };

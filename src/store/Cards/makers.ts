@@ -3,7 +3,7 @@ import {
 } from './models';
 import { Map as IMap, List } from 'immutable';
 import { ActionRecord } from '../../models/Action';
-import { Card, CardRecord } from '../../models/Card';
+import { Card, CardRecord, CardTagRecord } from '../../models/Card';
 
 export const makeDeepCardData = (cardData: CardData): CardDataRecord => {
     return new CardDataRecord({
@@ -30,7 +30,7 @@ export const makeDeepCard = (card: Card): CardRecord => {
     return new CardRecord({
         id: card.id,
         time: card.time,
-        tags: IMap<string, string>(card.tags),
-        cards: List<CardRecord>(card.cards.map(c => makeDeepCard(c)))
+        tags: IMap<string, CardTagRecord>(card.tags),
+        cards: List<CardRecord>(card.cards && card.cards.map(c => makeDeepCard(c)))
     });
 };

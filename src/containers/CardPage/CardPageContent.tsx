@@ -2,7 +2,7 @@ import * as React from 'react';
 import Tags from './Tags';
 import Operations from './Operations';
 import SubCards from './SubCards';
-import { CardRecord } from '../../models/Card';
+import { CardRecord, CardTagRecord } from '../../models/Card';
 import CardOperation from '../../modules/CardOperations/CardOperation';
 import CardPageHeader from './CardPageHeader';
 import { uuidv4 } from '../../lib/uuid';
@@ -37,13 +37,13 @@ class CardPageContent extends React.Component<PageProps, CardContentState> {
         this.setState({ open: false });
     }
 
-    handleTagClick = (tagName, tagValue) => {
+    handleTagClick = (tagName: string, value: CardTagRecord) => {
         let op = this.props.operations.find(x => x.type === 'SET_CARD_TAG');
         if (op) {
             this.setState({
                 open: true,
                 operationComponent: op.getEditor
-                    && op.getEditor(this.handleCardMutation, { tagName, tagValue })
+                    && op.getEditor(this.handleCardMutation, value)
             });
         }
     }

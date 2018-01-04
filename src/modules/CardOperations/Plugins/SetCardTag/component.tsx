@@ -3,23 +3,27 @@ import { TextField, Button } from 'material-ui';
 import CardContent from 'material-ui/Card/CardContent';
 import CardActions from 'material-ui/Card/CardActions';
 import Typography from 'material-ui/Typography/Typography';
+import { CardTagRecord } from '../../../../models/Card';
 
 export default class extends React.Component<
     {
         handler: (actionType: string, data: any) => void,
         actionName: string,
-        current?: any
+        current?: CardTagRecord
     },
-    { tagName: string, tagValue: string }> {
+    { name: string, value: string, quantity: number, debit: number, credit: number }> {
     constructor(props: any) {
         super(props);
-        this.state = { tagName: '', tagValue: '' };
+        this.state = { name: '', value: '', quantity: 0, debit: 0, credit: 0 };
     }
     componentDidMount() {
         if (this.props.current) {
             this.setState({
-                tagName: this.props.current.tagName,
-                tagValue: this.props.current.tagValue
+                name: this.props.current.name,
+                value: this.props.current.value,
+                quantity: this.props.current.quantity,
+                debit: this.props.current.debit,
+                credit: this.props.current.credit
             });
         }
     }
@@ -31,14 +35,30 @@ export default class extends React.Component<
                     <Typography type="headline">Set Card Tag</Typography>
                     {!this.props.current && <TextField
                         label="Tag Name"
-                        value={this.state.tagName}
-                        onChange={e => this.setState({ tagName: e.target.value })}
+                        value={this.state.name}
+                        onChange={e => this.setState({ name: e.target.value })}
                     />}
                     <br />
                     <TextField
-                        label={this.props.current ? this.props.current.tagName : 'Tag Value'}
-                        value={this.state.tagValue}
-                        onChange={e => this.setState({ tagValue: e.target.value })}
+                        label={this.props.current ? this.props.current.name : 'Tag Value'}
+                        value={this.state.value}
+                        onChange={e => this.setState({ value: e.target.value })}
+                    />
+                    <br />
+                    <TextField
+                        label="Quantity"
+                        value={this.state.quantity}
+                        onChange={e => this.setState({ quantity: Number(e.target.value) })}
+                    />
+                    <TextField
+                        label="Debit"
+                        value={this.state.debit}
+                        onChange={e => this.setState({ debit: Number(e.target.value) })}
+                    />
+                    <TextField
+                        label="Credit"
+                        value={this.state.credit}
+                        onChange={e => this.setState({ credit: Number(e.target.value) })}
                     />
                 </CardContent>
                 <CardActions>
@@ -47,8 +67,11 @@ export default class extends React.Component<
                             this.props.handler(
                                 this.props.actionName,
                                 {
-                                    tagName: this.state.tagName,
-                                    tagValue: this.state.tagValue
+                                    name: this.state.name,
+                                    value: this.state.value,
+                                    quantity: this.state.quantity,
+                                    debit: this.state.debit,
+                                    credit: this.state.credit
                                 });
                         }}
                     >
