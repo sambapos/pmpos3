@@ -28,41 +28,39 @@ class Operations extends React.Component<PageProps, { anchorEl: any }> {
     render() {
         const open = Boolean(this.state.anchorEl);
         return (
-            <div>
-                <div className={this.props.classes.opMenu}>
-                    <IconButton
-                        aria-label="More"
-                        aria-owns={open ? 'long-menu' : null}
-                        aria-haspopup="true"
-                        onClick={this.handleClick}
-                    >
-                        <i className="material-icons">more_vert</i>
-                    </IconButton>
-                    <Menu
-                        id="long-menu"
-                        anchorEl={this.state.anchorEl}
-                        open={open}
-                        onClose={this.handleClose}
-                        PaperProps={{
-                            style: {
-                                maxHeight: ITEM_HEIGHT * 4.5,
-                                width: 200,
-                            },
-                        }}
-                    >
-                        {this.props.operations.map(option => (
-                            <MenuItem
-                                key={option.type}
-                                onClick={e => {
-                                    this.props.onClick(option);
-                                    this.handleClose();
-                                }}
-                            >
-                                {option.description}
-                            </MenuItem>
-                        ))}
-                    </Menu>
-                </div>
+            <div className={this.props.classes.opMenu}>
+                <IconButton
+                    aria-label="More"
+                    aria-owns={open ? 'long-menu' : null}
+                    aria-haspopup="true"
+                    onClick={this.handleClick}
+                >
+                    <i className="material-icons">more_vert</i>
+                </IconButton>
+                <Menu
+                    id="long-menu"
+                    anchorEl={this.state.anchorEl}
+                    open={open}
+                    onClose={this.handleClose}
+                    PaperProps={{
+                        style: {
+                            maxHeight: ITEM_HEIGHT * 4.5,
+                            width: 200,
+                        },
+                    }}
+                >
+                    {this.props.operations.map(option => (
+                        <MenuItem
+                            key={option.type}
+                            onClick={e => {
+                                this.props.onClick(option);
+                                this.handleClose();
+                            }}
+                        >
+                            {option.description}
+                        </MenuItem>
+                    ))}
+                </Menu>
             </div>
         );
     }

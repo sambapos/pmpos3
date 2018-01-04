@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import * as CardStore from '../../store/Cards';
+import * as moment from 'moment';
 import { RouteComponentProps } from 'react-router';
-import { WithStyles } from 'material-ui';
+import { WithStyles, Typography } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
@@ -67,6 +68,10 @@ export class CardPage extends React.Component<
                     ]}
                 />
                 <div className={this.props.classes.content}>
+                    <div>
+                        <Typography>{this.props.card.id}</Typography>
+                        <Typography>{moment(this.props.card.time).format('LLL')}</Typography>
+                    </div>
                     <CardPageContent
                         executeCardAction={this.props.addPendingAction}
                         card={this.props.card}

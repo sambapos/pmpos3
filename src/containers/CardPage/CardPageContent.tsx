@@ -1,12 +1,11 @@
 import * as React from 'react';
 import * as shortid from 'shortid';
-import * as moment from 'moment';
 import Tags from './Tags';
 import Operations from './Operations';
 import SubCards from './SubCards';
 import { CardRecord, CardTagRecord } from '../../models/Card';
 import CardOperation from '../../modules/CardOperations/CardOperation';
-import { Modal, WithStyles, Typography } from 'material-ui';
+import { Modal, WithStyles } from 'material-ui';
 import decorate, { Style } from './style';
 
 interface CardContentProps {
@@ -84,9 +83,6 @@ class CardPageContent extends React.Component<PageProps, CardContentState> {
                     operations={this.props.operations}
                     onClick={op => this.handleOperation(op)}
                 />
-                <Typography>{this.props.card.id}</Typography>
-                <Typography>{moment(this.props.card.time).format('LLL')}</Typography>
-
                 <Tags card={this.props.card} handleTagClick={this.handleTagClick} />
                 <SubCards
                     card={this.props.card}

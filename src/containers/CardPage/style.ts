@@ -8,11 +8,20 @@ export interface Style {
     root: any;
     footer: any;
     opMenu: any;
+    tagItem: any;
+    tagItemContent: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     opMenu: {
         float: 'right'
+    },
+    tagItem: {
+        paddingTop: '4px',
+        paddingBottom: '4px',
+    },
+    tagItemContent: {
+        flex: 1
     },
     card: {
         minWidth: 275,
