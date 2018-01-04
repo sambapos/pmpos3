@@ -10,12 +10,25 @@ import TopBar from '../TopBar';
 import { CardRecord } from '../../models/Card';
 
 export type PageProps =
-    { cards: List<CardRecord> }
+    { cards: List<CardRecord>, card: CardRecord }
     & WithStyles<keyof Style>
     & typeof CardStore.actionCreators
     & RouteComponentProps<{}>;
 
 class CardsPage extends React.Component<PageProps, {}> {
+
+    createTestCards() {
+        for (let index = 0; index < 100; index++) {
+            this.props.addCard();
+            for (let index1 = 0; index1 < 50; index1++) {
+                this.props.addPendingAction(undefined, 'SET_CARD_TAG', {
+                    name: 'Tag' + index1, value: 'Value' + index1
+                });
+            }
+            this.props.commitCard();
+        }
+    }
+
     public render() {
         return (
             <div>
@@ -27,6 +40,12 @@ class CardsPage extends React.Component<PageProps, {}> {
                     }}
                 >Add Card
                 </button>
+                {/* <button
+                    onClick={() => {
+                        this.createTestCards();
+                    }}
+                >Add Test Cards
+                </button> */}
                 <ul>
                     {
                         this.props.cards.map(card => {
@@ -40,8 +59,6 @@ class CardsPage extends React.Component<PageProps, {}> {
                                         }}
                                     >
                                         {card.id}
-                                        <br />
-                                        {card.time}
                                     </a>
                                 </li>
                             );
@@ -54,7 +71,8 @@ class CardsPage extends React.Component<PageProps, {}> {
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-    cards: state.cards.cards
+    cards: state.cards.cards,
+    card: state.cards.currentCard
 });
 
 export default decorate(connect(

@@ -9,7 +9,7 @@ import { createBrowserHistory } from 'history';
 import configureStore from './configureStore';
 import * as RoutesModule from './routes';
 import { saveState } from './localStorage';
-import { uuidv4 } from './lib/uuid';
+import * as shortid from 'shortid';
 
 let routes = RoutesModule.routes;
 
@@ -23,7 +23,7 @@ store.subscribe(() => {
 
 let terminalId = localStorage.getItem('terminalId');
 if (!terminalId) {
-  terminalId = uuidv4();
+  terminalId = shortid.generate();
   localStorage.setItem('terminalId', terminalId as string);
 }
 store.dispatch({ type: 'SET_TERMINAL_ID', terminalId });

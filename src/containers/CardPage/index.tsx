@@ -14,6 +14,7 @@ import CardOperation from '../../modules/CardOperations/CardOperation';
 import { CommitRecord } from '../../store/Cards/models';
 import Commits from './Commits';
 import CardPageContent from './CardPageContent';
+import CardBalance from './CardBalance';
 
 type PageProps =
     {
@@ -46,7 +47,7 @@ export class CardPage extends React.Component<
         return (
             <div className={this.props.classes.root}>
                 <TopBar
-                    title="Card"
+                    title={`Card (${this.props.card.id})`}
                     menuCommand={{ icon: 'close', onClick: () => { this.props.history.goBack(); } }}
                     secondaryCommands={[
                         {
@@ -71,9 +72,6 @@ export class CardPage extends React.Component<
                         card={this.props.card}
                         operations={this.state.operations}
                     />
-                    {/* <Tags card={this.props.card} handleTagClick={this.handleTagClick} />
-                    <Operations operations={this.state.operations} onClick={op => this.handleOperation(op)} />
-                    <SubCards card={this.props.card} /> */}
                     {this.state.showCommits &&
                         <Commits
                             pendingActions={this.props.pendingActions}
@@ -81,6 +79,9 @@ export class CardPage extends React.Component<
                         />
                     }
                 </div >
+                <div className={this.props.classes.footer}>
+                    <CardBalance card={this.props.card} />
+                </div>
             </div>
         );
     }

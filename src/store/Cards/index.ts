@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 import { AppThunkAction } from '../appThunkAction';
-import { uuidv4 } from '../../lib/uuid';
+import * as shortid from 'shortid';
 import { StateRecord, Commit } from './models';
 import CardList from './CardList';
 import { CardRecord } from '../../models/Card';
@@ -69,7 +69,7 @@ export const reducer: Reducer<StateRecord> = (
         case 'ADD_CARD': {
             let cardCreateAction = new ActionRecord({
                 actionType: 'CREATE_CARD', data: {
-                    id: uuidv4(),
+                    id: shortid.generate(),
                     time: new Date().getTime()
                 }
             });
@@ -127,7 +127,7 @@ export const actionCreators = {
 
         if (state.pendingActions.count() > 0) {
             let commit = {
-                id: uuidv4(),
+                id: shortid.generate(),
                 time: new Date().getTime(),
                 terminalId: getState().client.terminalId,
                 user: getState().client.loggedInUser,
@@ -142,16 +142,17 @@ export const actionCreators = {
             type: 'COMMIT_CARD'
         });
     },
-    addPendingAction: (card: CardRecord, actionType: string, data: any):
+    addPendingAction: (card: CardRecord | undefined, actionType: string, data: any):
         AppThunkAction<KnownActions> => (dispatch, getState) => {
+            let c = card || getState().cards.currentCard;
             let actionData = new ActionRecord({
-                id: uuidv4(),
-                cardId: card.id,
+                id: shortid.generate(),
+                cardId: c.id,
                 actionType,
                 data,
-                concurrencyData: cardList.readConcurrencyData(actionType, card, data)
+                concurrencyData: cardList.readConcurrencyData(actionType, c, data)
             });
-            if (cardList.canApplyAction(card, actionData)) {
+            if (cardList.canApplyAction(c, actionData)) {
                 dispatch({
                     type: 'ADD_PENDING_ACTION', action: actionData
                 });
@@ -163,7 +164,6 @@ export const actionCreators = {
             cardId: id,
             payload: new Promise<CardRecord>((resolve, reject) => {
                 let card = cardList.getCard(id);
-                console.log(card);
                 if (!card) {
                     reject(`${id} not found`);
                 } else {

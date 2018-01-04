@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import { List as IList, Map as IMap, fromJS } from 'immutable';
 import { AppThunkAction } from './appThunkAction';
-import { uuidv4 } from '../lib/uuid';
+import * as shortid from 'shortid';
 
 type AddTaskAction = {
     type: 'ADD_TASK',
@@ -22,7 +22,7 @@ export const reducer: Reducer<IList<IMap<any, any>>> = (
 ): IList<IMap<any, any>> => {
     switch (action.type) {
         case 'ADD_TASK':
-            return state.push(fromJS({ id: uuidv4(), title: action.title, estimate: 0, date: new Date() }));
+            return state.push(fromJS({ id: shortid.generate(), title: action.title, estimate: 0, date: new Date() }));
         case 'SET_TASK_ESTIMATE':
             const currentTask = state.get(action.index);
             if (currentTask) {

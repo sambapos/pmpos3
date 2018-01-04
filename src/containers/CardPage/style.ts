@@ -6,9 +6,14 @@ export interface Style {
     paper: any;
     modal: any;
     root: any;
+    footer: any;
+    opMenu: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
+    opMenu: {
+        float: 'right'
+    },
     card: {
         minWidth: 275,
         padding: spacing.unit,
@@ -31,6 +36,14 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
             width: '900px',
             alignSelf: 'center'
         },
+    },
+    footer: {
+        [breakpoints.up('sm')]: {
+            maxWidth: '600px',
+            width: '100%',
+            alignSelf: 'center',
+        },
+        flex: 'none'
     },
     modal: {
         position: 'absolute',

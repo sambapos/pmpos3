@@ -1,12 +1,12 @@
 import * as React from 'react';
+import * as shortid from 'shortid';
+import * as moment from 'moment';
 import Tags from './Tags';
 import Operations from './Operations';
 import SubCards from './SubCards';
 import { CardRecord, CardTagRecord } from '../../models/Card';
 import CardOperation from '../../modules/CardOperations/CardOperation';
-import CardPageHeader from './CardPageHeader';
-import { uuidv4 } from '../../lib/uuid';
-import { Modal, WithStyles } from 'material-ui';
+import { Modal, WithStyles, Typography } from 'material-ui';
 import decorate, { Style } from './style';
 
 interface CardContentProps {
@@ -61,7 +61,7 @@ class CardPageContent extends React.Component<PageProps, CardContentState> {
             });
         } else {
             this.handleCardMutation(operation.type, {
-                id: uuidv4(), time: new Date().getTime()
+                id: shortid.generate(), time: new Date().getTime()
             });
         }
     }
@@ -79,9 +79,15 @@ class CardPageContent extends React.Component<PageProps, CardContentState> {
                         {this.state.operationComponent}
                     </div>
                 </Modal>
-                <CardPageHeader card={this.props.card} />
+                <Operations
+                    card={this.props.card}
+                    operations={this.props.operations}
+                    onClick={op => this.handleOperation(op)}
+                />
+                <Typography>{this.props.card.id}</Typography>
+                <Typography>{moment(this.props.card.time).format('LLL')}</Typography>
+
                 <Tags card={this.props.card} handleTagClick={this.handleTagClick} />
-                <Operations operations={this.props.operations} onClick={op => this.handleOperation(op)} />
                 <SubCards
                     card={this.props.card}
                     operations={this.props.operations}

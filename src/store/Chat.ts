@@ -1,8 +1,8 @@
 import { Reducer } from 'redux';
 import { List as IList, Record } from 'immutable';
 import { AppThunkAction } from './appThunkAction';
-import { uuidv4 } from '../lib/uuid';
 import configureProtocol from './configureProtocol';
+import * as shortid from 'shortid';
 
 type IncLamportAction = {
     type: 'INC_LAMPORT'
@@ -97,7 +97,7 @@ export const actionCreators = {
     addMessage: (message: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
         dispatch({ type: 'INC_LAMPORT' });
         getState().chat.protocol.share.chat.push([{
-            id: uuidv4(),
+            id: shortid.generate(),
             time: new Date().getTime(),
             lamport: getState().chat.lamport,
             message: message,

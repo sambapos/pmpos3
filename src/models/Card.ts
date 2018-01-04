@@ -4,6 +4,7 @@ export interface CardTag {
     name: string;
     value: string;
     quantity: number;
+    unit: string;
     debit: number;
     credit: number;
 }
@@ -12,6 +13,7 @@ export class CardTagRecord extends Record<CardTag>({
     name: '',
     value: '',
     quantity: 0,
+    unit: '',
     debit: 0,
     credit: 0
 }) {
