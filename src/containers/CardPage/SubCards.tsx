@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { Card } from 'material-ui';
-import { CardRecord } from '../../models/Card';
+import { CardRecord, CardTagRecord } from '../../models/Card';
 import CardPageContent from './CardPageContent';
-import CardOperation from '../../modules/CardOperations/CardOperation';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import decorate, { Style } from './style';
 
 interface SubCardProps {
     card: CardRecord;
-    operations: CardOperation[];
-    executeCardAction: (card: CardRecord, actionType: string, data: any) => void;
+    selectedCard: CardRecord;
+    onClick: (card: CardRecord, target: any) => void;
+    handleTagClick: (Card: CardRecord, value: CardTagRecord) => void;
 }
 
 const SubCards = (props: SubCardProps & WithStyles<keyof Style>) => {
@@ -21,8 +21,9 @@ const SubCards = (props: SubCardProps & WithStyles<keyof Style>) => {
                     <CardPageContent
                         key={card.id}
                         card={card}
-                        operations={props.operations}
-                        executeCardAction={props.executeCardAction}
+                        selectedCard={props.selectedCard}
+                        onClick={props.onClick}
+                        handleTagClick={props.handleTagClick}
                     />
                 );
             })}

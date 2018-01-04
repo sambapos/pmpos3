@@ -6,7 +6,7 @@ import { WithStyles } from 'material-ui/styles/withStyles';
 
 interface TagsProps {
     card: CardRecord;
-    handleTagClick: (key: string, value: CardTagRecord) => void;
+    handleTagClick: (card: CardRecord, value: CardTagRecord) => void;
 }
 
 const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
@@ -23,7 +23,7 @@ const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
                         <ListItem
                             key={k}
                             className={props.classes.tagItem}
-                            onClick={e => props.handleTagClick(k, v)}
+                            onClick={e => props.handleTagClick(props.card, v)}
                         >
                             <div className={props.classes.tagItemContent}>
                                 {key}{vl}{u}

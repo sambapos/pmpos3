@@ -10,6 +10,8 @@ export interface Style {
     opMenu: any;
     tagItem: any;
     tagItemContent: any;
+    cardLine: any;
+    cardLineIcon: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
@@ -22,6 +24,14 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     },
     tagItemContent: {
         flex: 1
+    },
+    cardLine: {
+        display: 'flex',
+        flexWrap: 'wrap'
+    },
+    cardLineIcon: {
+        marginTop: spacing.unit,
+        fontSize: 20
     },
     card: {
         minWidth: 275,
