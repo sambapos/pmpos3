@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { List } from 'immutable';
-import { CommitRecord } from '../store/Cards/models';
 import CommitItem from './CommitItem';
+import { CommitRecord } from '../models/Commit';
 
 interface CommitListProps {
     commits: List<CommitRecord>;

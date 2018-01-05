@@ -15,7 +15,7 @@ yIndexedDb(Y);
 ipfsConnector(Y);
 
 import { ApplicationState } from './index';
-import { Commit } from './Cards/models';
+import { Commit } from '../models/Commit';
 
 export default (
     terminalId: string, user: string,
@@ -47,7 +47,7 @@ export default (
 
     Y({
         db: {
-            name: 'memory'
+            name: 'indexeddb'
         },
         connector: {
             name: 'ipfs',

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { ActionRecord } from '../../models/Action';
 import { List } from 'immutable';
-import { CommitRecord } from '../../store/Cards/models';
 import { WithStyles, Card, Typography } from 'material-ui';
 import decorate, { Style } from './style';
 import ActionList from '../../components/ActionList';
 import CommitList from '../../components/CommitList';
+import { CommitRecord } from '../../models/Commit';
 
 type CommitProps =
     {

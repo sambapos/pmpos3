@@ -1,9 +1,8 @@
-import {
-    Commit, CommitRecord, CardData, CardDataRecord,
-} from './models';
 import { Map as IMap, List } from 'immutable';
-import { ActionRecord } from '../../models/Action';
-import { Card, CardRecord, CardTagRecord } from '../../models/Card';
+import { CardData, CardDataRecord } from './CardData';
+import { CommitRecord, Commit } from './Commit';
+import { ActionRecord } from './Action';
+import { Card, CardRecord, CardTagRecord } from './Card';
 
 export const makeDeepCardData = (cardData: CardData): CardDataRecord => {
     return new CardDataRecord({

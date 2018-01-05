@@ -7,6 +7,8 @@ export interface CardTag {
     unit: string;
     debit: number;
     credit: number;
+    source: string;
+    target: string;
 }
 
 export class CardTagRecord extends Record<CardTag>({
@@ -15,7 +17,9 @@ export class CardTagRecord extends Record<CardTag>({
     quantity: 0,
     unit: '',
     debit: 0,
-    credit: 0
+    credit: 0,
+    source: '',
+    target: ''
 }) {
     get balance(): number { return (this.debit - this.credit) * Math.max(this.quantity, 1); }
 }
@@ -40,5 +44,10 @@ export class CardRecord extends Record<Card>({
 
     get subCardBalance(): number {
         return this.cards.reduce((x, y) => x + y.balance, 0);
+    }
+
+    get display(): string {
+        let nameTag = this.tags.get('Name');
+        return nameTag && nameTag.value ? nameTag.value : this.id;
     }
 }

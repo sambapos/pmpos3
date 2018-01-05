@@ -58,7 +58,7 @@ class CardsPage extends React.Component<PageProps, {}> {
                                             e.preventDefault();
                                         }}
                                     >
-                                        {card.id}
+                                        {card.display}
                                     </a>
                                 </li>
                             );

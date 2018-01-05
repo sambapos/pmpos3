@@ -5,6 +5,8 @@ import CardActions from 'material-ui/Card/CardActions';
 import Typography from 'material-ui/Typography/Typography';
 import { CardTagRecord } from '../../../../models/Card';
 import * as shortid from 'shortid';
+import AutoSuggest from './AutoSuggest';
+import CardList from '../../../CardList';
 
 export default class extends React.Component<
     {
@@ -12,10 +14,16 @@ export default class extends React.Component<
         actionName: string,
         current?: CardTagRecord
     },
-    { name: string, value: string, quantity: number, unit: string, debit: number, credit: number }> {
+    {
+        name: string, value: string, quantity: number, unit: string,
+        debit: number, credit: number, source: string, target: string
+    }> {
     constructor(props: any) {
         super(props);
-        this.state = { name: '', value: '', quantity: 0, unit: '', debit: 0, credit: 0 };
+        this.state = {
+            name: '', value: '', quantity: 0, unit: '',
+            debit: 0, credit: 0, source: '', target: ''
+        };
     }
     componentDidMount() {
         if (this.props.current) {
@@ -25,12 +33,15 @@ export default class extends React.Component<
                 quantity: this.props.current.quantity,
                 unit: this.props.current.unit,
                 debit: this.props.current.debit,
-                credit: this.props.current.credit
+                credit: this.props.current.credit,
+                source: this.props.current.source,
+                target: this.props.current.target
             });
         }
     }
 
     render() {
+
         return (
             <div>
                 <CardContent>
@@ -40,13 +51,12 @@ export default class extends React.Component<
                         value={this.state.name}
                         onChange={e => this.setState({ name: e.target.value })}
                     />}
-                    <br />
-                    <TextField
-                        label={this.props.current ? this.props.current.name : 'Tag Value'}
-                        value={this.state.value}
-                        onChange={e => this.setState({ value: e.target.value })}
+                    <AutoSuggest
+                        label="Tag Value"
+                        value={this.props.current ? this.props.current.value : ''}
+                        getSuggestions={value => CardList.getCardSuggestions(this.state.name, value)}
+                        handleChange={(e, value) => this.setState({ value })}
                     />
-                    <br />
                     <TextField
                         label="Quantity"
                         value={this.state.quantity}
@@ -67,6 +77,16 @@ export default class extends React.Component<
                         value={this.state.credit}
                         onChange={e => this.setState({ credit: Number(e.target.value) })}
                     />
+                    <TextField
+                        label="Source"
+                        value={this.state.source}
+                        onChange={e => this.setState({ source: e.target.value })}
+                    />
+                    <TextField
+                        label="Target"
+                        value={this.state.target}
+                        onChange={e => this.setState({ target: e.target.value })}
+                    />
                 </CardContent>
                 <CardActions>
                     <Button
@@ -79,7 +99,9 @@ export default class extends React.Component<
                                     quantity: this.state.quantity,
                                     unit: this.state.unit,
                                     debit: this.state.debit,
-                                    credit: this.state.credit
+                                    credit: this.state.credit,
+                                    source: this.state.source,
+                                    target: this.state.target
                                 });
                         }}
                     >

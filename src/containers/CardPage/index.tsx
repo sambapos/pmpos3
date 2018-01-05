@@ -13,11 +13,10 @@ import { ActionRecord } from '../../models/Action';
 import { CardRecord, CardTagRecord } from '../../models/Card';
 import { cardOperations } from '../../modules/CardOperations';
 import CardOperation from '../../modules/CardOperations/CardOperation';
-import { CommitRecord } from '../../store/Cards/models';
 import Commits from './Commits';
 import CardPageContent from './CardPageContent';
 import CardBalance from './CardBalance';
-import FooterOperations from './FooterOperations';
+import { CommitRecord } from '../../models/Commit';
 
 type PageProps =
     {
@@ -31,7 +30,7 @@ type PageProps =
     & RouteComponentProps<{ id?: string }>;
 
 interface PageState {
-    anchorEl: any,
+    anchorEl: any;
     operationComponent: any;
     modalOpen: boolean;
     operations: CardOperation[];
@@ -104,7 +103,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
         return (
             <div className={this.props.classes.root}>
                 <TopBar
-                    title={`Card (${this.props.card.id})`}
+                    title={`Card (${this.props.card.display})`}
                     menuCommand={{ icon: 'close', onClick: () => { this.props.history.goBack(); } }}
                     secondaryCommands={[
                         {
@@ -130,10 +129,14 @@ export class CardPage extends React.Component<PageProps, PageState> {
                     </div>
                     <CardPageContent
                         card={this.props.card}
-                        selectedCard={this.state.selectedCard}
                         onClick={(card, target) => this.setState({ selectedCard: card, anchorEl: target })}
-                        handleTagClick={(card: CardRecord, v: CardTagRecord) =>
-                            this.setState({ currentAction: { type: 'SET_CARD_TAG', data: v, card } })}
+                        handleTagClick={(card: CardRecord, cardTag: CardTagRecord) => {
+                            this.setState({ selectedCard: card });
+                            this.handleOperation(
+                                this.state.operations.find(x => x.type === 'SET_CARD_TAG') as CardOperation,
+                                cardTag
+                            );
+                        }}
                     />
                     {this.state.showCommits &&
                         <Commits
@@ -143,11 +146,6 @@ export class CardPage extends React.Component<PageProps, PageState> {
                     }
                 </div >
                 <div className={this.props.classes.footer}>
-                    <FooterOperations
-                        operations={this.state.operations}
-                        currentAction={this.state.currentAction}
-                        handleCardMutation={this.handleCardMutation}
-                    />
                     <CardBalance card={this.props.card} />
                 </div>
                 <Modal

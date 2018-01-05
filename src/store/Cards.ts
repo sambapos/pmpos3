@@ -1,10 +1,29 @@
 import { Reducer } from 'redux';
-import { AppThunkAction } from '../appThunkAction';
+import { AppThunkAction } from './appThunkAction';
 import * as shortid from 'shortid';
-import { StateRecord, Commit } from './models';
-import CardList from './CardList';
-import { CardRecord } from '../../models/Card';
-import { ActionRecord } from '../../models/Action';
+import { CardRecord } from '../models/Card';
+import { ActionRecord } from '../models/Action';
+import { Commit, CommitRecord } from '../models/Commit';
+import CardList from '../modules/CardList';
+import { List, Record } from 'immutable';
+
+export interface State {
+    cards: List<CardRecord>;
+    currentCard: CardRecord;
+    currentCommits: List<CommitRecord> | undefined;
+    pendingActions: List<ActionRecord>;
+    isLoaded: boolean;
+    protocol: any;
+}
+
+export class StateRecord extends Record<State>({
+    currentCard: new CardRecord(),
+    pendingActions: List<ActionRecord>(),
+    currentCommits: List<CommitRecord>(),
+    cards: List<CardRecord>(),
+    isLoaded: false,
+    protocol: undefined
+}) { }
 
 type SetCommitProtocolAction = {
     type: 'SET_COMMIT_PROTOCOL',
@@ -52,8 +71,6 @@ type KnownActions = AddCardAction | AddPendingActionAction | CommitCardAction | 
     | LoadCardAction | LoadCardRequestAction | LoadCardSuccessAction | LoadCardFailAction
     | SetCommitProtocolAction;
 
-const cardList = new CardList();
-
 export const reducer: Reducer<StateRecord> = (
     state: StateRecord = new StateRecord(),
     action: KnownActions
@@ -62,7 +79,7 @@ export const reducer: Reducer<StateRecord> = (
         case 'ADD_PENDING_ACTION': {
             return state
                 .update('currentCard', current => {
-                    return cardList.applyAction(current, action.action);
+                    return CardList.applyAction(current, action.action);
                 })
                 .update('pendingActions', list => list.push(action.action));
         }
@@ -77,14 +94,14 @@ export const reducer: Reducer<StateRecord> = (
                 .set('isLoaded', true)
                 .set('currentCommits', undefined)
                 .set('pendingActions', state.pendingActions.clear().push(cardCreateAction))
-                .set('currentCard', cardList.applyAction(undefined, cardCreateAction));
+                .set('currentCard', CardList.applyAction(undefined, cardCreateAction));
         }
         case 'SET_COMMIT_PROTOCOL': {
             return state.set('protocol', action.protocol);
         }
         case 'COMMIT_RECEIVED': {
-            cardList.addCommits(action.values);
-            return state.set('cards', cardList.getCards());
+            CardList.addCommits(action.values);
+            return state.set('cards', CardList.getCards());
         }
         case 'COMMIT_CARD': {
             return resetCurrentCard(state);
@@ -95,7 +112,7 @@ export const reducer: Reducer<StateRecord> = (
         case 'LOAD_CARD_SUCCESS': {
             let result = state
                 .set('currentCard', action.payload)
-                .set('currentCommits', cardList.getCommits(action.payload.id))
+                .set('currentCommits', CardList.getCommits(action.payload.id))
                 .set('isLoaded', true);
             return result;
         }
@@ -150,9 +167,9 @@ export const actionCreators = {
                 cardId: c.id,
                 actionType,
                 data,
-                concurrencyData: cardList.readConcurrencyData(actionType, c, data)
+                concurrencyData: CardList.readConcurrencyData(actionType, c, data)
             });
-            if (cardList.canApplyAction(c, actionData)) {
+            if (CardList.canApplyAction(c, actionData)) {
                 dispatch({
                     type: 'ADD_PENDING_ACTION', action: actionData
                 });
@@ -163,7 +180,7 @@ export const actionCreators = {
             type: 'LOAD_CARD',
             cardId: id,
             payload: new Promise<CardRecord>((resolve, reject) => {
-                let card = cardList.getCard(id);
+                let card = CardList.getCard(id);
                 if (!card) {
                     reject(`${id} not found`);
                 } else {

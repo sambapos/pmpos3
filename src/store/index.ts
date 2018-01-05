@@ -1,15 +1,14 @@
 import * as Client from './Client';
 import * as Tasks from './Tasks';
-import * as Cards from './Cards/index';
+import * as Cards from './Cards';
 import { List, Map } from 'immutable';
-import * as CardModels from './Cards/models';
 import * as Chat from './Chat';
 
 // The top-level state object
 export interface ApplicationState {
     client: Client.ClientState;
     tasks: List<Map<any, any>>;
-    cards: CardModels.StateRecord;
+    cards: Cards.StateRecord;
     chat: Chat.StateRecord;
 }
 

@@ -3,6 +3,7 @@
   "version": "0.3.1",
   "private": true,
   "dependencies": {
+    "autosuggest-highlight": "^3.1.1",
     "history": "^4.7.2",
     "immutable": "^4.0.0-rc.9",
     "ipfs": "^0.27.5",
@@ -10,6 +11,7 @@
     "material-ui": "^1.0.0-beta.26",
     "moment": "^2.20.0",
     "react": "^16.2.0",
+    "react-autosuggest": "^9.3.2",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
     "react-router": "^4.2.0",

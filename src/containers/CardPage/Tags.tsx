@@ -19,16 +19,19 @@ const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
                     let u = v.unit ? '.' + v.unit : '';
                     let vl = v.value ? q + v.value : '';
                     let key = !k || k[0] === '_' ? '' : k + ': ';
+                    let st = v.source || v.target ? `${v.source} > ${v.target}` : '';
                     return (
                         <ListItem
                             key={k}
+                            button
                             className={props.classes.tagItem}
                             onClick={e => props.handleTagClick(props.card, v)}
                         >
                             <div className={props.classes.tagItemContent}>
-                                {key}{vl}{u}
+                                <div>{key}{vl}{u}</div>
+                                {st && <div style={{ fontSize: '0.7em' }}>{st}</div>}
                             </div>
-                            <div>{b}</div>
+                            <div style={{ fontSize: '1.2em' }}>{b}</div>
                         </ListItem>);
                 })
             }

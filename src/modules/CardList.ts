@@ -1,11 +1,12 @@
-import { CommitRecord, Commit } from './models';
 import { List, Map as IMap } from 'immutable';
-import { cardOperations } from '../../modules/CardOperations';
-import { ActionRecord } from '../../models/Action';
-import { CardRecord } from '../../models/Card';
-import { makeDeepCommit } from './makers';
+import { CommitRecord, Commit } from '../models/Commit';
+import { CardRecord } from '../models/Card';
+import { cardOperations } from './CardOperations/index';
+import { ActionRecord } from '../models/Action';
+import { makeDeepCommit } from '../models/makers';
+import { Suggestion } from './CardOperations/Plugins/SetCardTag/AutoSuggest';
 
-export default class CardList {
+class CardList {
 
     commits: IMap<string, List<CommitRecord>>;
     cards: IMap<string, CardRecord>;
@@ -66,4 +67,31 @@ export default class CardList {
     getCommits(id: string): List<CommitRecord> | undefined {
         return this.commits.get(id);
     }
+
+    getCardSuggestions(ref: string, value1: string): Suggestion[] {
+        const inputValue = value1.trim().toLowerCase();
+        const inputLength = inputValue.length;
+        if (inputLength === 0) { return []; }
+        let card = this.cards.find(c => {
+            let refTag = c.tags.get('Ref');
+            if (refTag) { return refTag.value === ref; }
+            return false;
+        });
+        let result = [] as Suggestion[];
+        if (card) {
+            result = card.cards
+                .filter(c => {
+                    if (!c.tags.has('Name')) { return false; }
+                    let val: string = c.tags.getIn(['Name', 'value']);
+                    return val.trim().toLowerCase().indexOf(inputValue) > -1;
+                })
+                .map(c => {
+                    return { label: c.tags.getIn(['Name', 'value']) };
+                })
+                .toArray();
+        }
+        return result;
+    }
 }
+
+export default new CardList();

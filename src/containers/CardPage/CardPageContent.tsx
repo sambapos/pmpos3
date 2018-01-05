@@ -7,7 +7,6 @@ import decorate, { Style } from './style';
 
 interface CardContentProps {
     card: CardRecord;
-    selectedCard: CardRecord;
     onClick: (card: CardRecord, target: any) => void;
     handleTagClick: (card: CardRecord, value: CardTagRecord) => void;
 }
@@ -15,7 +14,6 @@ interface CardContentProps {
 type PageProps = CardContentProps & WithStyles<keyof Style>;
 
 const CardPageContent = (props: PageProps) => {
-    let isSelected: boolean = props.card.id === props.selectedCard.id;
     return (
         <div >
             <div className={props.classes.cardLine}>
@@ -24,13 +22,12 @@ const CardPageContent = (props: PageProps) => {
                     color="primary"
                     className={props.classes.cardLineIcon}
                 >
-                    {isSelected ? 'radio_button_checked' : 'radio_button_unchecked'}
+                    more_vert
                 </Icon>
                 <Tags card={props.card} handleTagClick={props.handleTagClick} />
             </div>
             <SubCards
                 card={props.card}
-                selectedCard={props.selectedCard}
                 onClick={props.onClick}
                 handleTagClick={props.handleTagClick}
             />

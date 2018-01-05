@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { CommitRecord } from '../store/Cards/models';
 import { Card } from 'material-ui';
 import * as moment from 'moment';
 import Typography from 'material-ui/Typography/Typography';
 import ActionList from './ActionList';
+import { CommitRecord } from '../models/Commit';
 
 interface CommitItemProps {
     commit: CommitRecord;
