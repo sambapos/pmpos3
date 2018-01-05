@@ -14,8 +14,9 @@ interface CardContentProps {
 type PageProps = CardContentProps & WithStyles<keyof Style>;
 
 const CardPageContent = (props: PageProps) => {
+    console.log('c', props.card);
     return (
-        <div >
+        <div className={props.card.cards.count() > 0 ? props.classes.node : props.classes.leaf} >
             <div className={props.classes.cardLine}>
                 <Icon
                     onClick={e => props.onClick(props.card, e.target)}

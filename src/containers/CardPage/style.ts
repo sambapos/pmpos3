@@ -7,16 +7,27 @@ export interface Style {
     modal: any;
     root: any;
     footer: any;
-    opMenu: any;
     tagItem: any;
     tagItemContent: any;
     cardLine: any;
     cardLineIcon: any;
+    node: any;
+    leaf: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
-    opMenu: {
-        float: 'right'
+    node: {
+        backgroundColor: palette.common.lightWhite,
+        paddingLeft: spacing.unit,
+        paddingRight: spacing.unit,
+        paddingBottom: spacing.unit,
+        marginBottom: spacing.unit,
+        borderColor: palette.text.divider,
+        border: '1px solid',
+    },
+    leaf: {
+        paddingLeft: spacing.unit,
+        backgroundColor: palette.background.paper,
     },
     tagItem: {
         paddingTop: '4px',
