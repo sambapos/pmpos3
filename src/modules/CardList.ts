@@ -10,6 +10,7 @@ class CardList {
 
     commits: IMap<string, List<CommitRecord>>;
     cards: IMap<string, CardRecord>;
+    cardIndex: IMap<string, List<string>>;
 
     constructor() {
         this.commits = IMap<string, List<CommitRecord>>();

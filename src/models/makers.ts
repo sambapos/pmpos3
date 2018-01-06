@@ -20,7 +20,6 @@ export const makeDeepCommit = (commit: Commit): CommitRecord => {
         cardId: commit.cardId,
         terminalId: commit.terminalId,
         user: commit.user,
-        state: makeDeepCard(commit.state),
         actions: List<ActionRecord>(commit.actions.map(action => new ActionRecord(action)))
     });
 };
