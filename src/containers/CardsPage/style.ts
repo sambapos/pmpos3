@@ -4,11 +4,17 @@ export interface Style {
     card: any;
     content: any;
     paper: any;
+    root: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     card: {
         minWidth: 275,
+    },
+    root: {
+        display: 'flex',
+        flexFlow: 'column',
+        flex: '1 1 auto'
     },
     content: {
         height: '100%',

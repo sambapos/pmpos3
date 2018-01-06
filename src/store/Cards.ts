@@ -175,12 +175,12 @@ export const actionCreators = {
                 });
             }
         },
-    loadCard: (id: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
+    loadCard: (id: string, id2?: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
         dispatch({
             type: 'LOAD_CARD',
             cardId: id,
             payload: new Promise<CardRecord>((resolve, reject) => {
-                let card = CardList.getCard(id);
+                let card = CardList.getCard(id, id2);
                 if (!card) {
                     reject(`${id} not found`);
                 } else {

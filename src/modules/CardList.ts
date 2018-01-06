@@ -60,8 +60,12 @@ class CardList {
         return List<CardRecord>(this.cards.valueSeq());
     }
 
-    getCard(id: string): CardRecord {
-        return this.cards.get(id) as CardRecord;
+    getCard(id: string, id2?: string): CardRecord {
+        let card = this.cards.get(id);
+        if (card && id2) {
+            card = card.cards.find(c => c.id === id2);
+        }
+        return card as CardRecord;
     }
 
     getCommits(id: string): List<CommitRecord> | undefined {

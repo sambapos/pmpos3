@@ -27,7 +27,7 @@ type PageProps =
     }
     & WithStyles<keyof Style>
     & typeof CardStore.actionCreators
-    & RouteComponentProps<{ id?: string }>;
+    & RouteComponentProps<{ id?: string, id2?: string }>;
 
 interface PageState {
     anchorEl: any;
@@ -90,7 +90,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
 
     public componentDidMount() {
         if (this.props.match.params.id) {
-            this.props.loadCard(this.props.match.params.id);
+            this.props.loadCard(this.props.match.params.id, this.props.match.params.id2);
         }
         if (this.props.isLoaded) {
             this.setState({ selectedCard: this.props.card });

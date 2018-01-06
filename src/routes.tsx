@@ -21,7 +21,7 @@ export const subRoutes = (
         <Route exact path="/chat" component={ChatPage} />
         <Route exact path="/about" component={AboutPage} />
         <Route exact path="/login" component={LoginPage} />
-        <Route exact path="/cards" component={CardsPage} />
-        <Route exact path="/card/:id?" component={CardPage} />
+        <Route exact path="/cards/:id?" component={CardsPage} />
+        <Route exact path="/card/:id?/:id2?" component={CardPage} />
     </div>
 );
