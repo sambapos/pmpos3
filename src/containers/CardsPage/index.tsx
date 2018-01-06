@@ -5,14 +5,14 @@ import { RouteComponentProps } from 'react-router';
 import { WithStyles, List, ListItem } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
-import { List as IList } from 'immutable';
+import { Map as IMap } from 'immutable';
 import TopBar from '../TopBar';
 import { CardRecord } from '../../models/Card';
 import Divider from 'material-ui/Divider/Divider';
 import ListItemText from 'material-ui/List/ListItemText';
 
 type PageProps =
-    { cards: IList<CardRecord>, card: CardRecord }
+    { cards: IMap<string, CardRecord>, card: CardRecord }
     & WithStyles<keyof Style>
     & typeof CardStore.actionCreators
     & RouteComponentProps<{ id?: string }>;
@@ -94,12 +94,12 @@ class CardsPage extends React.Component<PageProps, {}> {
     }
 
     public render() {
-        let cards = this.props.cards.toArray();
+        let cards = this.props.cards;
         let parentCard: CardRecord | undefined;
         if (this.props.match.params.id) {
-            parentCard = this.props.cards.find(c => c.id === this.props.match.params.id);
+            parentCard = this.props.cards.get(this.props.match.params.id);
             if (parentCard) {
-                cards = parentCard.cards.toArray();
+                cards = parentCard.cards;
             }
         }
 
@@ -113,7 +113,7 @@ class CardsPage extends React.Component<PageProps, {}> {
 
                 <div className={this.props.classes.content}>
                     <List>
-                        {this.renderCards(cards, parentCard)}
+                        {this.renderCards(cards.valueSeq().toArray(), parentCard)}
                     </List>
                 </div>
             </div>

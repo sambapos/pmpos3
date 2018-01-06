@@ -5,10 +5,10 @@ import { CardRecord } from '../models/Card';
 import { ActionRecord } from '../models/Action';
 import { Commit, CommitRecord } from '../models/Commit';
 import CardList from '../modules/CardList';
-import { List, Record } from 'immutable';
+import { List, Map as IMap, Record } from 'immutable';
 
 export interface State {
-    cards: List<CardRecord>;
+    cards: IMap<string, CardRecord>;
     currentCard: CardRecord;
     visibleCardId: string;
     currentCommits: List<CommitRecord> | undefined;
@@ -22,7 +22,7 @@ export class StateRecord extends Record<State>({
     visibleCardId: '',
     pendingActions: List<ActionRecord>(),
     currentCommits: List<CommitRecord>(),
-    cards: List<CardRecord>(),
+    cards: IMap<string, CardRecord>(),
     isLoaded: false,
     protocol: undefined
 }) { }

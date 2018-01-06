@@ -56,8 +56,8 @@ class CardList {
         commits.forEach(x => this.addCommit(x));
     }
 
-    getCards(): List<CardRecord> {
-        return List<CardRecord>(this.cards.valueSeq());
+    getCards(): IMap<string, CardRecord> {
+        return this.cards;
     }
 
     getCard(id: string): CardRecord {
@@ -79,7 +79,7 @@ class CardList {
         });
         let result = [] as Suggestion[];
         if (card) {
-            result = card.cards
+            result = card.cards.valueSeq()
                 .filter(c => {
                     if (!c.tags.has('Name')) { return false; }
                     let val: string = c.tags.getIn(['Name', 'value']);

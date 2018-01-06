@@ -30,6 +30,6 @@ export const makeDeepCard = (card: Card): CardRecord => {
         id: card.id,
         time: card.time,
         tags: IMap<string, CardTagRecord>(card.tags),
-        cards: List<CardRecord>(card.cards && card.cards.map(c => makeDeepCard(c)))
+        cards: IMap<string, CardRecord>(card.cards)
     });
 };

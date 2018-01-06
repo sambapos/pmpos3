@@ -1,4 +1,4 @@
-import { Record, List, Map as IMap } from 'immutable';
+import { Record, Map as IMap } from 'immutable';
 
 export interface CardTag {
     name: string;
@@ -28,14 +28,14 @@ export interface Card {
     id: string;
     time: number;
     tags: IMap<string, CardTagRecord>;
-    cards: List<CardRecord>;
+    cards: IMap<string, CardRecord>;
 }
 
 export class CardRecord extends Record<Card>({
     id: '',
     time: 0,
     tags: IMap<string, CardTagRecord>(),
-    cards: List<CardRecord>()
+    cards: IMap<string, CardRecord>()
 }) {
     get balance(): number {
         let tagBalance = this.tags.reduce((x, y) => x + y.balance, 0);

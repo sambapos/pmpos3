@@ -17,7 +17,7 @@ export default class CreateCard extends CardOperation {
             time: data.time
         });
         if (card.id) {
-            result = card.update('cards', list => list.push(result));
+            result = card.update('cards', map => map.set(result.id, result));
         }
         return result;
     }

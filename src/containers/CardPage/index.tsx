@@ -104,11 +104,11 @@ export class CardPage extends React.Component<PageProps, PageState> {
         let displayedCard = this.props.card;
         if (this.props.match.params.id2) {
             displayedCard =
-                displayedCard.cards.find(c => c.id === this.props.match.params.id2)
+                displayedCard.cards.get(this.props.match.params.id2)
                 || this.props.card;
         } else if (this.props.visibleCardId) {
             displayedCard =
-                displayedCard.cards.find(c => c.id === this.props.visibleCardId)
+                displayedCard.cards.get(this.props.visibleCardId)
                 || this.props.card;
         }
         return (
