@@ -26,8 +26,36 @@ class CardsPage extends React.Component<PageProps, {}> {
                     name: 'Tag' + index1, value: 'Value' + index1
                 });
             }
-            this.props.commitCard();
+            // this.props.commitCard();
         }
+    }
+
+    getSecondaryCommands(parentCard: CardRecord | undefined) {
+        let result = [
+            {
+                icon: 'add', onClick: () => {
+                    this.props.addCard(parentCard);
+                    this.props.history.push('/card');
+                }
+            }
+        ];
+
+        if (parentCard) {
+            result.unshift({
+                icon: 'edit', onClick: () => {
+                    this.props.history.push('/card/' + parentCard.id);
+                }
+            });
+        }
+
+        return result;
+    }
+
+    getMenuCommand(parentCard?: CardRecord) {
+        if (parentCard) {
+            return { icon: 'close', onClick: () => { this.props.history.goBack(); } };
+        }
+        return undefined;
     }
 
     renderCards(cards: CardRecord[], parentCard?: CardRecord) {
@@ -79,14 +107,8 @@ class CardsPage extends React.Component<PageProps, {}> {
             <div className={this.props.classes.root}>
                 <TopBar
                     title={this.getTitle(parentCard)}
-                    secondaryCommands={[
-                        {
-                            icon: 'add', onClick: () => {
-                                this.props.addCard();
-                                this.props.history.push('/card');
-                            }
-                        }
-                    ]}
+                    menuCommand={this.getMenuCommand(parentCard)}
+                    secondaryCommands={this.getSecondaryCommands(parentCard)}
                 />
 
                 <div className={this.props.classes.content}>

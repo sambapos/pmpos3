@@ -23,6 +23,7 @@ type PageProps =
         isLoaded: boolean,
         pendingActions: List<ActionRecord>
         card: CardRecord,
+        visibleCardId: string,
         commits: List<CommitRecord>
     }
     & WithStyles<keyof Style>
@@ -100,10 +101,20 @@ export class CardPage extends React.Component<PageProps, PageState> {
     public render() {
         if (!this.props.isLoaded || !this.props.card) { return <div>Loading</div>; }
         const isMenuOpen = Boolean(this.state.anchorEl);
+        let displayedCard = this.props.card;
+        if (this.props.match.params.id2) {
+            displayedCard =
+                displayedCard.cards.find(c => c.id === this.props.match.params.id2)
+                || this.props.card;
+        } else if (this.props.visibleCardId) {
+            displayedCard =
+                displayedCard.cards.find(c => c.id === this.props.visibleCardId)
+                || this.props.card;
+        }
         return (
             <div className={this.props.classes.root}>
                 <TopBar
-                    title={`Card (${this.props.card.display})`}
+                    title={`Card (${displayedCard.display})`}
                     menuCommand={{ icon: 'close', onClick: () => { this.props.history.goBack(); } }}
                     secondaryCommands={[
                         {
@@ -117,18 +128,18 @@ export class CardPage extends React.Component<PageProps, PageState> {
                         {
                             icon: 'check', onClick: () => {
                                 this.props.commitCard();
-                                this.props.history.push('/cards');
+                                this.props.history.goBack();
                             }
                         }
                     ]}
                 />
                 <div className={this.props.classes.content}>
                     <div>
-                        <Typography>{this.props.card.id}</Typography>
-                        <Typography>{moment(this.props.card.time).format('LLL')}</Typography>
+                        <Typography>{displayedCard.id}</Typography>
+                        <Typography>{moment(displayedCard.time).format('LLL')}</Typography>
                     </div>
                     <CardPageContent
-                        card={this.props.card}
+                        card={displayedCard}
                         onClick={(card, target) => this.setState({ selectedCard: card, anchorEl: target })}
                         handleTagClick={(card: CardRecord, cardTag: CardTagRecord) => {
                             this.setState({ selectedCard: card });
@@ -146,7 +157,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
                     }
                 </div >
                 <div className={this.props.classes.footer}>
-                    <CardBalance card={this.props.card} />
+                    <CardBalance card={displayedCard} />
                 </div>
                 <Modal
                     aria-labelledby="simple-modal-title"
@@ -189,6 +200,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
 
 const mapStateToProps = (state: ApplicationState) => ({
     card: state.cards.currentCard,
+    visibleCardId: state.cards.visibleCardId,
     commits: state.cards.currentCommits,
     pendingActions: state.cards.pendingActions,
     isLoaded: state.cards.isLoaded

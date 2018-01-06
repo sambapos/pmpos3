@@ -10,6 +10,7 @@ import { List, Record } from 'immutable';
 export interface State {
     cards: List<CardRecord>;
     currentCard: CardRecord;
+    visibleCardId: string;
     currentCommits: List<CommitRecord> | undefined;
     pendingActions: List<ActionRecord>;
     isLoaded: boolean;
@@ -18,6 +19,7 @@ export interface State {
 
 export class StateRecord extends Record<State>({
     currentCard: new CardRecord(),
+    visibleCardId: '',
     pendingActions: List<ActionRecord>(),
     currentCommits: List<CommitRecord>(),
     cards: List<CardRecord>(),
@@ -36,7 +38,8 @@ type CommitReceivedAction = {
 };
 
 type AddCardAction = {
-    type: 'ADD_CARD'
+    type: 'ADD_CARD',
+    parentCard?: CardRecord
 };
 
 type CommitCardAction = {
@@ -85,7 +88,10 @@ export const reducer: Reducer<StateRecord> = (
         }
         case 'ADD_CARD': {
             let cardCreateAction = new ActionRecord({
-                actionType: 'CREATE_CARD', data: {
+                actionType: 'CREATE_CARD',
+                id: shortid.generate(),
+                cardId: action.parentCard ? action.parentCard.id : undefined,
+                data: {
                     id: shortid.generate(),
                     time: new Date().getTime()
                 }
@@ -94,7 +100,8 @@ export const reducer: Reducer<StateRecord> = (
                 .set('isLoaded', true)
                 .set('currentCommits', undefined)
                 .set('pendingActions', state.pendingActions.clear().push(cardCreateAction))
-                .set('currentCard', CardList.applyAction(undefined, cardCreateAction));
+                .set('visibleCardId', action.parentCard ? cardCreateAction.data.id : '')
+                .set('currentCard', CardList.applyAction(action.parentCard, cardCreateAction));
         }
         case 'SET_COMMIT_PROTOCOL': {
             return state.set('protocol', action.protocol);
@@ -128,15 +135,17 @@ export const reducer: Reducer<StateRecord> = (
 function resetCurrentCard(state: StateRecord) {
     return state
         .set('currentCard', new CardRecord())
+        .set('visibleCardId', '')
         .set('pendingActions', state.pendingActions.clear())
         .set('currentCommits', undefined)
         .set('isLoaded', false);
 }
 
 export const actionCreators = {
-    addCard: (): AppThunkAction<KnownActions> => (dispatch, getState) => {
+    addCard: (parentCard?: CardRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
         dispatch({
-            type: 'ADD_CARD'
+            type: 'ADD_CARD',
+            parentCard
         });
     },
     commitCard: (): AppThunkAction<KnownActions> => (dispatch, getState) => {
@@ -180,7 +189,7 @@ export const actionCreators = {
             type: 'LOAD_CARD',
             cardId: id,
             payload: new Promise<CardRecord>((resolve, reject) => {
-                let card = CardList.getCard(id, id2);
+                let card = CardList.getCard(id);
                 if (!card) {
                     reject(`${id} not found`);
                 } else {
