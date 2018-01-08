@@ -14,11 +14,7 @@ const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
         <List dense>
             {
                 props.card.tags.entrySeq().map(([k, v]) => {
-                    let q = v.quantity > 0 ? v.quantity + ' ' : '';
                     let b = v.balance !== 0 ? v.balance : '';
-                    let u = v.unit ? '.' + v.unit : '';
-                    let vl = v.value ? q + v.value : '';
-                    let key = !k || k[0] === '_' ? '' : k + ': ';
                     let st = v.source || v.target ? `${v.source} > ${v.target}` : '';
                     return (
                         <ListItem
@@ -28,7 +24,7 @@ const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
                             onClick={e => props.handleTagClick(props.card, v)}
                         >
                             <div className={props.classes.tagItemContent}>
-                                <div>{key}{vl}{u}</div>
+                                <div>{v.display}</div>
                                 {st && <div style={{ fontSize: '0.7em' }}>{st}</div>}
                             </div>
                             <div style={{ fontSize: '1.2em' }}>{b}</div>

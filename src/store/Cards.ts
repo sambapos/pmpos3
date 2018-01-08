@@ -10,7 +10,6 @@ import { List, Map as IMap, Record } from 'immutable';
 export interface State {
     cards: IMap<string, CardRecord>;
     currentCard: CardRecord;
-    visibleCardId: string;
     currentCommits: List<CommitRecord> | undefined;
     pendingActions: List<ActionRecord>;
     isLoaded: boolean;
@@ -19,7 +18,6 @@ export interface State {
 
 export class StateRecord extends Record<State>({
     currentCard: new CardRecord(),
-    visibleCardId: '',
     pendingActions: List<ActionRecord>(),
     currentCommits: List<CommitRecord>(),
     cards: IMap<string, CardRecord>(),
@@ -38,8 +36,7 @@ type CommitReceivedAction = {
 };
 
 type AddCardAction = {
-    type: 'ADD_CARD',
-    parentCard?: CardRecord
+    type: 'ADD_CARD'
 };
 
 type CommitCardAction = {
@@ -90,7 +87,6 @@ export const reducer: Reducer<StateRecord> = (
             let cardCreateAction = new ActionRecord({
                 actionType: 'CREATE_CARD',
                 id: shortid.generate(),
-                cardId: action.parentCard ? action.parentCard.id : undefined,
                 data: {
                     id: shortid.generate(),
                     time: new Date().getTime()
@@ -100,8 +96,7 @@ export const reducer: Reducer<StateRecord> = (
                 .set('isLoaded', true)
                 .set('currentCommits', undefined)
                 .set('pendingActions', state.pendingActions.clear().push(cardCreateAction))
-                .set('visibleCardId', action.parentCard ? cardCreateAction.data.id : '')
-                .set('currentCard', CardList.applyAction(action.parentCard, cardCreateAction));
+                .set('currentCard', CardList.applyAction(undefined, cardCreateAction));
         }
         case 'SET_COMMIT_PROTOCOL': {
             return state.set('protocol', action.protocol);
@@ -135,7 +130,6 @@ export const reducer: Reducer<StateRecord> = (
 function resetCurrentCard(state: StateRecord) {
     return state
         .set('currentCard', new CardRecord())
-        .set('visibleCardId', '')
         .set('pendingActions', state.pendingActions.clear())
         .set('currentCommits', undefined)
         .set('isLoaded', false);
@@ -144,8 +138,7 @@ function resetCurrentCard(state: StateRecord) {
 export const actionCreators = {
     addCard: (parentCard?: CardRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
         dispatch({
-            type: 'ADD_CARD',
-            parentCard
+            type: 'ADD_CARD'
         });
     },
     commitCard: (): AppThunkAction<KnownActions> => (dispatch, getState) => {
@@ -184,7 +177,7 @@ export const actionCreators = {
                 });
             }
         },
-    loadCard: (id: string, id2?: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
+    loadCard: (id: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
         dispatch({
             type: 'LOAD_CARD',
             cardId: id,

@@ -19,6 +19,7 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     content: {
         height: '100%',
         display: 'flex',
+        overflowX: 'auto',
         [breakpoints.down('sm')]: {
             flexFlow: 'column'
         },

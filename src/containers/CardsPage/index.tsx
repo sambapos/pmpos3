@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as CardStore from '../../store/Cards';
 import { RouteComponentProps } from 'react-router';
-import { WithStyles, List, ListItem } from 'material-ui';
+import { WithStyles, List, ListItem, ListItemSecondaryAction } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import { Map as IMap } from 'immutable';
@@ -15,7 +15,7 @@ type PageProps =
     { cards: IMap<string, CardRecord>, card: CardRecord }
     & WithStyles<keyof Style>
     & typeof CardStore.actionCreators
-    & RouteComponentProps<{ id?: string }>;
+    & RouteComponentProps<{}>;
 
 class CardsPage extends React.Component<PageProps, {}> {
     createTestCards() {
@@ -30,54 +30,42 @@ class CardsPage extends React.Component<PageProps, {}> {
         }
     }
 
-    getSecondaryCommands(parentCard: CardRecord | undefined) {
+    getSecondaryCommands() {
         let result = [
             {
                 icon: 'add', onClick: () => {
-                    this.props.addCard(parentCard);
+                    this.props.addCard();
                     this.props.history.push('/card');
                 }
             }
         ];
-
-        if (parentCard) {
-            result.unshift({
-                icon: 'edit', onClick: () => {
-                    this.props.history.push('/card/' + parentCard.id);
-                }
-            });
-        }
-
         return result;
     }
 
-    getMenuCommand(parentCard?: CardRecord) {
-        if (parentCard) {
-            return { icon: 'close', onClick: () => { this.props.history.goBack(); } };
-        }
-        return undefined;
-    }
-
-    renderCards(cards: CardRecord[], parentCard?: CardRecord) {
+    renderCards(cards: CardRecord[]) {
         return cards.map(card => {
             return card && (
                 <div key={card.id}>
                     <ListItem
                         button
                         onClick={(e) => {
-                            if (card.tags.has('Ref')) {
-                                this.props.history.push('/cards/' + card.id);
-                            } else {
-                                let cardId = card.id;
-                                if (parentCard) {
-                                    cardId = `${parentCard.id}/${card.id}`;
-                                }
-                                this.props.history.push('/card/' + cardId);
-                            }
+                            this.props.history.push('/card/' + card.id);
                             e.preventDefault();
                         }}
                     >
-                        <ListItemText primary={card.display} secondary={card.id} />
+                        <ListItemText
+                            primary={card.display}
+                            secondary={card.tags.valueSeq().map(tag => (
+                                <span
+                                    style={{ marginRight: '8px' }}
+                                    key={tag.name}
+                                >
+                                    {tag.display}
+                                </span>))}
+                        />
+                        <ListItemSecondaryAction>
+                            {card.balanceDisplay}
+                        </ListItemSecondaryAction>
                     </ListItem>
                     <Divider />
                 </div>
@@ -85,35 +73,17 @@ class CardsPage extends React.Component<PageProps, {}> {
         });
     }
 
-    getTitle(parentCard?: CardRecord) {
-        let suffix = '';
-        if (parentCard) {
-            suffix = ` (${parentCard.display})`;
-        }
-        return 'Cards' + suffix;
-    }
-
     public render() {
-        let cards = this.props.cards;
-        let parentCard: CardRecord | undefined;
-        if (this.props.match.params.id) {
-            parentCard = this.props.cards.get(this.props.match.params.id);
-            if (parentCard) {
-                cards = parentCard.cards;
-            }
-        }
-
         return (
             <div className={this.props.classes.root}>
                 <TopBar
-                    title={this.getTitle(parentCard)}
-                    menuCommand={this.getMenuCommand(parentCard)}
-                    secondaryCommands={this.getSecondaryCommands(parentCard)}
+                    title="Cards"
+                    secondaryCommands={this.getSecondaryCommands()}
                 />
 
                 <div className={this.props.classes.content}>
                     <List>
-                        {this.renderCards(cards.valueSeq().toArray(), parentCard)}
+                        {this.renderCards(this.props.cards.valueSeq().toArray())}
                     </List>
                 </div>
             </div>

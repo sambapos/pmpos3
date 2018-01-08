@@ -3,6 +3,6 @@ import { Typography } from 'material-ui';
 
 export default (props) => {
     return (
-        <Typography type="body2">Balance:{props.card.balance}</Typography>
+        <Typography type="body2">Balance:{props.card.balanceDisplay}</Typography>
     );
 };
