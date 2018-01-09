@@ -5,11 +5,11 @@ import { CardRecord } from '../models/Card';
 import { ActionRecord } from '../models/Action';
 import { Commit, CommitRecord } from '../models/Commit';
 import CardList from '../modules/CardList';
-import { List, Map as IMap, Record } from 'immutable';
+import { List, Record } from 'immutable';
 import { CardTypeRecord } from '../models/CardType';
 
 export interface State {
-    cards: IMap<string, CardRecord>;
+    cards: List<CardRecord>;
     currentCard: CardRecord;
     currentCardType: CardTypeRecord;
     currentCommits: List<CommitRecord> | undefined;
@@ -23,7 +23,7 @@ export class StateRecord extends Record<State>({
     currentCardType: new CardTypeRecord(),
     pendingActions: List<ActionRecord>(),
     currentCommits: List<CommitRecord>(),
-    cards: IMap<string, CardRecord>(),
+    cards: List<CardRecord>(),
     isLoaded: false,
     protocol: undefined
 }) { }
@@ -113,7 +113,7 @@ export const reducer: Reducer<StateRecord> = (
         }
         case 'COMMIT_RECEIVED': {
             CardList.addCommits(action.values);
-            return state.set('cards', CardList.getCards());
+            return state.set('cards', CardList.getCardsByType(state.currentCardType.id));
         }
         case 'COMMIT_CARD': {
             return resetCurrentCard(state);
@@ -133,7 +133,9 @@ export const reducer: Reducer<StateRecord> = (
                 .set('isLoaded', false);
         }
         case 'SET_CURRENT_CARD_TYPE': {
-            return state.set('currentCardType', action.cardType);
+            return state
+                .set('cards', CardList.getCardsByType(action.cardType.id))
+                .set('currentCardType', action.cardType);
         }
         default:
             return state;

@@ -13,10 +13,11 @@ import { CardRecord } from '../../models/Card';
 import Divider from 'material-ui/Divider/Divider';
 import ListItemText from 'material-ui/List/ListItemText';
 import { CardTypeRecord } from '../../models/CardType';
-import CardList from '../../modules/CardList';
 
 type PageProps =
     {
+        cards: IList<CardRecord>,
+        card: CardRecord,
         cardTypes: IMap<string, CardTypeRecord>,
         currentCardType: CardTypeRecord
     }
@@ -122,7 +123,7 @@ class CardsPage extends React.Component<PageProps, { currentCardType: CardTypeRe
                 />
                 <div className={this.props.classes.content}>
                     <List>
-                        {this.renderCards(CardList.getCardsByType(this.state.currentCardType.id))}
+                        {this.renderCards(this.props.cards)}
                     </List>
                 </div>
             </div>
@@ -131,6 +132,8 @@ class CardsPage extends React.Component<PageProps, { currentCardType: CardTypeRe
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
+    cards: state.cards.cards,
+    card: state.cards.currentCard,
     cardTypes: state.config.cardTypes,
     currentCardType: state.cards.currentCardType
 });

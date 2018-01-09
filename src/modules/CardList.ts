@@ -66,9 +66,11 @@ class CardList {
     }
 
     getCardsByType(typeId: string): List<CardRecord> {
-        let index = this.cardTypeIndex.get(typeId);
-        if (index) {
-            return index.map(id => this.cards.get(id) as CardRecord) || List<CardRecord>();
+        if (typeId && this.cardTypeIndex) {
+            let index = this.cardTypeIndex.get(typeId);
+            if (index) {
+                return index.map(id => this.cards.get(id) as CardRecord) || List<CardRecord>();
+            }
         }
         return List<CardRecord>();
     }
@@ -86,7 +88,7 @@ class CardList {
         const inputLength = inputValue.length;
         if (inputLength === 0) { return []; }
 
-        let cardType = this.cardTypes.valueSeq()
+        let cardType = this.cardTypes
             .find(x => x.reference === ref) || new CardTypeRecord();
 
         let result = [] as Suggestion[];
@@ -94,8 +96,9 @@ class CardList {
             let index = this.cardTypeIndex.get(cardType.id) || List<string>();
             let cards = index.map(id => this.cards.get(id) as CardRecord);
             result = cards
+                .filter(c => c.name.toLowerCase().trim().includes(inputValue))
                 .map(c => {
-                    return { label: c.tags.getIn(['Name', 'value']) };
+                    return { label: c.name };
                 })
                 .toArray();
         }

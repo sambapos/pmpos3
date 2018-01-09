@@ -68,8 +68,11 @@ export class CardRecord extends Record<Card>({
     }
 
     get display(): string {
-        let nameTag = this.tags.get('Name');
-        return nameTag && nameTag.value ? nameTag.value : this.id;
+        return this.name || this.id;
+    }
+
+    get name(): string {
+        return this.tags.getIn(['Name', 'value']) || '';
     }
 
     get isNew(): boolean {
