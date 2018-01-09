@@ -36,7 +36,8 @@ type CommitReceivedAction = {
 };
 
 type AddCardAction = {
-    type: 'ADD_CARD'
+    type: 'ADD_CARD',
+    cardType: string
 };
 
 type CommitCardAction = {
@@ -89,6 +90,7 @@ export const reducer: Reducer<StateRecord> = (
                 id: shortid.generate(),
                 data: {
                     id: shortid.generate(),
+                    type: action.cardType,
                     time: new Date().getTime()
                 }
             });
@@ -136,9 +138,10 @@ function resetCurrentCard(state: StateRecord) {
 }
 
 export const actionCreators = {
-    addCard: (parentCard?: CardRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
+    addCard: (cardType: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
         dispatch({
-            type: 'ADD_CARD'
+            type: 'ADD_CARD',
+            cardType
         });
     },
     commitCard: (): AppThunkAction<KnownActions> => (dispatch, getState) => {

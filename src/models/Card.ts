@@ -37,6 +37,7 @@ export class CardTagRecord extends Record<CardTag>({
 export interface Card {
     id: string;
     time: number;
+    type: string;
     isClosed: boolean;
     tags: IMap<string, CardTagRecord>;
     cards: IMap<string, CardRecord>;
@@ -46,6 +47,7 @@ export interface Card {
 export class CardRecord extends Record<Card>({
     id: '',
     time: 0,
+    type: '',
     isClosed: false,
     tags: IMap<string, CardTagRecord>(),
     cards: IMap<string, CardRecord>(),

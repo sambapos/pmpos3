@@ -39,6 +39,9 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
         width: '100%',
     },
     flex: {
+        marginLeft: spacing.unit * 2,
         flex: 1,
+        display: 'flex',
+        flexFlow: 'column'
     }
 }));

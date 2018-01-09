@@ -5,7 +5,6 @@ export interface Style {
     content: any;
     paper: any;
     root: any;
-    formControl: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
@@ -39,10 +38,5 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
 
         flex: '1 1 auto',
         overflowX: 'auto' as 'auto',
-    },
-    formControl: {
-        margin: spacing.unit,
-        display: 'grid',
-        minWidth: 120,
-    },
+    }
 }));

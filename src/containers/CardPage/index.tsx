@@ -128,6 +128,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
                         <Typography>{this.props.card.id}</Typography>
                         <Typography>{moment(this.props.card.time).format('LLL')}</Typography>
                         <Typography>{this.props.card.isClosed && 'CLOSED!'}</Typography>
+                        <div>{this.props.card.type}</div>
                     </div>
                     <CardPageContent
                         card={this.props.card}

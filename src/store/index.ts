@@ -1,6 +1,7 @@
 import * as Client from './Client';
 import * as Tasks from './Tasks';
 import * as Cards from './Cards';
+import * as Config from './Config';
 import { List, Map } from 'immutable';
 import * as Chat from './Chat';
 
@@ -10,6 +11,7 @@ export interface ApplicationState {
     tasks: List<Map<any, any>>;
     cards: Cards.StateRecord;
     chat: Chat.StateRecord;
+    config: Config.ConfigStateRecord;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -19,5 +21,6 @@ export const reducers = {
     client: Client.reducer,
     tasks: Tasks.reducer,
     cards: Cards.reducer,
-    chat: Chat.reducer
+    chat: Chat.reducer,
+    config: Config.reducer
 };

@@ -14,6 +14,7 @@ export default class CreateCard extends CardOperation {
     reduce(card: CardRecord, data: any): CardRecord {
         let result = new CardRecord({
             id: data.id,
+            type: data.type,
             time: data.time
         });
         if (card.id) {

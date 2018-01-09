@@ -7,6 +7,8 @@ import ChatPage from './containers/ChatPage';
 import LoginPage from './containers/LoginPage';
 import CardsPage from './containers/CardsPage';
 import CardPage from './containers/CardPage';
+import CardTypesPage from './containers/CardTypesPage';
+import CardTypePage from './containers/CardTypePage';
 import { Route } from 'react-router-dom';
 
 export const routes = (
@@ -21,6 +23,8 @@ export const subRoutes = (
         <Route exact path="/chat" component={ChatPage} />
         <Route exact path="/about" component={AboutPage} />
         <Route exact path="/login" component={LoginPage} />
+        <Route exact path="/cardTypes" component={CardTypesPage} />
+        <Route exact path="/cardType" component={CardTypePage} />
         <Route exact path="/cards" component={CardsPage} />
         <Route exact path="/card/:id?" component={CardPage} />
     </div>

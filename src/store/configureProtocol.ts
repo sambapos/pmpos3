@@ -56,12 +56,20 @@ export default (
         },
         share: {
             chat: 'Array',
-            commits: 'Array'
+            commits: 'Array',
+            config: 'Map'
         }
     }).then((y) => {
         dispatchCommitProtocol(dispatch, y.share.commits);
+        dispatchConfigProtocol(dispatch, y.share.config);
+
+        dispatchConfigEvent(dispatch, y.share.config);
+        y.share.config.observe(event => {
+            dispatchConfigEvent(dispatch, event.object);
+        });
 
         dispatchCommitEvent(dispatch, y.share.commits.toArray());
+
         y.share.commits.observe(event => {
             dispatchCommitEvent(dispatch, event.values);
         });
@@ -78,10 +86,24 @@ export default (
     });
 };
 
+function dispatchConfigProtocol(dispatch: any, protocol: any) {
+    dispatch({
+        type: 'SET_CONFIG_PROTOCOL',
+        protocol
+    });
+}
+
 function dispatchCommitProtocol(dispatch: any, protocol: any) {
     dispatch({
         type: 'SET_COMMIT_PROTOCOL',
         protocol
+    });
+}
+
+function dispatchConfigEvent(dispatch: any, value: any) {
+    dispatch({
+        type: 'CONFIG_RECEIVED',
+        payload: value.keys().reduce((x, y) => x.set(y, value.get(y)), new Map<string, any>())
     });
 }
 
