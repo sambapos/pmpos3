@@ -14,7 +14,7 @@ const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
         <List dense>
             {
                 props.card.tags.entrySeq().map(([k, v]) => {
-                    let b = v.balance !== 0 ? v.balance : '';
+                    let b = v.balance !== 0 ? v.balance.toFixed(2) : '';
                     let st = v.source || v.target ? `${v.source} > ${v.target}` : '';
                     return (
                         <ListItem

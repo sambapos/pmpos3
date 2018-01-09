@@ -4,7 +4,7 @@ import * as CardStore from '../../store/Cards';
 import * as moment from 'moment';
 import * as shortid from 'shortid';
 import { RouteComponentProps } from 'react-router';
-import { WithStyles, Typography, Modal, Menu, MenuItem } from 'material-ui';
+import { WithStyles, Typography, Modal, Menu, MenuItem, Paper } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
@@ -133,8 +133,8 @@ export class CardPage extends React.Component<PageProps, PageState> {
                         }
                     ]}
                 />
-                <div className={this.props.classes.content}>
-                    <div>
+                <Paper className={this.props.classes.content}>
+                    <div className={this.props.classes.indexHeader}>
                         <Typography>{this.props.card.id}</Typography>
                         <Typography>{moment(this.props.card.time).format('LLL')}</Typography>
                         <Typography>{this.props.card.isClosed && 'CLOSED!'}</Typography>
@@ -156,7 +156,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
                             commits={this.props.commits}
                         />
                     }
-                </div >
+                </Paper >
                 <div className={this.props.classes.footer}>
                     <CardBalance card={this.props.card} />
                 </div>

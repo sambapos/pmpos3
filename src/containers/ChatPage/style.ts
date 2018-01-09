@@ -10,7 +10,7 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
     root: {
         display: 'flex',
         flexFlow: 'column',
-        flex: '1 1 auto'
+        flex: '1 1 auto',
     },
     content: {
         flex: '1 1 auto',

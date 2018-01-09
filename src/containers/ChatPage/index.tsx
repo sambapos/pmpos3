@@ -40,9 +40,9 @@ class ChatPage extends React.Component<PageProps, {
 
     public render() {
         return (
-            <Paper className={this.props.classes.root}>
+            <div className={this.props.classes.root}>
                 <TopBar title="Chat" />
-                <div className={this.props.classes.content} id="chatDiv">
+                <Paper className={this.props.classes.content} id="chatDiv">
                     <MList dense>
                         {
                             this.props.chat.messages.sort((x1, x2) => this.sort(x1, x2)).map(x => {
@@ -58,9 +58,9 @@ class ChatPage extends React.Component<PageProps, {
                             })
                         }
                     </MList>
-                </div>
-                <Divider />
-                <div className={this.props.classes.footer}>
+                </Paper>
+                <Paper className={this.props.classes.footer}>
+                    <Divider />
                     <Input
                         style={{ width: '100%', alignItems: 'center', marginLeft: '8px' }}
                         placeholder={`${this.props.loggedInUser}:Type your message`}
@@ -82,8 +82,8 @@ class ChatPage extends React.Component<PageProps, {
                             </IconButton>
                         }
                     />
-                </div>
-            </Paper>
+                </Paper>
+            </div>
         );
     }
 

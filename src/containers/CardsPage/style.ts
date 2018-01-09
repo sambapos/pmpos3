@@ -3,7 +3,6 @@ import withStyles from 'material-ui/styles/withStyles';
 export interface Style {
     card: any;
     content: any;
-    paper: any;
     root: any;
     formControl: any;
 }
@@ -21,24 +20,11 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         height: '100%',
         display: 'flex',
         overflowX: 'auto',
-        [breakpoints.down('sm')]: {
-            flexFlow: 'column'
-        },
-        [breakpoints.up('md')]: {
-            width: '900px',
+        [breakpoints.up('sm')]: {
+            maxWidth: '600px',
+            width: '100%',
             alignSelf: 'center'
         },
-    },
-    paper: {
-        [breakpoints.down('sm')]: {
-            marginTop: spacing.unit * 3,
-        },
-        [breakpoints.up('sm')]: {
-            marginLeft: spacing.unit * 3,
-        },
-
-        flex: '1 1 auto',
-        overflowX: 'auto' as 'auto',
     },
     formControl: {
         margin: spacing.unit,

@@ -13,21 +13,21 @@ export interface Style {
     cardLineIcon: any;
     node: any;
     leaf: any;
+    indexHeader: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     node: {
-        backgroundColor: palette.common.lightWhite,
-        paddingLeft: spacing.unit,
-        paddingRight: spacing.unit,
-        paddingBottom: spacing.unit,
-        marginBottom: spacing.unit,
+        // marginLeft: spacing.unit,
+        // paddingBottom: spacing.unit,
+        // marginBottom: spacing.unit,
         borderColor: palette.text.divider,
-        border: '1px solid',
+        borderTop: '1px solid',
+        backgroundColor: palette.background.contentFrame,
     },
     leaf: {
-        paddingLeft: spacing.unit,
         backgroundColor: palette.background.paper,
+        paddingLeft: spacing.unit,
     },
     tagItem: {
         paddingTop: '4px',
@@ -38,7 +38,11 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     },
     cardLine: {
         display: 'flex',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        borderBottom: '1px solid ' + palette.text.divider,
+
+        // borderLeft: '1px solid ' + palette.text.divider,
+        // borderRight: '1px solid ' + palette.text.divider,
     },
     cardLineIcon: {
         marginTop: spacing.unit,
@@ -52,18 +56,19 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     root: {
         display: 'flex',
         flexFlow: 'column',
-        flex: '1 1 auto',
+        flex: '1 1 auto'
+    },
+    indexHeader: {
         padding: spacing.unit
     },
     content: {
         height: '100%',
         display: 'flex',
         overflowX: 'auto',
-        [breakpoints.down('sm')]: {
-            flexFlow: 'column'
-        },
-        [breakpoints.up('md')]: {
-            width: '900px',
+        flexFlow: 'column',
+        [breakpoints.up('sm')]: {
+            maxWidth: '600px',
+            width: '100%',
             alignSelf: 'center'
         },
     },

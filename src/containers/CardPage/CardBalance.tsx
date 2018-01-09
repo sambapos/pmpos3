@@ -1,8 +1,11 @@
 import * as React from 'react';
-import { Typography } from 'material-ui';
+import { Typography, ListItem } from 'material-ui';
 
 export default (props) => {
-    return (
-        <Typography type="body2">Balance:{props.card.balanceDisplay}</Typography>
+    return props.card.balanceDisplay && (
+        <ListItem>
+            <Typography style={{ flex: 1 }} type="title">Balance</Typography>
+            <Typography type="title">{props.card.balanceDisplay}</Typography>
+        </ListItem>
     );
 };

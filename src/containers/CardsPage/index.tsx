@@ -2,9 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as CardStore from '../../store/Cards';
 import { RouteComponentProps } from 'react-router';
-import {
-    WithStyles, List, ListItem, ListItemSecondaryAction
-} from 'material-ui';
+import { WithStyles, List, ListItem, ListItemSecondaryAction, Paper } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';
@@ -32,12 +30,12 @@ class CardsPage extends React.Component<PageProps, { currentCardType: CardTypeRe
         this.state = { currentCardType: props.currentCardType };
     }
 
-    componentWillMount() {
-        if (!this.state.currentCardType) {
-            let first = this.props.cardTypes.valueSeq().first();
-            if (first) { this.props.setCurrentCardType(first); }
-        }
-    }
+    // componentWillMount() {
+    //     if (!this.state.currentCardType) {
+    //         let first = this.props.cardTypes.valueSeq().first();
+    //         if (first) { this.props.setCurrentCardType(first); }
+    //     }
+    // }
 
     componentWillReceiveProps(nextProps: PageProps) {
         if (nextProps.currentCardType.name !== this.state.currentCardType.name) {
@@ -121,11 +119,11 @@ class CardsPage extends React.Component<PageProps, { currentCardType: CardTypeRe
                     title={this.state.currentCardType ? this.state.currentCardType.name : 'Cards'}
                     secondaryCommands={this.getSecondaryCommands()}
                 />
-                <div className={this.props.classes.content}>
+                <Paper className={this.props.classes.content}>
                     <List>
                         {this.renderCards(this.props.cards)}
                     </List>
-                </div>
+                </Paper>
             </div>
         );
     }
