@@ -1,9 +1,10 @@
 import * as React from 'react';
 import Tags from './Tags';
 import SubCards from './SubCards';
-import { CardRecord, CardTagRecord } from '../../models/Card';
+import { CardRecord } from '../../models/Card';
 import { WithStyles, Icon } from 'material-ui';
 import decorate, { Style } from './style';
+import { CardTagRecord } from '../../models/CardTag';
 
 interface CardContentProps {
     card: CardRecord;

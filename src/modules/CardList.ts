@@ -6,6 +6,7 @@ import { ActionRecord } from '../models/Action';
 import { makeDeepCommit } from '../models/makers';
 import { Suggestion } from './CardOperations/Plugins/SetCardTag/AutoSuggest';
 import { CardTypeRecord } from '../models/CardType';
+import { CardTagRecord } from '../models/CardTag';
 
 class CardList {
 
@@ -63,6 +64,15 @@ class CardList {
 
     getCards(): IMap<string, CardRecord> {
         return this.cards;
+    }
+
+    reduceTags(card: CardRecord, list: List<CardTagRecord>): List<CardTagRecord> {
+        list = list.merge(card.getTags());
+        return card.cards.reduce((r, c) => this.reduceTags(c, r), list);
+    }
+
+    getTags(): List<CardTagRecord> {
+        return this.cards.reduce((r, card) => this.reduceTags(card, r), List<CardTagRecord>());
     }
 
     getCardsByType(typeId: string): List<CardRecord> {

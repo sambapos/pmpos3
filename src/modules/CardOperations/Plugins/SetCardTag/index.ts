@@ -1,8 +1,9 @@
 import * as React from 'react';
 import CardOperation from '../../CardOperation';
-import { CardRecord, CardTagRecord } from '../../../../models/Card';
+import { CardRecord } from '../../../../models/Card';
 import { ActionRecord } from '../../../../models/Action';
 import TagEditor from './component';
+import { CardTagRecord } from '../../../../models/CardTag';
 
 export default class SetCardTag extends CardOperation {
     constructor() {

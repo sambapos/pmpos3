@@ -1,38 +1,5 @@
 import { Record, Map as IMap, List } from 'immutable';
-
-export interface CardTag {
-    name: string;
-    value: string;
-    quantity: number;
-    unit: string;
-    debit: number;
-    credit: number;
-    source: string;
-    target: string;
-}
-
-export class CardTagRecord extends Record<CardTag>({
-    name: '',
-    value: '',
-    quantity: 0,
-    unit: '',
-    debit: 0,
-    credit: 0,
-    source: '',
-    target: ''
-}) {
-    get balance(): number { return (this.debit - this.credit) * Math.max(this.quantity, 1); }
-    get display(): string {
-
-        // let b = this.balance !== 0 ? this.balance : '';
-        let u = this.unit ? this.unit : '';
-        let q = this.quantity > 0 ? this.quantity + u + ' ' : '';
-        let vl = this.value ? q + this.value : '';
-        let key = !this.name || this.name[0] === '_' ? '' : this.name + ': ';
-        // let st = this.source || this.target ? `${this.source} > ${this.target}` : '';
-        return `${key}${vl}`;
-    }
-}
+import { CardTagRecord } from './CardTag';
 
 export interface Card {
     id: string;
@@ -77,5 +44,9 @@ export class CardRecord extends Record<Card>({
 
     get isNew(): boolean {
         return this.tags.count() === 0 && this.cards.count() === 0;
+    }
+
+    getTags(): List<CardTagRecord> {
+        return List<CardTagRecord>(this.tags.valueSeq());
     }
 }

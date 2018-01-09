@@ -3,10 +3,10 @@ import { TextField, Button } from 'material-ui';
 import CardContent from 'material-ui/Card/CardContent';
 import CardActions from 'material-ui/Card/CardActions';
 import Typography from 'material-ui/Typography/Typography';
-import { CardTagRecord } from '../../../../models/Card';
 import * as shortid from 'shortid';
 import AutoSuggest from './AutoSuggest';
 import CardList from '../../../CardList';
+import { CardTagRecord } from '../../../../models/CardTag';
 
 export default class extends React.Component<
     {
@@ -94,6 +94,7 @@ export default class extends React.Component<
                             this.props.handler(
                                 this.props.actionName,
                                 {
+                                    id: shortid.generate(),
                                     name: this.state.name || `_${shortid.generate()}`,
                                     value: this.state.value,
                                     quantity: this.state.quantity,

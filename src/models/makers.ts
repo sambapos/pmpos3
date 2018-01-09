@@ -2,7 +2,8 @@ import { Map as IMap, List } from 'immutable';
 import { CardData, CardDataRecord } from './CardData';
 import { CommitRecord, Commit } from './Commit';
 import { ActionRecord } from './Action';
-import { Card, CardRecord, CardTagRecord } from './Card';
+import { Card, CardRecord } from './Card';
+import { CardTagRecord } from './CardTag';
 
 export const makeDeepCardData = (cardData: CardData): CardDataRecord => {
     return new CardDataRecord({

@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { CardRecord, CardTagRecord } from '../../models/Card';
 import { List, ListItem } from 'material-ui';
 import decorate, { Style } from './style';
 import { WithStyles } from 'material-ui/styles/withStyles';
+import { CardTagRecord } from '../../models/CardTag';
+import { CardRecord } from '../../models/Card';
 
 interface TagsProps {
     card: CardRecord;
@@ -14,8 +15,8 @@ const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
         <List dense>
             {
                 props.card.tags.entrySeq().map(([k, v]) => {
-                    let b = v.balance !== 0 ? v.balance.toFixed(2) : '';
-                    let st = v.source || v.target ? `${v.source} > ${v.target}` : '';
+
+                    let st = v.locationDisplay;
                     return (
                         <ListItem
                             key={k}
@@ -27,7 +28,7 @@ const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
                                 <div>{v.display}</div>
                                 {st && <div style={{ fontSize: '0.7em' }}>{st}</div>}
                             </div>
-                            <div style={{ fontSize: '1.2em' }}>{b}</div>
+                            <div style={{ fontSize: '1.2em' }}>{v.balanceDisplay}</div>
                         </ListItem>);
                 })
             }

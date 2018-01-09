@@ -10,7 +10,7 @@ import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
 import { List, Map as IMap } from 'immutable';
 import { ActionRecord } from '../../models/Action';
-import { CardRecord, CardTagRecord } from '../../models/Card';
+import { CardRecord } from '../../models/Card';
 import { cardOperations } from '../../modules/CardOperations';
 import CardOperation from '../../modules/CardOperations/CardOperation';
 import Commits from './Commits';
@@ -18,6 +18,7 @@ import CardPageContent from './CardPageContent';
 import CardBalance from './CardBalance';
 import { CommitRecord } from '../../models/Commit';
 import { CardTypeRecord } from '../../models/CardType';
+import { CardTagRecord } from '../../models/CardTag';
 
 type PageProps =
     {
