@@ -2,7 +2,8 @@ import { Reducer } from 'redux';
 import * as shortid from 'shortid';
 import { Record, Map as IMap } from 'immutable';
 import { AppThunkAction } from './appThunkAction';
-import { CardTypeRecord } from '../models/CardTypes';
+import { CardTypeRecord } from '../models/CardType';
+import CardList from '../modules/CardList';
 
 interface ConfigState {
     protocol: any;
@@ -87,6 +88,7 @@ export const reducer: Reducer<ConfigStateRecord> = (
                 let cardTypes = action.payload.get('cardTypes');
                 let map = Object.keys(cardTypes)
                     .reduce((x, y) => x.set(y, new CardTypeRecord(cardTypes[y])), IMap<string, CardTypeRecord>());
+                CardList.setCardTypes(map);
                 return state.set('cardTypes', map);
             }
             return state;

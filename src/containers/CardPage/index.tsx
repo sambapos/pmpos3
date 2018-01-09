@@ -8,7 +8,7 @@ import { WithStyles, Typography, Modal, Menu, MenuItem } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
-import { List } from 'immutable';
+import { List, Map as IMap } from 'immutable';
 import { ActionRecord } from '../../models/Action';
 import { CardRecord, CardTagRecord } from '../../models/Card';
 import { cardOperations } from '../../modules/CardOperations';
@@ -17,12 +17,14 @@ import Commits from './Commits';
 import CardPageContent from './CardPageContent';
 import CardBalance from './CardBalance';
 import { CommitRecord } from '../../models/Commit';
+import { CardTypeRecord } from '../../models/CardType';
 
 type PageProps =
     {
         isLoaded: boolean,
         pendingActions: List<ActionRecord>
         card: CardRecord,
+        cardTypes: IMap<string, CardTypeRecord>
         commits: List<CommitRecord>
     }
     & WithStyles<keyof Style>
@@ -97,6 +99,14 @@ export class CardPage extends React.Component<PageProps, PageState> {
         }
     }
 
+    getTitle() {
+        let ct = this.props.cardTypes.get(this.props.card.typeId);
+        let cap = ct ? ct.reference : `Card`;
+        return this.props.card.isNew
+            ? `New ${cap}`
+            : `${cap} (${this.props.card.display})`;
+    }
+
     public render() {
         if (!this.props.isLoaded || !this.props.card) { return <div>Loading</div>; }
         const isMenuOpen = Boolean(this.state.anchorEl);
@@ -104,7 +114,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
         return (
             <div className={this.props.classes.root}>
                 <TopBar
-                    title={`Card (${this.props.card.display})`}
+                    title={this.getTitle()}
                     menuCommand={{ icon: 'close', onClick: () => { this.props.history.goBack(); } }}
                     secondaryCommands={[
                         {
@@ -128,7 +138,6 @@ export class CardPage extends React.Component<PageProps, PageState> {
                         <Typography>{this.props.card.id}</Typography>
                         <Typography>{moment(this.props.card.time).format('LLL')}</Typography>
                         <Typography>{this.props.card.isClosed && 'CLOSED!'}</Typography>
-                        <div>{this.props.card.type}</div>
                     </div>
                     <CardPageContent
                         card={this.props.card}
@@ -192,6 +201,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
 
 const mapStateToProps = (state: ApplicationState) => ({
     card: state.cards.currentCard,
+    cardTypes: state.config.cardTypes,
     commits: state.cards.currentCommits,
     pendingActions: state.cards.pendingActions,
     isLoaded: state.cards.isLoaded

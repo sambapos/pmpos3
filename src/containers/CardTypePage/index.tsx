@@ -6,7 +6,7 @@ import { WithStyles, TextField } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
-import { CardTypeRecord } from '../../models/CardTypes';
+import { CardTypeRecord } from '../../models/CardType';
 
 type PageProps =
     {
@@ -62,6 +62,14 @@ export class CardTypePage extends React.Component<PageProps, { cardType: CardTyp
                         value={this.state.cardType.name}
                         onChange={(e) => this.setState({
                             cardType: this.state.cardType.set('name', e.target.value)
+                        })}
+                    />
+
+                    <TextField
+                        label="Reference"
+                        value={this.state.cardType.reference}
+                        onChange={(e) => this.setState({
+                            cardType: this.state.cardType.set('reference', e.target.value)
                         })}
                     />
                 </div >

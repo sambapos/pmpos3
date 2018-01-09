@@ -6,10 +6,12 @@ import { ActionRecord } from '../models/Action';
 import { Commit, CommitRecord } from '../models/Commit';
 import CardList from '../modules/CardList';
 import { List, Map as IMap, Record } from 'immutable';
+import { CardTypeRecord } from '../models/CardType';
 
 export interface State {
     cards: IMap<string, CardRecord>;
     currentCard: CardRecord;
+    currentCardType: CardTypeRecord;
     currentCommits: List<CommitRecord> | undefined;
     pendingActions: List<ActionRecord>;
     isLoaded: boolean;
@@ -18,6 +20,7 @@ export interface State {
 
 export class StateRecord extends Record<State>({
     currentCard: new CardRecord(),
+    currentCardType: new CardTypeRecord(),
     pendingActions: List<ActionRecord>(),
     currentCommits: List<CommitRecord>(),
     cards: IMap<string, CardRecord>(),
@@ -26,18 +29,18 @@ export class StateRecord extends Record<State>({
 }) { }
 
 type SetCommitProtocolAction = {
-    type: 'SET_COMMIT_PROTOCOL',
+    type: 'SET_COMMIT_PROTOCOL'
     protocol: any
 };
 
 type CommitReceivedAction = {
-    type: 'COMMIT_RECEIVED',
+    type: 'COMMIT_RECEIVED'
     values: Commit[]
 };
 
 type AddCardAction = {
     type: 'ADD_CARD',
-    cardType: string
+    cardTypeId: string
 };
 
 type CommitCardAction = {
@@ -45,7 +48,7 @@ type CommitCardAction = {
 };
 
 type AddPendingActionAction = {
-    type: 'ADD_PENDING_ACTION',
+    type: 'ADD_PENDING_ACTION'
     action: ActionRecord
 };
 
@@ -68,9 +71,14 @@ type LoadCardFailAction = {
     type: 'LOAD_CARD_FAIL'
 };
 
+type SetCurrentCardTypeAction = {
+    type: 'SET_CURRENT_CARD_TYPE'
+    cardType: CardTypeRecord
+};
+
 type KnownActions = AddCardAction | AddPendingActionAction | CommitCardAction | CommitReceivedAction
     | LoadCardAction | LoadCardRequestAction | LoadCardSuccessAction | LoadCardFailAction
-    | SetCommitProtocolAction;
+    | SetCommitProtocolAction | SetCurrentCardTypeAction;
 
 export const reducer: Reducer<StateRecord> = (
     state: StateRecord = new StateRecord(),
@@ -90,7 +98,7 @@ export const reducer: Reducer<StateRecord> = (
                 id: shortid.generate(),
                 data: {
                     id: shortid.generate(),
-                    type: action.cardType,
+                    typeId: action.cardTypeId,
                     time: new Date().getTime()
                 }
             });
@@ -124,6 +132,9 @@ export const reducer: Reducer<StateRecord> = (
             return state
                 .set('isLoaded', false);
         }
+        case 'SET_CURRENT_CARD_TYPE': {
+            return state.set('currentCardType', action.cardType);
+        }
         default:
             return state;
     }
@@ -138,10 +149,10 @@ function resetCurrentCard(state: StateRecord) {
 }
 
 export const actionCreators = {
-    addCard: (cardType: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
+    addCard: (cardType: CardTypeRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
         dispatch({
             type: 'ADD_CARD',
-            cardType
+            cardTypeId: cardType.id
         });
     },
     commitCard: (): AppThunkAction<KnownActions> => (dispatch, getState) => {
@@ -193,5 +204,14 @@ export const actionCreators = {
                 }
             })
         });
-    }
+    },
+    setCurrentCardType: (cardType: CardTypeRecord | undefined):
+        AppThunkAction<KnownActions> => (dispatch, getState) => {
+            if (cardType) {
+                dispatch({
+                    type: 'SET_CURRENT_CARD_TYPE',
+                    cardType
+                });
+            }
+        }
 };
