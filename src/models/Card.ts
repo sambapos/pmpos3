@@ -20,18 +20,44 @@ export class CardRecord extends Record<Card>({
     cards: IMap<string, CardRecord>(),
     keys: List<string>()
 }) {
-    get balance(): number {
-        let tagBalance = this.tags.reduce((x, y) => x + y.balance, 0);
-        return tagBalance + this.subCardBalance;
+    get debit(): number {
+        let tagDebit = this.tags.reduce((x, y) => x + y.debitValue, 0);
+        return tagDebit + this.subCardDebit;
     }
 
-    get balanceDisplay(): string {
-        if (this.balance !== 0) { return this.balance.toFixed(2); }
+    get credit(): number {
+        let tagCredit = this.tags.reduce((x, y) => x + y.creditValue, 0);
+        return tagCredit + this.subCardCredit;
+    }
+
+    get balance(): number {
+        return this.debit - this.credit;
+    }
+
+    get debitDisplay(): string {
+        let debit = this.debit;
+        if (debit !== 0) { return debit.toFixed(2); }
         return '';
     }
 
-    get subCardBalance(): number {
-        return this.cards.reduce((x, y) => x + y.balance, 0);
+    get creditDisplay(): string {
+        let credit = this.credit;
+        if (credit !== 0) { return credit.toFixed(2); }
+        return '';
+    }
+
+    get balanceDisplay(): string {
+        let balance = this.balance;
+        if (balance !== 0) { return balance.toFixed(2); }
+        return '';
+    }
+
+    get subCardDebit(): number {
+        return this.cards.reduce((x, y) => x + y.debit, 0);
+    }
+
+    get subCardCredit(): number {
+        return this.cards.reduce((x, y) => x + y.credit, 0);
     }
 
     get display(): string {
@@ -46,7 +72,11 @@ export class CardRecord extends Record<Card>({
         return this.tags.count() === 0 && this.cards.count() === 0;
     }
 
-    getTags(): List<CardTagRecord> {
-        return List<CardTagRecord>(this.tags.valueSeq());
+    getTags(filter?: (card: CardTagRecord) => boolean): List<CardTagRecord> {
+        let tags = this.tags.valueSeq();
+        if (filter) {
+            tags = tags.filter(filter);
+        }
+        return List<CardTagRecord>(tags);
     }
 }

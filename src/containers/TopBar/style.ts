@@ -36,7 +36,7 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
         marginRight: drawerWidth,
     },
     toolbar: {
-        width: '100%',
+
     },
     flex: {
         marginLeft: spacing.unit * 2,

@@ -3,7 +3,7 @@ import withStyles from 'material-ui/styles/withStyles';
 export interface Style {
     card: any;
     content: any;
-    paper: any;
+    footer: any;
     root: any;
     amount: any;
 }
@@ -13,8 +13,11 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         minWidth: 275,
     },
     amount: {
-        minWidth: 50,
-        textAlign: 'right'
+        minWidth: 75,
+        textAlign: 'right',
+        [breakpoints.down('xs')]: {
+            minWidth: 50,
+        },
     },
     root: {
         display: 'flex',
@@ -29,18 +32,20 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         [breakpoints.up('sm')]: {
             maxWidth: '600px',
             width: '100%',
-            alignSelf: 'center'
+            alignSelf: 'center',
         },
+        [breakpoints.down('xs')]: {
+            fontSize: '0.8em',
+        }
     },
-    paper: {
-        [breakpoints.down('sm')]: {
-            marginTop: spacing.unit * 3,
-        },
+    footer: {
         [breakpoints.up('sm')]: {
-            marginLeft: spacing.unit * 3,
+            maxWidth: '600px',
+            alignSelf: 'center',
         },
-
-        flex: '1 1 auto',
-        overflowX: 'auto' as 'auto',
+        width: '100%',
+        flex: 'none',
+        display: 'flex',
+        flexFlow: 'column'
     }
 }));
