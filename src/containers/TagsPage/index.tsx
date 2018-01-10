@@ -1,13 +1,11 @@
 import * as React from 'react';
 import * as moment from 'moment';
 import { RouteComponentProps } from 'react-router';
-import { WithStyles, ListItem, Paper, List, Typography } from 'material-ui';
+import { WithStyles, ListItem, Paper, Typography } from 'material-ui';
 import decorate, { Style } from './style';
 import { List as IList } from 'immutable';
 import TopBar from '../TopBar';
-import Divider from 'material-ui/Divider/Divider';
 import CardList from '../../modules/CardList';
-import ListItemText from 'material-ui/List/ListItemText';
 import TextField from 'material-ui/TextField/TextField';
 import CardTagData from '../../models/CardTagData';
 import { CardTagRecord } from '../../models/CardTag';
@@ -45,24 +43,23 @@ class TagsPage extends React.Component<PageProps, {
         return tags.sort((a, b) => a.time - b.time).map(tagData => {
             balance += tagData.getBalanceFor(this.state.searchValue);
             return tagData && (
-                <div key={tagData.id}>
-                    <Divider />
-                    <ListItem>
-                        <ListItemText
-                            primary={tagData.display}
-                            secondary={tagData.name + ' ' + moment(tagData.time).format('LLL')}
-                        />
-                        <div className={this.props.classes.amount}>
-                            {tagData.getDebitDisplayFor(this.state.searchValue)}
+                <tr key={tagData.id} className={this.props.classes.tableRow}>
+                    <td className={this.props.classes.tableCell}>
+                        <div>{tagData.display}</div>
+                        <div className={this.props.classes.tableSecondary}>
+                            {tagData.name + ' ' + moment(tagData.time).format('LLL')}
                         </div>
-                        <div className={this.props.classes.amount}>
-                            {tagData.getCreditDisplayFor(this.state.searchValue)}
-                        </div>
-                        <div className={this.props.classes.amount}>
-                            {balance.toFixed(2)}
-                        </div>
-                    </ListItem>
-                </div>
+                    </td>
+                    <td className={this.props.classes.tableCellNumber}>
+                        {tagData.getDebitDisplayFor(this.state.searchValue)}
+                    </td>
+                    <td className={this.props.classes.tableCellNumber}>
+                        {tagData.getCreditDisplayFor(this.state.searchValue)}
+                    </td>
+                    <td className={this.props.classes.tableCellNumber}>
+                        {balance !== 0 ? balance.toFixed(2) : ''}
+                    </td>
+                </tr>
             );
         });
     }
@@ -99,10 +96,16 @@ class TagsPage extends React.Component<PageProps, {
                     />
                 </div>
                 <div className={this.props.classes.content}>
-                    <Paper >
-                        <List disablePadding>
+                    <Paper className={this.props.classes.card}>
+                        <table className={this.props.classes.table}>
+                            <tr>
+                                <th>Name</th>
+                                <th>Debit</th>
+                                <th>Credit</th>
+                                <th>Balance</th>
+                            </tr>
                             {this.renderTags(this.state.tags)}
-                        </List>
+                        </table>
                     </Paper>
                 </div>
 

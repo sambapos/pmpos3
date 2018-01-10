@@ -109,7 +109,15 @@ export class CardPage extends React.Component<PageProps, PageState> {
     }
 
     public render() {
-        if (!this.props.isLoaded || !this.props.card) { return <div>Loading</div>; }
+        if (!this.props.isLoaded || !this.props.card) {
+            return (
+                <div>
+                    <TopBar
+                        title="Loading...."
+                    />
+                </div>
+            );
+        }
         const isMenuOpen = Boolean(this.state.anchorEl);
 
         return (

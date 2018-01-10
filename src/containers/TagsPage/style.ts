@@ -5,19 +5,39 @@ export interface Style {
     content: any;
     footer: any;
     root: any;
-    amount: any;
+    table: any;
+    tableRow: any;
+    tableCell: any;
+    tableCellNumber: any;
+    tableSecondary: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     card: {
         minWidth: 275,
+        marginTop: spacing.unit
     },
-    amount: {
-        minWidth: 75,
+    tableSecondary: {
+        fontSize: '0.8em',
+        color: palette.text.secondary
+    },
+    table: {
+        borderCollapse: 'collapse',
+        width: '100%',
+    },
+    tableRow: {
+        width: '100%',
+    },
+    tableCell: {
+        borderTop: '1px solid ' + palette.text.divider,
+        padding: spacing.unit,
+    },
+    tableCellNumber: {
+        paddingRight: spacing.unit,
         textAlign: 'right',
-        [breakpoints.down('xs')]: {
-            minWidth: 50,
-        },
+        borderLeft: '1px solid ' + palette.text.divider,
+        borderTop: '1px solid ' + palette.text.divider,
+        minWidth: '40px'
     },
     root: {
         display: 'flex',
@@ -35,7 +55,7 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
             alignSelf: 'center',
         },
         [breakpoints.down('xs')]: {
-            fontSize: '0.8em',
+            fontSize: '0.85em',
         }
     },
     footer: {
