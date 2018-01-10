@@ -33,6 +33,26 @@ export class CardTagRecord extends Record<CardTag>({
         return `${key}${vl}`;
     }
 
+    getInQuantityFor(location?: string): number {
+        location = location && location.toLowerCase();
+        if (location && this.value.toLowerCase().includes(location)) {
+            return this.target ? this.quantity : 0;
+        }
+        return this.target && (!location || this.target.toLowerCase().includes(location)) ? this.quantity : 0;
+    }
+
+    getOutQuantityFor(location?: string): number {
+        location = location && location.toLowerCase();
+        if (location && this.value.toLowerCase().includes(location)) {
+            return this.target ? 0 : this.quantity;
+        }
+        return this.source && (!location || this.source.toLowerCase().includes(location)) ? this.quantity : 0;
+    }
+
+    getTotalQuantityFor(location: string): number {
+        return this.getInQuantityFor(location) - this.getOutQuantityFor(location);
+    }
+
     get debitValue(): number {
         return this.target ? Math.max(this.quantity, 1) * this.amount : 0;
     }
