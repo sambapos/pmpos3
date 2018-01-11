@@ -6,7 +6,8 @@ export interface CardTag {
     value: string;
     quantity: number;
     unit: string;
-    amount: number;
+    debit: number;
+    credit: number;
     source: string;
     target: string;
 }
@@ -17,13 +18,13 @@ export class CardTagRecord extends Record<CardTag>({
     value: '',
     quantity: 0,
     unit: '',
-    amount: 0,
+    debit: 0,
+    credit: 0,
     source: '',
     target: ''
 }) {
-    get balance(): number { return (this.debitValue - this.creditValue); }
+    get balance(): number { return (this.totalDebit - this.totalCredit); }
     get display(): string {
-
         // let b = this.balance !== 0 ? this.balance : '';
         let u = this.unit ? this.unit : '';
         let q = this.quantity > 0 ? this.quantity + u + ' ' : '';
@@ -32,6 +33,8 @@ export class CardTagRecord extends Record<CardTag>({
         // let st = this.source || this.target ? `${this.source} > ${this.target}` : '';
         return `${key}${vl}`;
     }
+    get totalDebit(): number { return Math.max(this.quantity, 1) * this.debit; }
+    get totalCredit(): number { return Math.max(this.quantity, 1) * this.credit; }
 
     getInQuantityFor(location?: string): number {
         location = location && location.toLowerCase();
@@ -51,14 +54,6 @@ export class CardTagRecord extends Record<CardTag>({
 
     getTotalQuantityFor(location: string): number {
         return this.getInQuantityFor(location) - this.getOutQuantityFor(location);
-    }
-
-    get debitValue(): number {
-        return this.target ? Math.max(this.quantity, 1) * this.amount : 0;
-    }
-
-    get creditValue(): number {
-        return this.source ? Math.max(this.quantity, 1) * this.amount : 0;
     }
 
     get locationDisplay(): string {

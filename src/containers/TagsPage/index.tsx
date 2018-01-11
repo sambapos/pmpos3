@@ -1,28 +1,33 @@
 import * as React from 'react';
-import * as moment from 'moment';
 import { RouteComponentProps } from 'react-router';
-import { WithStyles, ListItem, Paper, Typography } from 'material-ui';
+import { WithStyles, ListItem, Typography } from 'material-ui';
 import decorate, { Style } from './style';
-import { List as IList, Map as IMap } from 'immutable';
+import { List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import CardList from '../../modules/CardList';
 import TextField from 'material-ui/TextField/TextField';
 import CardTagData from '../../models/CardTagData';
-import { CardTagRecord } from '../../models/CardTag';
+import InventoryTable from './InventoryTable';
+import AccountTable from './AccountTable';
+import LocationTable from './LocationTable';
+import { CardTypeRecord } from '../../models/CardType';
+import BalanceTable from './BalanceTable';
 
 type PageProps =
     WithStyles<keyof Style>
     & RouteComponentProps<{}>;
 
 class TagsPage extends React.Component<PageProps, {
-    searchValue: string,
+    search: string,
+    edit: string,
     tags: IList<CardTagData>
 }> {
 
     constructor(props: PageProps) {
         super(props);
         this.state = {
-            searchValue: '',
+            search: '',
+            edit: '',
             tags: IList<CardTagData>()
         };
     }
@@ -38,164 +43,41 @@ class TagsPage extends React.Component<PageProps, {
         return result;
     }
 
-    renderLocation(tags: IList<CardTagData>) {
-        let balances = tags.reduce(
-            (r, d) => {
-                return r.update(d.tag.value, o => {
-                    return (o || IMap<string, number>())
-                        .update('in', v => (v || 0) + d.tag.getInQuantityFor(this.state.searchValue))
-                        .update('out', v => (v || 0) + d.tag.getOutQuantityFor(this.state.searchValue));
-                });
-            },
-            IMap<string, IMap<string, number>>());
-
-        return balances.map((v, k) => {
-            return (
-                <tr key={k} className={this.props.classes.tableRow}>
-                    <td className={this.props.classes.tableCell}>
-                        <div>{k}</div>
-                    </td>
-                    <td className={this.props.classes.tableCellNumber}>
-                        {v.get('in')}
-                    </td>
-                    <td className={this.props.classes.tableCellNumber}>
-                        {v.get('out')}
-                    </td>
-                    <td className={this.props.classes.tableCellNumber}>
-                        {(v.get('in') || 0) - (v.get('out') || 0)}
-                    </td>
-                </tr>
-            );
-        }).valueSeq();
+    loadCards(searchValue: string): IList<CardTagData> {
+        return CardList.getTags([searchValue]);
     }
 
-    renderInventory(tags: IList<CardTagData>) {
-        let balance = 0;
-        return tags.sort((a, b) => a.time - b.time).map(tagData => {
-            balance += tagData.getTotalFor(this.state.searchValue);
-            return tagData && (
-                <tr key={tagData.id} className={this.props.classes.tableRow}>
-                    <td className={this.props.classes.tableCell}>
-                        <div>{tagData.display}</div>
-                        <div className={this.props.classes.tableSecondary}>
-                            {tagData.name + ' ' + moment(tagData.time).format('LLL')}
-                        </div>
-                    </td>
-                    <td className={this.props.classes.tableCellNumber}>
-                        {tagData.getInDisplayFor(this.state.searchValue)}
-                    </td>
-                    <td className={this.props.classes.tableCellNumber}>
-                        {tagData.getOutDisplayFor(this.state.searchValue)}
-                    </td>
-                    <td className={this.props.classes.tableCellNumber}>
-                        {balance !== 0 ? balance : ''}
-                    </td>
-                </tr>
-            );
-        });
+    getTables() {
+        return (
+            <div>
+                <AccountTable
+                    tags={this.state.tags}
+                    searchValue={this.state.search}
+                />
+                <InventoryTable
+                    tags={this.state.tags}
+                    searchValue={this.state.search}
+                />
+                <LocationTable
+                    tags={this.state.tags}
+                    searchValue={this.state.search}
+                />
+            </div>
+        );
     }
 
-    renderTags(tags: IList<CardTagData>) {
-        let balance = 0;
-        return tags.sort((a, b) => a.time - b.time).map(tagData => {
-            balance += tagData.getBalanceFor(this.state.searchValue);
-            return tagData && (
-                <tr key={tagData.id} className={this.props.classes.tableRow}>
-                    <td className={this.props.classes.tableCell}>
-                        <div>{tagData.display}</div>
-                        <div className={this.props.classes.tableSecondary}>
-                            {tagData.name + ' ' + moment(tagData.time).format('LLL')}
-                        </div>
-                    </td>
-                    <td className={this.props.classes.tableCellNumber}>
-                        {tagData.getDebitDisplayFor(this.state.searchValue)}
-                    </td>
-                    <td className={this.props.classes.tableCellNumber}>
-                        {tagData.getCreditDisplayFor(this.state.searchValue)}
-                    </td>
-                    <td className={this.props.classes.tableCellNumber}>
-                        {balance !== 0 ? balance.toFixed(2) : ''}
-                    </td>
-                </tr>
-            );
-        });
+    getCardType(value: string): CardTypeRecord | undefined {
+        return CardList.getCardTypes().find(x => x.name.toLowerCase() === value.toLowerCase());
     }
 
-    loadCards(): IList<CardTagData> {
-        return CardList.getTags((tag: CardTagRecord) => {
-            let sv = this.state.searchValue.toLowerCase();
-            return tag.value.toLowerCase().includes(sv)
-                || tag.source.toLowerCase().includes(sv)
-                || tag.target.toLowerCase().includes(sv);
-        });
-    }
-
-    getLocationTable() {
-        let firstTag = this.getFirstTag();
-        if (!firstTag || !firstTag.isLocation(this.state.searchValue)) {
-            return null;
+    getContent() {
+        let ct = this.getCardType(this.state.search);
+        if (ct) {
+            let cardNames = CardList.getCardsByType(ct.id).map(x => x.name);
+            let tags = CardList.getTags(cardNames.toArray());
+            return (<BalanceTable tags={tags} />);
         }
-        return (
-            <Paper className={this.props.classes.card}>
-                <table className={this.props.classes.table}>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>In</th>
-                            <th>Out</th>
-                            <th>Remaining</th>
-                        </tr>
-                    </thead>
-                    <tbody>{this.renderLocation(this.state.tags)}</tbody>
-                </table>
-            </Paper>
-        );
-    }
-
-    getFirstTag(): CardTagData | undefined {
-        return this.state.tags.first();
-    }
-
-    getAccountTable() {
-        let firstTag = this.getFirstTag();
-        if (!firstTag) { return null; }
-        return (
-            <Paper className={this.props.classes.card}>
-                <table className={this.props.classes.table}>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Debit</th>
-                            <th>Credit</th>
-                            <th>Balance</th>
-                        </tr>
-                    </thead>
-                    <tbody>{this.renderTags(this.state.tags)}</tbody>
-                </table>
-            </Paper>
-        );
-    }
-
-    getInventoryTable() {
-        let firstTag = this.getFirstTag();
-        if (!firstTag || !firstTag.isInventory(this.state.searchValue)) {
-            return null;
-        }
-        return (
-            <Paper className={this.props.classes.card}>
-                <table className={this.props.classes.table}>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>In</th>
-                            <th>Out</th>
-                            <th>Remaining</th>
-                        </tr>
-                    </thead>
-                    <tbody>{this.renderInventory(this.state.tags)}</tbody>
-                </table>
-            </Paper>
-        );
+        return this.getTables();
     }
 
     public render() {
@@ -208,35 +90,25 @@ class TagsPage extends React.Component<PageProps, {
                 <div className={this.props.classes.footer}>
                     <TextField
                         label="Search"
-                        value={this.state.searchValue}
+                        value={this.state.edit}
                         onChange={e => this.setState({
-                            searchValue: e.target.value,
+                            edit: e.target.value,
                             tags: this.state.tags.count() > 0 ? this.state.tags.clear() : this.state.tags
                         })}
-                        onKeyDown={
-                            e => e.key === 'Enter'
-                                && this.setState(
-                                    {
-                                        tags: this.loadCards()
-                                    }
-                                )
-                        }
+                        onKeyDown={e => e.key === 'Enter'
+                            && this.setState({ search: this.state.edit, tags: this.loadCards(this.state.edit) })}
                     />
                 </div>
                 <div className={this.props.classes.content}>
-                    {this.getAccountTable()}
-                    {this.getInventoryTable()}
-                    {this.getLocationTable()}
+                    {this.getContent()}
                 </div>
 
                 <div className={this.props.classes.footer}>
                     <ListItem>
                         <Typography style={{ flex: 1 }} type="title">Balance</Typography>
                         <Typography type="title">
-                            {this.state.tags.reduce(
-                                (r, t) => r + t.getBalanceFor(this.state.searchValue),
-                                0)
-                                .toFixed(2)}
+                            {this.state.tags
+                                .reduce((r, t) => r + t.tag.balance, 0).toFixed(2)}
                         </Typography>
                     </ListItem>
                 </div>

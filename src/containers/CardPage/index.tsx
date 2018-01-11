@@ -15,10 +15,10 @@ import { cardOperations } from '../../modules/CardOperations';
 import CardOperation from '../../modules/CardOperations/CardOperation';
 import Commits from './Commits';
 import CardPageContent from './CardPageContent';
-import CardBalance from './CardBalance';
 import { CommitRecord } from '../../models/Commit';
 import { CardTypeRecord } from '../../models/CardType';
 import { CardTagRecord } from '../../models/CardTag';
+import CardBalance from './CardBalance';
 
 type PageProps =
     {
@@ -105,7 +105,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
         let cap = ct ? ct.reference : `Card`;
         return this.props.card.isNew
             ? `New ${cap}`
-            : `${cap} (${this.props.card.display})`;
+            : `${this.props.card.display}`;
     }
 
     public render() {

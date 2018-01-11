@@ -30,13 +30,6 @@ class CardsPage extends React.Component<PageProps, { currentCardType: CardTypeRe
         this.state = { currentCardType: props.currentCardType };
     }
 
-    // componentWillMount() {
-    //     if (!this.state.currentCardType) {
-    //         let first = this.props.cardTypes.valueSeq().first();
-    //         if (first) { this.props.setCurrentCardType(first); }
-    //     }
-    // }
-
     componentWillReceiveProps(nextProps: PageProps) {
         if (nextProps.currentCardType.name !== this.state.currentCardType.name) {
             this.setState({ currentCardType: nextProps.currentCardType });
@@ -94,13 +87,15 @@ class CardsPage extends React.Component<PageProps, { currentCardType: CardTypeRe
                         >
                             <ListItemText
                                 primary={card.display}
-                                secondary={card.tags.valueSeq().map(tag => (
-                                    <span
-                                        style={{ marginRight: '8px' }}
-                                        key={tag.name}
-                                    >
-                                        {tag.display}
-                                    </span>))}
+                                secondary={card.tags.valueSeq()
+                                    .filter(tag => tag.name !== 'Name')
+                                    .map(tag => (
+                                        <span
+                                            style={{ marginRight: '8px' }}
+                                            key={tag.name}
+                                        >
+                                            {tag.display}
+                                        </span>))}
                             />
                             <ListItemSecondaryAction>
                                 {card.balanceDisplay}

@@ -2,11 +2,12 @@ import { CardTagRecord } from './CardTag';
 import { CardRecord } from './Card';
 
 export default class {
-
+    key: string;
     tag: CardTagRecord;
     card: CardRecord;
 
-    constructor(tag: CardTagRecord, card: CardRecord) {
+    constructor(key: string, tag: CardTagRecord, card: CardRecord) {
+        this.key = key;
         this.tag = tag;
         this.card = card;
     }
@@ -25,6 +26,10 @@ export default class {
 
     get time(): number {
         return this.card.time;
+    }
+
+    get amount(): number {
+        return Math.abs(this.tag.totalCredit - this.tag.totalDebit);
     }
 
     getInDisplayFor(filter: string): string {
@@ -55,45 +60,35 @@ export default class {
         return this.getDebitFor(filter) - this.getCreditFor(filter);
     }
 
-    isInventory(filter: string): boolean {
-        return this.tag.quantity > 0 && this.tag.value.toLowerCase().includes(filter.toLowerCase());
-    }
-
-    isSourceLocation(filter: string): boolean {
+    isSourceAccount(filter: string): boolean {
         return this.tag.source.toLowerCase().includes(filter.toLowerCase());
     }
 
-    isTargetLocation(filter: string): boolean {
+    isTargetAccount(filter: string): boolean {
         return this.tag.target.toLowerCase().includes(filter.toLowerCase());
     }
 
-    isLocation(filter: string): boolean {
-        return this.isSourceLocation(filter) || this.isTargetLocation(filter);
+    isAccount(filter: string): boolean {
+        return this.isSourceAccount(filter) || this.isTargetAccount(filter);
     }
 
-    private getDebitFor(filter: string): number {
-        if (this.isInventory(filter)) {
+    getDebitFor(filter: string): number {
+        if (this.isAccount(filter)) {
+            return this.isTargetAccount(filter) ? this.amount : 0;
+        }
+        if (!this.tag.source && !this.tag.target) {
             return this.card.debit;
         }
-        return this.getTagDebit(this.tag, filter);
+        return this.tag.target ? Math.abs(this.card.balance) : 0;
     }
 
-    private getCreditFor(filter: string): number {
-        if (this.isInventory(filter)) {
+    getCreditFor(filter: string): number {
+        if (this.isAccount(filter)) {
+            return this.isSourceAccount(filter) ? this.amount : 0;
+        }
+        if (!this.tag.source && !this.tag.target) {
             return this.card.credit;
         }
-        return this.getTagCredit(this.tag, filter);
-    }
-
-    private getTagDebit(tag: CardTagRecord, filter?: string): number {
-        return tag.target &&
-            (!filter || this.isTargetLocation(filter))
-            ? tag.debitValue : 0;
-    }
-
-    private getTagCredit(tag: CardTagRecord, filter?: string): number {
-        return tag.source &&
-            (!filter || this.isSourceLocation(filter))
-            ? tag.creditValue : 0;
+        return this.tag.source ? Math.abs(this.card.balance) : 0;
     }
 }

@@ -7,7 +7,6 @@ import { makeDeepCommit } from '../models/makers';
 import { Suggestion } from './CardOperations/Plugins/SetCardTag/AutoSuggest';
 import { CardTypeRecord } from '../models/CardType';
 import CardTagData from '../models/CardTagData';
-import { CardTagRecord } from '../models/CardTag';
 
 class CardList {
 
@@ -67,16 +66,19 @@ class CardList {
         return this.cards;
     }
 
-    reduceTags(
-        card: CardRecord,
-        list: List<CardTagData>,
-        filter?: (card: CardTagRecord) => boolean): List<CardTagData> {
-        list = list.merge(card.getTags(filter).map(t => { return new CardTagData(t, card); }));
-        return card.cards.reduce((r, c) => this.reduceTags(c, r, filter), list);
+    getCardTypes(): IMap<string, CardTypeRecord> {
+        return this.cardTypes;
     }
 
-    getTags(filter?: (card: CardTagRecord) => boolean): List<CardTagData> {
-        return this.cards.reduce((r, card) => this.reduceTags(card, r, filter), List<CardTagData>());
+    reduceTags(card: CardRecord, list: List<CardTagData>, filters: string[]) {
+        let foundTags = card.getTags(filters);
+        list = list.merge(foundTags.result
+            .map(ft => { return new CardTagData(foundTags.filter, ft, card); }));
+        return card.cards.reduce((r, c) => this.reduceTags(c, r, filters), list);
+    }
+
+    getTags(filters: string[]): List<CardTagData> {
+        return this.cards.reduce((r, card) => this.reduceTags(card, r, filters), List<CardTagData>());
     }
 
     getCardsByType(typeId: string): List<CardRecord> {

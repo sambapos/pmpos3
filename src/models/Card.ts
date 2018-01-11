@@ -21,12 +21,12 @@ export class CardRecord extends Record<Card>({
     keys: List<string>()
 }) {
     get debit(): number {
-        let tagDebit = this.tags.reduce((x, y) => x + y.debitValue, 0);
+        let tagDebit = this.tags.reduce((x, y) => x + y.totalDebit, 0);
         return tagDebit + this.subCardDebit;
     }
 
     get credit(): number {
-        let tagCredit = this.tags.reduce((x, y) => x + y.creditValue, 0);
+        let tagCredit = this.tags.reduce((x, y) => x + y.totalCredit, 0);
         return tagCredit + this.subCardCredit;
     }
 
@@ -72,11 +72,21 @@ export class CardRecord extends Record<Card>({
         return this.tags.count() === 0 && this.cards.count() === 0;
     }
 
-    getTags(filter?: (card: CardTagRecord) => boolean): List<CardTagRecord> {
+    acceptsFilter(tag: CardTagRecord, filter: string): boolean {
+        let sv = filter.toLowerCase();
+        return (tag.value.toLowerCase().includes(sv) && tag.name !== 'Name')
+            || tag.source.toLowerCase().includes(sv)
+            || tag.target.toLowerCase().includes(sv);
+    }
+
+    getTags(filters: string[]): { filter: string, result: List<CardTagRecord> } {
         let tags = this.tags.valueSeq();
-        if (filter) {
-            tags = tags.filter(filter);
+        for (const filter of filters) {
+            let filteredTags = tags.filter(t => this.acceptsFilter(t, filter));
+            if (filteredTags.count() > 0) {
+                return { filter, result: List<CardTagRecord>(filteredTags) };
+            }
         }
-        return List<CardTagRecord>(tags);
+        return { filter: '', result: List<CardTagRecord>() };
     }
 }
