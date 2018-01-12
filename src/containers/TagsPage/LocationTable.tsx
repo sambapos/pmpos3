@@ -15,7 +15,7 @@ type Props = PageProps & WithStyles<keyof Style>;
 
 const LocationTable = (props: Props) => {
     let firstTag = props.tags.first();
-    if (!firstTag || !firstTag.isAccount(props.searchValue)) {
+    if (!firstTag || firstTag.tag.quantity === 0 || !firstTag.isAccount(props.searchValue)) {
         return null;
     }
     let balances = props.tags.reduce(

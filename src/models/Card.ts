@@ -21,12 +21,12 @@ export class CardRecord extends Record<Card>({
     keys: List<string>()
 }) {
     get debit(): number {
-        let tagDebit = this.tags.reduce((x, y) => x + y.totalDebit, 0);
+        let tagDebit = this.tags.reduce((x, y) => x + y.debit, 0);
         return tagDebit + this.subCardDebit;
     }
 
     get credit(): number {
-        let tagCredit = this.tags.reduce((x, y) => x + y.totalCredit, 0);
+        let tagCredit = this.tags.reduce((x, y) => x + y.credit, 0);
         return tagCredit + this.subCardCredit;
     }
 

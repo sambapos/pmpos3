@@ -28,7 +28,7 @@ const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
                                 <div>{v.display}</div>
                                 {st && <div style={{ fontSize: '0.7em' }}>{st}</div>}
                             </div>
-                            <div style={{ fontSize: '1.2em' }}>{v.balanceDisplay}</div>
+                            <div style={{ fontSize: '1.2em' }}>{v.amount !== 0 ? v.amount.toFixed(2) : ''}</div>
                         </ListItem>);
                 })
             }

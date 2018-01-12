@@ -108,7 +108,7 @@ class TagsPage extends React.Component<PageProps, {
                         <Typography style={{ flex: 1 }} type="title">Balance</Typography>
                         <Typography type="title">
                             {this.state.tags
-                                .reduce((r, t) => r + t.tag.balance, 0).toFixed(2)}
+                                .reduce((r, t) => r + t.getBalanceFor(this.state.search), 0).toFixed(2)}
                         </Typography>
                     </ListItem>
                 </div>

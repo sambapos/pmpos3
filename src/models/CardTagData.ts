@@ -28,10 +28,6 @@ export default class {
         return this.card.time;
     }
 
-    get amount(): number {
-        return Math.abs(this.tag.totalCredit - this.tag.totalDebit);
-    }
-
     getInDisplayFor(filter: string): string {
         let inValue = this.tag.getInQuantityFor(filter);
         return inValue !== 0 ? String(inValue) : '';
@@ -74,7 +70,7 @@ export default class {
 
     getDebitFor(filter: string): number {
         if (this.isAccount(filter)) {
-            return this.isTargetAccount(filter) ? this.amount : 0;
+            return this.isTargetAccount(filter) ? this.tag.amount : 0;
         }
         if (!this.tag.source && !this.tag.target) {
             return this.card.debit;
@@ -84,7 +80,7 @@ export default class {
 
     getCreditFor(filter: string): number {
         if (this.isAccount(filter)) {
-            return this.isSourceAccount(filter) ? this.amount : 0;
+            return this.isSourceAccount(filter) ? this.tag.amount : 0;
         }
         if (!this.tag.source && !this.tag.target) {
             return this.card.credit;

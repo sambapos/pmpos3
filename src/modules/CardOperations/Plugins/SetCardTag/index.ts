@@ -36,8 +36,7 @@ export default class SetCardTag extends CardOperation {
             || currentValue.value !== data.value
             || currentValue.quantity !== data.quantity
             || currentValue.unit !== data.unit
-            || currentValue.debit !== data.debit
-            || currentValue.credit !== data.credit
+            || currentValue.amount !== data.amount
             || currentValue.source !== data.source
             || currentValue.target !== data.target;
     }

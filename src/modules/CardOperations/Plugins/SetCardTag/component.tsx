@@ -16,13 +16,13 @@ export default class extends React.Component<
     },
     {
         name: string, value: string, quantity: number, unit: string,
-        debit: number, credit: number, source: string, target: string
+        amount: number, source: string, target: string
     }> {
     constructor(props: any) {
         super(props);
         this.state = {
             name: '', value: '', quantity: 0, unit: '',
-            debit: 0, credit: 0, source: '', target: ''
+            amount: 0, source: '', target: ''
         };
     }
     componentDidMount() {
@@ -32,8 +32,7 @@ export default class extends React.Component<
                 value: this.props.current.value,
                 quantity: this.props.current.quantity,
                 unit: this.props.current.unit,
-                debit: this.props.current.debit,
-                credit: this.props.current.credit,
+                amount: this.props.current.amount,
                 source: this.props.current.source,
                 target: this.props.current.target
             });
@@ -68,14 +67,9 @@ export default class extends React.Component<
                         onChange={e => this.setState({ unit: e.target.value })}
                     />
                     <TextField
-                        label="Debit"
-                        value={this.state.debit}
-                        onChange={e => this.setState({ debit: Number(e.target.value) })}
-                    />
-                    <TextField
-                        label="Credit"
-                        value={this.state.credit}
-                        onChange={e => this.setState({ credit: Number(e.target.value) })}
+                        label="Amount"
+                        value={this.state.amount}
+                        onChange={e => this.setState({ amount: Number(e.target.value) })}
                     />
                     <TextField
                         label="Source"
@@ -99,8 +93,7 @@ export default class extends React.Component<
                                     value: this.state.value,
                                     quantity: this.state.quantity,
                                     unit: this.state.unit,
-                                    debit: this.state.debit,
-                                    credit: this.state.credit,
+                                    amount: this.state.amount,
                                     source: this.state.source,
                                     target: this.state.target
                                 });
