@@ -22,6 +22,10 @@ export class CardTagRecord extends Record<CardTag>({
     target: ''
 }) {
     get balance(): number { return (this.debit - this.credit); }
+    get totalAmountDisplay(): string {
+        return this.amount > 0
+            ? (this.amount * Math.max(this.quantity, 1)).toFixed(2) : '';
+    }
     get display(): string {
         // let b = this.balance !== 0 ? this.balance : '';
         let u = this.unit ? this.unit : '';

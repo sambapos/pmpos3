@@ -7,6 +7,7 @@ import { Commit, CommitRecord } from '../models/Commit';
 import CardList from '../modules/CardList';
 import { List, Record } from 'immutable';
 import { CardTypeRecord } from '../models/CardType';
+import { ApplicationState } from './index';
 
 export interface State {
     cards: List<CardRecord>;
@@ -40,7 +41,7 @@ type CommitReceivedAction = {
 
 type AddCardAction = {
     type: 'ADD_CARD',
-    cardTypeId: string
+    action: ActionRecord
 };
 
 type CommitCardAction = {
@@ -93,20 +94,11 @@ export const reducer: Reducer<StateRecord> = (
                 .update('pendingActions', list => list.push(action.action));
         }
         case 'ADD_CARD': {
-            let cardCreateAction = new ActionRecord({
-                actionType: 'CREATE_CARD',
-                id: shortid.generate(),
-                data: {
-                    id: shortid.generate(),
-                    typeId: action.cardTypeId,
-                    time: new Date().getTime()
-                }
-            });
             return state
                 .set('isLoaded', true)
                 .set('currentCommits', undefined)
-                .set('pendingActions', state.pendingActions.clear().push(cardCreateAction))
-                .set('currentCard', CardList.applyAction(undefined, cardCreateAction));
+                .set('pendingActions', state.pendingActions.clear().push(action.action))
+                .set('currentCard', CardList.applyAction(undefined, action.action));
         }
         case 'SET_COMMIT_PROTOCOL': {
             return state.set('protocol', action.protocol);
@@ -150,12 +142,47 @@ function resetCurrentCard(state: StateRecord) {
         .set('isLoaded', false);
 }
 
+function internalAddPendingAction(
+    card: CardRecord, actionType: string, data: any,
+    getState: () => ApplicationState,
+    dispatch: (action: KnownActions) => void) {
+    let c = card;
+    let actionData = new ActionRecord({
+        id: shortid.generate(),
+        cardId: c.id,
+        actionType,
+        data,
+        concurrencyData: CardList.readConcurrencyData(actionType, c, data)
+    });
+    if (CardList.canApplyAction(c, actionData)) {
+        dispatch({
+            type: 'ADD_PENDING_ACTION', action: actionData
+        });
+    }
+}
+
+function internalAddCard(
+    cardType: CardTypeRecord,
+    getState: () => ApplicationState,
+    dispatch: (action: KnownActions) => void) {
+    let cardCreateAction = new ActionRecord({
+        actionType: 'CREATE_CARD',
+        id: shortid.generate(),
+        data: {
+            id: shortid.generate(),
+            typeId: cardType.id,
+            time: new Date().getTime()
+        }
+    });
+    dispatch({
+        type: 'ADD_CARD',
+        action: cardCreateAction
+    });
+}
+
 export const actionCreators = {
     addCard: (cardType: CardTypeRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
-        dispatch({
-            type: 'ADD_CARD',
-            cardTypeId: cardType.id
-        });
+        internalAddCard(cardType, getState, dispatch);
     },
     commitCard: (): AppThunkAction<KnownActions> => (dispatch, getState) => {
         const state = getState().cards;
@@ -179,19 +206,7 @@ export const actionCreators = {
     },
     addPendingAction: (card: CardRecord | undefined, actionType: string, data: any):
         AppThunkAction<KnownActions> => (dispatch, getState) => {
-            let c = card || getState().cards.currentCard;
-            let actionData = new ActionRecord({
-                id: shortid.generate(),
-                cardId: c.id,
-                actionType,
-                data,
-                concurrencyData: CardList.readConcurrencyData(actionType, c, data)
-            });
-            if (CardList.canApplyAction(c, actionData)) {
-                dispatch({
-                    type: 'ADD_PENDING_ACTION', action: actionData
-                });
-            }
+            internalAddPendingAction(card || getState().cards.currentCard, actionType, data, getState, dispatch);
         },
     loadCard: (id: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
         dispatch({

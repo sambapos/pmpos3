@@ -29,7 +29,7 @@ class CardList {
         return cardOperations.getConcurrencyData(actionType, card, actionData);
     }
 
-    applyAction(card: CardRecord = new CardRecord(), action: ActionRecord): CardRecord {
+    applyAction(card: CardRecord = new CardRecord(), action: ActionRecord, executeRules: boolean = false): CardRecord {
         if (cardOperations.canHandle(action)) {
             return cardOperations.reduce(card, action);
         }

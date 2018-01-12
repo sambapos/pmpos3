@@ -9,7 +9,7 @@ import CardsPage from './containers/CardsPage';
 import CardPage from './containers/CardPage';
 import CardTypesPage from './containers/CardTypesPage';
 import CardTypePage from './containers/CardTypePage';
-import TagsPage from './containers/TagsPage';
+import ReportPage from './containers/ReportPage';
 import { Route } from 'react-router-dom';
 
 export const routes = (
@@ -28,6 +28,6 @@ export const subRoutes = (
         <Route exact path="/cardType" component={CardTypePage} />
         <Route exact path="/cards" component={CardsPage} />
         <Route exact path="/card/:id?" component={CardPage} />
-        <Route exact path="/tags" component={TagsPage} />
+        <Route exact path="/report" component={ReportPage} />
     </div>
 );

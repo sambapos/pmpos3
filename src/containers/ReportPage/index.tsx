@@ -17,7 +17,7 @@ type PageProps =
     WithStyles<keyof Style>
     & RouteComponentProps<{}>;
 
-class TagsPage extends React.Component<PageProps, {
+class ReportPage extends React.Component<PageProps, {
     search: string,
     edit: string,
     tags: IList<CardTagData>
@@ -84,7 +84,7 @@ class TagsPage extends React.Component<PageProps, {
         return (
             <div className={this.props.classes.root}>
                 <TopBar
-                    title="Tags"
+                    title="Report"
                     secondaryCommands={this.getSecondaryCommands()}
                 />
                 <div className={this.props.classes.footer}>
@@ -117,4 +117,4 @@ class TagsPage extends React.Component<PageProps, {
     }
 }
 
-export default decorate(TagsPage);
+export default decorate(ReportPage);
