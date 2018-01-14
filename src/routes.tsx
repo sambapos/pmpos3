@@ -18,16 +18,16 @@ export const routes = (
 
 export const subRoutes = (
     <div style={{ height: '100%', display: 'flex' }}>
-        <Route exact path="/" component={DashboardPage} />
-        <Route exact path="/index.html" component={DashboardPage} />
-        <Route exact path="/tasks" component={TasksPage} />
-        <Route exact path="/chat" component={ChatPage} />
-        <Route exact path="/about" component={AboutPage} />
-        <Route exact path="/login" component={LoginPage} />
-        <Route exact path="/cardTypes" component={CardTypesPage} />
-        <Route exact path="/cardType" component={CardTypePage} />
-        <Route exact path="/cards" component={CardsPage} />
-        <Route exact path="/card/:id?" component={CardPage} />
-        <Route exact path="/report" component={ReportPage} />
+        <Route exact path={process.env.PUBLIC_URL + '/'} component={DashboardPage} />
+        <Route exact path={process.env.PUBLIC_URL + '/index.html'} component={DashboardPage} />
+        <Route exact path={process.env.PUBLIC_URL + '/tasks'} component={TasksPage} />
+        <Route exact path={process.env.PUBLIC_URL + '/chat'} component={ChatPage} />
+        <Route exact path={process.env.PUBLIC_URL + '/about'} component={AboutPage} />
+        <Route exact path={process.env.PUBLIC_URL + '/login'} component={LoginPage} />
+        <Route exact path={process.env.PUBLIC_URL + '/cardTypes'} component={CardTypesPage} />
+        <Route exact path={process.env.PUBLIC_URL + '/cardType'} component={CardTypePage} />
+        <Route exact path={process.env.PUBLIC_URL + '/cards'} component={CardsPage} />
+        <Route exact path={process.env.PUBLIC_URL + '/card/:id?'} component={CardPage} />
+        <Route exact path={process.env.PUBLIC_URL + '/report'} component={ReportPage} />
     </div>
 );

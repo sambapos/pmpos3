@@ -23,7 +23,7 @@ class CardTypesPage extends React.Component<PageProps, {}> {
         let result = [
             {
                 icon: 'add', onClick: () => {
-                    this.props.history.push('/cardType');
+                    this.props.history.push(process.env.PUBLIC_URL + '/cardType');
                     this.props.addCardType();
                 }
             }
@@ -38,7 +38,7 @@ class CardTypesPage extends React.Component<PageProps, {}> {
                     <ListItem
                         button
                         onClick={(e) => {
-                            this.props.history.push('/cardType');
+                            this.props.history.push(process.env.PUBLIC_URL + '/cardType');
                             this.props.loadCardType(cardType.id);
                             e.preventDefault();
                         }}

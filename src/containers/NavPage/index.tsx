@@ -60,7 +60,7 @@ class NavPage extends React.Component<NavPageProps> {
                     <ListItem
                         button
                         onClick={() => {
-                            this.props.history.push('/about');
+                            this.props.history.push(process.env.PUBLIC_URL + '/about');
                             if (window.innerWidth < 1024) { this.handleDrawerToggle(); }
                         }}
                     >

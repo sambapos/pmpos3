@@ -5,12 +5,13 @@ import { ActionRecord } from './Action';
 import { Card, CardRecord } from './Card';
 import { CardTagRecord } from './CardTag';
 
-export const makeDeepCardData = (cardData: CardData): CardDataRecord => {
-    return new CardDataRecord({
-        card: makeDeepCard(cardData.card),
-        commits: List<CommitRecord>(cardData.commits.map(
-            commit => makeDeepCommit(commit as Commit))
-        )
+export const makeDeepCard = (card: Card): CardRecord => {
+    return new CardRecord({
+        id: card.id,
+        time: card.time,
+        typeId: card.typeId,
+        tags: IMap<string, CardTagRecord>(card.tags),
+        cards: IMap<string, CardRecord>(card.cards)
     });
 };
 
@@ -25,12 +26,11 @@ export const makeDeepCommit = (commit: Commit): CommitRecord => {
     });
 };
 
-export const makeDeepCard = (card: Card): CardRecord => {
-    return new CardRecord({
-        id: card.id,
-        time: card.time,
-        typeId: card.typeId,
-        tags: IMap<string, CardTagRecord>(card.tags),
-        cards: IMap<string, CardRecord>(card.cards)
+export const makeDeepCardData = (cardData: CardData): CardDataRecord => {
+    return new CardDataRecord({
+        card: makeDeepCard(cardData.card),
+        commits: List<CommitRecord>(cardData.commits.map(
+            commit => makeDeepCommit(commit as Commit))
+        )
     });
 };

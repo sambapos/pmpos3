@@ -15,7 +15,7 @@ interface NavListProps {
 export default class extends React.Component<NavListProps> {
 
     nav(link: string) {
-        this.props.history.push(link);
+        this.props.history.push(process.env.PUBLIC_URL + link);
         if (this.props.closeDrawer && window.innerWidth < 1024) { this.props.closeDrawer(); }
     }
 

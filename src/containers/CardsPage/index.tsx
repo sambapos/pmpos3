@@ -66,7 +66,7 @@ class CardsPage extends React.Component<PageProps, { currentCardType: CardTypeRe
                 icon: 'add',
                 onClick: () => {
                     this.props.addCard(this.props.currentCardType);
-                    this.props.history.push('/card');
+                    this.props.history.push(process.env.PUBLIC_URL + '/card');
                 }
             }
         ];
@@ -81,7 +81,7 @@ class CardsPage extends React.Component<PageProps, { currentCardType: CardTypeRe
                         <ListItem
                             button
                             onClick={(e) => {
-                                this.props.history.push('/card/' + card.id);
+                                this.props.history.push(process.env.PUBLIC_URL + '/card/' + card.id);
                                 e.preventDefault();
                             }}
                         >

@@ -36,7 +36,7 @@ class ReportPage extends React.Component<PageProps, {
         let result = [
             {
                 icon: 'add', onClick: () => {
-                    this.props.history.push('/cardType');
+                    this.props.history.push(process.env.PUBLIC_URL + '/cardType');
                 }
             }
         ];
