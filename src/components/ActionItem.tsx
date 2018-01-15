@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { ActionRecord } from '../models/Action';
 import Divider from 'material-ui/Divider/Divider';
 import Typography from 'material-ui/Typography/Typography';
+import * as React from 'react';
+import { ActionRecord } from '../models/Action';
 
 interface ActionItemProps {
     action: ActionRecord;

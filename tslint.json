@@ -1,5 +1,8 @@
 {
-    "extends": ["tslint-react"],
+    "extends": [
+        "tslint-react",
+        "tslint-config-prettier"
+    ],
     "rules": {
         "align": [
             true,
@@ -24,25 +27,20 @@
         "jsx-boolean-value": false,
         "label-position": true,
         "max-line-length": [true, 120],
-        "member-ordering": [
-            true,
-            "public-before-private",
-            "static-before-instance",
-            "variables-before-functions"
-        ],
         "no-any": false,
         "no-arg": true,
         "no-bitwise": true,
-        "no-console": [
-            true,
-            "log",
-            "error",
-            "debug",
-            "info",
-            "time",
-            "timeEnd",
-            "trace"
-        ],
+        "no-console": {
+            "severity": "warning",
+            "options": [
+                "debug",
+                "info",
+                "log",
+                "time",
+                "timeEnd",
+                "trace"
+            ]
+        },
         "no-consecutive-blank-lines": true,
         "no-construct": true,
         "no-debugger": true,
@@ -62,6 +60,7 @@
             "check-open-brace",
             "check-whitespace"
         ],
+        "ordered-imports": false,
         "quotemark": [true, "single", "jsx-double"],
         "radix": true,
         "semicolon": [true, "always"],
@@ -94,7 +93,6 @@
             "check-operator",
             "check-separator",
             "check-type"
-            // "check-typecast"
         ]
     }
 }

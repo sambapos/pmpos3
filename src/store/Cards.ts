@@ -8,6 +8,11 @@ import CardList from '../modules/CardList';
 import { List, Record } from 'immutable';
 import { CardTypeRecord } from '../models/CardType';
 import { ApplicationState } from './index';
+import { ActionsObservable } from 'redux-observable';
+import { Observable } from 'rxjs/Observable';
+import { Action } from 'redux';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/ignoreElements';
 
 export interface State {
     cards: List<CardRecord>;
@@ -80,6 +85,11 @@ type SetCurrentCardTypeAction = {
 type KnownActions = AddCardAction | AddPendingActionAction | CommitCardAction | CommitReceivedAction
     | LoadCardAction | LoadCardRequestAction | LoadCardSuccessAction | LoadCardFailAction
     | SetCommitProtocolAction | SetCurrentCardTypeAction;
+
+export const epic = (action$: ActionsObservable<Action>): Observable<Action> =>
+    action$.ofType('ADD_PENDING_ACTION')
+        .do(action => console.log(action))
+        .ignoreElements();
 
 export const reducer: Reducer<StateRecord> = (
     state: StateRecord = new StateRecord(),

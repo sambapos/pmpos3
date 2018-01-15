@@ -2,9 +2,11 @@ import { createStore, applyMiddleware, compose, combineReducers, GenericStoreEnh
 import thunk from 'redux-thunk';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import * as StoreModule from './store';
-import { ApplicationState, reducers } from './store';
+import { ApplicationState, reducers, epics } from './store';
 import { History } from 'history';
 import promiseMiddleware from './middlewares/promiseMiddleware';
+import { combineEpics, createEpicMiddleware } from 'redux-observable';
+import { values } from 'lodash';
 
 export default function configureStore(history: History, initialState?: ApplicationState) {
     // Build middleware. These are functions that can process the actions before they reach the store.
@@ -15,7 +17,8 @@ export default function configureStore(history: History, initialState?: Applicat
         applyMiddleware(
             thunk,
             promiseMiddleware(),
-            routerMiddleware(history)
+            routerMiddleware(history),
+            createEpicMiddleware(buildRootEpic(epics))
         ),
         devToolsExtension ? devToolsExtension() : (f: {}) => f
     )(createStore);
@@ -32,6 +35,10 @@ export default function configureStore(history: History, initialState?: Applicat
         });
     }
     return store;
+}
+
+function buildRootEpic(allEpics: {}) {
+    return combineEpics(...values(epics));
 }
 
 function buildRootReducer(allReducers: {}) {

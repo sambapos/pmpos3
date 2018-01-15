@@ -1,6 +1,6 @@
+import { List } from 'immutable';
 import * as React from 'react';
 import { ActionRecord } from '../models/Action';
-import { List } from 'immutable';
 import ActionItem from './ActionItem';
 
 interface ActionListProps {
