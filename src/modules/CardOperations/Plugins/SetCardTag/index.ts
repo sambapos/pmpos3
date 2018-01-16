@@ -30,6 +30,7 @@ export default class SetCardTag extends CardOperation {
     }
 
     canApply(card: CardRecord, data: CardTagRecord): boolean {
+        console.log('DATA EVAL', data);
         if (!data.name) { return false; }
         let currentValue = card.getIn(['tags', data.name]) as CardTagRecord;
         return !currentValue

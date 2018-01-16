@@ -23,11 +23,11 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         // marginBottom: spacing.unit,
         borderColor: palette.text.divider,
         borderTop: '1px solid',
+        paddingLeft: spacing.unit,
         backgroundColor: palette.background.contentFrame,
     },
     leaf: {
-        backgroundColor: palette.background.paper,
-        paddingLeft: spacing.unit,
+        backgroundColor: palette.background.paper
     },
     tagItem: {
         paddingTop: '4px',

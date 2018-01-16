@@ -6,19 +6,120 @@ import { ActionRecord } from '../models/Action';
 import { makeDeepCommit } from '../models/makers';
 import { Suggestion } from './CardOperations/Plugins/SetCardTag/AutoSuggest';
 import { CardTypeRecord } from '../models/CardType';
+import { Engine } from 'json-rules-engine';
 import CardTagData from '../models/CardTagData';
+import { Parser } from 'expr-eval';
 
 class CardList {
-
     commits: IMap<string, List<CommitRecord>>;
     cards: IMap<string, CardRecord>;
     cardTypes: IMap<string, CardTypeRecord>;
     cardTypeIndex: IMap<string, List<string>>;
+    engine: Engine;
 
     constructor() {
         this.commits = IMap<string, List<CommitRecord>>();
         this.cards = IMap<string, CardRecord>();
         this.cardTypes = IMap<string, CardTypeRecord>();
+        this.engine = new Engine();
+        this.engine.addRule(this.rule);
+    }
+
+    rule: any = {
+        conditions: {
+            all: [
+                {
+                    fact: 'action',
+                    path: '.actionType',
+                    operator: 'equal',
+                    value: 'CREATE_CARD'
+                },
+                {
+                    fact: 'card',
+                    path: '.typeId',
+                    operator: 'equal',
+                    value: 'HkiVldrVM'
+                }
+            ]
+        },
+        // event: {
+        //     type: 'SET_CARD_TAG',
+        //     params: {
+        //         name: 'Number',
+        //         value: '0000'
+        //     }
+        // }
+        event: {
+            type: 'SUCCESS',
+            params: {
+                actions: [
+                    {
+                        type: 'SET_CARD_TAG',
+                        params: {
+                            name: 'Number',
+                            value: '0000'
+                        }
+                    },
+                    {
+                        type: 'SET_CARD_TAG',
+                        params: {
+                            name: 'Waiter',
+                            value: 'Tip',
+                            amount: '=card.balance*0.1'
+                        }
+                    }
+                ]
+
+            }
+        }
+    };
+
+    evaluate(v: string, card: CardRecord, action: ActionRecord) {
+        if (v.startsWith('=')) {
+            let p = new Parser();
+            let expr = p.parse(v.substr(1));
+            return expr.evaluate({ 'card': card as any, 'action': action as any });
+        }
+        return v;
+    }
+
+    getNextActions(action: ActionRecord, card: CardRecord): Promise<ActionRecord[]> {
+        return new Promise<ActionRecord[]>(resolve => {
+            this.engine
+                .run({ card, action })
+                .then(events => {
+                    let actions: ActionRecord[] = [];
+                    for (const event of events) {
+                        actions.push(
+                            ...event.params.actions.map(ac => {
+                                let processedData = { ...ac.params };
+                                Object.keys(ac.params)
+                                    .forEach(p => processedData[p]
+                                        = this.evaluate(processedData[p], card, action));
+                                return new ActionRecord({
+                                    actionType: ac.type,
+                                    cardId: action.data.id || card.id,
+                                    data: processedData
+                                });
+                            })
+                        );
+                    }
+                    resolve(actions);
+                });
+        });
+
+        // if (action.actionType === 'CREATE_CARD') {
+        //     return [new ActionRecord({
+        //         actionType: 'SET_CARD_TAG',
+        //         cardId: action.data.id,
+        //         data: {
+        //             name: 'Number',
+        //             value: '0000'
+        //         }
+        //     })];
+        // }
+
+        // return [];
     }
 
     setCardTypes(cardTypes: IMap<string, CardTypeRecord>) {
