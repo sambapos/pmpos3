@@ -6,9 +6,10 @@ import { ActionRecord } from '../models/Action';
 import { makeDeepCommit } from '../models/makers';
 import { Suggestion } from './CardOperations/Plugins/SetCardTag/AutoSuggest';
 import { CardTypeRecord } from '../models/CardType';
-import { Engine } from 'json-rules-engine';
+import { Engine, Rule } from 'json-rules-engine';
 import CardTagData from '../models/CardTagData';
 import { Parser } from 'expr-eval';
+import { RuleRecord } from '../models/Rule';
 
 class CardList {
     commits: IMap<string, List<CommitRecord>>;
@@ -23,6 +24,13 @@ class CardList {
         this.cardTypes = IMap<string, CardTypeRecord>();
         this.engine = new Engine();
         this.engine.addRule(this.rule);
+        console.log(this.engine.rules[0].toJSON());
+    }
+
+    setRules(rules: IMap<string, RuleRecord>) {
+        if (this.engine) { this.engine.stop(); }
+        this.engine = new Engine;
+        rules.forEach(rule => this.engine.addRule(new Rule(rule.content)));
     }
 
     rule: any = {
@@ -42,13 +50,6 @@ class CardList {
                 }
             ]
         },
-        // event: {
-        //     type: 'SET_CARD_TAG',
-        //     params: {
-        //         name: 'Number',
-        //         value: '0000'
-        //     }
-        // }
         event: {
             type: 'SUCCESS',
             params: {

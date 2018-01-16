@@ -9,6 +9,8 @@ import CardsPage from './containers/CardsPage';
 import CardPage from './containers/CardPage';
 import CardTypesPage from './containers/CardTypesPage';
 import CardTypePage from './containers/CardTypePage';
+import RulesPage from './containers/RulesPage';
+import RulePage from './containers/RulePage';
 import ReportPage from './containers/ReportPage';
 import { Route } from 'react-router-dom';
 
@@ -26,6 +28,8 @@ export const subRoutes = (
         <Route exact path={process.env.PUBLIC_URL + '/login'} component={LoginPage} />
         <Route exact path={process.env.PUBLIC_URL + '/cardTypes'} component={CardTypesPage} />
         <Route exact path={process.env.PUBLIC_URL + '/cardType'} component={CardTypePage} />
+        <Route exact path={process.env.PUBLIC_URL + '/rules'} component={RulesPage} />
+        <Route exact path={process.env.PUBLIC_URL + '/rule'} component={RulePage} />
         <Route exact path={process.env.PUBLIC_URL + '/cards'} component={CardsPage} />
         <Route exact path={process.env.PUBLIC_URL + '/card/:id?'} component={CardPage} />
         <Route exact path={process.env.PUBLIC_URL + '/report'} component={ReportPage} />

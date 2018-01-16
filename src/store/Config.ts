@@ -4,28 +4,25 @@ import { Record, Map as IMap } from 'immutable';
 import { AppThunkAction } from './appThunkAction';
 import { CardTypeRecord } from '../models/CardType';
 import CardList from '../modules/CardList';
+import { RuleRecord } from '../models/Rule';
 
 interface ConfigState {
     protocol: any;
     currentCardType: CardTypeRecord;
+    currentRule: RuleRecord;
     isLoading: boolean;
     cardTypes: IMap<string, CardTypeRecord>;
+    rules: IMap<string, RuleRecord>;
 }
 
 export class ConfigStateRecord extends Record<ConfigState>({
     protocol: undefined,
     isLoading: false,
     currentCardType: new CardTypeRecord(),
-    cardTypes: IMap<string, CardTypeRecord>()
+    currentRule: new RuleRecord(),
+    cardTypes: IMap<string, CardTypeRecord>(),
+    rules: IMap<string, RuleRecord>()
 }) { }
-
-type AddCardTypeAction = {
-    type: 'ADD_CARD_TYPE'
-};
-
-type ResetCardTypeAction = {
-    type: 'RESET_CARD_TYPE'
-};
 
 type SetConfigProtocolAction = {
     type: 'SET_CONFIG_PROTOCOL',
@@ -35,6 +32,41 @@ type SetConfigProtocolAction = {
 type ConfigReceivedAction = {
     type: 'CONFIG_RECEIVED',
     payload: Map<string, any>;
+};
+
+type AddRuleAction = {
+    type: 'ADD_RULE'
+};
+
+type ResetRuleAction = {
+    type: 'RESET_RULE'
+};
+
+type LoadRuleAction = {
+    type: 'LOAD_RULE'
+    id: String
+    payload: Promise<RuleRecord>
+};
+
+type LoadRuleRequestAction = {
+    type: 'LOAD_RULE_REQUEST'
+};
+
+type LoadRuleSuccessAction = {
+    type: 'LOAD_RULE_SUCCESS'
+    payload: RuleRecord
+};
+
+type LoadRuleFailAction = {
+    type: 'LOAD_RULE_FAIL'
+};
+
+type AddCardTypeAction = {
+    type: 'ADD_CARD_TYPE'
+};
+
+type ResetCardTypeAction = {
+    type: 'RESET_CARD_TYPE'
 };
 
 type LoadCardTypeAction = {
@@ -58,7 +90,10 @@ type LoadCardTypeFailAction = {
 
 type KnownActions = SetConfigProtocolAction | ConfigReceivedAction | ResetCardTypeAction
     | LoadCardTypeAction | LoadCardTypeFailAction | LoadCardTypeRequestAction
-    | LoadCardTypeSuccessAction | AddCardTypeAction;
+    | LoadCardTypeSuccessAction | AddCardTypeAction
+
+    | ResetRuleAction | LoadRuleAction | LoadRuleFailAction | LoadRuleRequestAction | LoadRuleSuccessAction
+    | AddRuleAction;
 
 export const reducer: Reducer<ConfigStateRecord> = (
     state: ConfigStateRecord = new ConfigStateRecord(),
@@ -67,6 +102,26 @@ export const reducer: Reducer<ConfigStateRecord> = (
     switch (action.type) {
         case 'SET_CONFIG_PROTOCOL': {
             return state.set('protocol', action.protocol);
+        }
+        case 'CONFIG_RECEIVED': {
+            let cardTypeMap = IMap<string, CardTypeRecord>();
+            let ruleMap = IMap<string, RuleRecord>();
+
+            if (action.payload.has('cardTypes')) {
+                let cardTypes = action.payload.get('cardTypes');
+                cardTypeMap = Object.keys(cardTypes)
+                    .reduce((x, y) => x.set(y, new CardTypeRecord(cardTypes[y])), IMap<string, CardTypeRecord>());
+                CardList.setCardTypes(cardTypeMap);
+            }
+            if (action.payload.has('rules')) {
+                let rules = action.payload.get('rules');
+                ruleMap = Object.keys(rules)
+                    .reduce((x, y) => x.set(y, new RuleRecord(rules[y])), IMap<string, RuleRecord>());
+                CardList.setRules(ruleMap);
+            }
+            return state
+                .set('cardTypes', cardTypeMap)
+                .set('rules', ruleMap);
         }
         case 'LOAD_CARD_TYPE_REQUEST': {
             return state
@@ -83,16 +138,6 @@ export const reducer: Reducer<ConfigStateRecord> = (
                 .set('isLoading', false)
                 .set('currentCardType', action.payload);
         }
-        case 'CONFIG_RECEIVED': {
-            if (action.payload.has('cardTypes')) {
-                let cardTypes = action.payload.get('cardTypes');
-                let map = Object.keys(cardTypes)
-                    .reduce((x, y) => x.set(y, new CardTypeRecord(cardTypes[y])), IMap<string, CardTypeRecord>());
-                CardList.setCardTypes(map);
-                return state.set('cardTypes', map);
-            }
-            return state;
-        }
         case 'RESET_CARD_TYPE': {
             return state
                 .set('isLoading', false)
@@ -102,6 +147,33 @@ export const reducer: Reducer<ConfigStateRecord> = (
             return state
                 .set('isLoading', false)
                 .set('currentCardType', new CardTypeRecord({
+                    id: shortid.generate()
+                }));
+        }
+        case 'LOAD_RULE_REQUEST': {
+            return state
+                .set('isLoading', true)
+                .set('currentRule', new RuleRecord());
+        }
+        case 'LOAD_RULE_FAIL': {
+            return state
+                .set('isLoading', false)
+                .set('currentRule', new RuleRecord());
+        }
+        case 'LOAD_RULE_SUCCESS': {
+            return state
+                .set('isLoading', false)
+                .set('currentRule', action.payload);
+        }
+        case 'RESET_RULE': {
+            return state
+                .set('isLoading', false)
+                .set('currentRule', new RuleRecord());
+        }
+        case 'ADD_RULE': {
+            return state
+                .set('isLoading', false)
+                .set('currentRule', new RuleRecord({
                     id: shortid.generate()
                 }));
         }
@@ -119,10 +191,24 @@ export const actionCreators = {
             type: 'RESET_CARD_TYPE'
         });
     },
+    saveRule: (rule: RuleRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
+        let rules = getState().config.rules;
+        let result = rules.set(rule.id, rule);
+        getState().config.protocol.set('rules', result.toJS());
+        dispatch({
+            type: 'RESET_RULE'
+        });
+    },
     addCardType: ():
         AppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({
                 type: 'ADD_CARD_TYPE'
+            });
+        },
+    addRule: ():
+        AppThunkAction<KnownActions> => (dispatch, getState) => {
+            dispatch({
+                type: 'ADD_RULE'
             });
         },
     loadCardType: (id: string):
@@ -136,6 +222,21 @@ export const actionCreators = {
                         reject(`${id} not found`);
                     } else {
                         resolve(cardType);
+                    }
+                })
+            });
+        },
+    loadRule: (id: string):
+        AppThunkAction<KnownActions> => (dispatch, getState) => {
+            dispatch({
+                type: 'LOAD_RULE',
+                id,
+                payload: new Promise<RuleRecord>((resolve, reject) => {
+                    let rule = getState().config.rules.get(id);
+                    if (!rule) {
+                        reject(`${id} not found`);
+                    } else {
+                        resolve(rule);
                     }
                 })
             });

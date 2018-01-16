@@ -42,6 +42,7 @@ export default class extends React.Component<NavListProps> {
                 <IconListItem mainText="Chat" icon="chat" onClick={() => this.nav('/chat')} />
                 <Expander mainText="Management" >
                     <NestedListItem label="Card Types" onClick={() => this.nav('/cardTypes')} />
+                    <NestedListItem label="Rules" onClick={() => this.nav('/rules')} />
                 </Expander>
             </List>
         );
