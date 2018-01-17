@@ -1,18 +1,19 @@
 import CardOperation from '../CardOperation';
 import { CardRecord } from '../../../models/Card';
 
-export default class CloseCard extends CardOperation {
+export default class ButtonClick extends CardOperation {
+
     canApply(card: CardRecord, data: any): boolean {
-        return data.id && !card.isClosed && card.balance === 0;
+        return !card.isClosed;
     }
     constructor() {
-        super('CLOSE_CARD', 'Close Card');
+        super('BUTTON_CLICK', 'Button Click');
     }
     readConcurrencyData(card: CardRecord, actionData: any) {
         return undefined;
     }
     reduce(card: CardRecord, data: any): CardRecord {
-        return card.set('isClosed', true);
+        return card;
     }
     fixData(data: any) {
         return data;

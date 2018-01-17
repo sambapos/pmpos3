@@ -5,6 +5,7 @@ export interface Card {
     id: string;
     time: number;
     typeId: string;
+    type: string;
     isClosed: boolean;
     tags: IMap<string, CardTagRecord>;
     cards: IMap<string, CardRecord>;
@@ -14,6 +15,7 @@ export class CardRecord extends Record<Card>({
     id: '',
     time: 0,
     typeId: '',
+    type: '',
     isClosed: false,
     tags: IMap<string, CardTagRecord>(),
     cards: IMap<string, CardRecord>()
@@ -64,10 +66,6 @@ export class CardRecord extends Record<Card>({
 
     get name(): string {
         return this.tags.getIn(['Name', 'value']) || '';
-    }
-
-    get isNew(): boolean {
-        return this.tags.count() === 0 && this.cards.count() === 0;
     }
 
     getSubCard(id: string): CardRecord | undefined {

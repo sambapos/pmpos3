@@ -87,27 +87,36 @@ class CardList {
         return v;
     }
 
+    processData(data: any, action: ActionRecord, root: CardRecord, card: CardRecord) {
+        let result = { ...data };
+        for (const key of Object.keys(data)) {
+            result[key] = this.evaluate(result[key], root, card, action);
+        }
+        return result;
+    }
+
     getNextActions(action: ActionRecord, root: CardRecord, card: CardRecord): Promise<ActionRecord[]> {
         return new Promise<ActionRecord[]>(resolve => {
             this.engine
                 .run({ root, card, action })
                 .then(events => {
                     let actions: ActionRecord[] = [];
+                    let lastCardId = action.cardId;
                     for (const event of events) {
-                        actions.push(
-                            ...event.params.actions.map(ac => {
-                                let processedData = { ...ac.params };
-                                Object.keys(ac.params)
-                                    .forEach(p => processedData[p]
-                                        = this.evaluate(processedData[p], root, card, action));
-                                return new ActionRecord({
-                                    actionType: ac.type,
-                                    cardId: action.data.id || card.id,
-                                    data: processedData
-                                });
-                            })
-                        );
+                        for (const act of event.params.actions) {
+                            let processedData = this.processData(act.params, action, root, card);
+                            processedData = cardOperations.fixData(act.type, processedData);
+                            actions.push(new ActionRecord({
+                                actionType: act.type,
+                                cardId: lastCardId,
+                                data: processedData
+                            }));
+                            if (processedData.id) {
+                                lastCardId = processedData.id;
+                            }
+                        }
                     }
+                    console.log('ACTIONS', actions);
                     resolve(actions);
                 });
         });

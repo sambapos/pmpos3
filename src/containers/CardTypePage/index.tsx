@@ -17,21 +17,35 @@ type PageProps =
     & typeof ConfigStore.actionCreators
     & RouteComponentProps<{ id?: string }>;
 
-export class CardTypePage extends React.Component<PageProps, { cardType: CardTypeRecord }> {
+interface PageState {
+    name: string;
+    reference: string;
+    commands: string;
+}
+
+export class CardTypePage extends React.Component<PageProps, PageState> {
     constructor(props: PageProps) {
         super(props);
-        this.state = { cardType: new CardTypeRecord() };
+        this.state = { name: '', reference: '', commands: '' };
     }
 
     public componentWillReceiveProps(props: PageProps) {
         if (!props.isLoading) {
-            this.setState({ cardType: props.cardType });
+            this.setState({
+                name: props.cardType.name,
+                reference: props.cardType.reference,
+                commands: props.cardType.commands.join('\n')
+            });
         }
     }
 
     public componentWillMount() {
         if (!this.props.isLoading && this.props.cardType) {
-            this.setState({ cardType: this.props.cardType });
+            this.setState({
+                name: this.props.cardType.name,
+                reference: this.props.cardType.reference,
+                commands: this.props.cardType.commands.join('\n')
+            });
         }
     }
 
@@ -41,7 +55,7 @@ export class CardTypePage extends React.Component<PageProps, { cardType: CardTyp
 
     public render() {
         if (this.props.isLoading || !this.props.cardType) { return <div>Loading</div>; }
-
+        console.log(this.props.cardType);
         return (
             <div className={this.props.classes.root}>
                 <TopBar
@@ -49,8 +63,19 @@ export class CardTypePage extends React.Component<PageProps, { cardType: CardTyp
                     menuCommand={{ icon: 'close', onClick: () => { this.props.history.goBack(); } }}
                     secondaryCommands={[
                         {
+                            icon: 'delete', onClick: () => {
+                                this.props.deleteCardType(this.props.cardType.id);
+                                this.props.history.goBack();
+                            }
+                        },
+                        {
                             icon: 'check', onClick: () => {
-                                this.props.saveCardType(this.state.cardType);
+                                this.props.saveCardType(new CardTypeRecord({
+                                    id: this.props.cardType.id,
+                                    name: this.state.name,
+                                    reference: this.state.reference,
+                                    commands: this.state.commands.split('\n')
+                                }));
                                 this.props.history.goBack();
                             }
                         }
@@ -59,17 +84,26 @@ export class CardTypePage extends React.Component<PageProps, { cardType: CardTyp
                 <div className={this.props.classes.content}>
                     <TextField
                         label="Card Type Name"
-                        value={this.state.cardType.name}
+                        value={this.state.name}
                         onChange={(e) => this.setState({
-                            cardType: this.state.cardType.set('name', e.target.value)
+                            name: e.target.value
                         })}
                     />
 
                     <TextField
                         label="Reference"
-                        value={this.state.cardType.reference}
+                        value={this.state.reference}
                         onChange={(e) => this.setState({
-                            cardType: this.state.cardType.set('reference', e.target.value)
+                            reference: e.target.value
+                        })}
+                    />
+
+                    <TextField
+                        multiline
+                        label="Commands"
+                        value={this.state.commands}
+                        onChange={(e) => this.setState({
+                            commands: e.target.value
                         })}
                     />
                 </div >

@@ -24,7 +24,7 @@ class RulesPage extends React.Component<PageProps, {}> {
             {
                 icon: 'add', onClick: () => {
                     this.props.history.push(process.env.PUBLIC_URL + '/rule');
-                    this.props.addCardType();
+                    this.props.addRule();
                 }
             }
         ];

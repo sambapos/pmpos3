@@ -183,6 +183,20 @@ export const reducer: Reducer<ConfigStateRecord> = (
 };
 
 export const actionCreators = {
+    deleteCardType: (id: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
+        let result = getState().config.cardTypes.delete(id);
+        getState().config.protocol.set('cardTypes', result.toJS());
+        dispatch({
+            type: 'RESET_CARD_TYPE'
+        });
+    },
+    deleteRule: (id: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
+        let result = getState().config.rules.delete(id);
+        getState().config.protocol.set('rules', result.toJS());
+        dispatch({
+            type: 'RESET_RULE'
+        });
+    },
     saveCardType: (cardType: CardTypeRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
         let cardTypes = getState().config.cardTypes;
         let result = cardTypes.set(cardType.id, cardType);

@@ -86,7 +86,9 @@ export const epic = (
     action$.ofType('ADD_PENDING_ACTION')
         .mergeMap(action => {
             let root = store.getState().cards.currentCard;
-            let card = root.getCard(action.action.cardId) || root;
+            let cardId = action.action.actionType === 'CREATE_CARD'
+                ? action.action.data.id : action.action.cardId;
+            let card = root.getCard(cardId) || root;
             return CardList.getNextActions(action.action, root, card);
         })
         .mergeMap(nextActions => {
@@ -163,6 +165,7 @@ export const actionCreators = {
             data: {
                 id: shortid.generate(),
                 typeId: cardType.id,
+                type: cardType.name,
                 time: new Date().getTime()
             }
         });

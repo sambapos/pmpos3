@@ -13,4 +13,5 @@ export default abstract class CardOperation {
     abstract reduce(card: CardRecord, data: any): CardRecord;
     abstract canApply(card: CardRecord, data: any): boolean;
     abstract readConcurrencyData(card: CardRecord, actionData: any): any;
+    abstract fixData(data: any): any;
 }

@@ -19,6 +19,8 @@ import { CommitRecord } from '../../models/Commit';
 import { CardTypeRecord } from '../../models/CardType';
 import { CardTagRecord } from '../../models/CardTag';
 import CardBalance from './CardBalance';
+import CardList from '../../modules/CardList';
+import Divider from 'material-ui/Divider/Divider';
 
 type PageProps =
     {
@@ -39,6 +41,7 @@ interface PageState {
     operations: CardOperation[];
     showCommits: boolean;
     selectedCard: CardRecord;
+    buttons: string[];
     currentAction: { type: string, data: any, card: CardRecord } | undefined;
 }
 
@@ -52,7 +55,8 @@ export class CardPage extends React.Component<PageProps, PageState> {
             operations: cardOperations.getOperations(),
             showCommits: false,
             selectedCard: props.card,
-            currentAction: undefined
+            currentAction: undefined,
+            buttons: []
         };
     }
 
@@ -91,6 +95,12 @@ export class CardPage extends React.Component<PageProps, PageState> {
         }
     }
 
+    handleButtonClick(button: string) {
+        this.handleCardMutation('BUTTON_CLICK', {
+            name: button
+        });
+    }
+
     public componentDidMount() {
         if (this.props.match.params.id) {
             this.props.loadCard(this.props.match.params.id);
@@ -103,9 +113,14 @@ export class CardPage extends React.Component<PageProps, PageState> {
     getTitle() {
         let ct = this.props.cardTypes.get(this.props.card.typeId);
         let cap = ct ? ct.reference : `Card`;
-        return this.props.card.isNew
+        return !this.props.card.name
             ? `New ${cap}`
             : `${this.props.card.display}`;
+    }
+
+    getButtons(card: CardRecord): string[] {
+        let ct = CardList.getCardTypes().get(card.typeId);
+        return ct ? ct.commands : [];
     }
 
     public render() {
@@ -150,7 +165,11 @@ export class CardPage extends React.Component<PageProps, PageState> {
                     </div>
                     <CardPageContent
                         card={this.props.card}
-                        onClick={(card, target) => this.setState({ selectedCard: card, anchorEl: target })}
+                        onClick={(card, target) => this.setState({
+                            selectedCard: card,
+                            buttons: this.getButtons(card),
+                            anchorEl: target
+                        })}
                         handleTagClick={(card: CardRecord, cardTag: CardTagRecord) => {
                             this.setState({ selectedCard: card });
                             this.handleOperation(
@@ -200,6 +219,18 @@ export class CardPage extends React.Component<PageProps, PageState> {
                             }}
                         >
                             {option.description}
+                        </MenuItem>
+                    ))}
+                    <Divider />
+                    {this.state.buttons.map(button => (
+                        <MenuItem
+                            key={button}
+                            onClick={e => {
+                                this.handleButtonClick(button);
+                                this.handleMenuClose();
+                            }}
+                        >
+                            {button}
                         </MenuItem>
                     ))}
                 </Menu>

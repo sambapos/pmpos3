@@ -6,6 +6,7 @@ import TagEditor from './component';
 import { CardTagRecord } from '../../../../models/CardTag';
 
 export default class SetCardTag extends CardOperation {
+
     constructor() {
         super('SET_CARD_TAG', 'Set Card Tag');
         this.canReduce = this.canReduceCard;
@@ -27,6 +28,10 @@ export default class SetCardTag extends CardOperation {
     canReduceCard(card: CardRecord, action: ActionRecord): boolean {
         let current = this.readConcurrencyData(card, action.data) as CardTagRecord;
         return !current || current.value === action.concurrencyData.value;
+    }
+
+    fixData(data: any) {
+        return data;
     }
 
     canApply(card: CardRecord, data: CardTagRecord): boolean {

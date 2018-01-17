@@ -48,6 +48,11 @@ class CardOperations {
     getOperations() {
         return Array.from(this.operations.values()).filter(x => x.description);
     }
+    fixData(actionType: string, data: any): any {
+        let operation = this.operations.get(actionType);
+        if (operation) { return operation.fixData(data); }
+        return data;
+    }
 }
 
 export const cardOperations: CardOperations = new CardOperations();
