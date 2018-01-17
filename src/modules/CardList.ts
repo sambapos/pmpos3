@@ -24,7 +24,6 @@ class CardList {
         this.cardTypes = IMap<string, CardTypeRecord>();
         this.engine = new Engine();
         this.engine.addRule(this.rule);
-        console.log(this.engine.rules[0].toJSON());
     }
 
     setRules(rules: IMap<string, RuleRecord>) {
@@ -75,19 +74,23 @@ class CardList {
         }
     };
 
-    evaluate(v: string, card: CardRecord, action: ActionRecord) {
+    evaluate(v: string, root: CardRecord, card: CardRecord, action: ActionRecord) {
         if (v.startsWith('=')) {
             let p = new Parser();
             let expr = p.parse(v.substr(1));
-            return expr.evaluate({ 'card': card as any, 'action': action as any });
+            return expr.evaluate({
+                'root': root as any,
+                'card': card as any,
+                'action': action as any
+            });
         }
         return v;
     }
 
-    getNextActions(action: ActionRecord, card: CardRecord): Promise<ActionRecord[]> {
+    getNextActions(action: ActionRecord, root: CardRecord, card: CardRecord): Promise<ActionRecord[]> {
         return new Promise<ActionRecord[]>(resolve => {
             this.engine
-                .run({ card, action })
+                .run({ root, card, action })
                 .then(events => {
                     let actions: ActionRecord[] = [];
                     for (const event of events) {
@@ -96,7 +99,7 @@ class CardList {
                                 let processedData = { ...ac.params };
                                 Object.keys(ac.params)
                                     .forEach(p => processedData[p]
-                                        = this.evaluate(processedData[p], card, action));
+                                        = this.evaluate(processedData[p], root, card, action));
                                 return new ActionRecord({
                                     actionType: ac.type,
                                     cardId: action.data.id || card.id,

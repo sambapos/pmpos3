@@ -13,12 +13,13 @@ export default function configureStore(history: History, initialState?: Applicat
     const windowIfDefined = typeof window === 'undefined' ? null : window as any;
     // If devTools is installed, connect to it
     const devToolsExtension = windowIfDefined && windowIfDefined.devToolsExtension as () => GenericStoreEnhancer;
+    const epicMiddleware = createEpicMiddleware(buildRootEpic(epics));
     const createStoreWithMiddleware = compose(
         applyMiddleware(
             thunk,
             promiseMiddleware(),
             routerMiddleware(history),
-            createEpicMiddleware(buildRootEpic(epics))
+            epicMiddleware
         ),
         devToolsExtension ? devToolsExtension() : (f: {}) => f
     )(createStore);
@@ -32,7 +33,9 @@ export default function configureStore(history: History, initialState?: Applicat
         module.hot.accept('./store', () => {
             const nextRootReducer = require<typeof StoreModule>('./store');
             store.replaceReducer(buildRootReducer(nextRootReducer.reducers));
+            epicMiddleware.replaceEpic(buildRootEpic(nextRootReducer.epics));
         });
+
     }
     return store;
 }

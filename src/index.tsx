@@ -11,8 +11,6 @@ import * as RoutesModule from './routes';
 import { saveState } from './localStorage';
 import * as shortid from 'shortid';
 
-localStorage.debug = 'json-rules-engine';
-
 let routes = RoutesModule.routes;
 
 const history = createBrowserHistory();

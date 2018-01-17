@@ -8,7 +8,6 @@ export interface Card {
     isClosed: boolean;
     tags: IMap<string, CardTagRecord>;
     cards: IMap<string, CardRecord>;
-    keys: List<string>;
 }
 
 export class CardRecord extends Record<Card>({
@@ -17,8 +16,7 @@ export class CardRecord extends Record<Card>({
     typeId: '',
     isClosed: false,
     tags: IMap<string, CardTagRecord>(),
-    cards: IMap<string, CardRecord>(),
-    keys: List<string>()
+    cards: IMap<string, CardRecord>()
 }) {
     get debit(): number {
         let tagDebit = this.tags.reduce((x, y) => x + y.debit, 0);
@@ -70,6 +68,16 @@ export class CardRecord extends Record<Card>({
 
     get isNew(): boolean {
         return this.tags.count() === 0 && this.cards.count() === 0;
+    }
+
+    getSubCard(id: string): CardRecord | undefined {
+        return this.cards.find(x => x.getCard(id) !== undefined);
+    }
+
+    getCard(id: string): CardRecord | undefined {
+        if (!id) { return undefined; }
+        if (this.id === id) { return this; }
+        return this.getSubCard(id);
     }
 
     acceptsFilter(tag: CardTagRecord, filter: string): boolean {

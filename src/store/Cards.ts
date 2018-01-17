@@ -85,11 +85,11 @@ export const epic = (
     store: { getState: Function, dispatch: Function }): Observable<AddPendingActionAction> =>
     action$.ofType('ADD_PENDING_ACTION')
         .mergeMap(action => {
-            let card = store.getState().cards.currentCard;
-            return CardList.getNextActions(action.action, card);
+            let root = store.getState().cards.currentCard;
+            let card = root.getCard(action.action.cardId) || root;
+            return CardList.getNextActions(action.action, root, card);
         })
         .mergeMap(nextActions => {
-            console.log('NEXT', nextActions);
             let actions = nextActions.map(x => {
                 return { type: 'ADD_PENDING_ACTION', action: x, initialize: false } as AddPendingActionAction;
             });
@@ -102,7 +102,6 @@ export const reducer: Reducer<StateRecord> = (
 ) => {
     switch (action.type) {
         case 'ADD_PENDING_ACTION': {
-            console.log(action.action);
             let currentState = action.initialize
                 ? state
                     .set('currentCard', new CardRecord())
