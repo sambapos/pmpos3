@@ -4,6 +4,7 @@ import { Record, Map as IMap } from 'immutable';
 import { AppThunkAction } from './appThunkAction';
 import { CardTypeRecord } from '../models/CardType';
 import CardList from '../modules/CardList';
+import RuleManager from '../modules/RuleManager';
 import { RuleRecord } from '../models/Rule';
 
 interface ConfigState {
@@ -117,7 +118,7 @@ export const reducer: Reducer<ConfigStateRecord> = (
                 let rules = action.payload.get('rules');
                 ruleMap = Object.keys(rules)
                     .reduce((x, y) => x.set(y, new RuleRecord(rules[y])), IMap<string, RuleRecord>());
-                CardList.setRules(ruleMap);
+                RuleManager.setRules(ruleMap);
             }
             return state
                 .set('cardTypes', cardTypeMap)

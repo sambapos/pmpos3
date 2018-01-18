@@ -6,6 +6,7 @@ import { CardRecord } from '../models/Card';
 import { ActionRecord } from '../models/Action';
 import { Commit, CommitRecord } from '../models/Commit';
 import CardList from '../modules/CardList';
+import RuleManager from '../modules/RuleManager';
 import { List, Record } from 'immutable';
 import { CardTypeRecord } from '../models/CardType';
 import { ActionsObservable } from 'redux-observable';
@@ -89,7 +90,7 @@ export const epic = (
             let cardId = action.action.actionType === 'CREATE_CARD'
                 ? action.action.data.id : action.action.cardId;
             let card = root.getCard(cardId) || root;
-            return CardList.getNextActions(action.action, root, card);
+            return RuleManager.getNextActions(action.action, root, card);
         })
         .mergeMap(nextActions => {
             let actions = nextActions.map(x => {

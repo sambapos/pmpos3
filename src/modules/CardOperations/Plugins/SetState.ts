@@ -1,6 +1,6 @@
 import CardOperation from '../CardOperation';
 import { CardRecord } from '../../../models/Card';
-import CardList from '../../CardList';
+import RuleManager from '../../RuleManager';
 
 export default class SetState extends CardOperation {
     constructor() {
@@ -13,7 +13,7 @@ export default class SetState extends CardOperation {
         return undefined;
     }
     reduce(card: CardRecord, data: any): CardRecord {
-        if (data.name) { CardList.setState(data.name, data.value); }
+        if (data.name) { RuleManager.setState(data.name, data.value); }
         return card;
     }
     fixData(data: any) {
