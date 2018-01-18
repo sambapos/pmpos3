@@ -1,9 +1,10 @@
 import * as React from 'react';
+import * as shortid from 'shortid';
 import CardOperation from '../../CardOperation';
 import { CardRecord } from '../../../../models/Card';
 import { ActionRecord } from '../../../../models/Action';
-import TagEditor from './component';
 import { CardTagRecord } from '../../../../models/CardTag';
+import TagEditor from './component';
 
 export default class SetCardTag extends CardOperation {
 
@@ -31,6 +32,12 @@ export default class SetCardTag extends CardOperation {
     }
 
     fixData(data: any) {
+        if (!data.id) {
+            data.id = shortid.generate();
+        }
+        if (!data.name) {
+            data.name = '_' + shortid.generate();
+        }
         return data;
     }
 

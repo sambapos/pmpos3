@@ -10,6 +10,7 @@ import { Engine, Rule } from 'json-rules-engine';
 import CardTagData from '../models/CardTagData';
 import { Parser } from 'expr-eval';
 import { RuleRecord } from '../models/Rule';
+import * as shortid from 'shortid';
 
 class CardList {
     commits: IMap<string, List<CommitRecord>>;
@@ -17,6 +18,7 @@ class CardList {
     cardTypes: IMap<string, CardTypeRecord>;
     cardTypeIndex: IMap<string, List<string>>;
     engine: Engine;
+    state: IMap<string, any>;
 
     constructor() {
         this.commits = IMap<string, List<CommitRecord>>();
@@ -24,12 +26,15 @@ class CardList {
         this.cardTypes = IMap<string, CardTypeRecord>();
         this.engine = new Engine();
         this.engine.addRule(this.rule);
+        this.state = IMap<string, any>();
     }
 
     setRules(rules: IMap<string, RuleRecord>) {
         if (this.engine) { this.engine.stop(); }
         this.engine = new Engine;
-        rules.forEach(rule => this.engine.addRule(new Rule(rule.content)));
+        rules
+            .filter(x => x.content)
+            .forEach(rule => this.engine.addRule(new Rule(rule.content)));
     }
 
     rule: any = {
@@ -74,6 +79,10 @@ class CardList {
         }
     };
 
+    setState(name: string, value: any) {
+        this.state = this.state.set(name, value);
+    }
+
     evaluate(v: string, root: CardRecord, card: CardRecord, action: ActionRecord) {
         if (v.startsWith('=')) {
             let p = new Parser();
@@ -81,7 +90,8 @@ class CardList {
             return expr.evaluate({
                 'root': root as any,
                 'card': card as any,
-                'action': action as any
+                'action': action as any,
+                'state': this.state as any
             });
         }
         return v;
@@ -98,7 +108,7 @@ class CardList {
     getNextActions(action: ActionRecord, root: CardRecord, card: CardRecord): Promise<ActionRecord[]> {
         return new Promise<ActionRecord[]>(resolve => {
             this.engine
-                .run({ root, card, action })
+                .run({ state: this.state, root, card, action })
                 .then(events => {
                     let actions: ActionRecord[] = [];
                     let lastCardId = action.cardId;
@@ -107,6 +117,7 @@ class CardList {
                             let processedData = this.processData(act.params, action, root, card);
                             processedData = cardOperations.fixData(act.type, processedData);
                             actions.push(new ActionRecord({
+                                id: shortid.generate(),
                                 actionType: act.type,
                                 cardId: lastCardId,
                                 data: processedData
@@ -116,23 +127,9 @@ class CardList {
                             }
                         }
                     }
-                    console.log('ACTIONS', actions);
                     resolve(actions);
                 });
         });
-
-        // if (action.actionType === 'CREATE_CARD') {
-        //     return [new ActionRecord({
-        //         actionType: 'SET_CARD_TAG',
-        //         cardId: action.data.id,
-        //         data: {
-        //             name: 'Number',
-        //             value: '0000'
-        //         }
-        //     })];
-        // }
-
-        // return [];
     }
 
     setCardTypes(cardTypes: IMap<string, CardTypeRecord>) {
@@ -203,6 +200,12 @@ class CardList {
             }
         }
         return List<CardRecord>();
+    }
+
+    getCardTypeIdByRef(ref: string): string {
+        let ct = this.cardTypes.find(x => x.reference === ref || x.name === ref);
+        if (ct) { return ct.id; }
+        return '';
     }
 
     getCard(id: string): CardRecord {

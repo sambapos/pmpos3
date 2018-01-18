@@ -68,7 +68,7 @@ export class RulePage extends React.Component<PageProps, { rule: RuleRecord }> {
                         {
                             icon: 'delete',
                             menuItems: [{
-                                icon: 'delete',
+                                icon: 'Confirm',
                                 onClick: () => {
                                     this.props.deleteRule(this.state.rule.id);
                                     this.props.history.goBack();

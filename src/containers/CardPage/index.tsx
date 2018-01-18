@@ -34,6 +34,34 @@ type PageProps =
     & typeof CardStore.actionCreators
     & RouteComponentProps<{ id?: string }>;
 
+class CommandButton {
+    // Add Pizza=AddProduct:Product=Pizza,Price=10
+    command: string;
+    caption: string;
+    parameters: any;
+
+    constructor(payload: string) {
+        this.command = payload;
+        this.caption = payload;
+        if (payload.includes(':')) {
+            let parts = payload.split(':');
+            payload = parts[0];
+            this.parameters = parts[1].split(',').reduce(
+                (r, p) => {
+                    let params = p.split('=');
+                    r[params[0]] = params[1];
+                    return r;
+                },
+                {});
+        }
+        if (payload.includes('=')) {
+            let parts = payload.split('=');
+            this.caption = parts[0];
+            this.command = parts[1];
+        }
+    }
+}
+
 interface PageState {
     anchorEl: any;
     operationComponent: any;
@@ -41,7 +69,7 @@ interface PageState {
     operations: CardOperation[];
     showCommits: boolean;
     selectedCard: CardRecord;
-    buttons: string[];
+    buttons: CommandButton[];
     currentAction: { type: string, data: any, card: CardRecord } | undefined;
 }
 
@@ -83,11 +111,14 @@ export class CardPage extends React.Component<PageProps, PageState> {
 
     handleOperation(operation: CardOperation, currentData?: any) {
         if (operation.getEditor) {
-            this.setState({
-                modalOpen: true,
-                operationComponent: operation.getEditor
-                    && operation.getEditor((at, data) => this.handleCardMutation(at, data), currentData)
-            });
+            let component = operation.getEditor(
+                (at, data) => this.handleCardMutation(at, data), currentData);
+            if (component) {
+                this.setState({
+                    modalOpen: true,
+                    operationComponent: component
+                });
+            }
         } else {
             this.handleCardMutation(operation.type, {
                 id: shortid.generate(), time: new Date().getTime()
@@ -95,9 +126,10 @@ export class CardPage extends React.Component<PageProps, PageState> {
         }
     }
 
-    handleButtonClick(button: string) {
-        this.handleCardMutation('BUTTON_CLICK', {
-            name: button
+    handleButtonClick(button: CommandButton) {
+        this.handleCardMutation('EXECUTE_COMMAND', {
+            name: button.command,
+            params: button.parameters
         });
     }
 
@@ -118,9 +150,9 @@ export class CardPage extends React.Component<PageProps, PageState> {
             : `${this.props.card.display}`;
     }
 
-    getButtons(card: CardRecord): string[] {
+    getButtons(card: CardRecord): CommandButton[] {
         let ct = CardList.getCardTypes().get(card.typeId);
-        return ct ? ct.commands : [];
+        return ct ? ct.commands.map(x => new CommandButton(x)) : [];
     }
 
     public render() {
@@ -210,6 +242,18 @@ export class CardPage extends React.Component<PageProps, PageState> {
                         },
                     }}
                 >
+                    {this.state.buttons.map(button => (
+                        <MenuItem
+                            key={button.caption}
+                            onClick={e => {
+                                this.handleButtonClick(button);
+                                this.handleMenuClose();
+                            }}
+                        >
+                            {button.caption}
+                        </MenuItem>
+                    ))}
+                    <Divider />
                     {this.state.operations.map(option => (
                         <MenuItem
                             key={option.type}
@@ -219,18 +263,6 @@ export class CardPage extends React.Component<PageProps, PageState> {
                             }}
                         >
                             {option.description}
-                        </MenuItem>
-                    ))}
-                    <Divider />
-                    {this.state.buttons.map(button => (
-                        <MenuItem
-                            key={button}
-                            onClick={e => {
-                                this.handleButtonClick(button);
-                                this.handleMenuClose();
-                            }}
-                        >
-                            {button}
                         </MenuItem>
                     ))}
                 </Menu>

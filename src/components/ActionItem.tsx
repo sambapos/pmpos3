@@ -17,7 +17,7 @@ export default (props: ActionItemProps) => {
                 && <Typography type="body1">cd:{`${props.action.concurrencyData}`}</Typography>}
             <div>{Object.keys(props.action.data).map(key => {
                 return (<div key={key}>
-                    <Typography type="body1">{key}: {props.action.data[key]}</Typography>
+                    <Typography type="body1">{key}: {JSON.stringify(props.action.data[key])}</Typography>
                 </div>);
             })}</div>
         </div>

@@ -55,7 +55,6 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
 
     public render() {
         if (this.props.isLoading || !this.props.cardType) { return <div>Loading</div>; }
-        console.log(this.props.cardType);
         return (
             <div className={this.props.classes.root}>
                 <TopBar
@@ -63,10 +62,14 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
                     menuCommand={{ icon: 'close', onClick: () => { this.props.history.goBack(); } }}
                     secondaryCommands={[
                         {
-                            icon: 'delete', onClick: () => {
-                                this.props.deleteCardType(this.props.cardType.id);
-                                this.props.history.goBack();
-                            }
+                            icon: 'delete',
+                            menuItems: [{
+                                icon: 'Confirm',
+                                onClick: () => {
+                                    this.props.deleteCardType(this.props.cardType.id);
+                                    this.props.history.goBack();
+                                }
+                            }]
                         },
                         {
                             icon: 'check', onClick: () => {
