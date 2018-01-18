@@ -2,10 +2,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
 import * as ClientStore from '../../store/Client';
-import { Button, Card } from 'material-ui';
 import { RouteComponentProps } from 'react-router';
 import TopBar from '../TopBar';
 import Typography from 'material-ui/Typography/Typography';
+import { Card } from 'material-ui';
 
 export type PageProps =
     ClientStore.ClientState
@@ -22,10 +22,6 @@ class HomePage extends React.Component<PageProps> {
                         This project contains PoC's and Tests to demonstrate
                     some features of future SambaPOS versions.
                 </Typography>
-                    <br />
-                    <Button raised onClick={() => this.props.IncrementEnthusiasm()}>
-                        HMR Test {this.props.enthusiasmLevel}
-                    </Button>
                 </Card>
             </div>
         );

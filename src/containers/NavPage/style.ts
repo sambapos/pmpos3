@@ -12,6 +12,7 @@ export interface Style {
     contentShift: any;
     contentShiftLeft: any;
     contentShiftRight: any;
+    modal: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints, mixins, transitions }): Style => ({
@@ -83,5 +84,17 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
         [breakpoints.up('md')]: {
             marginRight: drawerWidth,
         }
+    },
+    modal: {
+        position: 'absolute',
+        width: '80%',
+        maxWidth: spacing.unit * 50,
+        top: `50%`,
+        left: `50%`,
+        transform: `translate(-50%, -50%)`,
+        border: '1px solid #e5e5e5',
+        backgroundColor: '#fff',
+        boxShadow: '0 5px 15px rgba(0, 0, 0, .5)',
+        padding: spacing.unit * 3,
     },
 }));

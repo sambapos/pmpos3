@@ -1,26 +1,30 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import * as CardStore from '../../store/Cards';
 import * as moment from 'moment';
 import * as shortid from 'shortid';
+import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
-import { WithStyles, Typography, Modal, Menu, MenuItem, Paper } from 'material-ui';
-import decorate, { Style } from './style';
+import * as CardStore from '../../store/Cards';
+import * as ClientStore from '../../store/Client';
 import { ApplicationState } from '../../store/index';
+
+import { WithStyles, Typography, Menu, MenuItem, Paper, Divider } from 'material-ui';
+import decorate, { Style } from './style';
+import * as Extender from '../../lib/Extender';
 import TopBar from '../TopBar';
 import { List, Map as IMap } from 'immutable';
 import { ActionRecord } from '../../models/Action';
 import { CardRecord } from '../../models/Card';
-import { cardOperations } from '../../modules/CardOperations';
-import CardOperation from '../../modules/CardOperations/CardOperation';
-import Commits from './Commits';
-import CardPageContent from './CardPageContent';
 import { CommitRecord } from '../../models/Commit';
 import { CardTypeRecord } from '../../models/CardType';
 import { CardTagRecord } from '../../models/CardTag';
+import { cardOperations } from '../../modules/CardOperations';
+import CardOperation from '../../modules/CardOperations/CardOperation';
+
+import Commits from './Commits';
+import CardPageContent from './CardPageContent';
 import CardBalance from './CardBalance';
 import CardList from '../../modules/CardList';
-import Divider from 'material-ui/Divider/Divider';
+import { CommandButton } from './CommandButton';
 
 type PageProps =
     {
@@ -32,45 +36,15 @@ type PageProps =
     }
     & WithStyles<keyof Style>
     & typeof CardStore.actionCreators
+    & typeof ClientStore.actionCreators
     & RouteComponentProps<{ id?: string }>;
-
-class CommandButton {
-    // Add Pizza=AddProduct:Product=Pizza,Price=10
-    command: string;
-    caption: string;
-    parameters: any;
-
-    constructor(payload: string) {
-        this.command = payload;
-        this.caption = payload;
-        if (payload.includes(':')) {
-            let parts = payload.split(':');
-            payload = parts[0];
-            this.parameters = parts[1].split(',').reduce(
-                (r, p) => {
-                    let params = p.split('=');
-                    r[params[0]] = params[1];
-                    return r;
-                },
-                {});
-        }
-        if (payload.includes('=')) {
-            let parts = payload.split('=');
-            this.caption = parts[0];
-            this.command = parts[1];
-        }
-    }
-}
 
 interface PageState {
     anchorEl: any;
-    operationComponent: any;
-    modalOpen: boolean;
     operations: CardOperation[];
     showCommits: boolean;
     selectedCard: CardRecord;
     buttons: CommandButton[];
-    currentAction: { type: string, data: any, card: CardRecord } | undefined;
 }
 
 export class CardPage extends React.Component<PageProps, PageState> {
@@ -78,22 +52,15 @@ export class CardPage extends React.Component<PageProps, PageState> {
         super(props);
         this.state = {
             anchorEl: undefined,
-            operationComponent: undefined,
-            modalOpen: false,
             operations: cardOperations.getOperations(),
             showCommits: false,
             selectedCard: props.card,
-            currentAction: undefined,
             buttons: []
         };
     }
 
-    handleModalOpen = () => {
-        this.setState({ modalOpen: true });
-    }
-
     handleModalClose = () => {
-        this.setState({ modalOpen: false });
+        this.props.SetModalState(false);
     }
 
     handleMenuClick = event => {
@@ -114,10 +81,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
             let component = operation.getEditor(
                 (at, data) => this.handleCardMutation(at, data), currentData);
             if (component) {
-                this.setState({
-                    modalOpen: true,
-                    operationComponent: component
-                });
+                this.props.SetModalComponent(component);
             }
         } else {
             this.handleCardMutation(operation.type, {
@@ -165,7 +129,6 @@ export class CardPage extends React.Component<PageProps, PageState> {
                 </div>
             );
         }
-        const isMenuOpen = Boolean(this.state.anchorEl);
 
         return (
             <div className={this.props.classes.root}>
@@ -220,20 +183,10 @@ export class CardPage extends React.Component<PageProps, PageState> {
                 <div className={this.props.classes.footer}>
                     <CardBalance card={this.props.card} />
                 </div>
-                <Modal
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                    open={this.state.modalOpen}
-                    onClose={this.handleModalClose}
-                >
-                    <div className={this.props.classes.modal}>
-                        {this.state.operationComponent}
-                    </div>
-                </Modal>
                 <Menu
                     id="long-menu"
                     anchorEl={this.state.anchorEl}
-                    open={isMenuOpen}
+                    open={Boolean(this.state.anchorEl)}
                     onClose={this.handleMenuClose}
                     PaperProps={{
                         style: {
@@ -281,5 +234,5 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 export default decorate(connect(
     mapStateToProps,
-    CardStore.actionCreators
+    Extender.extend(ClientStore.actionCreators, CardStore.actionCreators)
 )(CardPage));

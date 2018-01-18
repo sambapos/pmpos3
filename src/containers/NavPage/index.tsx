@@ -9,7 +9,7 @@ import Divider from 'material-ui/Divider';
 import NavList from './navList';
 import { subRoutes } from '../../routes';
 import { RouteComponentProps, Route } from 'react-router';
-import { ListItem, ListItemText, Typography } from 'material-ui';
+import { ListItem, ListItemText, Typography, Modal } from 'material-ui';
 import decorate, { Style } from './style';
 
 import * as ClientStore from '../../store/Client';
@@ -17,12 +17,20 @@ import { ApplicationState } from '../../store/index';
 import { connect } from 'react-redux';
 import LoginPage from '../LoginPage';
 
-type NavPageProps = ClientStore.ClientState
+interface NavPageProps {
+    drawerOpen: boolean;
+    loggedInUser: string;
+    modalOpen: boolean;
+    modalComponent: any;
+}
+
+type Props =
+    NavPageProps
     & WithStyles<keyof Style>
     & typeof ClientStore.actionCreators
     & RouteComponentProps<{}>;
 
-class NavPage extends React.Component<NavPageProps> {
+class NavPage extends React.Component<Props> {
     state = {
         anchor: 'Left'
     };
@@ -110,13 +118,28 @@ class NavPage extends React.Component<NavPageProps> {
                                 : <div style={{ height: '100%', display: 'flex' }}><Route component={LoginPage} /></div>
                         }
                     </main>
-
                 </div>
+                <Modal
+                    open={this.props.modalOpen}
+                    onClose={() => this.props.SetModalState(false)}
+                >
+                    <div className={this.props.classes.modal}>
+                        {this.props.modalComponent}
+                    </div>
+                </Modal>
             </div>
         );
     }
 }
+
+const mapStateToProps = (state: ApplicationState) => ({
+    drawerOpen: state.client.drawerOpen,
+    loggedInUser: state.client.loggedInUser,
+    modalOpen: state.client.modalOpen,
+    modalComponent: state.client.modalComponent
+});
+
 export default decorate(connect(
-    (state: ApplicationState) => state.client,
+    mapStateToProps,
     ClientStore.actionCreators
 )(NavPage));
