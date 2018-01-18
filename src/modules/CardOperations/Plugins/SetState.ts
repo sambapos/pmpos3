@@ -1,10 +1,14 @@
 import CardOperation from '../CardOperation';
 import { CardRecord } from '../../../models/Card';
 import RuleManager from '../../RuleManager';
+import { ActionRecord } from '../../../models/Action';
 
 export default class SetState extends CardOperation {
     constructor() {
         super('SET_STATE', 'Set State');
+    }
+    canEdit(action: ActionRecord): boolean {
+        return false;
     }
     canApply(card: CardRecord, data: any): boolean {
         return !card.isClosed;

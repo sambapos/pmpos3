@@ -53,6 +53,17 @@ class CardOperations {
         if (operation) { return operation.fixData(data); }
         return data;
     }
+    canEdit(action: ActionRecord): boolean {
+        let operation = this.operations.get(action.actionType);
+        return operation !== undefined && operation.canEdit(action);
+    }
+    getEditor(
+        action: ActionRecord,
+        success: (actionType: string, data: any) => void,
+        cancel: () => void): JSX.Element {
+        let operation = this.operations.get(action.actionType) as CardOperation;
+        return operation.getEditor(success, cancel);
+    }
 }
 
 export const cardOperations: CardOperations = new CardOperations();

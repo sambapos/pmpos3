@@ -2,11 +2,15 @@ import CardOperation from '../CardOperation';
 import { CardRecord } from '../../../models/Card';
 import * as shortid from 'shortid';
 import CardList from '../../CardList';
+import { ActionRecord } from '../../../models/Action';
 
 export default class CreateCard extends CardOperation {
-
     constructor() {
         super('CREATE_CARD', 'Create Card');
+    }
+
+    canEdit(action: ActionRecord): boolean {
+        return false;
     }
 
     canApply(card: CardRecord, data: any): boolean {

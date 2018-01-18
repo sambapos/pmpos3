@@ -10,7 +10,8 @@ import { CardTagRecord } from '../../../../models/CardTag';
 
 export default class extends React.Component<
     {
-        handler: (actionType: string, data: any) => void,
+        success: (actionType: string, data: any) => void,
+        cancel: () => void,
         actionName: string,
         current?: CardTagRecord
     },
@@ -85,7 +86,7 @@ export default class extends React.Component<
                 <CardActions>
                     <Button
                         onClick={(e) => {
-                            this.props.handler(
+                            this.props.success(
                                 this.props.actionName,
                                 {
                                     id: shortid.generate(),

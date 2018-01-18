@@ -12,6 +12,7 @@ import { CardTypeRecord } from '../models/CardType';
 import { ActionsObservable } from 'redux-observable';
 import { Observable } from 'rxjs/Observable';
 import { ArrayObservable } from 'rxjs/observable/ArrayObservable';
+import { cardOperations } from '../modules/CardOperations/index';
 
 export interface State {
     cards: List<CardRecord>;
@@ -81,6 +82,57 @@ type KnownActions = AddPendingActionAction | CommitCardAction | CommitReceivedAc
     | LoadCardAction | LoadCardRequestAction | LoadCardSuccessAction | LoadCardFailAction
     | SetCommitProtocolAction | SetCurrentCardTypeAction;
 
+const processAction = (action: ActionRecord, dispatch: Function): Promise<ActionRecord> => {
+    return new Promise<ActionRecord>((resolve, reject) => {
+        if (cardOperations.canEdit(action)) {
+            let editor = cardOperations
+                .getEditor(
+                action, (actionType, data) => {
+                    let result = action.set('data', data);
+                    resolve(result);
+                },
+                () => reject());
+            dispatch({ type: 'SET_MODAL_COMPONENT', component: editor });
+        } else {
+            console.log('Edit not needed', action);
+            resolve(action);
+        }
+    });
+};
+
+function processArray(
+    array: ActionRecord[],
+    fn: (action: ActionRecord, dispatch: Function) => Promise<ActionRecord>,
+    dispatch: Function) {
+    var results: ActionRecord[] = [];
+    return array.reduce(
+        (p: Promise<ActionRecord[]>, item: ActionRecord) => {
+            return p.then(function () {
+                return fn(item, dispatch).then(function (action: ActionRecord) {
+                    results.push(action);
+                    return results;
+                });
+            });
+        },
+        new Promise<ActionRecord[]>(r => r()));
+}
+
+const processActions = (actions: ActionRecord[], dispatch: Function): Promise<ActionRecord[]> => {
+    if (actions.length === 0) {
+        return new Promise<ActionRecord[]>(r => r(actions));
+    }
+    return new Promise<ActionRecord[]>((resolve, reject) => {
+        processArray(actions, processAction, dispatch)
+            .then(
+            function (result: ActionRecord[]) {
+                resolve(result);
+            },
+            function (reason: string) {
+                reject(reason);
+            });
+    });
+};
+
 export const epic = (
     action$: ActionsObservable<AddPendingActionAction>,
     store: { getState: Function, dispatch: Function }): Observable<AddPendingActionAction> =>
@@ -91,6 +143,9 @@ export const epic = (
                 ? action.action.data.id : action.action.cardId;
             let card = root.getCard(cardId) || root;
             return RuleManager.getNextActions(action.action, root, card);
+        })
+        .mergeMap(nextActions => {
+            return processActions(nextActions, store.dispatch);
         })
         .mergeMap(nextActions => {
             let actions = nextActions.map(x => {

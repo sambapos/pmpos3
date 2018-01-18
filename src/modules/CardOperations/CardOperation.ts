@@ -5,7 +5,7 @@ export default abstract class CardOperation {
     type: string;
     description: string | undefined;
     canReduce: (card: CardRecord, action: ActionRecord) => boolean;
-    getEditor: (handler: (actionType: string, data: any) => void, current?: any) => JSX.Element;
+    getEditor: (handler: (actionType: string, data: any) => void, cancel: () => void, current?: any) => JSX.Element;
     constructor(opType: string, description?: string) {
         this.type = opType;
         this.description = description;
@@ -14,4 +14,5 @@ export default abstract class CardOperation {
     abstract canApply(card: CardRecord, data: any): boolean;
     abstract readConcurrencyData(card: CardRecord, actionData: any): any;
     abstract fixData(data: any): any;
+    abstract canEdit(action: ActionRecord): boolean;
 }

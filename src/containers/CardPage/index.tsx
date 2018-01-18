@@ -79,7 +79,9 @@ export class CardPage extends React.Component<PageProps, PageState> {
     handleOperation(operation: CardOperation, currentData?: any) {
         if (operation.getEditor) {
             let component = operation.getEditor(
-                (at, data) => this.handleCardMutation(at, data), currentData);
+                (at, data) => this.handleCardMutation(at, data),
+                () => { this.handleModalClose(); },
+                currentData);
             if (component) {
                 this.props.SetModalComponent(component);
             }

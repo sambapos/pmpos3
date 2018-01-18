@@ -14,8 +14,12 @@ export default class SetCardTag extends CardOperation {
         this.getEditor = this.createEditor;
     }
 
-    createEditor(handler: (actionType: string, data: any) => void, current: any) {
-        return React.createElement(TagEditor, { handler, actionName: this.type, current });
+    canEdit(action: ActionRecord): boolean {
+        return !action.data.name && !action.data.value;
+    }
+
+    createEditor(success: (actionType: string, data: any) => void, cancel: () => void, current: any) {
+        return React.createElement(TagEditor, { success, cancel, actionName: this.type, current });
     }
 
     readConcurrencyData(card: CardRecord, data: CardTagRecord) {
