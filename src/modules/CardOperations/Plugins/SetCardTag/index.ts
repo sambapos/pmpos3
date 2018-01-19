@@ -15,7 +15,7 @@ export default class SetCardTag extends CardOperation {
     }
 
     canEdit(action: ActionRecord): boolean {
-        return !action.data.name && !action.data.value;
+        return !action.data.value;
     }
 
     createEditor(success: (actionType: string, data: any) => void, cancel: () => void, current: any) {

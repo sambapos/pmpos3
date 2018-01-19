@@ -60,9 +60,10 @@ class CardOperations {
     getEditor(
         action: ActionRecord,
         success: (actionType: string, data: any) => void,
-        cancel: () => void): JSX.Element {
+        cancel: () => void,
+        current?: any): JSX.Element {
         let operation = this.operations.get(action.actionType) as CardOperation;
-        return operation.getEditor(success, cancel);
+        return operation.getEditor(success, cancel, current);
     }
 }
 

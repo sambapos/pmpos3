@@ -53,7 +53,7 @@ export default class extends React.Component<
                     />}
                     <AutoSuggest
                         label="Tag Value"
-                        value={this.props.current ? this.props.current.value : ''}
+                        value={this.props.current ? this.props.current.value || '' : ''}
                         getSuggestions={value => CardList.getCardSuggestions(this.state.name, value)}
                         handleChange={(e, value) => this.setState({ value })}
                     />
