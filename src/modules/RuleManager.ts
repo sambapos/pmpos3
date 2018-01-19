@@ -76,11 +76,13 @@ class RuleManager {
         if (v.startsWith && v.startsWith('=')) {
             let p = new Parser();
             let expr = p.parse(v.substr(1));
+            let stateValues = this.state.toJS();
+            console.log('CHECK', stateValues);
             return expr.evaluate({
                 'root': root as any,
                 'card': card as any,
                 'action': action as any,
-                'state': this.state as any
+                'state': stateValues as any
             });
         }
         return v;

@@ -6,10 +6,13 @@ import DialogTitle from 'material-ui/Dialog/DialogTitle';
 import Typography from 'material-ui/Typography/Typography';
 import decorate, { Style } from './style';
 import { WithStyles } from 'material-ui/styles/withStyles';
+import { Map as IMap } from 'immutable';
+import RuleManager from '../../../RuleManager';
 
 interface State {
     question: string;
     parameters: {};
+    parameterState: IMap<string, any>;
 }
 
 interface PageProps {
@@ -27,8 +30,22 @@ class Component extends React.Component<Props, State> {
         super(props);
         this.state = {
             question: '',
-            parameters: {}
+            parameters: {},
+            parameterState: IMap<string, any>()
         };
+    }
+
+    componentWillReceiveProps(props: Props) {
+        if (props.current) {
+            Object.keys(props.current.parameters).forEach(key => {
+                let value = props.current.parameters[key];
+                if (Array.isArray(value)) {
+                    this.setState({ parameterState: this.state.parameterState.set(key, '') });
+                } else {
+                    this.setState({ parameterState: this.state.parameterState.set(key, value) });
+                }
+            });
+        }
     }
 
     componentDidMount() {
@@ -43,12 +60,19 @@ class Component extends React.Component<Props, State> {
 
     getParamEditor(key: string, value: any) {
         if (Array.isArray(value)) {
+
             return (
-                <div>
+                <div key={key}>
                     <Typography type="body2">{key}</Typography>
                     <div className={this.props.classes.buttonContainer}>
                         {(Array(...value).map(item => (
-                            <Button raised className={this.props.classes.selectionButton}>
+                            <Button
+                                color={this.state.parameterState.get(key) === item ? 'accent' : 'default'}
+                                key={item} raised className={this.props.classes.selectionButton}
+                                onClick={e => this.setState({
+                                    parameterState: this.state.parameterState.set(key, item)
+                                })}
+                            >
                                 {item}
                             </Button>
                         )))}
@@ -56,11 +80,12 @@ class Component extends React.Component<Props, State> {
                 </div >
             );
         }
-        return <TextField label={key} value={value} />;
+        return <TextField label={key} key={key}
+            value={this.state.parameterState.get(key)}
+            onChange={e => this.setState({ parameterState: this.state.parameterState.set(key, e.target.value) })} />;
     }
 
     render() {
-
         return (
             <div>
                 <DialogTitle>{this.state.question}</DialogTitle>
@@ -72,6 +97,7 @@ class Component extends React.Component<Props, State> {
                     {/* <Button onClick={() => this.props.cancel()}>Cancel</Button> */}
                     <Button
                         onClick={(e) => {
+                            this.state.parameterState.map((value, key) => RuleManager.setState(key, value));
                             this.props.success(this.props.actionName, this.props.current);
                         }}
                     >
