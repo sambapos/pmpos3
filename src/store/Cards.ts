@@ -12,7 +12,7 @@ import { CardTypeRecord } from '../models/CardType';
 import { ActionsObservable } from 'redux-observable';
 import { Observable } from 'rxjs/Observable';
 import { cardOperations } from '../modules/CardOperations/index';
-import { ArrayObservable } from 'rxjs/observable/ArrayObservable';
+// import { ArrayObservable } from 'rxjs/observable/ArrayObservable';
 
 export interface State {
     cards: List<CardRecord>;
@@ -110,6 +110,32 @@ type KnownActions = AddPendingActionAction | CommitCardAction | CommitReceivedAc
 //     });
 // };
 
+function getEditor(action: ActionRecord, observer: any): Promise<ActionRecord> {
+    return new Promise<ActionRecord>((resolve, reject) => {
+        let editor = cardOperations.getEditor(
+            action, (actionType, data) => {
+                let result = action.set('data', data);
+                resolve(result);
+            },
+            () => reject(), action.data);
+        observer.next({ type: 'SET_MODAL_COMPONENT', component: editor });
+    });
+}
+
+async function getResult(action: ActionRecord, observer: any) {
+    if (cardOperations.canEdit(action)) {
+        let result = await getEditor(action, observer);
+        return { type: 'ADD_PENDING_ACTION', action: result, initialize: false };
+    } else { return { type: 'ADD_PENDING_ACTION', action, initialize: false }; }
+}
+
+async function createObserver(actions: ActionRecord[], observer: any) {
+    for (const action of actions) {
+        let result = await getResult(action, observer);
+        observer.next(result);
+    }
+}
+
 export const epic = (
     action$: ActionsObservable<AddPendingActionAction>,
     store: { getState: Function, dispatch: Function }): Observable<AddPendingActionAction> =>
@@ -121,26 +147,28 @@ export const epic = (
             let card = root.getCard(cardId) || root;
             return RuleManager.getNextActions(action.action, root, card);
         })
-        .mergeMap(x => ArrayObservable.create(x))
-        .mergeMap(action => {
-            return new Promise<ActionRecord>((resolve, reject) => {
-                if (cardOperations.canEdit(action)) {
-                    let editor = cardOperations
-                        .getEditor(
-                        action, (actionType, data) => {
-                            let result = action.set('data', data);
-                            resolve(result);
-                        },
-                        () => reject(), action.data);
-                    store.dispatch({ type: 'SET_MODAL_COMPONENT', component: editor });
-                } else {
-                    console.log('Edit not needed', action);
-                    resolve(action);
-                }
-            });
-        })
-        .mergeMap(action => Observable.of(
-            { type: 'ADD_PENDING_ACTION', action, initialize: false } as AddPendingActionAction));
+        .mergeMap(actions => Observable.create(observer =>
+            createObserver(actions, observer).then(() => observer.complete())));
+
+// .mergeMap(action => {
+//     return new Promise<ActionRecord>((resolve, reject) => {
+//         if (cardOperations.canEdit(action)) {
+//             let editor = cardOperations
+//                 .getEditor(
+//                 action, (actionType, data) => {
+//                     let result = action.set('data', data);
+//                     resolve(result);
+//                 },
+//                 () => reject(), action.data);
+//             store.dispatch({ type: 'SET_MODAL_COMPONENT', component: editor });
+//         } else {
+//             console.log('Edit not needed', action);
+//             resolve(action);
+//         }
+//     });
+// })
+// .mergeMap(action => Observable.of(
+//     { type: 'ADD_PENDING_ACTION', action, initialize: false } as AddPendingActionAction));
 
 export const reducer: Reducer<StateRecord> = (
     state: StateRecord = new StateRecord(),
