@@ -96,5 +96,7 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
         backgroundColor: '#fff',
         boxShadow: '0 5px 15px rgba(0, 0, 0, .5)',
         padding: spacing.unit * 3,
+        display: 'flex',
+        flexFlow: 'column'
     },
 }));

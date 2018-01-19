@@ -73,7 +73,7 @@ class RuleManager {
     }
 
     evaluate(v: string, root: CardRecord, card: CardRecord, action: ActionRecord) {
-        if (v.startsWith('=')) {
+        if (v.startsWith && v.startsWith('=')) {
             let p = new Parser();
             let expr = p.parse(v.substr(1));
             return expr.evaluate({
