@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { TextField, Button } from 'material-ui';
-import CardContent from 'material-ui/Card/CardContent';
-import CardActions from 'material-ui/Card/CardActions';
-import Typography from 'material-ui/Typography/Typography';
 import * as shortid from 'shortid';
+import DialogContent from 'material-ui/Dialog/DialogContent';
+import DialogActions from 'material-ui/Dialog/DialogActions';
+import DialogTitle from 'material-ui/Dialog/DialogTitle';
 
 export default class extends React.Component<
     {
-        handler: (actionType: string, data: any) => void,
+        success: (actionType: string, data: any) => void,
+        cancel: () => void,
         actionName: string
     },
     {
@@ -25,8 +26,8 @@ export default class extends React.Component<
 
         return (
             <div>
-                <CardContent>
-                    <Typography type="headline">Execute Command</Typography>
+                <DialogTitle>Execute Command</DialogTitle>
+                <DialogContent>
                     {<TextField
                         label="Name"
                         value={this.state.name}
@@ -37,11 +38,12 @@ export default class extends React.Component<
                         value={this.state.parameters}
                         onChange={e => this.setState({ parameters: e.target.value })}
                     />
-                </CardContent>
-                <CardActions>
+                </DialogContent>
+                <DialogActions>
+                    {/* <Button onClick={() => this.props.cancel()}>Cancel</Button> */}
                     <Button
                         onClick={(e) => {
-                            this.props.handler(
+                            this.props.success(
                                 this.props.actionName,
                                 {
                                     id: shortid.generate(),
@@ -59,7 +61,7 @@ export default class extends React.Component<
                     >
                         Submit
                     </Button>
-                </CardActions>
+                </DialogActions>
             </div>
         );
     }

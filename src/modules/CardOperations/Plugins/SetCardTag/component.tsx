@@ -1,8 +1,5 @@
 import * as React from 'react';
-import { TextField, Button } from 'material-ui';
-import CardContent from 'material-ui/Card/CardContent';
-import CardActions from 'material-ui/Card/CardActions';
-import Typography from 'material-ui/Typography/Typography';
+import { TextField, Button, DialogContent, DialogTitle, DialogActions } from 'material-ui';
 import * as shortid from 'shortid';
 import AutoSuggest from './AutoSuggest';
 import CardList from '../../../CardList';
@@ -43,8 +40,8 @@ export default class extends React.Component<
     render() {
         return (
             <div>
-                <CardContent>
-                    <Typography type="headline">Set Card Tag</Typography>
+                <DialogTitle>Set Card Tag</DialogTitle>
+                <DialogContent>
                     {!this.props.current && <TextField
                         label="Tag Name"
                         value={this.state.name}
@@ -81,8 +78,9 @@ export default class extends React.Component<
                         value={this.state.target}
                         onChange={e => this.setState({ target: e.target.value })}
                     />
-                </CardContent>
-                <CardActions>
+                </DialogContent>
+                <DialogActions>
+                    {/* <Button onClick={() => this.props.cancel()}>Cancel</Button> */}
                     <Button
                         onClick={(e) => {
                             this.props.success(
@@ -101,7 +99,7 @@ export default class extends React.Component<
                     >
                         Submit
                     </Button>
-                </CardActions>
+                </DialogActions>
 
             </div>
         );

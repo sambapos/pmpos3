@@ -1,5 +1,6 @@
 import './index.css';
 import 'typeface-roboto';
+import 'rxjs';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import registerServiceWorker from './registerServiceWorker';

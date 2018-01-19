@@ -1,4 +1,3 @@
-import 'rxjs';
 import { Reducer } from 'redux';
 import { AppThunkAction } from './appThunkAction';
 import * as shortid from 'shortid';
@@ -114,10 +113,15 @@ function getEditor(action: ActionRecord, observer: any): Promise<ActionRecord> {
     return new Promise<ActionRecord>((resolve, reject) => {
         let editor = cardOperations.getEditor(
             action, (actionType, data) => {
+                observer.next({ type: 'SET_MODAL_STATE', visible: false });
                 let result = action.set('data', data);
                 resolve(result);
             },
-            () => reject(), action.data);
+            () => {
+                observer.next({ type: 'SET_MODAL_STATE', visible: false });
+                reject();
+            },
+            action.data);
         observer.next({ type: 'SET_MODAL_COMPONENT', component: editor });
     });
 }
@@ -148,7 +152,9 @@ export const epic = (
             return RuleManager.getNextActions(action.action, root, card);
         })
         .mergeMap(actions => Observable.create(observer =>
-            createObserver(actions, observer).then(() => observer.complete())));
+            createObserver(actions, observer)
+                .then(() => observer.complete())
+                .catch(() => observer.complete())));
 
 // .mergeMap(action => {
 //     return new Promise<ActionRecord>((resolve, reject) => {

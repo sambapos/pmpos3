@@ -120,8 +120,8 @@ class NavPage extends React.Component<Props> {
                     </main>
                 </div>
                 <Modal
+                    disableBackdropClick
                     open={this.props.modalOpen}
-                    onClose={() => this.props.SetModalState(false)}
                 >
                     <div className={this.props.classes.modal}>
                         {this.props.modalComponent}

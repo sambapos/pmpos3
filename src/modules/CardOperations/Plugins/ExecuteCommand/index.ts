@@ -12,8 +12,8 @@ export default class ExecuteCommand extends CardOperation {
     canEdit(action: ActionRecord): boolean {
         return !action.data.name;
     }
-    createEditor(handler: (actionType: string, data: any) => void, current: any) {
-        return React.createElement(Editor, { handler, actionName: this.type, current });
+    createEditor(success: (actionType: string, data: any) => void, cancel: () => void, current: any) {
+        return React.createElement(Editor, { success, cancel, actionName: this.type, current });
     }
     canApply(card: CardRecord, data: any): boolean {
         return !card.isClosed;
