@@ -1,11 +1,11 @@
 import * as shortid from 'shortid';
 import { ActionRecord } from '../models/Action';
-import { CardRecord } from '../models/Card';
 import { Engine, Rule } from 'json-rules-engine';
 import { Map as IMap } from 'immutable';
 import { RuleRecord } from '../models/Rule';
 import { Parser } from 'expr-eval';
 import { cardOperations } from './CardOperations/index';
+import { ActionState } from '../models/ActionState';
 
 class RuleManager {
 
@@ -72,41 +72,44 @@ class RuleManager {
             .forEach(rule => this.engine.addRule(new Rule(rule.content)));
     }
 
-    evaluate(v: string, root: CardRecord, card: CardRecord, action: ActionRecord) {
+    evaluate(v: string, actionState: ActionState) {
         if (v.startsWith && v.startsWith('=')) {
             let p = new Parser();
             let expr = p.parse(v.substr(1));
             let stateValues = this.state.toJS();
-            console.log('CHECK', stateValues);
             return expr.evaluate({
-                'root': root as any,
-                'card': card as any,
-                'action': action as any,
+                'root': actionState.root as any,
+                'card': actionState.card as any,
+                'action': actionState.action as any,
                 'state': stateValues as any
             });
         }
         return v;
     }
 
-    processData(data: any, action: ActionRecord, root: CardRecord, card: CardRecord) {
+    processData(data: any, actionState: ActionState) {
         let result = { ...data };
         for (const key of Object.keys(data)) {
-            result[key] = this.evaluate(result[key], root, card, action);
+            result[key] = this.evaluate(result[key], actionState);
         }
         return result;
     }
 
-    getNextActions(action: ActionRecord, root: CardRecord, card: CardRecord): Promise<ActionRecord[]> {
+    getNextActions(actionState: ActionState): Promise<ActionRecord[]> {
         return new Promise<ActionRecord[]>(resolve => {
             this.engine
-                .run({ state: this.state, root, card, action })
+                .run({
+                    state: this.state,
+                    root: actionState.root,
+                    card: actionState.card,
+                    action: actionState.action
+                })
                 .then(events => {
                     let actions: ActionRecord[] = [];
-                    let lastCardId = action.cardId;
+                    let lastCardId = actionState.action.cardId;
                     for (const event of events) {
                         for (const act of event.params.actions) {
-                            let processedData = this.processData(act.params, action, root, card);
-                            processedData = cardOperations.fixData(act.type, processedData);
+                            let processedData = cardOperations.fixData(act.type, act.params);
                             actions.push(new ActionRecord({
                                 id: shortid.generate(),
                                 actionType: act.type,
