@@ -18,13 +18,15 @@ import { ApplicationState } from './index';
 import { Commit } from '../models/Commit';
 
 export default (
-    terminalId: string, user: string,
+    terminalId: string,
+    venueName: string,
+    user: string,
     dispatch: (action: any) => void,
     getState: () => ApplicationState,
     cb: (protocol: any) => void) => {
 
     const ipfs = new IPFS({
-        repo: 'ipfs/PM-POS/' + terminalId + '/' + (user ? user : Math.random()),
+        repo: `ipfs/PM-POS/${venueName}/${terminalId}/${user ? user : Math.random()}`,
         EXPERIMENTAL: {
             pubsub: true
         },
@@ -51,7 +53,7 @@ export default (
         },
         connector: {
             name: 'ipfs',
-            room: 'pmpos-protocol',
+            room: 'pmpos-' + venueName,
             ipfs: ipfs
         },
         share: {

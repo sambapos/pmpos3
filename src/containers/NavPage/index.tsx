@@ -9,7 +9,7 @@ import Divider from 'material-ui/Divider';
 import NavList from './navList';
 import { subRoutes } from '../../routes';
 import { RouteComponentProps, Route } from 'react-router';
-import { ListItem, ListItemText, Typography, Modal } from 'material-ui';
+import { ListItem, ListItemText, Typography, Dialog } from 'material-ui';
 import decorate, { Style } from './style';
 
 import * as ClientStore from '../../store/Client';
@@ -34,6 +34,10 @@ class NavPage extends React.Component<Props> {
     state = {
         anchor: 'Left'
     };
+
+    componentWillReceiveProps(props: Props) {
+        if (this.props.modalOpen) { this.props.SetModalState(false); }
+    }
 
     handleDrawerToggle = () => {
         this.props.ToggleDrawer();
@@ -119,14 +123,12 @@ class NavPage extends React.Component<Props> {
                         }
                     </main>
                 </div>
-                <Modal
+                <Dialog
                     disableBackdropClick
                     open={this.props.modalOpen}
                 >
-                    <div className={this.props.classes.modal}>
-                        {this.props.modalComponent}
-                    </div>
-                </Modal>
+                    {this.props.modalComponent}
+                </Dialog>
             </div>
         );
     }

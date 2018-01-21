@@ -7,7 +7,7 @@ import * as CardStore from '../../store/Cards';
 import * as ClientStore from '../../store/Client';
 import { ApplicationState } from '../../store/index';
 
-import { WithStyles, Typography, Menu, MenuItem, Paper, Divider } from 'material-ui';
+import { WithStyles, Typography, Menu, MenuItem, Paper, Divider, Button } from 'material-ui';
 import decorate, { Style } from './style';
 import * as Extender from '../../lib/Extender';
 import TopBar from '../TopBar';
@@ -45,6 +45,7 @@ interface PageState {
     showCommits: boolean;
     selectedCard: CardRecord;
     buttons: CommandButton[];
+    footerButtons: CommandButton[];
 }
 
 export class CardPage extends React.Component<PageProps, PageState> {
@@ -55,7 +56,8 @@ export class CardPage extends React.Component<PageProps, PageState> {
             operations: cardOperations.getOperations(),
             showCommits: false,
             selectedCard: props.card,
-            buttons: []
+            buttons: [],
+            footerButtons: this.getButtons(props.card)
         };
     }
 
@@ -71,29 +73,29 @@ export class CardPage extends React.Component<PageProps, PageState> {
         this.setState({ anchorEl: undefined });
     }
 
-    handleCardMutation = (actionType: string, data: any) => {
-        this.props.addPendingAction(this.state.selectedCard, actionType, data);
+    handleCardMutation = (card: CardRecord, actionType: string, data: any) => {
+        this.props.addPendingAction(card, actionType, data);
         this.handleModalClose();
     }
 
     handleOperation(operation: CardOperation, currentData?: any) {
         if (operation.getEditor) {
             let component = operation.getEditor(
-                (at, data) => this.handleCardMutation(at, data),
+                (at, data) => this.handleCardMutation(this.state.selectedCard, at, data),
                 () => { this.handleModalClose(); },
                 currentData);
             if (component) {
                 this.props.SetModalComponent(component);
             }
         } else {
-            this.handleCardMutation(operation.type, {
+            this.handleCardMutation(this.state.selectedCard, operation.type, {
                 id: shortid.generate(), time: new Date().getTime()
             });
         }
     }
 
-    handleButtonClick(button: CommandButton) {
-        this.handleCardMutation('EXECUTE_COMMAND', {
+    handleButtonClick(card: CardRecord, button: CommandButton) {
+        this.handleCardMutation(card, 'EXECUTE_COMMAND', {
             name: button.command,
             params: button.parameters
         });
@@ -104,7 +106,15 @@ export class CardPage extends React.Component<PageProps, PageState> {
             this.props.loadCard(this.props.match.params.id);
         }
         if (this.props.isLoaded) {
-            this.setState({ selectedCard: this.props.card });
+            this.setState({
+                selectedCard: this.props.card,
+            });
+        }
+    }
+
+    public componentWillReceiveProps(props: PageProps) {
+        if (props.isLoaded) {
+            this.setState({ footerButtons: this.getButtons(props.card) });
         }
     }
 
@@ -118,7 +128,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
 
     getButtons(card: CardRecord): CommandButton[] {
         let ct = CardList.getCardTypes().get(card.typeId);
-        return ct ? ct.commands.map(x => new CommandButton(x)) : [];
+        return ct ? ct.commands.filter(c => c).map(x => new CommandButton(x)) : [];
     }
 
     public render() {
@@ -183,6 +193,17 @@ export class CardPage extends React.Component<PageProps, PageState> {
                     }
                 </Paper >
                 <div className={this.props.classes.footer}>
+                    <div>{this.state.footerButtons.map(button => {
+                        return (
+                            <Button
+                                key={`f_${button.caption}`}
+                                onClick={e => {
+                                    this.handleButtonClick(this.props.card, button);
+                                }}>
+                                {button.caption}
+                            </Button>
+                        );
+                    })}</div>
                     <CardBalance card={this.props.card} />
                 </div>
                 <Menu
@@ -201,14 +222,14 @@ export class CardPage extends React.Component<PageProps, PageState> {
                         <MenuItem
                             key={button.caption}
                             onClick={e => {
-                                this.handleButtonClick(button);
+                                this.handleButtonClick(this.state.selectedCard, button);
                                 this.handleMenuClose();
                             }}
                         >
                             {button.caption}
                         </MenuItem>
                     ))}
-                    <Divider />
+                    {this.state.buttons.length > 0 && <Divider />}
                     {this.state.operations.map(option => (
                         <MenuItem
                             key={option.type}

@@ -25,9 +25,12 @@ store.subscribe(() => {
 let terminalId = localStorage.getItem('terminalId');
 if (!terminalId) {
   terminalId = shortid.generate();
-  localStorage.setItem('terminalId', terminalId as string);
 }
-store.dispatch({ type: 'SET_TERMINAL_ID', terminalId });
+let venueName = localStorage.getItem('venueName');
+if (!venueName) {
+  venueName = 'DEMO';
+}
+store.dispatch({ type: 'SET_TERMINAL_ID', terminalId, venueName });
 
 function renderApp() {
   // This code starts up the React app when it runs in a browser. It sets up the routing configuration

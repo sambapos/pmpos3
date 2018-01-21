@@ -104,28 +104,30 @@ export const actionCreators = {
             user: getState().client.loggedInUser
         }]);
     },
-    connectProtocol: (terminalId: string, user: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
-        let currentProtocol = getState().cards.protocol;
-        if (currentProtocol) {
-            return;
-        }
+    connectProtocol: (terminalId: string, venueName: string, user: string):
+        AppThunkAction<KnownActions> => (dispatch, getState) => {
+            let currentProtocol = getState().cards.protocol;
+            if (currentProtocol) {
+                return;
+            }
 
-        dispatch({
-            type: 'CONNECT_PROTOCOL',
-            terminalId,
-            user,
-            payload: new Promise<any>(resolve => {
-                try {
-                    configureProtocol(
-                        terminalId, user, dispatch, getState,
-                        protocol => {
-                            resolve(protocol);
-                        }
-                    );
-                } catch (error) {
-                    fail(error);
-                }
-            })
-        });
-    }
+            dispatch({
+                type: 'CONNECT_PROTOCOL',
+                terminalId,
+                user,
+                payload: new Promise<any>(resolve => {
+                    try {
+                        configureProtocol(
+                            terminalId, venueName, user,
+                            dispatch, getState,
+                            protocol => {
+                                resolve(protocol);
+                            }
+                        );
+                    } catch (error) {
+                        fail(error);
+                    }
+                })
+            });
+        }
 };

@@ -4,6 +4,7 @@ import * as shortid from 'shortid';
 import AutoSuggest from './AutoSuggest';
 import CardList from '../../../CardList';
 import { CardTagRecord } from '../../../../models/CardTag';
+import { Fragment } from 'react';
 
 export default class extends React.Component<
     {
@@ -39,10 +40,10 @@ export default class extends React.Component<
 
     render() {
         return (
-            <div>
+            <Fragment>
                 <DialogTitle>Set Card Tag</DialogTitle>
                 <DialogContent>
-                    {!this.props.current && <TextField
+                    {Boolean(!this.props.current || !this.props.current.name) && <TextField
                         label="Tag Name"
                         value={this.state.name}
                         onChange={e => this.setState({ name: e.target.value })}
@@ -100,8 +101,7 @@ export default class extends React.Component<
                         Submit
                     </Button>
                 </DialogActions>
-
-            </div>
+            </Fragment>
         );
     }
 }

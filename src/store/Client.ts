@@ -1,11 +1,13 @@
 import { Reducer } from 'redux';
+import * as React from 'react';
 
 export interface ClientState {
     languageName: string;
     drawerOpen: boolean;
     loggedInUser: string;
     terminalId: string;
-    modalComponent: any;
+    venueName: string;
+    modalComponent: JSX.Element;
     modalOpen: boolean;
 }
 
@@ -22,6 +24,7 @@ interface SetLoggedInUserAction {
 interface SetTerminalIdAction {
     type: 'SET_TERMINAL_ID';
     terminalId: string;
+    venueName: string;
 }
 
 interface SetModalStateAction {
@@ -39,7 +42,9 @@ type KnownAction = ToggleDrawerAction | SetModalStateAction | SetModalComponentA
 
 export const actionCreators = {
     SetLoggedInUser: (user: string) => <SetLoggedInUserAction>{ type: 'SET_LOGGEDIN_USER', user },
-    SetTerminalId: (terminalId: string) => <SetTerminalIdAction>{ type: 'SET_TERMINAL_ID', terminalId },
+    SetTerminalId: (terminalId: string, venueName: string) => <SetTerminalIdAction>{
+        type: 'SET_TERMINAL_ID', terminalId, venueName
+    },
     ToggleDrawer: (forceClose?: boolean) => <ToggleDrawerAction>{ type: 'TOGGLE_DRAWER', forceClose },
     SetModalState: (visible: boolean) => <SetModalStateAction>{ type: 'SET_MODAL_STATE', visible },
     SetModalComponent: (component: any) => <SetModalComponentAction>{ type: 'SET_MODAL_COMPONENT', component }
@@ -50,7 +55,8 @@ const unloadedState: ClientState = {
     drawerOpen: false,
     loggedInUser: '',
     terminalId: '',
-    modalComponent: undefined,
+    venueName: '',
+    modalComponent: React.createElement('div'),
     modalOpen: false
 };
 
@@ -61,7 +67,9 @@ export const reducer: Reducer<ClientState> = (state: ClientState, action: KnownA
         case 'SET_LOGGEDIN_USER':
             return { ...state, loggedInUser: action.user };
         case 'SET_TERMINAL_ID':
-            return { ...state, terminalId: action.terminalId };
+            localStorage.setItem('terminalId', action.terminalId);
+            localStorage.setItem('venueName', action.venueName);
+            return { ...state, terminalId: action.terminalId, venueName: action.venueName };
         case 'SET_MODAL_STATE':
             return { ...state, modalOpen: action.visible };
         case 'SET_MODAL_COMPONENT':

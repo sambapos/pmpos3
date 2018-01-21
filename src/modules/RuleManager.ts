@@ -109,7 +109,8 @@ class RuleManager {
                     let lastCardId = actionState.action.cardId;
                     for (const event of events) {
                         for (const act of event.params.actions) {
-                            let processedData = cardOperations.fixData(act.type, act.params);
+                            let processedData = { ...act.params };
+                            processedData = cardOperations.fixData(act.type, processedData);
                             actions.push(new ActionRecord({
                                 id: shortid.generate(),
                                 actionType: act.type,
