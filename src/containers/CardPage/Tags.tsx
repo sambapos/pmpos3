@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { List, ListItem } from 'material-ui';
 import decorate, { Style } from './style';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import { CardTagRecord } from '../../models/CardTag';
@@ -12,15 +11,14 @@ interface TagsProps {
 
 const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
     return (
-        <List dense>
+        <div className={props.classes.tagSection}>
             {
                 props.card.tags.entrySeq().map(([k, v]) => {
 
                     let st = v.locationDisplay;
                     return (
-                        <ListItem
+                        <div
                             key={k}
-                            button
                             className={props.classes.tagItem}
                             onClick={e => props.handleTagClick(props.card, v)}
                         >
@@ -28,11 +26,11 @@ const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
                                 <div>{v.display}</div>
                                 {st && <div style={{ fontSize: '0.7em' }}>{st}</div>}
                             </div>
-                            <div style={{ fontSize: '1.2em' }}>{v.totalAmountDisplay}</div>
-                        </ListItem>);
+                            <div style={{ fontSize: '1.2em', padding: 8 }}>{v.totalAmountDisplay}</div>
+                        </div>);
                 })
             }
-        </List>
+        </div>
     );
 };
 

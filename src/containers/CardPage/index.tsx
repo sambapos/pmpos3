@@ -172,6 +172,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
                     </div>
                     <CardPageContent
                         card={this.props.card}
+                        selectedCardId={this.state.selectedCard ? this.state.selectedCard.id : ''}
                         onClick={(card, target) => this.setState({
                             selectedCard: card,
                             buttons: this.getButtons(card),
@@ -179,10 +180,6 @@ export class CardPage extends React.Component<PageProps, PageState> {
                         })}
                         handleTagClick={(card: CardRecord, cardTag: CardTagRecord) => {
                             this.setState({ selectedCard: card });
-                            this.handleOperation(
-                                this.state.operations.find(x => x.type === 'SET_CARD_TAG') as CardOperation,
-                                cardTag
-                            );
                         }}
                     />
                     {this.state.showCommits &&
@@ -218,18 +215,6 @@ export class CardPage extends React.Component<PageProps, PageState> {
                         },
                     }}
                 >
-                    {this.state.buttons.map(button => (
-                        <MenuItem
-                            key={button.caption}
-                            onClick={e => {
-                                this.handleButtonClick(this.state.selectedCard, button);
-                                this.handleMenuClose();
-                            }}
-                        >
-                            {button.caption}
-                        </MenuItem>
-                    ))}
-                    {this.state.buttons.length > 0 && <Divider />}
                     {this.state.operations.map(option => (
                         <MenuItem
                             key={option.type}
@@ -239,6 +224,34 @@ export class CardPage extends React.Component<PageProps, PageState> {
                             }}
                         >
                             {option.description}
+                        </MenuItem>
+                    ))}
+                    {this.state.selectedCard.tags.count() > 0 && <Divider />}
+                    {this.state.selectedCard.tags.map(tag => {
+                        return (
+                            <MenuItem
+                                key={'edit_' + tag.name}
+                                onClick={() => {
+                                    this.handleOperation(
+                                        this.state.operations.find(x => x.type === 'SET_CARD_TAG') as CardOperation,
+                                        tag
+                                    );
+                                    this.handleMenuClose();
+                                }}
+                            >Edit {!tag.name.startsWith('_') ? tag.name : tag.value}
+                            </MenuItem>
+                        );
+                    })}
+                    {this.state.buttons.length > 0 && <Divider />}
+                    {this.state.buttons.map(button => (
+                        <MenuItem
+                            key={button.caption}
+                            onClick={e => {
+                                this.handleButtonClick(this.state.selectedCard, button);
+                                this.handleMenuClose();
+                            }}
+                        >
+                            {button.caption}
                         </MenuItem>
                     ))}
                 </Menu>

@@ -7,8 +7,10 @@ export interface Style {
     modal: any;
     root: any;
     footer: any;
+    tagSection: any;
     tagItem: any;
     tagItemContent: any;
+    selectedCardLine: any;
     cardLine: any;
     cardLineIcon: any;
     node: any;
@@ -24,23 +26,38 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         borderColor: palette.text.divider,
         borderTop: '1px solid',
         paddingLeft: spacing.unit,
-        backgroundColor: palette.background.contentFrame,
+        backgroundColor: palette.background.contentFrame
     },
     leaf: {
-        backgroundColor: palette.background.paper
+        backgroundColor: palette.background.paper,
+    },
+    tagSection: {
+        display: 'inline-flex',
+        flex: 1,
+        flexFlow: 'column'
     },
     tagItem: {
-        paddingTop: '4px',
-        paddingBottom: '4px',
+        display: 'inline-flex',
+        width: '100%'
     },
     tagItemContent: {
-        flex: 1
+        flex: 1,
+        padding: spacing.unit / 2
     },
     cardLine: {
         display: 'flex',
         flexWrap: 'wrap',
+        paddingTop: spacing.unit / 2,
         borderBottom: '1px solid ' + palette.text.divider,
+        '&:hover': {
+            background: palette.common.faintBlack
+        }
 
+        // borderLeft: '1px solid ' + palette.text.divider,
+        // borderRight: '1px solid ' + palette.text.divider,
+    },
+    selectedCardLine: {
+        backgroundColor: palette.common.faintBlack
         // borderLeft: '1px solid ' + palette.text.divider,
         // borderRight: '1px solid ' + palette.text.divider,
     },

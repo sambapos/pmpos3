@@ -40,6 +40,9 @@ export default class CreateCard extends CardOperation {
                 data.typeId = CardList.getCardTypeIdByRef(data.type);
             }
         }
+        if (!data.time || data.time === 0) {
+            data.time = new Date().getTime();
+        }
         return data;
     }
 }
