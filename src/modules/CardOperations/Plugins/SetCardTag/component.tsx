@@ -43,11 +43,13 @@ export default class extends React.Component<
             <Fragment>
                 <DialogTitle>Set Card Tag</DialogTitle>
                 <DialogContent>
-                    {Boolean(!this.props.current || !this.props.current.name) && <TextField
-                        label="Tag Name"
-                        value={this.state.name}
-                        onChange={e => this.setState({ name: e.target.value })}
-                    />}
+                    {Boolean(!this.props.current || !this.props.current.name) &&
+                        <TextField
+                            fullWidth
+                            label="Tag Name"
+                            value={this.state.name}
+                            onChange={e => this.setState({ name: e.target.value })}
+                        />}
                     <AutoSuggest
                         label="Tag Value"
                         value={this.props.current ? this.props.current.value || '' : ''}
@@ -55,26 +57,31 @@ export default class extends React.Component<
                         handleChange={(e, value) => this.setState({ value })}
                     />
                     <TextField
+                        fullWidth
                         label="Quantity"
                         value={this.state.quantity}
                         onChange={e => this.setState({ quantity: Number(e.target.value) })}
                     />
                     <TextField
+                        fullWidth
                         label="Unit"
                         value={this.state.unit}
                         onChange={e => this.setState({ unit: e.target.value })}
                     />
                     <TextField
+                        fullWidth
                         label="Amount"
                         value={this.state.amount}
                         onChange={e => this.setState({ amount: Number(e.target.value) })}
                     />
                     <TextField
+                        fullWidth
                         label="Source"
                         value={this.state.source}
                         onChange={e => this.setState({ source: e.target.value })}
                     />
                     <TextField
+                        fullWidth
                         label="Target"
                         value={this.state.target}
                         onChange={e => this.setState({ target: e.target.value })}
