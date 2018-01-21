@@ -30,7 +30,8 @@ export default class SetCardTag extends CardOperation {
     }
 
     reduce(card: CardRecord, data: CardTagRecord): CardRecord {
-        return card.setIn(['tags', data.name], new CardTagRecord(data));
+        let r = new CardTagRecord(this.fixData(data));
+        return card.setIn(['tags', data.name], r);
     }
 
     canReduceCard(card: CardRecord, action: ActionRecord): boolean {
@@ -45,6 +46,8 @@ export default class SetCardTag extends CardOperation {
         if (!data.name) {
             data.name = '_' + shortid.generate();
         }
+        if (!Number.isNaN(Number(data.quantity))) { data.quantity = Number(data.quantity); }
+        if (!Number.isNaN(Number(data.amount))) { data.amount = Number(data.amount); }
         return data;
     }
 

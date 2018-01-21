@@ -87,12 +87,12 @@ class RuleManager {
         return v;
     }
 
-    processData(data: any, actionState: ActionState) {
+    processData(actionType: string, data: any, actionState: ActionState) {
         let result = { ...data };
         for (const key of Object.keys(data)) {
             result[key] = this.evaluate(result[key], actionState);
         }
-        return result;
+        return cardOperations.fixData(actionType, result);
     }
 
     getNextActions(actionState: ActionState): Promise<ActionRecord[]> {

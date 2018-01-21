@@ -100,7 +100,7 @@ function getEditor(action: ActionRecord, observer: any): Promise<ActionRecord> {
 }
 
 async function getResult(actionState: ActionState, action: ActionRecord, observer: any) {
-    action = action.set('data', RuleManager.processData(action.data, actionState)
+    action = action.set('data', RuleManager.processData(action.actionType, action.data, actionState)
     );
     if (cardOperations.canEdit(action)) {
         let result = await getEditor(action, observer);
