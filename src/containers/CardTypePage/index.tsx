@@ -20,13 +20,14 @@ type PageProps =
 interface PageState {
     name: string;
     reference: string;
+    displayFormat: string;
     commands: string;
 }
 
 export class CardTypePage extends React.Component<PageProps, PageState> {
     constructor(props: PageProps) {
         super(props);
-        this.state = { name: '', reference: '', commands: '' };
+        this.state = { name: '', reference: '', commands: '', displayFormat: '' };
     }
 
     public componentWillReceiveProps(props: PageProps) {
@@ -34,6 +35,7 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
             this.setState({
                 name: props.cardType.name,
                 reference: props.cardType.reference,
+                displayFormat: props.cardType.displayFormat,
                 commands: props.cardType.commands.join('\n')
             });
         }
@@ -44,6 +46,7 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
             this.setState({
                 name: this.props.cardType.name,
                 reference: this.props.cardType.reference,
+                displayFormat: this.props.cardType.displayFormat,
                 commands: this.props.cardType.commands.join('\n')
             });
         }
@@ -77,6 +80,7 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
                                     id: this.props.cardType.id,
                                     name: this.state.name,
                                     reference: this.state.reference,
+                                    displayFormat: this.state.displayFormat,
                                     commands: this.state.commands.split('\n')
                                 }));
                                 this.props.history.goBack();
@@ -98,6 +102,14 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
                         value={this.state.reference}
                         onChange={(e) => this.setState({
                             reference: e.target.value
+                        })}
+                    />
+
+                    <TextField
+                        label="Display Format"
+                        value={this.state.displayFormat}
+                        onChange={(e) => this.setState({
+                            displayFormat: e.target.value
                         })}
                     />
 

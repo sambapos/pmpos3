@@ -4,6 +4,7 @@ import CardPageContent from './CardPageContent';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import decorate, { Style } from './style';
 import { CardTagRecord } from '../../models/CardTag';
+import CardList from '../../modules/CardList';
 
 interface SubCardProps {
     card: CardRecord;
@@ -24,6 +25,7 @@ const SubCards = (props: SubCardProps & WithStyles<keyof Style>) => {
                         <CardPageContent
                             key={card.id}
                             card={card}
+                            cardType={CardList.getCardType(card.typeId)}
                             selectedCardId={props.selectedCardId}
                             onClick={props.onClick}
                             handleTagClick={props.handleTagClick}

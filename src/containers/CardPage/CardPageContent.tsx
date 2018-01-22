@@ -6,9 +6,11 @@ import { CardRecord } from '../../models/Card';
 import { WithStyles, Icon } from 'material-ui';
 import decorate, { Style } from './style';
 import { CardTagRecord } from '../../models/CardTag';
+import { CardTypeRecord } from '../../models/CardType';
 
 interface CardContentProps {
     card: CardRecord;
+    cardType: CardTypeRecord | undefined;
     selectedCardId: string;
     onClick: (card: CardRecord, target: any) => void;
     handleTagClick: (card: CardRecord, value: CardTagRecord) => void;
@@ -33,6 +35,7 @@ const CardPageContent = (props: PageProps) => {
                 </Icon>
                 <Tags
                     card={props.card}
+                    cardType={props.cardType}
                     handleTagClick={props.handleTagClick}
                 />
             </div>

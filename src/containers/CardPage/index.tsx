@@ -11,11 +11,10 @@ import { WithStyles, Typography, Menu, MenuItem, Paper, Divider, Button } from '
 import decorate, { Style } from './style';
 import * as Extender from '../../lib/Extender';
 import TopBar from '../TopBar';
-import { List, Map as IMap } from 'immutable';
+import { List } from 'immutable';
 import { ActionRecord } from '../../models/Action';
 import { CardRecord } from '../../models/Card';
 import { CommitRecord } from '../../models/Commit';
-import { CardTypeRecord } from '../../models/CardType';
 import { CardTagRecord } from '../../models/CardTag';
 import { cardOperations } from '../../modules/CardOperations';
 import CardOperation from '../../modules/CardOperations/CardOperation';
@@ -31,7 +30,6 @@ type PageProps =
         isLoaded: boolean,
         pendingActions: List<ActionRecord>
         card: CardRecord,
-        cardTypes: IMap<string, CardTypeRecord>
         commits: List<CommitRecord>
     }
     & WithStyles<keyof Style>
@@ -119,7 +117,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
     }
 
     getTitle() {
-        let ct = this.props.cardTypes.get(this.props.card.typeId);
+        let ct = CardList.getCardType(this.props.card.typeId);
         let cap = ct ? ct.reference : `Card`;
         return !this.props.card.name
             ? `New ${cap}`
@@ -172,6 +170,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
                     </div>
                     <CardPageContent
                         card={this.props.card}
+                        cardType={CardList.getCardType(this.props.card.typeId)}
                         selectedCardId={this.state.selectedCard ? this.state.selectedCard.id : ''}
                         onClick={(card, target) => this.setState({
                             selectedCard: card,
@@ -262,7 +261,6 @@ export class CardPage extends React.Component<PageProps, PageState> {
 
 const mapStateToProps = (state: ApplicationState) => ({
     card: state.cards.currentCard,
-    cardTypes: state.config.cardTypes,
     commits: state.cards.currentCommits,
     pendingActions: state.cards.pendingActions,
     isLoaded: state.cards.isLoaded

@@ -1,4 +1,5 @@
 import { Record } from 'immutable';
+import TemplateString from '../lib/TemplateString';
 
 export interface CardTag {
     id: string;
@@ -40,6 +41,11 @@ export class CardTagRecord extends Record<CardTag>({
     }
     get credit(): number {
         return this.target ? Math.max(this.quantity, 1) * this.amount : 0;
+    }
+    getFormattedDisplay(displayFormat: string) {
+        if (!displayFormat || !displayFormat.includes('$')) { return this.display; }
+        let template = TemplateString(displayFormat);
+        return template(this);
     }
     getInQuantityFor(location?: string): number {
         location = location && location.toLowerCase();

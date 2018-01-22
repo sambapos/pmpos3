@@ -43,7 +43,7 @@ export default class SetCardTag extends CardOperation {
         if (!data.id) {
             data.id = shortid.generate();
         }
-        if (!data.name) {
+        if (!data.name && data.value) {
             data.name = '_' + shortid.generate();
         }
         if (!Number.isNaN(Number(data.quantity))) { data.quantity = Number(data.quantity); }
@@ -52,7 +52,7 @@ export default class SetCardTag extends CardOperation {
     }
 
     canApply(card: CardRecord, data: CardTagRecord): boolean {
-        if (!data.name) { return false; }
+        if (!data.name || (data.name.startsWith('_') && !data.value)) { return false; }
         let currentValue = card.getIn(['tags', data.name]) as CardTagRecord;
         return !currentValue
             || currentValue.value !== data.value

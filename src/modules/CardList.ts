@@ -96,6 +96,10 @@ class CardList {
         return '';
     }
 
+    getCardType(id: string): CardTypeRecord | undefined {
+        return this.cardTypes.get(id);
+    }
+
     getCard(id: string): CardRecord {
         return this.cards.get(id) as CardRecord;
     }

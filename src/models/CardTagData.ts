@@ -70,7 +70,7 @@ export default class {
 
     getDebitFor(filter: string): number {
         if (this.isAccount(filter)) {
-            return this.isTargetAccount(filter) ? this.tag.amount : 0;
+            return this.isTargetAccount(filter) ? this.tag.amount * this.tag.quantity : 0;
         }
         if (!this.tag.source && !this.tag.target) {
             return this.card.debit;
@@ -80,7 +80,7 @@ export default class {
 
     getCreditFor(filter: string): number {
         if (this.isAccount(filter)) {
-            return this.isSourceAccount(filter) ? this.tag.amount : 0;
+            return this.isSourceAccount(filter) ? this.tag.amount * this.tag.quantity : 0;
         }
         if (!this.tag.source && !this.tag.target) {
             return this.card.credit;
