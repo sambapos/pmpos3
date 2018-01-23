@@ -36,7 +36,7 @@ export default class extends React.Component<MenuCommandProps, MenuCommandState>
         return (
             <div>
                 <IconButton
-                    color="contrast"
+                    color="inherit"
                     aria-label="open drawer"
                     onClick={(e) => {
                         if (this.props.command.onClick) {

@@ -52,7 +52,7 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
     content: {
         width: '100%',
         flexGrow: 1,
-        backgroundColor: palette.background.contentFrame,
+        backgroundColor: palette.action.disabledBackground,
         padding: 0,
         transition: transitions.create('margin', {
             easing: transitions.easing.sharp,

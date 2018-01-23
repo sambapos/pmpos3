@@ -29,14 +29,14 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         width: '100%',
     },
     tableCell: {
-        borderTop: '1px solid ' + palette.text.divider,
+        borderTop: '1px solid ' + palette.grey.A200,
         padding: spacing.unit,
     },
     tableCellNumber: {
         paddingRight: spacing.unit,
         textAlign: 'right',
-        borderLeft: '1px solid ' + palette.text.divider,
-        borderTop: '1px solid ' + palette.text.divider,
+        borderLeft: '1px solid ' + palette.grey.A200,
+        borderTop: '1px solid ' + palette.grey.A200,
         minWidth: '40px'
     },
     root: {

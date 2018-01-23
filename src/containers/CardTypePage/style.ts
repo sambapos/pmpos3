@@ -17,12 +17,12 @@ export interface Style {
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     node: {
-        backgroundColor: palette.common.lightWhite,
+        backgroundColor: palette.background.paper,
         paddingLeft: spacing.unit,
         paddingRight: spacing.unit,
         paddingBottom: spacing.unit,
         marginBottom: spacing.unit,
-        borderColor: palette.text.divider,
+        borderColor: (<any>palette).divider,
         border: '1px solid',
     },
     leaf: {

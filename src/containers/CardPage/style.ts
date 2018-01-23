@@ -23,13 +23,13 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         // marginLeft: spacing.unit,
         // paddingBottom: spacing.unit,
         // marginBottom: spacing.unit,
-        borderColor: palette.text.divider,
+        borderColor: (<any>palette).divider,
         borderTop: '1px solid',
         paddingLeft: spacing.unit,
-        backgroundColor: palette.background.contentFrame
+        backgroundColor: palette.background.default
     },
     leaf: {
-        backgroundColor: palette.background.paper,
+        backgroundColor: palette.common.fullWhite,
     },
     tagSection: {
         display: 'inline-flex',
@@ -48,16 +48,16 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         display: 'flex',
         flexWrap: 'wrap',
         paddingTop: spacing.unit / 2,
-        borderBottom: '1px solid ' + palette.text.divider,
+        borderBottom: '1px solid ' + (<any>palette).divider,
         '&:hover': {
-            background: palette.common.faintBlack
+            background: palette.grey.A100
         }
 
         // borderLeft: '1px solid ' + palette.text.divider,
         // borderRight: '1px solid ' + palette.text.divider,
     },
     selectedCardLine: {
-        backgroundColor: palette.common.faintBlack
+        backgroundColor: palette.grey.A100
         // borderLeft: '1px solid ' + palette.text.divider,
         // borderRight: '1px solid ' + palette.text.divider,
     },
