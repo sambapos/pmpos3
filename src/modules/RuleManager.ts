@@ -1,129 +1,85 @@
 import * as shortid from 'shortid';
 import { ActionRecord } from '../models/Action';
-import { Engine, Rule } from 'json-rules-engine';
 import { Map as IMap } from 'immutable';
 import { RuleRecord } from '../models/Rule';
-import { Parser } from 'expr-eval';
 import { cardOperations } from './CardOperations/index';
 import { ActionState } from '../models/ActionState';
+import * as nools from 'nools-ts';
+import FlowContainer from 'nools-ts/flow-container';
+
+class ActionType {
+    data: any;
+    type: string;
+    constructor(type: string, data: any) {
+        this.type = type;
+        this.data = data;
+    }
+}
 
 class RuleManager {
-
-    engine: Engine;
-    state: IMap<string, any>;
+    state: Map<string, any>;
+    flow: FlowContainer;
+    result: ActionType[];
 
     constructor() {
-        this.engine = new Engine();
-        this.engine.addRule(this.rule);
-        this.state = IMap<string, any>();
+        this.state = new Map<string, any>();
+        this.result = [];
     }
 
-    rule: any = {
-        conditions: {
-            all: [
-                {
-                    fact: 'action',
-                    path: '.actionType',
-                    operator: 'equal',
-                    value: 'CREATE_CARD'
-                },
-                {
-                    fact: 'card',
-                    path: '.typeId',
-                    operator: 'equal',
-                    value: 'HkiVldrVM'
-                }
-            ]
-        },
-        event: {
-            type: 'SUCCESS',
-            params: {
-                actions: [
-                    {
-                        type: 'SET_CARD_TAG',
-                        params: {
-                            name: 'Number',
-                            value: '0000'
-                        }
-                    },
-                    {
-                        type: 'SET_CARD_TAG',
-                        params: {
-                            name: 'Waiter',
-                            value: 'Tip',
-                            amount: '=card.balance*0.1'
-                        }
-                    }
-                ]
-
-            }
+    rule = `
+    rule test {
+        when {
+            a : Action a.type == 'EXECUTE_COMMAND' && a.data.name == 'TEST';
         }
-    };
+        then {
+            r.push(new Action('SET_CARD_TAG',{name:'Test',value:'0000'}))
+        }
+    }
+    `;
 
     setState(name: string, value: any) {
         this.state = this.state.set(name, value);
     }
 
     setRules(rules: IMap<string, RuleRecord>) {
-        if (this.engine) { this.engine.stop(); }
-        this.engine = new Engine;
-        rules
-            .filter(x => x.content)
-            .forEach(rule => this.engine.addRule(new Rule(rule.content)));
+        const defines = new Map();
+        defines.set('Action', ActionType);
+        let rule = rules.filter(x => !x.name.startsWith('_') && x.content.includes('when')).first();
+        let content = rule ? rule.content : this.rule;
+        this.flow = nools.compile(content, {
+            define: defines,
+            scope: new Map<string, any>([['r', this.result]])
+        });
     }
 
-    evaluate(v: string, actionState: ActionState) {
-        if (v.startsWith && v.startsWith('=')) {
-            let p = new Parser();
-            let expr = p.parse(v.substr(1));
-            let stateValues = this.state.toJS();
-            return expr.evaluate({
-                'root': actionState.root as any,
-                'card': actionState.card as any,
-                'action': actionState.action as any,
-                'state': stateValues as any
-            });
+    getNewActionsFrom(acts: ActionType[], actionState: ActionState) {
+        let actions: ActionRecord[] = [];
+        let lastCardId = actionState.action.cardId;
+        for (const act of this.result) {
+            let processedData = cardOperations.fixData(act.type, { ...act.data });
+            actions.push(new ActionRecord({
+                id: shortid.generate(),
+                actionType: act.type,
+                cardId: lastCardId,
+                data: processedData
+            }));
+            if (processedData.id) {
+                lastCardId = processedData.id;
+            }
         }
-        return v;
-    }
-
-    processData(actionType: string, data: any, actionState: ActionState) {
-        let result = { ...data };
-        for (const key of Object.keys(data)) {
-            result[key] = this.evaluate(result[key], actionState);
-        }
-        return cardOperations.fixData(actionType, result);
+        return actions;
     }
 
     getNextActions(actionState: ActionState): Promise<ActionRecord[]> {
         return new Promise<ActionRecord[]>(resolve => {
-            this.engine
-                .run({
-                    state: this.state,
-                    root: actionState.root,
-                    card: actionState.card,
-                    action: actionState.action
-                })
-                .then(events => {
-                    let actions: ActionRecord[] = [];
-                    let lastCardId = actionState.action.cardId;
-                    for (const event of events) {
-                        for (const act of event.params.actions) {
-                            let processedData = { ...act.params };
-                            processedData = cardOperations.fixData(act.type, processedData);
-                            actions.push(new ActionRecord({
-                                id: shortid.generate(),
-                                actionType: act.type,
-                                cardId: lastCardId,
-                                data: processedData
-                            }));
-                            if (processedData.id) {
-                                lastCardId = processedData.id;
-                            }
-                        }
-                    }
-                    resolve(actions);
-                });
+            while (this.result.length > 0) {
+                this.result.pop();
+            }
+            let session = this.flow.getSession(new ActionType(
+                actionState.action.actionType, actionState.action.data));
+            session.match().then(() => {
+                resolve(this.getNewActionsFrom(this.result, actionState));
+            });
         });
     }
 }

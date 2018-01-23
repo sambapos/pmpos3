@@ -12,7 +12,6 @@ import { ActionsObservable } from 'redux-observable';
 import { Observable } from 'rxjs/Observable';
 import { cardOperations } from '../modules/CardOperations/index';
 import { ActionState } from '../models/ActionState';
-// import { ArrayObservable } from 'rxjs/observable/ArrayObservable';
 
 export interface State {
     cards: List<CardRecord>;
@@ -100,8 +99,7 @@ function getEditor(action: ActionRecord, observer: any): Promise<ActionRecord> {
 }
 
 async function getResult(actionState: ActionState, action: ActionRecord, observer: any) {
-    action = action.set('data', RuleManager.processData(action.actionType, action.data, actionState)
-    );
+    action = action.set('data', cardOperations.fixData(action.actionType, { ...action.data }));
     if (cardOperations.canEdit(action)) {
         let result = await getEditor(action, observer);
         return { type: 'ADD_PENDING_ACTION', action: result, initialize: false };

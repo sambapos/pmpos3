@@ -40,9 +40,6 @@ export default class SetCardTag extends CardOperation {
     }
 
     fixData(data: any) {
-        if (!data.id) {
-            data.id = shortid.generate();
-        }
         if (!data.name && data.value) {
             data.name = '_' + shortid.generate();
         }
