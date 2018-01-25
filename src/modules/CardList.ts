@@ -47,9 +47,8 @@ class CardList {
         return commit.actions.reduce(this.actionReduce, card);
     }
 
-    addCommits(commits: Commit[]) {
-        commits.forEach(x => this.addCommit(x));
-        this.cardTypeIndex = this.cards.reduce(
+    getCardTypeIndex() {
+        return this.cards.reduce(
             (r: IMap<string, List<string>>, card) => {
                 return r.update(card.typeId, list => {
                     if (!list) {
@@ -59,6 +58,15 @@ class CardList {
                 });
             },
             IMap<string, List<string>>());
+    }
+
+    reIndexCardType() {
+        this.cardTypeIndex = this.getCardTypeIndex();
+    }
+
+    addCommits(commits: Commit[]) {
+        commits.forEach(x => this.addCommit(x));
+        this.reIndexCardType();
     }
 
     getCards(): IMap<string, CardRecord> {
@@ -102,6 +110,11 @@ class CardList {
 
     getCard(id: string): CardRecord {
         return this.cards.get(id) as CardRecord;
+    }
+
+    getCardByName(type: string, name: string): CardRecord | undefined {
+        let ctId = this.getCardTypeIdByRef(type);
+        return this.getCardsByType(ctId).find(c => c.hasTag('Name', name)) as CardRecord;
     }
 
     getCommits(id: string): List<CommitRecord> | undefined {

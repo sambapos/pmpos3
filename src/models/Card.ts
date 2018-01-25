@@ -95,4 +95,13 @@ export class CardRecord extends Record<Card>({
         }
         return { filter: '', result: List<CardTagRecord>() };
     }
+
+    hasTag(name: string, value: string): boolean {
+        return this.tags.find(v => v.name === name && v.value === value) !== undefined;
+    }
+
+    getTag(name: string, defaultValue: any): {} {
+        let tag = this.tags.find(v => v.name === name);
+        return tag ? tag.value : defaultValue;
+    }
 }

@@ -9,10 +9,10 @@ import TopBar from '../TopBar';
 import { RuleRecord } from '../../models/Rule';
 import AceEditor from 'react-ace';
 
-import 'brace/mode/json';
+import 'brace/mode/drools';
 import 'brace/theme/github';
 import 'brace/ext/language_tools';
-import 'brace/snippets/json';
+import 'brace/snippets/drools';
 
 type PageProps =
     {
@@ -93,7 +93,7 @@ export class RulePage extends React.Component<PageProps, { rule: RuleRecord }> {
                     />
 
                     <AceEditor
-                        mode="json"
+                        mode="drools"
                         theme="github"
                         name="jsonEdit"
                         height="auto"
@@ -102,6 +102,9 @@ export class RulePage extends React.Component<PageProps, { rule: RuleRecord }> {
                         onChange={(e) => this.setState({
                             rule: this.state.rule.set('content', e)
                         })}
+                        editorProps={{
+                            $blockScrolling: Infinity
+                        }}
                         fontSize={14}
                         showPrintMargin={true}
                         showGutter={true}
@@ -111,7 +114,7 @@ export class RulePage extends React.Component<PageProps, { rule: RuleRecord }> {
                             enableBasicAutocompletion: true,
                             enableLiveAutocompletion: true,
                             enableSnippets: true,
-                            showLineNumbers: true,
+                            showLineNumbers: false,
                             tabSize: 2,
                         }} />
                 </div >

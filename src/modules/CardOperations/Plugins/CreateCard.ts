@@ -25,7 +25,7 @@ export default class CreateCard extends CardOperation {
         let { id, typeId, type, time } = data;
 
         let result = new CardRecord({ id, typeId, type, time });
-        if (card.id) {
+        if (card.id && card.id !== '0') {
             result = card.update('cards', map => map.set(result.id, result));
         }
         return result;
