@@ -16,6 +16,7 @@ export interface Style {
     node: any;
     leaf: any;
     indexHeader: any;
+    subCards: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
@@ -24,12 +25,17 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         // paddingBottom: spacing.unit,
         // marginBottom: spacing.unit,
         borderColor: (<any>palette).divider,
-        borderTop: '1px solid',
-        paddingLeft: spacing.unit,
-        backgroundColor: palette.background.default
+        backgroundColor: palette.background.default,
+        display: 'flex',
+        flexFlow: 'column',
+        paddingLeft: spacing.unit
     },
     leaf: {
         backgroundColor: palette.common.fullWhite,
+        paddingLeft: spacing.unit,
+    },
+    subCards: {
+        overflow: 'auto',
     },
     tagSection: {
         display: 'inline-flex',
@@ -45,6 +51,7 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         padding: spacing.unit / 2
     },
     cardLine: {
+        flex: 'none',
         display: 'flex',
         flexWrap: 'wrap',
         paddingTop: spacing.unit / 2,
@@ -66,7 +73,6 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         fontSize: 20
     },
     card: {
-        minWidth: 275,
         padding: spacing.unit,
         marginBottom: spacing.unit
     },
@@ -76,12 +82,12 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         flex: '1 1 auto'
     },
     indexHeader: {
-        padding: spacing.unit
+        padding: spacing.unit,
+        borderBottom: '1px solid ' + (<any>palette).divider,
     },
     content: {
         height: '100%',
         display: 'flex',
-        overflowX: 'auto',
         flexFlow: 'column',
         [breakpoints.up('sm')]: {
             maxWidth: '600px',

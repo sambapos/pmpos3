@@ -16,7 +16,7 @@ interface SubCardProps {
 const SubCards = (props: SubCardProps & WithStyles<keyof Style>) => {
     if (props.card.cards.count() === 0) { return null; }
     return (
-        <div>
+        <div className={props.classes.subCards}>
             {props.card.cards
                 .valueSeq()
                 .sort((a, b) => a.time - b.time)

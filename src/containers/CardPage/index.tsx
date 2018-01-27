@@ -24,6 +24,9 @@ import CardPageContent from './CardPageContent';
 import CardBalance from './CardBalance';
 import CardList from '../../modules/CardList';
 import { CommandButton } from './CommandButton';
+import { Fragment } from 'react';
+import DialogContent from 'material-ui/Dialog/DialogContent';
+import DialogActions from 'material-ui/Dialog/DialogActions';
 
 type PageProps =
     {
@@ -40,7 +43,6 @@ type PageProps =
 interface PageState {
     anchorEl: any;
     operations: CardOperation[];
-    showCommits: boolean;
     selectedCard: CardRecord;
     buttons: CommandButton[];
     footerButtons: CommandButton[];
@@ -52,7 +54,6 @@ export class CardPage extends React.Component<PageProps, PageState> {
         this.state = {
             anchorEl: undefined,
             operations: cardOperations.getOperations(),
-            showCommits: false,
             selectedCard: props.card,
             buttons: [],
             footerButtons: this.getButtons(props.card)
@@ -150,7 +151,20 @@ export class CardPage extends React.Component<PageProps, PageState> {
                             icon: 'folder_open',
                             menuItems: [{
                                 icon: 'Display Commits', onClick: () => {
-                                    this.setState({ showCommits: true });
+                                    this.props.SetModalComponent((
+                                        <Fragment>
+                                            <DialogContent>
+                                                <Commits
+                                                    pendingActions={this.props.pendingActions}
+                                                    commits={this.props.commits}
+                                                />
+                                            </DialogContent>
+                                            <DialogActions>
+                                                <Button onClick={() => this.props.SetModalState(false)}>Close</Button>
+                                            </DialogActions>
+                                        </Fragment>
+                                    ));
+
                                 }
                             }]
                         },
@@ -181,14 +195,10 @@ export class CardPage extends React.Component<PageProps, PageState> {
                             this.setState({ selectedCard: card });
                         }}
                     />
-                    {this.state.showCommits &&
-                        <Commits
-                            pendingActions={this.props.pendingActions}
-                            commits={this.props.commits}
-                        />
-                    }
                 </Paper >
                 <div className={this.props.classes.footer}>
+                    <CardBalance card={this.props.card} />
+                    <Divider />
                     <div>{this.state.footerButtons.map(button => {
                         return (
                             <Button
@@ -200,7 +210,6 @@ export class CardPage extends React.Component<PageProps, PageState> {
                             </Button>
                         );
                     })}</div>
-                    <CardBalance card={this.props.card} />
                 </div>
                 <Menu
                     id="long-menu"

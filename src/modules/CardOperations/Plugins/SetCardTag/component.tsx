@@ -14,14 +14,14 @@ export default class extends React.Component<
         current?: CardTagRecord
     },
     {
-        name: string, value: string, quantity: number, unit: string,
-        amount: number, source: string, target: string
+        name: string, value: string, quantity: string, unit: string,
+        amount: string, source: string, target: string
     }> {
     constructor(props: any) {
         super(props);
         this.state = {
-            name: '', value: '', quantity: 0, unit: '',
-            amount: 0, source: '', target: ''
+            name: '', value: '', quantity: '', unit: '',
+            amount: '', source: '', target: ''
         };
     }
     componentDidMount() {
@@ -29,9 +29,9 @@ export default class extends React.Component<
             this.setState({
                 name: this.props.current.name,
                 value: this.props.current.value,
-                quantity: this.props.current.quantity,
+                quantity: String(this.props.current.quantity),
                 unit: this.props.current.unit,
-                amount: this.props.current.amount,
+                amount: String(this.props.current.amount),
                 source: this.props.current.source,
                 target: this.props.current.target
             });
@@ -59,8 +59,9 @@ export default class extends React.Component<
                     <TextField
                         fullWidth
                         label="Quantity"
+                        type="number"
                         value={this.state.quantity}
-                        onChange={e => this.setState({ quantity: Number(e.target.value) })}
+                        onChange={e => this.setState({ quantity: e.target.value })}
                     />
                     <TextField
                         fullWidth
@@ -71,8 +72,9 @@ export default class extends React.Component<
                     <TextField
                         fullWidth
                         label="Amount"
+                        type="number"
                         value={this.state.amount}
-                        onChange={e => this.setState({ amount: Number(e.target.value) })}
+                        onChange={e => this.setState({ amount: e.target.value })}
                     />
                     <TextField
                         fullWidth
@@ -97,9 +99,9 @@ export default class extends React.Component<
                                     id: shortid.generate(),
                                     name: this.state.name || `_${shortid.generate()}`,
                                     value: this.state.value,
-                                    quantity: this.state.quantity,
+                                    quantity: Number(this.state.quantity),
                                     unit: this.state.unit,
-                                    amount: this.state.amount,
+                                    amount: Number(this.state.amount),
                                     source: this.state.source,
                                     target: this.state.target
                                 });

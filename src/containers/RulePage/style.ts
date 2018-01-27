@@ -23,17 +23,15 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         height: '100%',
         display: 'flex',
         overflowX: 'auto',
-        [breakpoints.down('sm')]: {
-            flexFlow: 'column'
-        },
+        flexFlow: 'column',
         [breakpoints.up('md')]: {
             width: '900px',
             alignSelf: 'center'
         },
     },
     footer: {
-        [breakpoints.up('sm')]: {
-            maxWidth: '600px',
+        [breakpoints.up('md')]: {
+            maxWidth: '900px',
             width: '100%',
             alignSelf: 'center',
         },

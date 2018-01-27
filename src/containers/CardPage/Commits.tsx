@@ -16,7 +16,7 @@ type CommitProps =
 
 const Commits = (props: CommitProps) => {
     return (
-        <div>
+        <div style={{ wordWrap: 'break-word' }}>
             <Card className={props.classes.card}>
                 <Typography>Pending Actions</Typography>
                 <ActionList actions={props.pendingActions} />

@@ -59,11 +59,9 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         height: '100%',
         display: 'flex',
         overflowX: 'auto',
-        [breakpoints.down('sm')]: {
-            flexFlow: 'column'
-        },
-        [breakpoints.up('md')]: {
-            width: '900px',
+        flexFlow: 'column',
+        [breakpoints.up('sm')]: {
+            width: '600px',
             alignSelf: 'center'
         },
     },

@@ -4,6 +4,7 @@ import { WithStyles } from 'material-ui/styles/withStyles';
 import { CardTagRecord } from '../../models/CardTag';
 import { CardRecord } from '../../models/Card';
 import { CardTypeRecord } from '../../models/CardType';
+import { Icon } from 'material-ui';
 
 interface TagsProps {
     card: CardRecord;
@@ -28,7 +29,11 @@ const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
                                 <div>{props.cardType
                                     ? v.getFormattedDisplay(props.cardType.displayFormat)
                                     : v.display}</div>
-                                {st && <div style={{ fontSize: '0.7em' }}>{st}</div>}
+                                {st && <div style={{ fontSize: '0.75em' }}>
+                                    {v.source}<Icon style={{
+                                        fontSize: '1.2em', verticalAlign: 'bottom', fontWeight: 'bold'
+                                    }}>keyboard_arrow_right</Icon>{v.target}
+                                </div>}
                             </div>
                             <div
                                 style={{ fontSize: '1.2em', padding: 8, color: v.balance > 0 ? 'inherit' : 'red' }}>
