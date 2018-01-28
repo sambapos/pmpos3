@@ -4,6 +4,7 @@ import CloseCard from './CloseCard';
 import ExecuteCommand from './ExecuteCommand';
 import SetState from './SetState';
 import AskQuestion from './AskQuestion/index';
+import SelectCard from './SelectCard/index';
 
 export default [
     new CreateCard(),
@@ -11,5 +12,6 @@ export default [
     new CloseCard(),
     new ExecuteCommand(),
     new SetState(),
-    new AskQuestion()
+    new AskQuestion(),
+    new SelectCard()
 ];

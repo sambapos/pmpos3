@@ -34,10 +34,7 @@ class ActionData {
     }
 
     load(cardType: string, cardName: string) {
-        console.log('card query', cardType, cardName);
-        let result = CardList.getCardByName(cardType, cardName);
-        console.log(result && result.name);
-        return result;
+        return CardList.getCardByName(cardType, cardName);
     }
 }
 

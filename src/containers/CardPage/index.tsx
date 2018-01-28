@@ -27,6 +27,7 @@ import { CommandButton } from './CommandButton';
 import { Fragment } from 'react';
 import DialogContent from 'material-ui/Dialog/DialogContent';
 import DialogActions from 'material-ui/Dialog/DialogActions';
+import { CardTypeRecord } from '../../models/CardType';
 
 type PageProps =
     {
@@ -125,9 +126,32 @@ export class CardPage extends React.Component<PageProps, PageState> {
             : `${this.props.card.display}`;
     }
 
+    getButtonsForCommand(command: string): CommandButton[] {
+        if (!command.includes('=')) {
+            let parts = command.split(':');
+            let ct = CardList.getCardTypes().find(c => c.name === parts[1]);
+            if (ct) {
+                let cards = CardList.getCardsByType(ct.id);
+                return cards.map(c =>
+                    new CommandButton(`${c.name}=${parts[0]}:${
+                        c.tags.reduce((r, t) => r + (r ? ',' : '') + `${t.name}=${t.value}`, '')
+                        }`)).toArray();
+            }
+        }
+        return [new CommandButton(command)];
+    }
+
+    reduceButtons(ct: CardTypeRecord) {
+        return ct.commands.filter(c => c).reduce(
+            (r, c) => r.concat(this.getButtonsForCommand(c)),
+            new Array<CommandButton>());
+    }
+
     getButtons(card: CardRecord): CommandButton[] {
         let ct = CardList.getCardTypes().get(card.typeId);
-        return ct ? ct.commands.filter(c => c).map(x => new CommandButton(x)) : [];
+        return ct
+            ? this.reduceButtons(ct)
+            : [];
     }
 
     public render() {
