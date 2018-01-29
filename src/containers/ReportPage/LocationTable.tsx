@@ -31,7 +31,7 @@ const LocationTable = (props: Props) => {
         <Paper className={props.classes.card}>
             <table className={props.classes.table}>
                 <THead keys={['Name', 'In', 'Out', 'Remaining']} />
-                <tbody>{balances.map((v, k) => {
+                <tbody>{balances.filter(x => x.get('in') !== 0 || x.get('out') !== 0).map((v, k) => {
                     return (
                         <tr key={k} className={props.classes.tableRow}>
                             <td className={props.classes.tableCell}>

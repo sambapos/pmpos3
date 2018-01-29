@@ -24,28 +24,30 @@ const AccountTable = (props: Props) => {
         <Paper className={props.classes.card}>
             <table className={props.classes.table}>
                 <THead keys={['Name', 'Debit', 'Credit', 'Balance']} />
-                <tbody>{props.tags.sort((a, b) => a.time - b.time).map(tagData => {
-                    balance += tagData.getBalanceFor(props.searchValue);
-                    return tagData && (
-                        <tr key={tagData.id} className={props.classes.tableRow}>
-                            <td className={props.classes.tableCell}>
-                                <div>{tagData.display}</div>
-                                <div className={props.classes.tableSecondary}>
-                                    {tagData.name + ' ' + moment(tagData.time).format('LLL')}
-                                </div>
-                            </td>
-                            <td className={props.classes.tableCellNumber}>
-                                {tagData.getDebitDisplayFor(props.searchValue)}
-                            </td>
-                            <td className={props.classes.tableCellNumber}>
-                                {tagData.getCreditDisplayFor(props.searchValue)}
-                            </td>
-                            <td className={props.classes.tableCellNumber}>
-                                {balance !== 0 ? balance.toFixed(2) : ''}
-                            </td>
-                        </tr>
-                    );
-                })}
+                <tbody>{props.tags
+                    .filter(t => t.getDebitFor(props.searchValue) !== 0 || t.getCreditFor(props.searchValue) !== 0)
+                    .sort((a, b) => a.time - b.time).map(tagData => {
+                        balance += tagData.getBalanceFor(props.searchValue);
+                        return tagData && (
+                            <tr key={tagData.id} className={props.classes.tableRow}>
+                                <td className={props.classes.tableCell}>
+                                    <div>{tagData.display}</div>
+                                    <div className={props.classes.tableSecondary}>
+                                        {tagData.name + ' ' + moment(tagData.time).format('LLL')}
+                                    </div>
+                                </td>
+                                <td className={props.classes.tableCellNumber}>
+                                    {tagData.getDebitDisplayFor(props.searchValue)}
+                                </td>
+                                <td className={props.classes.tableCellNumber}>
+                                    {tagData.getCreditDisplayFor(props.searchValue)}
+                                </td>
+                                <td className={props.classes.tableCellNumber}>
+                                    {balance !== 0 ? balance.toFixed(2) : ''}
+                                </td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
         </Paper>

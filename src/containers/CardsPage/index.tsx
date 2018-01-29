@@ -23,11 +23,11 @@ type PageProps =
     & typeof CardStore.actionCreators
     & RouteComponentProps<{}>;
 
-class CardsPage extends React.Component<PageProps, { currentCardType: CardTypeRecord }> {
+class CardsPage extends React.Component<PageProps, { currentCardType: CardTypeRecord, showClosedCards: boolean }> {
 
     constructor(props: PageProps) {
         super(props);
-        this.state = { currentCardType: props.currentCardType };
+        this.state = { currentCardType: props.currentCardType, showClosedCards: false };
     }
 
     componentWillReceiveProps(nextProps: PageProps) {
@@ -63,6 +63,12 @@ class CardsPage extends React.Component<PageProps, { currentCardType: CardTypeRe
                 }).toArray()
             },
             {
+                icon: 'swap_vert',
+                onClick: () => {
+                    this.setState({ showClosedCards: !this.state.showClosedCards });
+                }
+            },
+            {
                 icon: 'add',
                 onClick: () => {
                     this.props.addCard(this.props.currentCardType);
@@ -75,6 +81,7 @@ class CardsPage extends React.Component<PageProps, { currentCardType: CardTypeRe
 
     renderCards(cards: IList<CardRecord>) {
         return cards
+            .filter(x => this.state.showClosedCards || !x.isClosed)
             .map(card => {
                 return card && (
                     <div key={card.id}>

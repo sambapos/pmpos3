@@ -38,13 +38,13 @@ const BalanceTable = (props: Props) => {
                                 <div>{k}</div>
                             </td>
                             <td className={props.classes.tableCellNumber}>
-                                {v.get('debit')}
+                                {Number(v.get('debit')).toFixed(2)}
                             </td>
                             <td className={props.classes.tableCellNumber}>
-                                {v.get('credit')}
+                                {Number(v.get('credit')).toFixed(2)}
                             </td>
                             <td className={props.classes.tableCellNumber}>
-                                {(v.get('debit') || 0) - (v.get('credit') || 0)}
+                                {Number((v.get('debit') || 0) - (v.get('credit') || 0)).toFixed(2)}
                             </td>
                         </tr>
                     );

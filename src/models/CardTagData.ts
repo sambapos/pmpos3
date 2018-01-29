@@ -70,20 +70,26 @@ export default class {
 
     getDebitFor(filter: string): number {
         if (this.isAccount(filter)) {
-            return this.isTargetAccount(filter) ? this.tag.amount * this.tag.quantity : 0;
+            return this.isTargetAccount(filter) ? Math.abs(this.tag.amount * this.tag.quantity) : 0;
         }
         if (!this.tag.source && !this.tag.target) {
             return this.card.debit;
+        }
+        if (this.tag.target && this.tag.source) {
+            return Math.abs(this.card.debit);
         }
         return this.tag.target ? Math.abs(this.card.balance) : 0;
     }
 
     getCreditFor(filter: string): number {
         if (this.isAccount(filter)) {
-            return this.isSourceAccount(filter) ? this.tag.amount * this.tag.quantity : 0;
+            return this.isSourceAccount(filter) ? Math.abs(this.tag.amount * this.tag.quantity) : 0;
         }
         if (!this.tag.source && !this.tag.target) {
             return this.card.credit;
+        }
+        if (this.tag.target && this.tag.source) {
+            return Math.abs(this.card.credit);
         }
         return this.tag.source ? Math.abs(this.card.balance) : 0;
     }

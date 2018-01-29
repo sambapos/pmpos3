@@ -32,17 +32,6 @@ class ReportPage extends React.Component<PageProps, {
         };
     }
 
-    getSecondaryCommands() {
-        let result = [
-            {
-                icon: 'add', onClick: () => {
-                    this.props.history.push(process.env.PUBLIC_URL + '/cardType');
-                }
-            }
-        ];
-        return result;
-    }
-
     loadCards(searchValue: string): IList<CardTagData> {
         return CardList.getTags([searchValue]);
     }
@@ -85,7 +74,6 @@ class ReportPage extends React.Component<PageProps, {
             <div className={this.props.classes.root}>
                 <TopBar
                     title="Report"
-                    secondaryCommands={this.getSecondaryCommands()}
                 />
                 <div className={this.props.classes.footer}>
                     <TextField
