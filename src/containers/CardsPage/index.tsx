@@ -11,6 +11,7 @@ import { CardRecord } from '../../models/Card';
 import Divider from 'material-ui/Divider/Divider';
 import ListItemText from 'material-ui/List/ListItemText';
 import { CardTypeRecord } from '../../models/CardType';
+import TextField from 'material-ui/TextField/TextField';
 
 type PageProps =
     {
@@ -23,11 +24,21 @@ type PageProps =
     & typeof CardStore.actionCreators
     & RouteComponentProps<{}>;
 
-class CardsPage extends React.Component<PageProps, { currentCardType: CardTypeRecord, showClosedCards: boolean }> {
+interface State {
+    currentCardType: CardTypeRecord;
+    showClosedCards: boolean;
+    searchValue: string;
+}
+
+class CardsPage extends React.Component<PageProps, State> {
 
     constructor(props: PageProps) {
         super(props);
-        this.state = { currentCardType: props.currentCardType, showClosedCards: false };
+        this.state = {
+            currentCardType: props.currentCardType,
+            showClosedCards: false,
+            searchValue: ''
+        };
     }
 
     componentWillReceiveProps(nextProps: PageProps) {
@@ -71,8 +82,10 @@ class CardsPage extends React.Component<PageProps, { currentCardType: CardTypeRe
             {
                 icon: 'add',
                 onClick: () => {
-                    this.props.addCard(this.props.currentCardType);
-                    this.props.history.push(process.env.PUBLIC_URL + '/card');
+                    if (this.props.currentCardType.id) {
+                        this.props.addCard(this.props.currentCardType);
+                        this.props.history.push(process.env.PUBLIC_URL + '/card');
+                    }
                 }
             }
         ];
@@ -81,7 +94,12 @@ class CardsPage extends React.Component<PageProps, { currentCardType: CardTypeRe
 
     renderCards(cards: IList<CardRecord>) {
         return cards
-            .filter(x => this.state.showClosedCards || !x.isClosed)
+            .filter(x =>
+                this.state.searchValue
+                || this.state.showClosedCards
+                || !x.isClosed)
+            .filter(x => !this.state.searchValue
+                || Boolean(x.tags.find(t => t.value.toLowerCase().includes(this.state.searchValue.toLowerCase()))))
             .map(card => {
                 return card && (
                     <div key={card.id}>
@@ -120,6 +138,12 @@ class CardsPage extends React.Component<PageProps, { currentCardType: CardTypeRe
                 <TopBar
                     title={this.state.currentCardType ? this.state.currentCardType.name : 'Cards'}
                     secondaryCommands={this.getSecondaryCommands()}
+                />
+                <TextField
+                    className={this.props.classes.search}
+                    label="Search"
+                    value={this.state.searchValue}
+                    onChange={e => this.setState({ searchValue: e.target.value })}
                 />
                 <Paper className={this.props.classes.content}>
                     <List>

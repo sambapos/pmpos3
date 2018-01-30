@@ -5,11 +5,20 @@ export interface Style {
     content: any;
     root: any;
     formControl: any;
+    search: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     card: {
         minWidth: 275,
+    },
+    search: {
+        [breakpoints.up('sm')]: {
+            maxWidth: '600px',
+            width: '100%',
+            alignSelf: 'center',
+            marginBottom: spacing.unit * 3
+        }
     },
     root: {
         display: 'flex',

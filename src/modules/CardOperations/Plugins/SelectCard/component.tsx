@@ -6,11 +6,13 @@ import decorate, { Style } from './style';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import RuleManager from '../../../RuleManager';
 import CardList from '../../../CardList';
+import TextField from 'material-ui/TextField/TextField';
 
 interface State {
     cardType: string;
     buttons: string[];
     selectedTag: string;
+    searchValue: string;
 }
 
 interface PageProps {
@@ -29,7 +31,8 @@ class Component extends React.Component<Props, State> {
         this.state = {
             cardType: '',
             buttons: [],
-            selectedTag: ''
+            selectedTag: '',
+            searchValue: ''
         };
     }
 
@@ -51,8 +54,16 @@ class Component extends React.Component<Props, State> {
             <>
             <DialogTitle>{`Select ${this.state.cardType}`}</DialogTitle>
             <DialogContent>
+                <TextField
+                    style={{ marginBottom: '8px' }}
+                    fullWidth
+                    label="Search"
+                    value={this.state.searchValue}
+                    onChange={e => this.setState({ searchValue: e.target.value })}
+                />
                 <div className={this.props.classes.buttonContainer}>
                     {this.state.buttons
+                        .filter(x => !this.state.searchValue || x.includes(this.state.searchValue))
                         .map(caption => (
                             <Button
                                 raised
