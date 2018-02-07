@@ -1,5 +1,5 @@
 import { Record } from 'immutable';
-import TemplateString from '../lib/TemplateString';
+import * as tmpl from 'blueimp-tmpl';
 
 export interface CardTag {
     id: string;
@@ -46,9 +46,8 @@ export class CardTagRecord extends Record<CardTag>({
         return this.target ? this.realQuantity * this.amount : 0;
     }
     getFormattedDisplay(displayFormat: string) {
-        if (!displayFormat || !displayFormat.includes('$')) { return this.display; }
-        let template = TemplateString(displayFormat);
-        return template(this);
+        if (!displayFormat || !displayFormat.includes('{%')) { return this.display; }
+        return tmpl(displayFormat, this);
     }
     getInQuantityFor(location?: string): number {
         location = location && location.toLowerCase();

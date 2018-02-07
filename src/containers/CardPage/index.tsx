@@ -249,7 +249,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
                 >
                     {this.state.operations.map(option => (
                         <MenuItem
-                            key={option.type}
+                            key={'cmd_' + option.type}
                             onClick={e => {
                                 this.handleOperation(option);
                                 this.handleMenuClose();
@@ -259,7 +259,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
                         </MenuItem>
                     ))}
                     {this.state.selectedCard.tags.count() > 0 && <Divider />}
-                    {this.state.selectedCard.tags.map(tag => {
+                    {this.state.selectedCard.tags.valueSeq().map(tag => {
                         return (
                             <MenuItem
                                 key={'edit_' + tag.name}
@@ -277,7 +277,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
                     {this.state.buttons.length > 0 && <Divider />}
                     {this.state.buttons.map(button => (
                         <MenuItem
-                            key={button.caption}
+                            key={'btn_' + button.caption}
                             onClick={e => {
                                 this.handleButtonClick(this.state.selectedCard, button);
                                 this.handleMenuClose();
