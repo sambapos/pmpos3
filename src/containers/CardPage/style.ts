@@ -24,14 +24,14 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         // marginLeft: spacing.unit,
         // paddingBottom: spacing.unit,
         // marginBottom: spacing.unit,
-        borderColor: (<any>palette).divider,
+        borderColor: palette.divider,
         backgroundColor: palette.background.default,
         display: 'flex',
         flexFlow: 'column',
         paddingLeft: spacing.unit
     },
     leaf: {
-        backgroundColor: palette.common.fullWhite,
+        backgroundColor: palette.common.white,
         paddingLeft: spacing.unit,
     },
     subCards: {
@@ -55,7 +55,7 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         display: 'flex',
         flexWrap: 'wrap',
         paddingTop: spacing.unit / 2,
-        borderBottom: '1px solid ' + (<any>palette).divider,
+        borderBottom: '1px solid ' + palette.divider,
         '&:hover': {
             background: palette.grey.A100
         }
@@ -83,7 +83,7 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     },
     indexHeader: {
         padding: spacing.unit,
-        borderBottom: '1px solid ' + (<any>palette).divider,
+        borderBottom: '1px solid ' + palette.divider,
     },
     content: {
         height: '100%',

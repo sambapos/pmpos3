@@ -17,7 +17,7 @@ const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
         <div className={props.classes.tagSection}>
             {
                 props.card.tags.entrySeq().map(([k, v]) => {
-
+                    let tagTotal = props.card.getTagTotal(v);
                     let st = v.locationDisplay;
                     return (
                         <div
@@ -36,8 +36,11 @@ const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
                                 </div>}
                             </div>
                             <div
-                                style={{ fontSize: '1.2em', padding: 8, color: v.balance > 0 ? 'inherit' : 'red' }}>
-                                {v.totalAmountDisplay}
+                                style={{
+                                    fontSize: '1.2em', padding: 8,
+                                    color: tagTotal < 0 ? 'red' : 'inherit'
+                                }}>
+                                {tagTotal !== 0 ? Math.abs(tagTotal).toFixed(2) : ''}
                             </div>
                         </div>);
                 })

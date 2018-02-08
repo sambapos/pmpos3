@@ -20,18 +20,31 @@ export class CardRecord extends Record<Card>({
     tags: IMap<string, CardTagRecord>(),
     cards: IMap<string, CardRecord>()
 }) {
+    getTagTotal(tag: CardTagRecord): number {
+        let val = 0;
+        for (const key of this.tags.keySeq().toArray()) {
+            const t = this.tags.get(key) as CardTagRecord;
+            let b = t.getDebit(this.subCardDebit + val) - t.getCredit(this.subCardCredit + val);
+            if (t.id === tag.id) {
+                return b;
+            }
+            val = val + b;
+        }
+        return val;
+    }
+
     get debit(): number {
-        let tagDebit = this.tags.reduce((x, y) => x + y.debit, 0);
+        let tagDebit = this.tags.reduce((x, y) => x + y.getDebit(this.subCardDebit + x), 0);
         return tagDebit + this.subCardDebit;
     }
 
     get credit(): number {
-        let tagCredit = this.tags.reduce((x, y) => x + y.credit, 0);
+        let tagCredit = this.tags.reduce((x, y) => x + y.getCredit(this.subCardCredit + x), 0);
         return tagCredit + this.subCardCredit;
     }
 
     get balance(): number {
-        return this.debit - this.credit;
+        return Math.round((this.debit - this.credit) * 100) / 100;
     }
 
     get debitDisplay(): string {
@@ -58,6 +71,10 @@ export class CardRecord extends Record<Card>({
 
     get subCardCredit(): number {
         return this.cards.reduce((x, y) => x + y.credit, 0);
+    }
+
+    get subCardBalance(): number {
+        return this.subCardDebit - this.subCardCredit;
     }
 
     get display(): string {

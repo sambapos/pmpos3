@@ -63,12 +63,12 @@ class Component extends React.Component<Props, State> {
 
             return (
                 <div key={key}>
-                    <Typography type="body2">{key}</Typography>
+                    <Typography variant="body2">{key}</Typography>
                     <div className={this.props.classes.buttonContainer}>
                         {(Array(...value).map(item => (
                             <Button
                                 color={this.state.parameterState.get(key) === item ? 'secondary' : 'default'}
-                                key={item} raised className={this.props.classes.selectionButton}
+                                key={item} variant="raised" className={this.props.classes.selectionButton}
                                 onClick={e => this.setState({
                                     parameterState: this.state.parameterState.set(key, item)
                                 })}

@@ -8,6 +8,7 @@ export interface CardTag {
     quantity: number;
     unit: string;
     amount: number;
+    rate: number;
     source: string;
     target: string;
 }
@@ -19,14 +20,11 @@ export class CardTagRecord extends Record<CardTag>({
     quantity: 0,
     unit: '',
     amount: 0,
+    rate: 0,
     source: '',
     target: ''
 }) {
-    get balance(): number { return (this.debit - this.credit); }
-    get totalAmountDisplay(): string {
-        return this.amount !== 0
-            ? (this.amount * this.realQuantity).toFixed(2) : '';
-    }
+
     get display(): string {
         // let b = this.balance !== 0 ? this.balance : '';
         let u = this.unit ? this.unit : '';
@@ -39,11 +37,20 @@ export class CardTagRecord extends Record<CardTag>({
     get realQuantity(): number {
         return this.quantity !== 0 ? this.quantity : 1;
     }
-    get debit(): number {
-        return this.source ? this.realQuantity * this.amount : 0;
+    getDebit(parentAmount: number): number {
+        return this.source ? this.realQuantity * this.getRealAmount(parentAmount) : 0;
     }
-    get credit(): number {
-        return this.target ? this.realQuantity * this.amount : 0;
+    getCredit(parentAmount: number): number {
+        return this.target ? this.realQuantity * this.getRealAmount(parentAmount) : 0;
+    }
+    getRealAmount(parentAmount: number): number {
+        if (this.rate !== 0) {
+            let amount = ((parentAmount * this.rate) / 100) + this.amount;
+            let result = Math.round(amount * 100) / 100;
+            console.log('calc', this.name, result);
+            return result;
+        }
+        return this.amount;
     }
     getFormattedDisplay(displayFormat: string) {
         if (!displayFormat || !displayFormat.includes('{%')) { return this.display; }
@@ -73,7 +80,8 @@ export class CardTagRecord extends Record<CardTag>({
         return this.source || this.target ? `${this.source} > ${this.target}` : '';
     }
 
-    get balanceDisplay(): string {
-        return this.balance !== 0 ? this.balance.toFixed(2) : '';
-    }
+    // getBalanceDisplay(parentAmount: number): string {
+    //     let balance = this.getBalance(parentAmount);
+    //     return balance !== 0 ? balance.toFixed(2) : '';
+    // }
 }

@@ -54,7 +54,7 @@ class NavPage extends React.Component<Props> {
             <div>
                 <div className={classes.drawerHeader} >
                     <Typography
-                        type="title"
+                        variant="title"
                         color="inherit"
                         className={classes.drawerCaption}
                     >
@@ -87,7 +87,7 @@ class NavPage extends React.Component<Props> {
                 <div className={classes.appFrame}>
                     <Hidden mdUp>
                         <Drawer
-                            type="temporary"
+                            variant="temporary"
                             anchor="left"
                             open={this.props.drawerOpen}
                             classes={{
@@ -100,7 +100,7 @@ class NavPage extends React.Component<Props> {
                     </Hidden>
                     <Hidden smDown>
                         <Drawer
-                            type="persistent"
+                            variant="persistent"
                             open={this.props.drawerOpen}
                             anchor="left"
                             classes={{

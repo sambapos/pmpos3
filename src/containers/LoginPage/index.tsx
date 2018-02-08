@@ -97,7 +97,7 @@ class LoginPage extends React.Component<PageProps, { venueName: string }> {
                     ]}
                 />
                 <div className={this.props.classes.content}>
-                    <Typography type="headline">Welcome to PM-POS</Typography>
+                    <Typography variant="headline">Welcome to PM-POS</Typography>
 
                     <LoginControl
                         onPinEntered={pin => {

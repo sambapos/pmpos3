@@ -36,7 +36,7 @@ class TopBar extends React.Component<Props, {}> {
                 <Toolbar disableGutters={!this.props.drawerOpen} className={this.props.classes.toolbar}>
                     <MenuButton command={menuCommand} />
                     <Typography
-                        type="title"
+                        variant="title"
                         color="inherit"
                     >
                         {this.props.title}

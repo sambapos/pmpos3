@@ -66,7 +66,7 @@ class Component extends React.Component<Props, State> {
                         .filter(x => !this.state.searchValue || x.includes(this.state.searchValue))
                         .map(caption => (
                             <Button
-                                raised
+                                variant="raised"
                                 className={this.props.classes.selectionButton}
                                 color={caption === this.state.selectedTag ? 'secondary' : 'default'}
                                 key={'b_' + caption}

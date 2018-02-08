@@ -15,13 +15,13 @@ export default class extends React.Component<
     },
     {
         name: string, value: string, quantity: string, unit: string,
-        amount: string, source: string, target: string
+        amount: string, rate: string, source: string, target: string
     }> {
     constructor(props: any) {
         super(props);
         this.state = {
             name: '', value: '', quantity: '', unit: '',
-            amount: '', source: '', target: ''
+            amount: '', rate: '', source: '', target: ''
         };
     }
     componentDidMount() {
@@ -32,6 +32,7 @@ export default class extends React.Component<
                 quantity: String(this.props.current.quantity),
                 unit: this.props.current.unit,
                 amount: String(this.props.current.amount),
+                rate: String(this.props.current.rate),
                 source: this.props.current.source,
                 target: this.props.current.target
             });
@@ -78,6 +79,13 @@ export default class extends React.Component<
                     />
                     <TextField
                         fullWidth
+                        label="Rate"
+                        type="number"
+                        value={this.state.rate}
+                        onChange={e => this.setState({ rate: e.target.value })}
+                    />
+                    <TextField
+                        fullWidth
                         label="Source"
                         value={this.state.source}
                         onChange={e => this.setState({ source: e.target.value })}
@@ -102,6 +110,7 @@ export default class extends React.Component<
                                     quantity: Number(this.state.quantity),
                                     unit: this.state.unit,
                                     amount: Number(this.state.amount),
+                                    rate: Number(this.state.rate),
                                     source: this.state.source,
                                     target: this.state.target
                                 });

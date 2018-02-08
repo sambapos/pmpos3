@@ -18,7 +18,7 @@ class HomePage extends React.Component<PageProps> {
             <div>
                 <TopBar title="About PM-POS 3.0" />
                 <Card style={{ margin: '8px', padding: '8px' }}>
-                    <Typography type="body2">
+                    <Typography variant="body2">
                         This project contains PoC's and Tests to demonstrate
                     some features of future SambaPOS versions.
                 </Typography>

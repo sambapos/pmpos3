@@ -14,7 +14,7 @@ const LoginButton = (props: Props) => {
     return (
         <Button
             className={props.classes.loginButton}
-            raised
+            variant="raised"
             color="primary"
             onClick={(e) => props.onClick(props.value)}
         >{!props.icon ? props.value : <i className="material-icons">{props.icon}</i>}

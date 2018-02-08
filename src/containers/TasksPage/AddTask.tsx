@@ -20,7 +20,7 @@ class AddTask extends React.Component<Props, { title: string }> {
         return (
             <Card className={this.props.classes.card}>
                 <CardContent>
-                    <Typography type="headline">
+                    <Typography variant="headline">
                         Add a Task
                         </Typography>
                     <TextField

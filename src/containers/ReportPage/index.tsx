@@ -93,8 +93,8 @@ class ReportPage extends React.Component<PageProps, {
 
                 <div className={this.props.classes.footer}>
                     <ListItem>
-                        <Typography style={{ flex: 1 }} type="title">Balance</Typography>
-                        <Typography type="title">
+                        <Typography style={{ flex: 1 }} variant="title">Balance</Typography>
+                        <Typography variant="title">
                             {this.state.tags
                                 .reduce((r, t) => r + t.getBalanceFor(this.state.search), 0).toFixed(2)}
                         </Typography>
