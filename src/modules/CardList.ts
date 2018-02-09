@@ -85,7 +85,11 @@ class CardList {
     }
 
     getTags(filters: string[]): List<CardTagData> {
-        return this.cards.reduce((r, card) => this.reduceTags(card, r, filters), List<CardTagData>());
+        return this.getTagsFrom(filters, this.cards);
+    }
+
+    getTagsFrom(filters: string[], cards: IMap<string, CardRecord>): List<CardTagData> {
+        return cards.reduce((r, card) => this.reduceTags(card, r, filters), List<CardTagData>());
     }
 
     getCardsByType(typeId: string): List<CardRecord> {

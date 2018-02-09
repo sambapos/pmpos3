@@ -12,6 +12,7 @@ export default (props: ActionItemProps) => {
         <div>
             <Divider />
             <Typography variant="body2">{props.action.actionType}</Typography>
+            <Typography variant="body1">i:{props.action.id}</Typography>
             <Typography variant="body1">ci:{props.action.cardId}</Typography>
             {props.action.concurrencyData
                 && <Typography variant="body1">cd:{`${JSON.stringify(props.action.concurrencyData)}`}</Typography>}

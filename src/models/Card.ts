@@ -1,5 +1,5 @@
 import { Record, Map as IMap, List } from 'immutable';
-import { CardTagRecord } from './CardTag';
+import { CardTagRecord, CardTag } from './CardTag';
 
 export interface Card {
     id: string;
@@ -24,7 +24,9 @@ export class CardRecord extends Record<Card>({
         let val = 0;
         for (const key of this.tags.keySeq().toArray()) {
             const t = this.tags.get(key) as CardTagRecord;
-            let b = t.getDebit(this.subCardDebit + val) - t.getCredit(this.subCardCredit + val);
+            // let d = t.getDebit(this.subCardDebit + val);
+            // let c = t.getCredit(this.subCardCredit + val);
+            let b = t.getRealAmount(this.subCardBalance + val) * t.realQuantity;
             if (t.id === tag.id) {
                 return b;
             }
@@ -120,5 +122,20 @@ export class CardRecord extends Record<Card>({
     getTag(name: string, defaultValue: any): {} {
         let tag = this.tags.find(v => v.name === name);
         return tag ? tag.value : defaultValue;
+    }
+
+    sub(id: string, f?: (c: CardRecord) => CardRecord): CardRecord {
+        let card = new CardRecord({ id });
+        if (f) {
+            card = f(card);
+        }
+        return this.setIn(['cards', id], card);
+    }
+
+    tag(tag: string | Partial<CardTag>, value?: string): CardRecord {
+        if (typeof tag === 'string') {
+            return this.setIn(['tags', tag], new CardTagRecord({ name: tag, value }));
+        }
+        return this.setIn(['tags', tag.name], new CardTagRecord(tag));
     }
 }

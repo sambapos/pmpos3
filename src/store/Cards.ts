@@ -122,7 +122,11 @@ export const epic = (
             let cardId = action.action.actionType === 'CREATE_CARD'
                 ? action.action.data.id : action.action.cardId;
             let card = root.getCard(cardId) || root;
-            let actions = await RuleManager.getNextActions({ action: action.action, root, card });
+            let actions = await RuleManager.getNextActions(
+                action.action.actionType,
+                action.action.data,
+                action.action.cardId,
+                root, card);
             return Observable.create(observer =>
                 createObserver({ root, card, action: action.action }, actions, observer)
                     .then(() => observer.complete())

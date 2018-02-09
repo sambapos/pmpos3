@@ -3,7 +3,6 @@ import { ActionRecord } from '../models/Action';
 import { Map as IMap } from 'immutable';
 import { RuleRecord } from '../models/Rule';
 import { cardOperations } from './CardOperations/index';
-import { ActionState } from '../models/ActionState';
 import * as nools from 'nools-ts';
 import FlowContainer from 'nools-ts/flow-container';
 import { CardRecord } from '../models/Card';
@@ -59,11 +58,9 @@ class ResultType {
 class RuleManager {
     state: Map<string, any>;
     flows: FlowContainer[];
-    result: ResultType;
 
     constructor() {
         this.state = new Map<string, any>();
-        this.result = new ResultType;
         this.flows = [];
     }
 
@@ -86,13 +83,13 @@ class RuleManager {
         const defines = new Map();
         defines.set('State', ActionData);
         defines.set('Action', ActionType);
+        defines.set('Result', ResultType);
         let filteredRules = rules
             .filter(x => !x.name.startsWith('_') && x.content.includes('when'))
             .valueSeq().toArray().filter(rule => this.testRule(rule));
         this.flows = filteredRules.map(rule => {
             return nools.compile(rule.content, {
-                define: defines,
-                scope: new Map<string, any>([['r', this.result]])
+                define: defines
             });
         });
     }
@@ -102,6 +99,7 @@ class RuleManager {
             const defines = new Map();
             defines.set('State', ActionData);
             defines.set('Action', ActionType);
+            defines.set('Result', ResultType);
             nools.compile(rule.content, {
                 define: defines,
                 scope: new Map<string, any>([['r', []]])
@@ -114,11 +112,14 @@ class RuleManager {
         }
     }
 
-    getNewActionsFrom(acts: ActionType[], actionState: ActionState) {
+    getNewActionsFrom(acts: ActionType[], cardId: string) {
         let actions: ActionRecord[] = [];
-        let lastCardId = actionState.action.cardId;
-        for (const act of this.result.actions) {
+        let lastCardId = cardId;
+        for (const act of acts) {
             let processedData = cardOperations.fixData(act.type, { ...act.data });
+            if (!processedData.id) {
+                processedData.id = shortid.generate();
+            }
             actions.push(new ActionRecord({
                 id: shortid.generate(),
                 actionType: act.type,
@@ -132,20 +133,28 @@ class RuleManager {
         return actions;
     }
 
-    getNextActions(actionState: ActionState): Promise<ActionRecord[]> {
+    async getNextActions(
+        actionType: string, actionData: any,
+        actionCardId: string,
+        card: CardRecord, root: CardRecord)
+        : Promise<ActionRecord[]> {
         return new Promise<ActionRecord[]>(resolve => {
-            this.result.clear();
-            let promises = this.flows.map(flow => {
+            let promises = this.flows.map(async flow => {
+                let result = new ResultType();
                 let session = flow.getSession(
                     new ActionData(
-                        new ActionType(actionState.action.actionType, actionState.action.data),
-                        actionState.card, actionState.root, this.state
-                    )
+                        new ActionType(actionType, actionData),
+                        card, root, this.state
+                    ),
+                    result
                 );
-                return session.match();
+                await session.match();
+                session.dispose();
+                return result;
             });
-            Promise.all(promises).then(() => {
-                resolve(this.getNewActionsFrom(this.result.actions, actionState));
+            Promise.all(promises).then(results => {
+                let result = results.reduce((r, a) => r.concat(a.actions), [] as ActionType[]);
+                resolve(this.getNewActionsFrom(result, actionCardId));
             });
         });
     }

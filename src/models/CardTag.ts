@@ -47,7 +47,6 @@ export class CardTagRecord extends Record<CardTag>({
         if (this.rate !== 0) {
             let amount = ((parentAmount * this.rate) / 100) + this.amount;
             let result = Math.round(amount * 100) / 100;
-            console.log('calc', this.name, result);
             return result;
         }
         return this.amount;

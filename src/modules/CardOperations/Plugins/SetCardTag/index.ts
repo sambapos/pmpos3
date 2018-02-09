@@ -45,6 +45,7 @@ export default class SetCardTag extends CardOperation {
         }
         if (!Number.isNaN(Number(data.quantity))) { data.quantity = Number(data.quantity); }
         if (!Number.isNaN(Number(data.amount))) { data.amount = Number(data.amount); }
+        if (!Number.isNaN(Number(data.rate))) { data.rate = Number(data.rate); }
         return data;
     }
 
