@@ -68,3 +68,89 @@ it('calculates inventory and profit', () => {
     let rate = (profit * 100) / avgD;
     expect(rate).toEqual(20);
 });
+
+it('calculates customer balance', () => {
+    let cards = IMap<string, CardRecord>();
+
+    let invoice1 = new CardRecord({ id: '1' })
+        .tag('Name', 'A0001')
+        .tag('Customer', 'Emre Eren')
+        .sub('1a', card => card.tag({ name: 'P', value: 'Kola', quantity: 2, amount: 6, source: 'Bar' }))
+        .sub('1b', card => card.tag({ name: 'P', value: 'Çay', quantity: 1, amount: 4, source: 'Bar' }));
+
+    cards = cards.set(invoice1.id, invoice1);
+
+    expect(invoice1.cards.count()).toEqual(2);
+    expect(invoice1.balance).toEqual(16);
+
+    let invoice2 = new CardRecord({ id: '2' })
+        .tag('Name', 'A0002')
+        .tag('Customer', 'Emre Eren')
+        .sub('2a', card => card.tag({ name: 'P', value: 'Fanta', quantity: 2, amount: 6, source: 'Bar' }))
+        .sub('2b', card => card.tag({ name: 'P', value: 'Çay', quantity: 1, amount: 4, source: 'Bar' }));
+
+    cards = cards.set(invoice2.id, invoice2);
+
+    let invoice3 = new CardRecord({ id: '3' })
+        .tag('Name', 'A0003')
+        .tag('Customer', 'Hasan Bey')
+        .sub('3a', card => card.tag({ name: 'P', value: 'Fanta', quantity: 2, amount: 6, source: 'Bar' }))
+        .sub('3b', card => card.tag({ name: 'P', value: 'Çay', quantity: 1, amount: 4, source: 'Bar' }));
+
+    cards = cards.set(invoice3.id, invoice3);
+
+    expect(invoice2.balance).toEqual(16);
+    expect(invoice2.getTag('Customer', '')).toEqual('Emre Eren');
+
+    expect(cards.count()).toEqual(3);
+    let tags = CardList.getTagsFrom(['Emre Eren'], cards);
+    expect(tags.count()).toEqual(2);
+
+    let debit = tags.reduce((r, t) => r += t.getDebitFor('Emre Eren'), 0);
+    let credit = tags.reduce((r, t) => r += t.getCreditFor('Emre Eren'), 0);
+    expect(debit).toEqual(32);
+    expect(credit).toEqual(0);
+
+    invoice1 = invoice1.sub('1c', card => card.tag(
+        { name: 'O', value: 'Nakit', quantity: 16, unit: 'TL', amount: 1, target: 'Kasa' }));
+    expect(invoice1.balance).toEqual(0);
+    cards = cards.set(invoice1.id, invoice1);
+
+    tags = CardList.getTagsFrom(['Emre Eren'], cards);
+    debit = tags.reduce((r, t) => r += t.getDebitFor('Emre Eren'), 0);
+    credit = tags.reduce((r, t) => r += t.getCreditFor('Emre Eren'), 0);
+    expect(debit).toEqual(32);
+    expect(credit).toEqual(16);
+
+    invoice2 = invoice2.sub('2c', card => card.tag(
+        { name: 'O', value: 'Account', amount: 16, target: 'Emre Eren' }
+    ));
+    expect(invoice2.balance).toEqual(0);
+    cards = cards.set(invoice2.id, invoice2);
+
+    tags = CardList.getTagsFrom(['Emre Eren'], cards);
+    debit = tags.reduce((r, t) => r += t.getDebitFor('Emre Eren'), 0);
+    credit = tags.reduce((r, t) => r += t.getCreditFor('Emre Eren'), 0);
+    expect(debit).toEqual(48);
+    expect(credit).toEqual(32);
+
+    let receipt1 = new CardRecord({ id: '4' })
+        .tag('Name', 'R0001')
+        .sub('R1b', card => card.tag(
+            { name: 'P', value: 'Nakit', quantity: 16, amount: 1, unit: 'TL', source: 'Emre Eren', target: 'Kasa' }));
+    cards = cards.set(receipt1.id, receipt1);
+    expect(receipt1.balance).toEqual(0);
+
+    tags = CardList.getTagsFrom(['Emre Eren'], cards);
+    expect(tags.count()).toEqual(4);
+
+    debit = tags.reduce((r, t) => r += t.getDebitFor('Emre Eren'), 0);
+    credit = tags.reduce((r, t) => r += t.getCreditFor('Emre Eren'), 0);
+    expect(debit).toEqual(48);
+    expect(credit).toEqual(48);
+
+    tags = CardList.getTagsFrom(['Kasa'], cards);
+    debit = tags.reduce((r, t) => r += t.getDebitFor('Kasa'), 0);
+    expect(debit).toEqual(32);
+
+});
