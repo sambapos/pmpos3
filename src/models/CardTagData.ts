@@ -72,6 +72,7 @@ export default class {
         if (this.isAccount(filter)) {
             return this.isTargetAccount(filter) ? Math.abs(this.card.getTagTotal(this.tag)) : 0;
         }
+        if (!this.tag.acceptsFilter(filter)) { return 0; }
         if (!this.tag.source && !this.tag.target) {
             return this.card.debit;
         }
@@ -85,6 +86,7 @@ export default class {
         if (this.isAccount(filter)) {
             return this.isSourceAccount(filter) ? Math.abs(this.card.getTagTotal(this.tag)) : 0;
         }
+        if (!this.tag.acceptsFilter(filter)) { return 0; }
         if (!this.tag.source && !this.tag.target) {
             return this.card.credit;
         }

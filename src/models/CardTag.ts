@@ -79,6 +79,13 @@ export class CardTagRecord extends Record<CardTag>({
         return this.source || this.target ? `${this.source} > ${this.target}` : '';
     }
 
+    acceptsFilter(filter: string): boolean {
+        let sv = filter.toLowerCase();
+        return (this.value.toLowerCase().includes(sv) && this.name !== 'Name')
+            || this.source.toLowerCase().includes(sv)
+            || this.target.toLowerCase().includes(sv);
+    }
+
     // getBalanceDisplay(parentAmount: number): string {
     //     let balance = this.getBalance(parentAmount);
     //     return balance !== 0 ? balance.toFixed(2) : '';

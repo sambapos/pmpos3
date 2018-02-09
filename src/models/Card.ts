@@ -97,17 +97,10 @@ export class CardRecord extends Record<Card>({
         return this.getSubCard(id);
     }
 
-    acceptsFilter(tag: CardTagRecord, filter: string): boolean {
-        let sv = filter.toLowerCase();
-        return (tag.value.toLowerCase().includes(sv) && tag.name !== 'Name')
-            || tag.source.toLowerCase().includes(sv)
-            || tag.target.toLowerCase().includes(sv);
-    }
-
     getTags(filters: string[]): { filter: string, result: List<CardTagRecord> } {
         let tags = this.tags.valueSeq();
         for (const filter of filters) {
-            let filteredTags = tags.filter(t => this.acceptsFilter(t, filter));
+            let filteredTags = tags.filter(t => t.acceptsFilter(filter));
             if (filteredTags.count() > 0) {
                 return { filter, result: List<CardTagRecord>(filteredTags) };
             }
