@@ -33,6 +33,7 @@ class SubCards extends React.Component<PageProps, { tagCount: number }> {
 
     componentDidMount() {
         this.debouncedScrollBottom = _.debounce(this.scroll_bottom);
+        this.debouncedScrollBottom();
     }
 
     scroll_bottom() {
