@@ -32,22 +32,22 @@ class ReportPage extends React.Component<PageProps, {
         };
     }
 
-    loadCards(searchValue: string): IList<CardTagData> {
-        return CardList.getTags([searchValue]);
+    loadCards(searchValue: string[]): IList<CardTagData> {
+        return CardList.getTags(searchValue);
     }
 
     getTables() {
         return (
             <div>
+                <LocationTable
+                    tags={this.state.tags}
+                    searchValue={this.state.search}
+                />
                 <AccountTable
                     tags={this.state.tags}
                     searchValue={this.state.search}
                 />
                 <InventoryTable
-                    tags={this.state.tags}
-                    searchValue={this.state.search}
-                />
-                <LocationTable
                     tags={this.state.tags}
                     searchValue={this.state.search}
                 />
@@ -83,8 +83,15 @@ class ReportPage extends React.Component<PageProps, {
                             edit: e.target.value,
                             tags: this.state.tags.count() > 0 ? this.state.tags.clear() : this.state.tags
                         })}
-                        onKeyDown={e => e.key === 'Enter'
-                            && this.setState({ search: this.state.edit, tags: this.loadCards(this.state.edit) })}
+                        onKeyDown={e => {
+                            if (e.key === 'Enter') {
+                                let parts = this.state.edit.split(',');
+                                this.setState({
+                                    search: parts[0],
+                                    tags: this.loadCards(parts)
+                                });
+                            }
+                        }}
                     />
                 </div>
                 <div className={this.props.classes.content}>
