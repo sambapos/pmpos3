@@ -4,6 +4,8 @@ PM-POS is an experimental POS application that aims to solve operational problem
 
 Note: _Unlike previous PM-POS projects this project is a standalone POS application and will not need SambaPOS to operate._
 
+https://emreeren.github.io/pmpos
+
 ## Primary Objectives
 
 * PM-POS should be able to work offline under poor local networking conditions.
@@ -14,10 +16,10 @@ Note: _Unlike previous PM-POS projects this project is a standalone POS applicat
 
 ## Things we want to do
 
-1. Create a simplified data structure to record all financial and inventory transactions.
-2. Create P2P networks for local terminals to generate centeralized local ledgers to allow terminals to operate without need for connecting to a server.
-3. Create a decenteralized public ledger network to integrate local ledgers.
-4. Create a cyrptocurrency that will be used to operate public ledgers. That currency can also be useful to create loyalty and payment solutions.
+* Create a simplified data structure to record all financial and inventory transactions.
+* Create P2P networks for local terminals to generate centeralized local ledgers to allow terminals to operate without need for connecting to a server.
+* Create a decenteralized public ledger network to integrate local ledgers.
+* Create a cyrptocurrency that will be used to operate public ledgers. That currency can also be useful to create loyalty and payment solutions.
 
 ## Related projects
 
