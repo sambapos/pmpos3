@@ -4,7 +4,7 @@ PM-POS is an experimental POS application that aims to solve operational problem
 
 Note: _Unlike previous PM-POS projects this project is a standalone POS application and will not need SambaPOS to operate._
 
-https://emreeren.github.io/pmpos
+Demo: https://emreeren.github.io/pmpos
 
 ## Primary Objectives
 
@@ -21,9 +21,9 @@ https://emreeren.github.io/pmpos
 * Create a decenteralized public ledger network to integrate local ledgers.
 * Create a cyrptocurrency that will be used to operate public ledgers. That currency can also be useful to create loyalty and payment solutions.
 
-## Related projects
+## Things we used to create PM-POS
 
-y-js, react, redux, redux-observable, nools-ts, material-ui, typescript
+y-js, react, redux, redux-observable, nools-ts, material-ui, typescript, immutablejs
 
 ## Cards & Tags
 
