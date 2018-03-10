@@ -1,18 +1,10 @@
-import * as IPFS from 'ipfs';
-import Y from 'yjs/dist/y';
-import yMemory from 'y-memory/dist/y-memory';
-import yArray from 'y-array/dist/y-array';
-import yMap from 'y-map/dist/y-map';
-import yIndexedDb from 'y-indexeddb/dist/y-indexeddb';
-import * as ipfsConnector from '../lib/y-ipfs-connector';
+var Y = require('yjs');
+require('y-array/y-array.js');
+require('y-websockets-client')(Y);
+require('y-memory');
+require('y-map');
 
 // import ipfsConnector from 'y-ipfs-connector';
-
-yMemory(Y);
-yArray(Y);
-yMap(Y);
-yIndexedDb(Y);
-ipfsConnector(Y);
 
 import { ApplicationState } from './index';
 import { Commit } from '../models/Commit';
@@ -25,67 +17,35 @@ export default (
     getState: () => ApplicationState,
     cb: (protocol: any) => void) => {
 
-    const ipfs = new IPFS({
-        repo: `ipfs/PM-POS/${venueName}/${terminalId}/${user ? user : Math.random()}`,
-        EXPERIMENTAL: {
-            pubsub: true
-        },
-        config: {
-            Addresses: {
-                Swarm: [
-                    '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star'
-                ]
-            }
-        }
-    });
-
-    ipfs.once('ready', () => {
-        ipfs.id((err, info) => {
-            if (err) {
-                throw err;
-            }
-        });
-    });
-
-    Y({
-        db: {
-            name: 'indexeddb'
-        },
+    let y = new Y('chat-example', {
         connector: {
-            name: 'ipfs',
-            room: 'pmpos-' + venueName,
-            ipfs: ipfs
-        },
-        share: {
-            chat: 'Array',
-            commits: 'Array',
-            config: 'Map'
+            name: 'websockets-client',
+            url: 'http://127.0.0.1:1234'
         }
-    }).then((y) => {
-        dispatchCommitProtocol(dispatch, y.share.commits);
-        dispatchConfigProtocol(dispatch, y.share.config);
-
-        dispatchConfigEvent(dispatch, y.share.config);
-        y.share.config.observe(event => {
-            dispatchConfigEvent(dispatch, event.object);
-        });
-
-        dispatchCommitEvent(dispatch, y.share.commits.toArray());
-
-        y.share.commits.observe(event => {
-            dispatchCommitEvent(dispatch, event.values);
-        });
-
-        y.share.chat.toArray().forEach(x => dispatchChatEvent(dispatch, x));
-        y.share.chat.observe(event => {
-            if (event.type === 'insert') {
-                for (let i = 0; i < event.length; i++) {
-                    dispatchChatEvent(dispatch, event.values[i]);
-                }
-            }
-        });
-        cb(y);
     });
+
+    let chatprotocol = y.define('chat', Y.Array);
+    let commitProtocol = y.define('commits', Y.Array);
+    let configProtocol = y.define('config', Y.Map);
+
+    dispatchCommitProtocol(dispatch, commitProtocol);
+    dispatchConfigProtocol(dispatch, configProtocol);
+
+    dispatchConfigEvent(dispatch, configProtocol);
+    configProtocol.observe(event => {
+        dispatchConfigEvent(dispatch, event.target);
+    });
+
+    dispatchCommitEvent(dispatch, commitProtocol.toArray());
+    commitProtocol.observe(event => {
+        event.addedElements.forEach(x => dispatchCommitEvent(dispatch, x._content));
+    });
+
+    chatprotocol.toArray().forEach(x => dispatchChatEvent(dispatch, x));
+    chatprotocol.observe(event => {
+        event.addedElements.forEach(x => dispatchChatEvent(dispatch, x._content[0]));
+    });
+    cb(y);
 };
 
 function dispatchConfigProtocol(dispatch: any, protocol: any) {

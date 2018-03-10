@@ -28,7 +28,8 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         backgroundColor: palette.background.default,
         display: 'flex',
         flexFlow: 'column',
-        paddingLeft: spacing.unit
+        paddingLeft: spacing.unit,
+        flex: 1
     },
     leaf: {
         backgroundColor: palette.common.white,
@@ -36,6 +37,8 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     },
     subCards: {
         overflow: 'auto',
+        flex: '1 1 auto',
+        height: '1px'
     },
     tagSection: {
         display: 'inline-flex',

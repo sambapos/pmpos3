@@ -125,7 +125,7 @@ export const actionCreators = {
                             }
                         );
                     } catch (error) {
-                        fail(error);
+                        console.log(error);
                     }
                 })
             });
