@@ -9,7 +9,6 @@ import { ConnectedRouter } from 'react-router-redux';
 import { createBrowserHistory } from 'history';
 import configureStore from './configureStore';
 import * as RoutesModule from './routes';
-import { saveState } from './localStorage';
 import * as shortid from 'shortid';
 
 let routes = RoutesModule.routes;
@@ -17,10 +16,6 @@ let routes = RoutesModule.routes;
 const history = createBrowserHistory();
 const initialState = undefined; // loadState();
 const store = configureStore(history, initialState);
-
-store.subscribe(() => {
-  saveState(store.getState());
-});
 
 let terminalId = localStorage.getItem('terminalId');
 if (!terminalId) {

@@ -115,7 +115,7 @@ export const actionCreators = {
                 type: 'CONNECT_PROTOCOL',
                 terminalId,
                 user,
-                payload: new Promise<any>(resolve => {
+                payload: new Promise<any>((resolve, reject) => {
                     try {
                         configureProtocol(
                             terminalId, venueName, user,
@@ -125,7 +125,7 @@ export const actionCreators = {
                             }
                         );
                     } catch (error) {
-                        console.log(error);
+                        reject(error);
                     }
                 })
             });

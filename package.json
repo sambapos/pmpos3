@@ -7,10 +7,8 @@
     "blueimp-tmpl": "^3.11.0",
     "history": "^4.7.2",
     "immutable": "^4.0.0-rc.9",
-    "ipfs-pubsub-room": "^1.1.5",
     "material-ui": "^1.0.0-beta.36",
     "moment": "^2.21.0",
-    "nools-ts": "^2.3.3",
     "react": "^16.2.0",
     "react-ace": "^5.9.0",
     "react-autosuggest": "^9.3.4",
@@ -25,8 +23,6 @@
     "redux-thunk": "^2.2.0",
     "rxjs": "^5.5.6",
     "shortid": "^2.2.8",
-    "transit-immutable-js": "^0.7.0",
-    "transit-js": "^0.8.846",
     "typeface-roboto": "0.0.45",
     "y-array": "^11.0.0-5",
     "y-indexeddb": "^9.0.0-5",
@@ -39,7 +35,9 @@
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build -b master -r https://github.com/emreeren/emreeren.github.io.git"
   },
   "devDependencies": {
     "@types/enzyme": "^3.1.9",
@@ -57,9 +55,11 @@
     "@types/webpack-env": "^1.13.5",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "gh-pages": "^1.1.0",
     "react-addons-test-utils": "^15.6.2",
     "react-test-renderer": "^16.2.0",
     "tslint-config-prettier": "^1.9.0",
     "typescript": "^2.7.2"
-  }
+  },
+  "homepage": "https://emreeren.github.io"
 }

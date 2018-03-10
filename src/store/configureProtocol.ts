@@ -17,10 +17,10 @@ export default (
     getState: () => ApplicationState,
     cb: (protocol: any) => void) => {
 
-    let y = new Y('chat-example', {
+    let y = new Y(venueName, {
         connector: {
             name: 'websockets-client',
-            url: 'http://127.0.0.1:1234'
+            url: 'https://my-websockets-server.herokuapp.com/'
         }
     });
 

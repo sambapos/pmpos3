@@ -3,8 +3,7 @@ import { ActionRecord } from '../models/Action';
 import { Map as IMap } from 'immutable';
 import { RuleRecord } from '../models/Rule';
 import { cardOperations } from './CardOperations/index';
-import * as nools from 'nools-ts';
-import FlowContainer from 'nools-ts/flow-container';
+import * as Nools from '../lib/nools-ts.min';
 import { CardRecord } from '../models/Card';
 import CardList from './CardList';
 
@@ -57,7 +56,7 @@ class ResultType {
 
 class RuleManager {
     state: Map<string, any>;
-    flows: FlowContainer[];
+    flows: any[];
 
     constructor() {
         this.state = new Map<string, any>();
@@ -88,9 +87,10 @@ class RuleManager {
             .filter(x => !x.name.startsWith('_') && x.content.includes('when'))
             .valueSeq().toArray().filter(rule => this.testRule(rule));
         this.flows = filteredRules.map(rule => {
-            return nools.compile(rule.content, {
+            let compiled = Nools.compile(rule.content, {
                 define: defines
             });
+            return compiled;
         });
     }
 
@@ -100,7 +100,7 @@ class RuleManager {
             defines.set('State', ActionData);
             defines.set('Action', ActionType);
             defines.set('Result', ResultType);
-            nools.compile(rule.content, {
+            Nools.compile(rule.content, {
                 define: defines,
                 scope: new Map<string, any>([['r', []]])
             });
