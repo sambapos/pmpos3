@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as ConfigStore from '../../store/Config';
 import { RouteComponentProps } from 'react-router';
-import { WithStyles, List, ListItem } from 'material-ui';
+import { WithStyles, List, ListItem, Paper } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import { Map as IMap } from 'immutable';
@@ -62,11 +62,11 @@ class CardTypesPage extends React.Component<PageProps, {}> {
                     secondaryCommands={this.getSecondaryCommands()}
                 />
 
-                <div className={this.props.classes.content}>
+                <Paper className={this.props.classes.content}>
                     <List>
                         {this.renderCards(this.props.cardTypes.valueSeq().toArray())}
                     </List>
-                </div>
+                </Paper>
             </div>
         );
     }

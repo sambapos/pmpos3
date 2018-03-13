@@ -8,10 +8,10 @@ import { ApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import { CardRecord } from '../../models/Card';
-import Divider from 'material-ui/Divider/Divider';
 import ListItemText from 'material-ui/List/ListItemText';
 import { CardTypeRecord } from '../../models/CardType';
 import TextField from 'material-ui/TextField/TextField';
+import * as faker from 'faker';
 
 type PageProps =
     {
@@ -48,14 +48,18 @@ class CardsPage extends React.Component<PageProps, State> {
     }
 
     createTestCards() {
-        for (let index = 0; index < 100; index++) {
+        for (let index = 0; index < 500; index++) {
             this.props.addCard(this.props.currentCardType);
-            for (let index1 = 0; index1 < 50; index1++) {
-                this.props.addPendingAction(undefined, 'SET_CARD_TAG', {
-                    name: 'Tag' + index1, value: 'Value' + index1
-                });
-            }
-            // this.props.commitCard();
+            this.props.addPendingAction(undefined, 'SET_CARD_TAG', {
+                name: 'Name', value: faker.name.findName()
+            });
+            this.props.addPendingAction(undefined, 'SET_CARD_TAG', {
+                name: 'Address', value: faker.address.streetAddress()
+            });
+            this.props.addPendingAction(undefined, 'SET_CARD_TAG', {
+                name: 'Phone', value: faker.phone.phoneNumber()
+            });
+            this.props.commitCard();
         }
     }
 
@@ -74,10 +78,27 @@ class CardsPage extends React.Component<PageProps, State> {
                 }).toArray()
             },
             {
-                icon: 'swap_vert',
-                onClick: () => {
-                    this.setState({ showClosedCards: !this.state.showClosedCards });
-                }
+                icon: 'new_releases',
+                menuItems: [
+                    {
+                        icon: 'Show Hidden Cards',
+                        onClick: () => {
+                            this.setState({ showClosedCards: !this.state.showClosedCards });
+                        }
+                    },
+                    {
+                        icon: 'Create Test Cards',
+                        onClick: () => {
+                            this.createTestCards();
+                        }
+                    },
+                    {
+                        icon: 'Delete Cards',
+                        onClick: () => {
+                            this.props.deleteCards(this.props.currentCardType.id);
+                        }
+                    }
+                ]
             },
             {
                 icon: 'add',
@@ -100,34 +121,34 @@ class CardsPage extends React.Component<PageProps, State> {
                 || !x.isClosed)
             .filter(x => !this.state.searchValue
                 || Boolean(x.tags.find(t => t.value.toLowerCase().includes(this.state.searchValue.toLowerCase()))))
+            .slice(0, 100)
             .map(card => {
                 return card && (
-                    <div key={card.id}>
-                        <ListItem
-                            button
-                            onClick={(e) => {
-                                this.props.history.push(process.env.PUBLIC_URL + '/card/' + card.id);
-                                e.preventDefault();
-                            }}
-                        >
-                            <ListItemText
-                                primary={card.display}
-                                secondary={card.tags.valueSeq()
-                                    .filter(tag => tag.name !== 'Name')
-                                    .map(tag => (
-                                        <span
-                                            style={{ marginRight: '8px' }}
-                                            key={tag.name}
-                                        >
-                                            {tag.display}
-                                        </span>))}
-                            />
-                            <ListItemSecondaryAction>
-                                {card.balanceDisplay}
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                        <Divider />
-                    </div>
+                    <ListItem
+                        key={card.id}
+                        button
+                        divider
+                        onClick={(e) => {
+                            this.props.history.push(process.env.PUBLIC_URL + '/card/' + card.id);
+                            e.preventDefault();
+                        }}
+                    >
+                        <ListItemText
+                            primary={card.display}
+                            secondary={card.tags.valueSeq()
+                                .filter(tag => tag.name !== 'Name')
+                                .map(tag => (
+                                    <span
+                                        style={{ marginRight: '8px' }}
+                                        key={tag.name}
+                                    >
+                                        {tag.display}
+                                    </span>))}
+                        />
+                        <ListItemSecondaryAction style={{ right: 10, fontSize: '1.1 em' }}>
+                            {card.balanceDisplay}
+                        </ListItemSecondaryAction>
+                    </ListItem>
                 );
             });
     }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as ConfigStore from '../../store/Config';
 import { RouteComponentProps } from 'react-router';
-import { WithStyles, TextField } from 'material-ui';
+import { WithStyles, TextField, Paper } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
@@ -88,7 +88,7 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
                         }
                     ]}
                 />
-                <div className={this.props.classes.content}>
+                <Paper className={this.props.classes.content}>
                     <TextField
                         label="Card Type Name"
                         value={this.state.name}
@@ -121,7 +121,7 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
                             commands: e.target.value
                         })}
                     />
-                </div >
+                </Paper >
             </div>
         );
     }

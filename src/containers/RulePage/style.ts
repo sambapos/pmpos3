@@ -24,6 +24,10 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         display: 'flex',
         overflowX: 'auto',
         flexFlow: 'column',
+        padding: spacing.unit,
+        [breakpoints.up('sm')]: {
+            padding: spacing.unit * 3
+        },
         [breakpoints.up('md')]: {
             width: '900px',
             alignSelf: 'center'

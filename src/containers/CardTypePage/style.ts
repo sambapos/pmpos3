@@ -52,17 +52,19 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     root: {
         display: 'flex',
         flexFlow: 'column',
-        flex: '1 1 auto',
-        padding: spacing.unit
+        flex: '1 1 auto'
     },
     content: {
         height: '100%',
         display: 'flex',
         overflowX: 'auto',
         flexFlow: 'column',
+        padding: spacing.unit,
         [breakpoints.up('sm')]: {
-            width: '600px',
-            alignSelf: 'center'
+            maxWidth: 600,
+            width: '100%',
+            alignSelf: 'center',
+            padding: spacing.unit * 3,
         },
     },
     footer: {

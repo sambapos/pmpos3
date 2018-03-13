@@ -247,6 +247,21 @@ export const actionCreators = {
             type: 'COMMIT_CARD'
         });
     },
+
+    deleteCards: (cardTypeId: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
+        let cards = CardList.getCardsByType(cardTypeId);
+        let state = getState().cards;
+        for (let index = state.protocol.length - 1; index >= 0; index--) {
+            const element = state.protocol.get(index);
+            let card = cards.find(c => c.id === element.cardId);
+            if (card) {
+                console.log('Delete', element, card);
+                state.protocol.delete(index);
+                CardList.cards = CardList.cards.remove(card.id);
+            }
+        }
+    },
+
     loadCard: (id: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
         dispatch({
             type: 'LOAD_CARD',

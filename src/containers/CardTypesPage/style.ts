@@ -22,7 +22,8 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         overflowX: 'auto',
         flexFlow: 'column',
         [breakpoints.up('sm')]: {
-            width: '600px',
+            width: '100%',
+            maxWidth: 600,
             alignSelf: 'center'
         },
     },

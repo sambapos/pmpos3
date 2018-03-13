@@ -33,6 +33,7 @@ export default (
 
     dispatchConfigEvent(dispatch, configProtocol);
     configProtocol.observe(event => {
+        console.log('config event', event);
         dispatchConfigEvent(dispatch, event.target);
     });
 
@@ -44,6 +45,9 @@ export default (
     chatprotocol.toArray().forEach(x => dispatchChatEvent(dispatch, x));
     chatprotocol.observe(event => {
         event.addedElements.forEach(x => dispatchChatEvent(dispatch, x._content[0]));
+        if (chatprotocol.length > 10) {
+            chatprotocol.delete(0, chatprotocol.length - 10);
+        }
     });
     cb(y);
 };

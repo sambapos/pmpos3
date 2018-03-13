@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as ConfigStore from '../../store/Config';
 import { RouteComponentProps } from 'react-router';
-import { WithStyles, TextField } from 'material-ui';
+import { WithStyles, TextField, Paper } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
@@ -83,7 +83,7 @@ export class RulePage extends React.Component<PageProps, { rule: RuleRecord }> {
                         }
                     ]}
                 />
-                <div className={this.props.classes.content}>
+                <Paper className={this.props.classes.content}>
                     <TextField
                         label="Rule Name"
                         value={this.state.rule.name}
@@ -117,7 +117,7 @@ export class RulePage extends React.Component<PageProps, { rule: RuleRecord }> {
                             showLineNumbers: false,
                             tabSize: 2,
                         }} />
-                </div >
+                </Paper >
             </div>
         );
     }
