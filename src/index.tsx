@@ -21,11 +21,11 @@ let terminalId = localStorage.getItem('terminalId');
 if (!terminalId) {
   terminalId = shortid.generate();
 }
-let venueName = localStorage.getItem('venueName');
-if (!venueName) {
-  venueName = 'DEMO';
+let networkName = localStorage.getItem('networkName');
+if (!networkName) {
+  networkName = 'DEMO';
 }
-store.dispatch({ type: 'SET_TERMINAL_ID', terminalId, venueName });
+store.dispatch({ type: 'SET_TERMINAL_ID', terminalId, networkName });
 
 function renderApp() {
   // This code starts up the React app when it runs in a browser. It sets up the routing configuration

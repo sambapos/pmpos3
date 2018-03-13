@@ -24,27 +24,27 @@ export type PageProps =
     & DispatchType
     & RouteComponentProps<{}>;
 
-class VenueDialog extends React.Component<
-    { venueName: string, onClick: (name: string) => void },
-    { venueName: string }> {
+class NetworkDialog extends React.Component<
+    { networkName: string, onClick: (name: string) => void },
+    { networkName: string }> {
 
     constructor(props: any) {
         super(props);
-        this.state = { venueName: props.venueName };
+        this.state = { networkName: props.networkName };
     }
 
     render() {
         return (
             <div>
-                <DialogTitle>Select Venue</DialogTitle>
+                <DialogTitle>Select Network</DialogTitle>
                 <DialogContent>
-                    <TextField label="Venue Name"
+                    <TextField label="Network Name"
                         margin="dense"
-                        value={this.state.venueName}
-                        onChange={e => this.setState({ venueName: e.target.value })} />
+                        value={this.state.networkName}
+                        onChange={e => this.setState({ networkName: e.target.value })} />
                     <DialogActions>
                         <Button onClick={e => {
-                            this.props.onClick(this.state.venueName);
+                            this.props.onClick(this.state.networkName);
                         }}>Submit</Button>
                     </DialogActions>
                 </DialogContent>
@@ -53,17 +53,17 @@ class VenueDialog extends React.Component<
     }
 }
 
-class LoginPage extends React.Component<PageProps, { venueName: string }> {
+class LoginPage extends React.Component<PageProps, { networkName: string }> {
     constructor(props: PageProps) {
         super(props);
-        this.state = { venueName: props.venueName };
+        this.state = { networkName: props.networkName };
     }
 
     getDialog() {
         if (this.props.loggedInUser) {
             return (
                 <DialogContent>
-                    <div>Please Reload to change the Venue</div>
+                    <div>Please Reload to change the Network</div>
                     <DialogActions>
                         <Button onClick={e => {
                             this.props.SetModalState(false);
@@ -73,10 +73,10 @@ class LoginPage extends React.Component<PageProps, { venueName: string }> {
             );
         }
         return (
-            <VenueDialog
-                venueName={this.state.venueName}
-                onClick={venueName => {
-                    this.setState({ venueName });
+            <NetworkDialog
+                networkName={this.state.networkName}
+                onClick={networkName => {
+                    this.setState({ networkName });
                     this.props.SetModalState(false);
                 }} />
         );
@@ -87,7 +87,7 @@ class LoginPage extends React.Component<PageProps, { venueName: string }> {
         return (
             <div className={this.props.classes.root}>
                 <TopBar
-                    title={`Login (${this.state.venueName}${loggedInUser ? '/' : ''}${loggedInUser})`}
+                    title={`Login (${this.state.networkName}${loggedInUser ? '/' : ''}${loggedInUser})`}
                     secondaryCommands={[
                         {
                             icon: 'home',
@@ -102,9 +102,9 @@ class LoginPage extends React.Component<PageProps, { venueName: string }> {
                     <LoginControl
                         onPinEntered={pin => {
                             this.props.SetLoggedInUser(pin);
-                            this.props.SetTerminalId(this.props.terminalId, this.state.venueName);
+                            this.props.SetTerminalId(this.props.terminalId, this.state.networkName);
                             this.props.connectProtocol(
-                                this.props.terminalId, this.state.venueName, pin
+                                this.props.terminalId, this.state.networkName, pin
                             );
                             if (pin && pin !== '' && this.props.location.pathname === '/login') {
                                 this.props.history.push('/');

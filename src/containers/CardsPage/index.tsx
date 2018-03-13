@@ -78,7 +78,7 @@ class CardsPage extends React.Component<PageProps, State> {
                 }).toArray()
             },
             {
-                icon: 'new_releases',
+                icon: 'developer_mode',
                 menuItems: [
                     {
                         icon: 'Show Hidden Cards',

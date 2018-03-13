@@ -4,14 +4,14 @@ PM-POS is an experimental POS application that aims to solve operational problem
 
 Note: _Unlike previous PM-POS projects this project is a standalone POS application and will not need SambaPOS to operate._
 
-Demo: https://emreeren.github.io/pmpos
+Demo: https://emreeren.github.io/pmpos3
 
 ## Primary Objectives
 
 * PM-POS should be able to work offline under poor local networking conditions.
 * We should be able to integrate PM-POS to other PM-POS networks, consumer apps or supplier apps.
 * Local restaurants sould be able to allow data access for remote locations.
-* Multiple venue data should be able to consolidated to a centeral database for reporting, analytics and AI.
+* Multiple location data should be able to consolidated to a centeral database for reporting, analytics and AI.
 * PM-POS should have multiple operational configurations that can be switched instantly under certain conditions.
 
 ## Things we want to do
@@ -23,7 +23,15 @@ Demo: https://emreeren.github.io/pmpos
 
 ## Things we used to create PM-POS
 
-y-js, react, redux, redux-observable, nools-ts, material-ui, typescript, immutablejs
+|y-js|To share card commits with clients|
+|react|To create UI Components|
+|redux|To manage UI State|
+|immutable-js|To make UI State immutabe|
+|redux-observable|To watch redux actions and trigger rules|
+|nools-ts|To build and execute rules|
+|material-ui|For mobile UI components|
+|typescript|To add typesafe feature to JS|
+|bluebird|To create string templates|
 
 ## Cards & Tags
 
@@ -31,7 +39,7 @@ To record operational data we're using two simple data types called Cards and Ta
 
 ## Commits
 
-PM-POS stores all card creation and tagging operations as actions and groups them as a commit. Commits are shared between terminals through P2P network. All commits are related with a single root card. When a terminal receives a commit it replays all commits for related root card and rebuilds related records.
+PM-POS stores all card creation and tagging operations as actions and groups them as a commit. Commits are shared between terminals through P2P network. All commits relates with a single root card. When a terminal receives a commit it replays all commits for related root card and rebuilds the card data.
 
 ## Rules
 

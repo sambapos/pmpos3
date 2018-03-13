@@ -11,13 +11,13 @@ import { Commit } from '../models/Commit';
 
 export default (
     terminalId: string,
-    venueName: string,
+    networkName: string,
     user: string,
     dispatch: (action: any) => void,
     getState: () => ApplicationState,
     cb: (protocol: any) => void) => {
 
-    let y = new Y(venueName, {
+    let y = new Y(networkName, {
         connector: {
             name: 'websockets-client',
             url: 'https://my-websockets-server.herokuapp.com/'

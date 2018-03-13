@@ -104,7 +104,7 @@ export const actionCreators = {
             user: getState().client.loggedInUser
         }]);
     },
-    connectProtocol: (terminalId: string, venueName: string, user: string):
+    connectProtocol: (terminalId: string, networkName: string, user: string):
         AppThunkAction<KnownActions> => (dispatch, getState) => {
             let currentProtocol = getState().cards.protocol;
             if (currentProtocol) {
@@ -118,7 +118,7 @@ export const actionCreators = {
                 payload: new Promise<any>((resolve, reject) => {
                     try {
                         configureProtocol(
-                            terminalId, venueName, user,
+                            terminalId, networkName, user,
                             dispatch, getState,
                             protocol => {
                                 resolve(protocol);
