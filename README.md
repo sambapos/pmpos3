@@ -23,15 +23,15 @@ Demo: https://emreeren.github.io/pmpos3
 
 ## Things we used to create PM-POS
 
-|y-js|To share card commits with clients|
-|react|To create UI Components|
-|redux|To manage UI State|
-|immutable-js|To make UI State immutabe|
-|redux-observable|To watch redux actions and trigger rules|
-|nools-ts|To build and execute rules|
-|material-ui|For mobile UI components|
-|typescript|To add typesafe feature to JS|
-|bluebird|To create string templates|
+| y-js             | To share card commits with clients       |
+| react            | To create UI Components                  |
+| redux            | To manage UI State                       |
+| immutable-js     | To make UI State immutabe                |
+| redux-observable | To watch redux actions and trigger rules |
+| nools-ts         | To build and execute rules               |
+| material-ui      | For mobile UI components                 |
+| typescript       | To add typesafe feature to JS            |
+| bluebird         | To create string templates               |
 
 ## Cards & Tags
 
