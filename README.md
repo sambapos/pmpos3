@@ -32,7 +32,7 @@ Demo: https://emreeren.github.io/pmpos3
 | [redux-observable](https://redux-observable.js.org/)       | To watch redux actions and trigger rules |
 | [nools-ts](https://github.com/taoqf/nools-ts)              | To build and execute rules               |
 | [material-ui](http://www.material-ui.com/)                 | For mobile UI components                 |
-| [typescript](https://www.typescriptlang.org/)              | To add typesafe feature to JS            |
+| [typescript](https://www.typescriptlang.org/)              | To add type safety to JS                 |
 | [blueimp](https://github.com/blueimp/JavaScript-Templates) | To create string templates               |
 
 ## Cards & Tags

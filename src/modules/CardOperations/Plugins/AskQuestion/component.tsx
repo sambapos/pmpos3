@@ -97,7 +97,10 @@ class Component extends React.Component<Props, State> {
                     {/* <Button onClick={() => this.props.cancel()}>Cancel</Button> */}
                     <Button
                         onClick={(e) => {
-                            this.state.parameterState.map((value, key) => RuleManager.setState(key, value));
+                            Object.keys(this.props.current.parameters).map(key => {
+                                let value = this.state.parameterState.get(key);
+                                RuleManager.setState(key, value);
+                            });
                             this.props.success(this.props.actionName, this.props.current);
                         }}
                     >
