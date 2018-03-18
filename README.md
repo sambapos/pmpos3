@@ -2,17 +2,22 @@
 
 PM-POS is an experimental POS application that aims to solve operational problems on retail, restaurant or similar environments. This project released to discuss how to use latest software tech for the benefit of SambaPOS community. Everything released under this project is PoC grade for now.
 
+Visit https://github.com/emreeren/pmpos3/wiki to have more information about the project.
+
 Note: _Unlike my previous PM-POS projects this project is a standalone POS application and will not need SambaPOS to operate._
 
-- Project Details: https://github.com/emreeren/pmpos3/wiki
-- Demo: https://emreeren.github.io/pmpos3
-- Tutorials
-  - [1. Creating first ticket](https://github.com/emreeren/pmpos3/wiki/1.-Creating-First-Ticket)
-  - [2. Adding Payments](https://github.com/emreeren/pmpos3/wiki/2.-Adding-Payments)
-  - [3. Selecting Tables](https://github.com/emreeren/pmpos3/wiki/3.-Choosing-Tables)
-  - [4. Simplifying Tables](https://github.com/emreeren/pmpos3/wiki/4.-Simplifying-Payments)
-  - [5. Understanding Rules](https://github.com/emreeren/pmpos3/wiki/5.-Understanding-Rules)
-  - [6. Misc Products](https://github.com/emreeren/pmpos3/wiki/6.-Misc-Products)
+## Demo
+
+https://emreeren.github.io/pmpos3
+
+**Demo Tutorials**
+
+- [1. Creating first ticket](https://github.com/emreeren/pmpos3/wiki/1.-Creating-First-Ticket)
+- [2. Adding Payments](https://github.com/emreeren/pmpos3/wiki/2.-Adding-Payments)
+- [3. Selecting Tables](https://github.com/emreeren/pmpos3/wiki/3.-Choosing-Tables)
+- [4. Simplifying Tables](https://github.com/emreeren/pmpos3/wiki/4.-Simplifying-Payments)
+- [5. Understanding Rules](https://github.com/emreeren/pmpos3/wiki/5.-Understanding-Rules)
+- [6. Misc Products](https://github.com/emreeren/pmpos3/wiki/6.-Misc-Products)
   
 ### Contribution
 
