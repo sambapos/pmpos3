@@ -15,7 +15,7 @@ Note: _Unlike my previous PM-POS projects this project is a standalone POS appli
   - [Misc Products](https://github.com/emreeren/pmpos3/wiki/6.-Misc-Products)
   
 
-List of projects we used to build PM-POS
+### List of projects we used to build PM-POS
 
 | Project                                                    | Description                              |
 | ---------------------------------------------------------- | ---------------------------------------- |
