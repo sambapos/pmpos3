@@ -7,12 +7,12 @@ Note: _Unlike my previous PM-POS projects this project is a standalone POS appli
 - Project Details: https://github.com/emreeren/pmpos3/wiki
 - Demo: https://emreeren.github.io/pmpos3
 - Tutorials
-  - [Creating first ticket](https://github.com/emreeren/pmpos3/wiki/1.-Creating-First-Ticket)
-  - [Adding Payments](https://github.com/emreeren/pmpos3/wiki/2.-Adding-Payments)
-  - [Selecting Tables](https://github.com/emreeren/pmpos3/wiki/3.-Choosing-Tables)
-  - [Simplifying Tables](https://github.com/emreeren/pmpos3/wiki/4.-Simplifying-Payments)
-  - [Understanding Rules](https://github.com/emreeren/pmpos3/wiki/5.-Understanding-Rules)
-  - [Misc Products](https://github.com/emreeren/pmpos3/wiki/6.-Misc-Products)
+  - [1. Creating first ticket](https://github.com/emreeren/pmpos3/wiki/1.-Creating-First-Ticket)
+  - [2. Adding Payments](https://github.com/emreeren/pmpos3/wiki/2.-Adding-Payments)
+  - [3. Selecting Tables](https://github.com/emreeren/pmpos3/wiki/3.-Choosing-Tables)
+  - [4. Simplifying Tables](https://github.com/emreeren/pmpos3/wiki/4.-Simplifying-Payments)
+  - [5. Understanding Rules](https://github.com/emreeren/pmpos3/wiki/5.-Understanding-Rules)
+  - [6. Misc Products](https://github.com/emreeren/pmpos3/wiki/6.-Misc-Products)
   
 
 ### List of projects we used to build PM-POS
