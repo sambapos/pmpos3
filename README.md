@@ -14,6 +14,9 @@ Note: _Unlike my previous PM-POS projects this project is a standalone POS appli
   - [5. Understanding Rules](https://github.com/emreeren/pmpos3/wiki/5.-Understanding-Rules)
   - [6. Misc Products](https://github.com/emreeren/pmpos3/wiki/6.-Misc-Products)
   
+### Contribution
+
+PM-POS is an experimental project started by [SambaPOS](https://sambapos.com) team. Merchants will use PM-POS to manage & operate their businesses. We'll start a blockchain project to integrate business locations and issue a cyrptocoin to operate the blockchain network. If you are interested you can submit issues, share your ideas or send your PR's.
 
 ### List of projects we used to build PM-POS
 
