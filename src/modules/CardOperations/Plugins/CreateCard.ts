@@ -45,4 +45,8 @@ export default class CreateCard extends CardOperation {
         }
         return data;
     }
+
+    processPendingAction(action: ActionRecord): ActionRecord {
+        return action;
+    }
 }

@@ -15,4 +15,5 @@ export default abstract class CardOperation {
     abstract readConcurrencyData(card: CardRecord, actionData: any): any;
     abstract fixData(data: any): any;
     abstract canEdit(action: ActionRecord): boolean;
+    abstract processPendingAction(action: ActionRecord): ActionRecord;
 }

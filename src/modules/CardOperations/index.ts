@@ -53,6 +53,11 @@ class CardOperations {
         if (operation) { return operation.fixData(data); }
         return data;
     }
+    processPendingAction(action: ActionRecord): ActionRecord {
+        let operation = this.operations.get(action.actionType);
+        if (operation) { return operation.processPendingAction(action); }
+        return action;
+    }
     canEdit(action: ActionRecord): boolean {
         let operation = this.operations.get(action.actionType);
         return operation !== undefined && operation.canEdit(action);

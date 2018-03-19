@@ -11,6 +11,7 @@ export interface CardTag {
     rate: number;
     source: string;
     target: string;
+    cardId: string;
 }
 
 export class CardTagRecord extends Record<CardTag>({
@@ -22,7 +23,8 @@ export class CardTagRecord extends Record<CardTag>({
     amount: 0,
     rate: 0,
     source: '',
-    target: ''
+    target: '',
+    cardId: ''
 }) {
 
     get display(): string {

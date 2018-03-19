@@ -106,9 +106,14 @@ class CardList {
     }
 
     getCardTypeIdByRef(ref: string): string {
-        let ct = this.cardTypes.find(x => x.reference === ref || x.name === ref);
+        let ct = this.getCardTypeByRef(ref);
         if (ct) { return ct.id; }
         return '';
+    }
+
+    getCardTypeByRef(ref: string): CardTypeRecord | undefined {
+        let ct = this.cardTypes.find(x => x.reference === ref || x.name === ref);
+        return ct;
     }
 
     getCardType(id: string): CardTypeRecord | undefined {

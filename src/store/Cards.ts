@@ -231,6 +231,8 @@ export const actionCreators = {
         const state = getState().cards;
 
         if (state.pendingActions.count() > 0) {
+            let processedActions = state.pendingActions.map(a => cardOperations.processPendingAction(a));
+
             let commit = {
                 id: shortid.generate(),
                 time: new Date().getTime(),
@@ -238,7 +240,7 @@ export const actionCreators = {
                 user: getState().client.loggedInUser,
                 cardId: state.currentCard.id,
                 state: state.currentCard.toJS(),
-                actions: state.pendingActions.toJS()
+                actions: processedActions.toJS()
             };
             state.protocol.push([commit]);
         }
@@ -255,7 +257,6 @@ export const actionCreators = {
             const element = state.protocol.get(index);
             let card = cards.find(c => c.id === element.cardId);
             if (card) {
-                console.log('Delete', element, card);
                 state.protocol.delete(index);
                 CardList.cards = CardList.cards.remove(card.id);
             }

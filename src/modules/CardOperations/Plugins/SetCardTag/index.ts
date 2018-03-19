@@ -5,6 +5,7 @@ import { CardRecord } from '../../../../models/Card';
 import { ActionRecord } from '../../../../models/Action';
 import { CardTagRecord } from '../../../../models/CardTag';
 import TagEditor from './component';
+import CardList from '../../../CardList';
 
 export default class SetCardTag extends CardOperation {
 
@@ -60,5 +61,18 @@ export default class SetCardTag extends CardOperation {
             || currentValue.rate !== data.rate
             || currentValue.source !== data.source
             || currentValue.target !== data.target;
+    }
+    processPendingAction(action: ActionRecord): ActionRecord {
+        let data = action.data;
+        data.cardId = '';
+        if (!action.data || !action.data.name || !action.data.value) {
+            return action.set('data', data);
+        }
+        let cardType = CardList.getCardTypeByRef(action.data.name);
+        if (cardType) {
+            let card = CardList.getCardByName(cardType.name, action.data.value);
+            data.cardId = card ? card.id : '';
+        }
+        return action.set('data', data);
     }
 }

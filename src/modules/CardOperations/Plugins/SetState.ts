@@ -23,4 +23,7 @@ export default class SetState extends CardOperation {
     fixData(data: any) {
         return data;
     }
+    processPendingAction(action: ActionRecord): ActionRecord {
+        return action;
+    }
 }
