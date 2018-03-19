@@ -2,6 +2,8 @@
 
 PM-POS is an experimental POS application that aims to solve operational problems on retail, restaurant or similar environments. This project released to discuss how to use latest software tech for the benefit of SambaPOS community. Everything released under this project is PoC grade for now.
 
+## More Info
+
 Visit https://github.com/emreeren/pmpos3/wiki to have more information about the project.
 
 Note: _Unlike my previous PM-POS projects this project is a standalone POS application and will not need SambaPOS to operate._
@@ -19,11 +21,11 @@ https://emreeren.github.io/pmpos3
 - [5. Understanding Rules](https://github.com/emreeren/pmpos3/wiki/5.-Understanding-Rules)
 - [6. Misc Products](https://github.com/emreeren/pmpos3/wiki/6.-Misc-Products)
   
-### Contribution
+## Contribution
 
 PM-POS is an experimental project started by [SambaPOS](https://sambapos.com) team. Merchants will use PM-POS to manage & operate their businesses. We'll start a blockchain project to integrate business locations and issue a cryptocurrency to operate the blockchain network. If you are interested you can submit issues, share your ideas or send your PR's.
 
-### List of projects we used to build PM-POS
+## List of projects we used to build PM-POS
 
 | Project                                                    | Description                              |
 | ---------------------------------------------------------- | ---------------------------------------- |
