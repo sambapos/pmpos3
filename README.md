@@ -6,7 +6,7 @@ PM-POS is an experimental POS application that aims to solve operational problem
 
 Visit https://github.com/emreeren/pmpos3/wiki to have more information about the project.
 
-Note: _Unlike my previous PM-POS projects this project is a standalone POS application and will not need SambaPOS to operate._
+Note: _Unlike my previous PM-POS projects this project is a standalone POS application and doesn't need SambaPOS to operate._
 
 ## Demo
 
