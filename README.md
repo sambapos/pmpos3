@@ -1,29 +1,31 @@
 # PM-POS 3.0
 
-PM-POS is an experimental POS application that aims to solve operational problems on retail, restaurant or similar environments. I released this project to discuss how to use latest software tech for the benefit of SambaPOS community. Everything released under this project is PoC grade for now.
+PM-POS is an experimental POS application that aims to solve operational problems on retail, restaurant or similar environments. This project released to discuss how to use latest software tech for the benefit of SambaPOS community. Everything released under this project is PoC grade for now.
 
-Note: _Unlike my previous PM-POS projects this project is a standalone POS application and will not need SambaPOS to operate._
+## More Info
 
-- More Info: https://github.com/emreeren/pmpos3/wiki
-- Demo: https://emreeren.github.io/pmpos3
-- Demo Documentation: https://github.com/emreeren/pmpos3/wiki/1.-Creating-First-Ticket
+Visit https://github.com/emreeren/pmpos3/wiki to have more information about the project.
 
-## Primary Objectives
+Note: _Unlike my previous PM-POS projects this project is a standalone POS application and doesn't need SambaPOS to operate._
 
-* PM-POS should be able to work offline under poor local networking conditions.
-* We should be able to integrate PM-POS to other PM-POS networks, consumer apps or supplier apps.
-* Local restaurants sould be able to allow data access for remote locations.
-* Multiple location data should be able to consolidated to a centeral database for reporting, analytics and AI.
-* PM-POS should have multiple operational configurations that can be switched instantly under certain conditions.
+## Demo
 
-## Things we want to do
+https://emreeren.github.io/pmpos3
 
-* Create a simplified data structure to record all financial and inventory transactions.
-* Create P2P networks for local terminals to generate centeralized local ledgers to allow terminals to operate without need for connecting to a server.
-* Create a decenteralized public ledger network to integrate local ledgers.
-* Create a cyrptocurrency that will be used to operate public ledgers. That currency can also be useful to create loyalty and payment solutions.
+**Demo Tutorials**
 
-## Things we used to create PM-POS
+- [1. Creating first ticket](https://github.com/emreeren/pmpos3/wiki/1.-Creating-First-Ticket)
+- [2. Adding Payments](https://github.com/emreeren/pmpos3/wiki/2.-Adding-Payments)
+- [3. Selecting Tables](https://github.com/emreeren/pmpos3/wiki/3.-Choosing-Tables)
+- [4. Simplifying Tables](https://github.com/emreeren/pmpos3/wiki/4.-Simplifying-Payments)
+- [5. Understanding Rules](https://github.com/emreeren/pmpos3/wiki/5.-Understanding-Rules)
+- [6. Misc Products](https://github.com/emreeren/pmpos3/wiki/6.-Misc-Products)
+  
+## Contribution
+
+PM-POS is an experimental project started by [SambaPOS](https://sambapos.com) team. Merchants will use PM-POS to manage & operate their businesses. We'll start a blockchain project to integrate business locations and issue a cryptocurrency to operate the blockchain network. If you are interested you can submit issues, share your ideas or send your PR's.
+
+## List of projects we used to build PM-POS
 
 | Project                                                    | Description                              |
 | ---------------------------------------------------------- | ---------------------------------------- |
@@ -36,7 +38,3 @@ Note: _Unlike my previous PM-POS projects this project is a standalone POS appli
 | [material-ui](http://www.material-ui.com/)                 | For mobile UI components                 |
 | [typescript](https://www.typescriptlang.org/)              | To add type safety to JS                 |
 | [blueimp](https://github.com/blueimp/JavaScript-Templates) | To create string templates               |
-
-## Documentation
-
-Visit https://github.com/emreeren/pmpos3/wiki for documentation.
