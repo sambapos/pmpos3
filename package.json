@@ -1,6 +1,6 @@
 {
   "name": "pmpos3",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": true,
   "dependencies": {
     "autosuggest-highlight": "^3.1.1",
@@ -33,8 +33,8 @@
     "yjs": "^13.0.0-54"
   },
   "scripts": {
-    "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
+    "start": "cross-env REACT_APP_VERSION=$npm_package_version react-scripts-ts start",
+    "build": "cross-env REACT_APP_VERSION=$npm_package_version react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "predeploy": "npm run build",
@@ -54,6 +54,7 @@
     "@types/react-test-renderer": "^16.0.1",
     "@types/webpack": "^3.8.9",
     "@types/webpack-env": "^1.13.5",
+    "cross-env": "^5.1.4",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "gh-pages": "^1.1.0",

@@ -21,7 +21,18 @@ class HomePage extends React.Component<PageProps> {
                     <Typography variant="body2">
                         This project contains PoC's and Tests to demonstrate
                     some features of future SambaPOS versions.
-                </Typography>
+
+                    </Typography>
+                </Card>
+                <Card style={{ margin: '8px', padding: '8px' }}>
+                    <Typography variant="body1">
+                        Version: {process.env.REACT_APP_VERSION}
+                    </Typography>
+                </Card>
+                <Card style={{ margin: '8px', padding: '8px' }}>
+                    <a href="https://github.com/emreeren/pmpos3/">
+                        https://github.com/emreeren/pmpos3/
+                        </a>
                 </Card>
             </div>
         );

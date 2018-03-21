@@ -58,7 +58,9 @@ class NavPage extends React.Component<Props> {
                         color="inherit"
                         className={classes.drawerCaption}
                     >
-                        PM-POS 3.0
+                        PM-POS 3.0<span style={{ fontSize: '0.5em', marginRight: 15, float: 'right' }}>
+                            V{process.env.REACT_APP_VERSION}
+                        </span>
                     </Typography>
                 </div>
                 <Divider />
