@@ -39,8 +39,8 @@ class SubCards extends React.Component<PageProps, { tagCount: number }> {
     scroll_bottom() {
         if (this.subCardList) {
             this.subCardList.scrollTop = this.subCardList.scrollHeight;
+            this.setState({ tagCount: this.props.card ? this.props.card.cards.count() : 0 });
         }
-        this.setState({ tagCount: this.props.card ? this.props.card.cards.count() : 0 });
     }
 
     render() {

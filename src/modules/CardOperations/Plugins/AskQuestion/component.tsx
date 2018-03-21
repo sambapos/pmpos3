@@ -80,9 +80,23 @@ class Component extends React.Component<Props, State> {
                 </div >
             );
         }
-        return <TextField label={key} key={key}
-            value={this.state.parameterState.get(key)}
-            onChange={e => this.setState({ parameterState: this.state.parameterState.set(key, e.target.value) })} />;
+        return <TextField label={key} key={key} type={this.getEditorType(key)}
+            value={this.getTextValue(key)}
+            onChange={e => this.setTextValue(key, e.target.value)} />;
+    }
+
+    getEditorType(key: string): string {
+        let val = this.state.parameters[key];
+        let isNumber = !isNaN(parseFloat(val)) && isFinite(val);
+        return isNumber ? 'number' : 'text';
+    }
+
+    getTextValue(key: string) {
+        return this.state.parameterState.get(key) || '';
+    }
+
+    setTextValue(key: string, value: any) {
+        this.setState({ parameterState: this.state.parameterState.set(key, value) });
     }
 
     render() {
