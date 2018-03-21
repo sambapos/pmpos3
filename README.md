@@ -23,7 +23,7 @@ https://emreeren.github.io/pmpos3
   
 ## Contribution
 
-PM-POS is an experimental project started by [SambaPOS](https://sambapos.com) team. Merchants will use PM-POS to manage & operate their businesses. We'll start a blockchain project to integrate business locations and issue a cryptocurrency to operate the blockchain network. If you are interested you can submit issues, share your ideas or send your PR's.
+PM-POS is a point of sale project started by [SambaPOS](https://sambapos.com) team. Merchants will use PM-POS to manage & operate their businesses. We'll also start a blockchain project to integrate business locations and issue a cryptocurrency to operate the blockchain network. If you are interested you can submit issues, share your ideas or send your PR's.
 
 ## List of projects we used to build PM-POS
 
