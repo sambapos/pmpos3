@@ -12,6 +12,8 @@ Note: _Unlike my previous PM-POS projects this project is a standalone POS appli
 
 https://emreeren.github.io/pmpos3
 
+Follow Demo Tutorials to have an idea about how PM-POS works.
+
 **Demo Tutorials**
 
 - [1. Creating first ticket](https://github.com/emreeren/pmpos3/wiki/1.-Creating-First-Ticket)
