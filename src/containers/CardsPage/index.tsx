@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as CardStore from '../../store/Cards';
 import { RouteComponentProps } from 'react-router';
-import { WithStyles, List, ListItem, ListItemSecondaryAction, Paper } from 'material-ui';
+import { WithStyles, ListItem, ListItemSecondaryAction, Paper } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';
@@ -12,6 +12,7 @@ import ListItemText from 'material-ui/List/ListItemText';
 import { CardTypeRecord } from '../../models/CardType';
 import TextField from 'material-ui/TextField/TextField';
 import * as faker from 'faker';
+import ReorderList from './ReorderList';
 
 type PageProps =
     {
@@ -154,6 +155,25 @@ class CardsPage extends React.Component<PageProps, State> {
     }
 
     public render() {
+        let sourceCards = this.props.cards
+            .sort((x, y) => x.index - y.index)
+            .map(card => {
+                return {
+                    text: card.display,
+                    id: card.id,
+                    secondary: card.tags.valueSeq()
+                        .filter(tag => tag.name !== 'Name')
+                        .map(tag => (
+                            <span
+                                style={{ marginRight: '8px' }}
+                                key={tag.name}
+                            >
+                                {tag.display}
+                            </span>)),
+                    action: card.balanceDisplay
+                };
+            })
+            .toArray();
         return (
             <div className={this.props.classes.root}>
                 <TopBar
@@ -167,9 +187,11 @@ class CardsPage extends React.Component<PageProps, State> {
                     onChange={e => this.setState({ searchValue: e.target.value })}
                 />
                 <Paper className={this.props.classes.content}>
-                    <List>
-                        {this.renderCards(this.props.cards)}
-                    </List>
+                    <ReorderList
+                        items={sourceCards}
+                        handleOnClick={
+                            item => this.props.history.push(process.env.PUBLIC_URL + '/card/' + item.id)
+                        } />
                 </Paper>
             </div>
         );
