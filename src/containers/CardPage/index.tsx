@@ -251,7 +251,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
                         <MenuItem
                             key={'cmd_' + option.type}
                             onClick={e => {
-                                this.handleOperation(option);
+                                this.handleOperation(option, this.state.selectedCard);
                                 this.handleMenuClose();
                             }}
                         >

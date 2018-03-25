@@ -121,7 +121,7 @@ class CardsPage extends React.Component<PageProps, State> {
                 || !x.isClosed)
             .filter(x => !this.state.searchValue
                 || Boolean(x.tags.find(t => t.value.toLowerCase().includes(this.state.searchValue.toLowerCase()))))
-            .slice(0, 100)
+            .sort((x, y) => x.index - y.index)
             .map(card => {
                 return card && (
                     <ListItem

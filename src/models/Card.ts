@@ -7,6 +7,7 @@ export interface Card {
     typeId: string;
     type: string;
     isClosed: boolean;
+    index: number;
     tags: IMap<string, CardTagRecord>;
     cards: IMap<string, CardRecord>;
 }
@@ -16,6 +17,7 @@ export class CardRecord extends Record<Card>({
     time: 0,
     typeId: '',
     type: '',
+    index: 0,
     isClosed: false,
     tags: IMap<string, CardTagRecord>(),
     cards: IMap<string, CardRecord>()
@@ -24,8 +26,6 @@ export class CardRecord extends Record<Card>({
         let val = 0;
         for (const key of this.tags.keySeq().toArray()) {
             const t = this.tags.get(key) as CardTagRecord;
-            // let d = t.getDebit(this.subCardDebit + val);
-            // let c = t.getCredit(this.subCardCredit + val);
             let b = t.getRealAmount(this.subCardBalance + val) * t.realQuantity;
             if (t.id === tag.id) {
                 return b;
