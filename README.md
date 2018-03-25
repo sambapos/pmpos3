@@ -12,6 +12,8 @@ Note: _Unlike my previous PM-POS projects this project is a standalone POS appli
 
 https://emreeren.github.io/pmpos3
 
+Follow Demo Tutorials to have an idea about how PM-POS works.
+
 **Demo Tutorials**
 
 - [1. Creating first ticket](https://github.com/emreeren/pmpos3/wiki/1.-Creating-First-Ticket)
@@ -23,7 +25,7 @@ https://emreeren.github.io/pmpos3
   
 ## Contribution
 
-PM-POS is an experimental project started by [SambaPOS](https://sambapos.com) team. Merchants will use PM-POS to manage & operate their businesses. We'll start a blockchain project to integrate business locations and issue a cryptocurrency to operate the blockchain network. If you are interested you can submit issues, share your ideas or send your PR's.
+PM-POS is a point of sale project started by [SambaPOS](https://sambapos.com) team. Merchants will use PM-POS to manage & operate their businesses. We'll also start a blockchain project to integrate business locations and issue a cryptocurrency to operate the blockchain network. If you are interested you can submit issues, share your ideas or send your PR's.
 
 ## List of projects we used to build PM-POS
 
