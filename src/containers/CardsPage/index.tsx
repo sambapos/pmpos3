@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import * as CardStore from '../../store/Cards';
 import { RouteComponentProps } from 'react-router';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { WithStyles, Paper, List, ListItem, ListItemText, ListItemSecondaryAction } from 'material-ui';
+import { InfiniteLoader, List, AutoSizer, CellMeasurer, CellMeasurerCache } from 'react-virtualized';
+import { WithStyles, Paper } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';
@@ -12,6 +13,7 @@ import { CardRecord } from '../../models/Card';
 import { CardTypeRecord } from '../../models/CardType';
 import TextField from 'material-ui/TextField/TextField';
 import * as faker from 'faker';
+import CardItem from './CardItem';
 
 type PageProps =
     {
@@ -53,13 +55,22 @@ const reorder = (list, startIndex, endIndex) => {
 
 class CardsPage extends React.Component<PageProps, State> {
 
+    private itemCount = 100;
+    private itemThresold = 50;
+
+    public cache = new CellMeasurerCache({
+        defaultWidth: 100,
+        defaultHeight: 999999,
+        fixedWidth: true
+    });
+
     constructor(props: PageProps) {
         super(props);
         this.state = {
             currentCardType: props.currentCardType,
             showClosedCards: false,
             searchValue: '',
-            items: this.getItems(props.cards, '', false)
+            items: this.getItems(props.cards, '', false, 0, this.itemCount)
         };
     }
 
@@ -70,8 +81,9 @@ class CardsPage extends React.Component<PageProps, State> {
             });
         }
         this.setState({
-            items: this.getItems(nextProps.cards, this.state.searchValue, this.state.showClosedCards)
+            items: this.getItems(nextProps.cards, this.state.searchValue, this.state.showClosedCards, 0, this.itemCount)
         });
+        this.cache.clearAll();
     }
 
     createTestCards() {
@@ -140,14 +152,21 @@ class CardsPage extends React.Component<PageProps, State> {
         return result;
     }
 
-    public getItems(cards: IList<CardRecord>, searchValue: string, showClosedCards: boolean) {
-        return cards
+    public getItems(
+        cards: IList<CardRecord>,
+        searchValue: string,
+        showClosedCards: boolean,
+        startIndex: number,
+        itemCount: number) {
+        let result = cards
             .filter(x =>
                 searchValue
                 || showClosedCards
                 || !x.isClosed)
             .filter(x => !searchValue
                 || Boolean(x.tags.find(t => t.value.toLowerCase().includes(this.state.searchValue.toLowerCase()))))
+            .skip(startIndex)
+            .take(itemCount)
             .sort((x, y) => x.index - y.index)
             .map(card => {
                 return {
@@ -166,7 +185,103 @@ class CardsPage extends React.Component<PageProps, State> {
                 };
             })
             .toArray();
+        return result;
     }
+
+    private isRowLoaded({ index }: any) {
+        return !!this.state.items[index];
+    }
+
+    private loadMoreRows({ startIndex, stopIndex }: any) {
+        let items = this.state.items.concat(this.getItems(
+            this.props.cards, this.state.searchValue, this.state.showClosedCards,
+            startIndex, stopIndex - startIndex + 1));
+        this.setState({ items });
+        this.cache.clearAll();
+    }
+
+    private renderCardList() {
+        var rowCount = this.props.cards.count();
+
+        return <InfiniteLoader
+            isRowLoaded={(x) => this.isRowLoaded(x)}
+            loadMoreRows={(x) => this.loadMoreRows(x)}
+            rowCount={rowCount}
+            minimumBatchSize={this.itemCount}
+            threshold={this.itemThresold}
+        >
+            {({ onRowsRendered, registerChild }) => (
+                <AutoSizer onResize={() => {
+                    this.cache.clearAll();
+                }}>
+                    {({ height, width }) => (
+                        <DragDropContext onDragEnd={(r) => this.onDragEnd(r)}>
+                            <Droppable droppableId="droppable">
+                                {(provided, snapshot) => (
+                                    <div
+                                        ref={provided.innerRef}
+                                        style={getListStyle(snapshot.isDraggingOver)}
+                                    >
+                                        <List
+                                            onRowsRendered={onRowsRendered}
+                                            deferredMeasurementCache={this.cache}
+                                            ref={registerChild}
+                                            rowCount={rowCount}
+                                            rowHeight={this.cache.rowHeight}
+                                            width={width}
+                                            height={height}
+                                            // scrollTop={this.props.scrollTop}
+                                            rowRenderer={(x) => this.cardRenderer(x)}
+                                        />
+                                        {provided.placeholder}
+                                    </div>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
+                    )}
+                </AutoSizer>
+            )}
+        </InfiniteLoader>;
+    }
+
+    private cardRenderer({ key, index, style, parent }: any) {
+        if (index >= this.state.items.length) { return 'NA'; }
+        var card = this.state.items[index];
+        return (<CellMeasurer
+            cache={this.cache}
+            columnIndex={0}
+            key={key}
+            parent={parent}
+            rowIndex={index}
+        >
+            {({ measure }) => {
+                return (
+                    <Draggable key={card.id} draggableId={card.id} index={index}>
+                        {(provided1, snapshot1) => (
+                            <div style={style}>
+                                <div
+                                    ref={provided1.innerRef}
+                                    {...provided1.draggableProps}
+                                    {...provided1.dragHandleProps}
+                                    style={getItemStyle(
+                                        snapshot1.isDragging,
+                                        provided1.draggableProps.style
+                                    )}
+                                >
+                                    <CardItem card={card} onClick={c => this.props.history.push(
+                                        process.env.PUBLIC_URL + '/card/' + c.id)} />
+
+                                </div>
+                                {provided1.placeholder}
+                            </div>
+                        )}
+                    </Draggable>
+                );
+            }}
+        </CellMeasurer>
+        );
+    }
+
     public render() {
         return (
             <div className={this.props.classes.root}>
@@ -181,7 +296,8 @@ class CardsPage extends React.Component<PageProps, State> {
                     onChange={e => this.setState({ searchValue: e.target.value })}
                 />
                 <Paper className={this.props.classes.content}>
-                    <DragDropContext onDragEnd={(r) => this.onDragEnd(r)}>
+                    {this.renderCardList()}
+                    {/* <DragDropContext onDragEnd={(r) => this.onDragEnd(r)}>
                         <Droppable droppableId="droppable">
                             {(provided, snapshot) => (
                                 <div
@@ -231,7 +347,7 @@ class CardsPage extends React.Component<PageProps, State> {
                             )}
 
                         </Droppable>
-                    </DragDropContext>
+                    </DragDropContext> */}
                 </Paper>
             </div>
         );

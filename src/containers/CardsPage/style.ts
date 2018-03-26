@@ -27,7 +27,6 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     },
     content: {
         height: '100%',
-        overflowX: 'auto',
         [breakpoints.up('sm')]: {
             maxWidth: '600px',
             width: '100%',
