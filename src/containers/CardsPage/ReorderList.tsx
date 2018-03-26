@@ -1,9 +1,10 @@
 import * as React from 'react';
 import update from 'immutability-helper';
 import { DragDropContext } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
+import TouchBackend from 'react-dnd-touch-backend';
 import ReorderListItem from './ReorderListItem';
 import { List } from 'material-ui';
+import ItemPreview from './ItemPreview';
 
 type ReorderableItem = {
     id: string;
@@ -17,11 +18,12 @@ interface ReorderListProps {
     handleOnClick: (item: any) => void;
 }
 
-class ReorderList extends React.Component<ReorderListProps, { items: ReorderableItem[] }> {
+class ReorderList extends React.Component<ReorderListProps,
+    { items: ReorderableItem[] }> {
     constructor(props: any) {
         super(props);
         this.state = {
-            items: props.items,
+            items: props.items
         };
 
         this.moveListItem = this.moveListItem.bind(this);
@@ -34,6 +36,7 @@ class ReorderList extends React.Component<ReorderListProps, { items: Reorderable
     }
 
     moveListItem(dragIndex: any, hoverIndex: any) {
+        console.log('mli', dragIndex, hoverIndex);
         const { items } = this.state;
         const dragitem = items[dragIndex];
 
@@ -41,7 +44,7 @@ class ReorderList extends React.Component<ReorderListProps, { items: Reorderable
             update(this.state, {
                 items: {
                     $splice: [[dragIndex, 1], [hoverIndex, 0, dragitem]],
-                },
+                }
             }),
         );
         // You may pass the state to props
@@ -52,11 +55,15 @@ class ReorderList extends React.Component<ReorderListProps, { items: Reorderable
         const { items } = this.state;
         return (
             <div>
+                <ItemPreview key="__preview" name="Item" />
                 <List>
                     {items.map((item, i) => (
                         <ReorderListItem
                             key={item.id}
-                            handleOnClick={() => this.props.handleOnClick(item)}
+                            handleOnClick={(e) => {
+                                this.props.handleOnClick(item);
+                                e.preventDefault();
+                            }}
                             index={i}
                             id={item.id}
                             text={item.text}
@@ -71,4 +78,6 @@ class ReorderList extends React.Component<ReorderListProps, { items: Reorderable
     }
 }
 
-export default DragDropContext(HTML5Backend)(ReorderList);
+export default DragDropContext(TouchBackend({
+    enableMouseEvents: true, delayTouchStart: 100
+}))(ReorderList);

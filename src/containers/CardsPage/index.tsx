@@ -2,13 +2,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as CardStore from '../../store/Cards';
 import { RouteComponentProps } from 'react-router';
-import { WithStyles, ListItem, ListItemSecondaryAction, Paper } from 'material-ui';
+import { WithStyles, Paper } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import { CardRecord } from '../../models/Card';
-import ListItemText from 'material-ui/List/ListItemText';
 import { CardTypeRecord } from '../../models/CardType';
 import TextField from 'material-ui/TextField/TextField';
 import * as faker from 'faker';
@@ -114,48 +113,14 @@ class CardsPage extends React.Component<PageProps, State> {
         return result;
     }
 
-    renderCards(cards: IList<CardRecord>) {
-        return cards
+    public render() {
+        let sourceCards = this.props.cards
             .filter(x =>
                 this.state.searchValue
                 || this.state.showClosedCards
                 || !x.isClosed)
             .filter(x => !this.state.searchValue
                 || Boolean(x.tags.find(t => t.value.toLowerCase().includes(this.state.searchValue.toLowerCase()))))
-            .sort((x, y) => x.index - y.index)
-            .map(card => {
-                return card && (
-                    <ListItem
-                        key={card.id}
-                        button
-                        divider
-                        onClick={(e) => {
-                            this.props.history.push(process.env.PUBLIC_URL + '/card/' + card.id);
-                            e.preventDefault();
-                        }}
-                    >
-                        <ListItemText
-                            primary={card.display}
-                            secondary={card.tags.valueSeq()
-                                .filter(tag => tag.name !== 'Name')
-                                .map(tag => (
-                                    <span
-                                        style={{ marginRight: '8px' }}
-                                        key={tag.name}
-                                    >
-                                        {tag.display}
-                                    </span>))}
-                        />
-                        <ListItemSecondaryAction style={{ right: 10, fontSize: '1.1 em' }}>
-                            {card.balanceDisplay}
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                );
-            });
-    }
-
-    public render() {
-        let sourceCards = this.props.cards
             .sort((x, y) => x.index - y.index)
             .map(card => {
                 return {

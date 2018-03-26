@@ -15,6 +15,7 @@ const cardSource = {
     beginDrag(props: any) {
         return {
             id: props.id,
+            name: props.text,
             index: props.index,
         };
     },
@@ -64,7 +65,7 @@ const cardTarget = {
         // but it's good here for the sake of performance
         // to avoid expensive index searches.
         monitor.getItem().index = hoverIndex;
-    },
+    }
 };
 
 const withDropTarget = DropTarget(ItemTypes.LIST_ITEM, cardTarget, connect => ({
@@ -73,6 +74,7 @@ const withDropTarget = DropTarget(ItemTypes.LIST_ITEM, cardTarget, connect => ({
 
 const withDropSource = DragSource(ItemTypes.LIST_ITEM, cardSource, (connect, monitor) => ({
     connectDragSource: connect.dragSource(),
+    connectDragPreview: connect.dragPreview(),
     isDragging: monitor.isDragging(),
 }));
 
@@ -85,6 +87,7 @@ class ReorderListItem extends React.Component<any> {
             isDragging,
             connectDragSource,
             connectDropTarget,
+            connectDragPreview,
             // props for onClick selection
             handleOnClick
             //
@@ -93,17 +96,20 @@ class ReorderListItem extends React.Component<any> {
 
         return connectDragSource(
             connectDropTarget(
-                <div style={{ ...style, opacity }}>
-                    <ListItem button divider onClick={handleOnClick}>
-                        <ListItemText
-                            primary={text}
-                            secondary={secondary}
-                        />
-                        <ListItemSecondaryAction style={{ right: 10, fontSize: '1.1 em' }}>
-                            {action}
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                </div>)
+                connectDragPreview(
+                    <div style={{ ...style, opacity }}>
+                        <ListItem button divider
+                            onTouchMove={e => e.preventDefault()}
+                            onClick={(e) => handleOnClick(e)}>
+                            <ListItemText
+                                primary={text}
+                                secondary={secondary}
+                            />
+                            <ListItemSecondaryAction style={{ right: 10, fontSize: '1.1 em' }}>
+                                {action}
+                            </ListItemSecondaryAction>
+                        </ListItem>
+                    </div>))
         );
     }
 }
