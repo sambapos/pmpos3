@@ -2,7 +2,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as CardStore from '../../store/Cards';
 import { RouteComponentProps } from 'react-router';
-import { WithStyles, Paper } from 'material-ui';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { WithStyles, Paper, List, ListItem, ListItemText, ListItemSecondaryAction } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';
@@ -11,7 +12,6 @@ import { CardRecord } from '../../models/Card';
 import { CardTypeRecord } from '../../models/CardType';
 import TextField from 'material-ui/TextField/TextField';
 import * as faker from 'faker';
-import ReorderList from './ReorderList';
 
 type PageProps =
     {
@@ -28,7 +28,27 @@ interface State {
     currentCardType: CardTypeRecord;
     showClosedCards: boolean;
     searchValue: string;
+    items: any[];
 }
+
+const getListStyle = isDraggingOver => ({
+    background: isDraggingOver ? 'lightblue' : ''
+});
+
+const getItemStyle = (isDragging, draggableStyle) => ({
+    // some basic styles to make the items look a bit nicer
+    userSelect: 'none',
+    // styles we need to apply on draggables
+    ...draggableStyle,
+});
+
+const reorder = (list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    return result;
+};
 
 class CardsPage extends React.Component<PageProps, State> {
 
@@ -37,13 +57,21 @@ class CardsPage extends React.Component<PageProps, State> {
         this.state = {
             currentCardType: props.currentCardType,
             showClosedCards: false,
-            searchValue: ''
+            searchValue: '',
+            items: this.getItems(props.cards, '', false)
         };
     }
 
     componentWillReceiveProps(nextProps: PageProps) {
         if (nextProps.currentCardType.name !== this.state.currentCardType.name) {
-            this.setState({ currentCardType: nextProps.currentCardType });
+            this.setState({
+                currentCardType: nextProps.currentCardType
+            });
+        }
+        if (nextProps.cards.count() !== this.state.items.length) {
+            this.setState({
+                items: this.getItems(nextProps.cards, this.state.searchValue, this.state.showClosedCards)
+            });
         }
     }
 
@@ -113,13 +141,13 @@ class CardsPage extends React.Component<PageProps, State> {
         return result;
     }
 
-    public render() {
-        let sourceCards = this.props.cards
+    public getItems(cards: IList<CardRecord>, searchValue: string, showClosedCards: boolean) {
+        return cards
             .filter(x =>
-                this.state.searchValue
-                || this.state.showClosedCards
+                searchValue
+                || showClosedCards
                 || !x.isClosed)
-            .filter(x => !this.state.searchValue
+            .filter(x => !searchValue
                 || Boolean(x.tags.find(t => t.value.toLowerCase().includes(this.state.searchValue.toLowerCase()))))
             .sort((x, y) => x.index - y.index)
             .map(card => {
@@ -139,6 +167,8 @@ class CardsPage extends React.Component<PageProps, State> {
                 };
             })
             .toArray();
+    }
+    public render() {
         return (
             <div className={this.props.classes.root}>
                 <TopBar
@@ -152,14 +182,77 @@ class CardsPage extends React.Component<PageProps, State> {
                     onChange={e => this.setState({ searchValue: e.target.value })}
                 />
                 <Paper className={this.props.classes.content}>
-                    <ReorderList
-                        items={sourceCards}
-                        handleOnClick={
-                            item => this.props.history.push(process.env.PUBLIC_URL + '/card/' + item.id)
-                        } />
+                    <DragDropContext onDragEnd={(r) => this.onDragEnd(r)}>
+                        <Droppable droppableId="droppable">
+                            {(provided, snapshot) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    style={getListStyle(snapshot.isDraggingOver)}
+                                >
+                                    <List>
+                                        {this.state.items.map((c, index) => {
+                                            return (
+                                                <Draggable key={c.id} draggableId={c.id} index={index}>
+                                                    {(provided1, snapshot1) => (
+                                                        <div>
+                                                            <div
+                                                                ref={provided1.innerRef}
+                                                                {...provided1.draggableProps}
+                                                                {...provided1.dragHandleProps}
+                                                                style={getItemStyle(
+                                                                    snapshot1.isDragging,
+                                                                    provided1.draggableProps.style
+                                                                )}
+                                                            >
+                                                                <ListItem button divider
+                                                                    key={c.id}
+                                                                    onClick={
+                                                                        () => this.props.history.push(
+                                                                            process.env.PUBLIC_URL + '/card/' + c.id)
+                                                                    }>
+                                                                    <ListItemText
+                                                                        primary={c.text}
+                                                                        secondary={c.secondary}
+                                                                    />
+                                                                    <ListItemSecondaryAction
+                                                                        style={{ right: 10, fontSize: '1.1 em' }}>
+                                                                        {c.action}
+                                                                    </ListItemSecondaryAction>
+                                                                </ListItem>
+                                                            </div>
+                                                            {provided1.placeholder}
+                                                        </div>
+                                                    )}
+                                                </Draggable>
+                                            );
+                                        })}
+                                    </List>
+                                    {provided.placeholder}
+                                </div>
+                            )}
+
+                        </Droppable>
+                    </DragDropContext>
                 </Paper>
             </div>
         );
+    }
+
+    onDragEnd(result: any) {
+        // dropped outside the list
+        if (!result.destination) {
+            return;
+        }
+
+        const items = reorder(
+            this.state.items,
+            result.source.index,
+            result.destination.index
+        );
+
+        this.setState({
+            items,
+        });
     }
 }
 
