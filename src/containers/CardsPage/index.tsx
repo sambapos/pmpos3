@@ -38,6 +38,7 @@ const getListStyle = isDraggingOver => ({
 const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: 'none',
+    background: isDragging ? 'white' : '',
     // styles we need to apply on draggables
     ...draggableStyle,
 });
@@ -68,11 +69,9 @@ class CardsPage extends React.Component<PageProps, State> {
                 currentCardType: nextProps.currentCardType
             });
         }
-        if (nextProps.cards.count() !== this.state.items.length) {
-            this.setState({
-                items: this.getItems(nextProps.cards, this.state.searchValue, this.state.showClosedCards)
-            });
-        }
+        this.setState({
+            items: this.getItems(nextProps.cards, this.state.searchValue, this.state.showClosedCards)
+        });
     }
 
     createTestCards() {
