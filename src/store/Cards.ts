@@ -21,6 +21,7 @@ export interface State {
     pendingActions: List<ActionRecord>;
     isLoaded: boolean;
     protocol: any;
+    cardListScrollTop: number;
 }
 
 export class StateRecord extends Record<State>({
@@ -30,7 +31,8 @@ export class StateRecord extends Record<State>({
     currentCommits: List<CommitRecord>(),
     cards: List<CardRecord>(),
     isLoaded: false,
-    protocol: undefined
+    protocol: undefined,
+    cardListScrollTop: 0
 }) { }
 
 type SetCommitProtocolAction = {
@@ -77,9 +79,14 @@ type SetCurrentCardTypeAction = {
     cardType: CardTypeRecord
 };
 
+type SetCardListScrollTopAction = {
+    type: 'SET_CARD_LIST_SCROLL_TOP'
+    value: number
+};
+
 type KnownActions = AddPendingActionAction | CommitCardAction | CommitReceivedAction
     | LoadCardAction | LoadCardRequestAction | LoadCardSuccessAction | LoadCardFailAction
-    | SetCommitProtocolAction | SetCurrentCardTypeAction;
+    | SetCommitProtocolAction | SetCurrentCardTypeAction | SetCardListScrollTopAction;
 
 function getEditor(action: ActionRecord, observer: any): Promise<ActionRecord> {
     return new Promise<ActionRecord>((resolve, reject) => {
@@ -179,6 +186,9 @@ export const reducer: Reducer<StateRecord> = (
             return state
                 .set('cards', CardList.getCardsByType(action.cardType.id))
                 .set('currentCardType', action.cardType);
+        }
+        case 'SET_CARD_LIST_SCROLL_TOP': {
+            return state.set('cardListScrollTop', action.value);
         }
         default:
             return state;
@@ -285,5 +295,9 @@ export const actionCreators = {
                     cardType
                 });
             }
+        },
+    setCardListScrollTop: (value: number):
+        AppThunkAction<KnownActions> => (dispatch, getState) => {
+            dispatch({ type: 'SET_CARD_LIST_SCROLL_TOP', value });
         }
 };
