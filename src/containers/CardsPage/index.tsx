@@ -22,7 +22,9 @@ type PageProps =
         card: CardRecord,
         cardTypes: IMap<string, CardTypeRecord>,
         currentCardType: CardTypeRecord,
-        cardListScrollTop: number
+        cardListScrollTop: number,
+        searchValue: string,
+        showAllCards: boolean
     }
     & WithStyles<keyof Style>
     & typeof CardStore.actionCreators
@@ -30,11 +32,10 @@ type PageProps =
 
 interface State {
     currentCardType: CardTypeRecord;
-    showClosedCards: boolean;
-    searchValue: string;
     items: any[];
     itemCount: number;
     scrollTop: number;
+    searchValueText: string;
 }
 
 const reorder = (list, startIndex, endIndex) => {
@@ -46,6 +47,7 @@ const reorder = (list, startIndex, endIndex) => {
 
 class CardsPage extends React.Component<PageProps, State> {
 
+    private debouncedSearch;
     private debouncedHandleScroll;
     private itemCount = 50;
 
@@ -57,38 +59,43 @@ class CardsPage extends React.Component<PageProps, State> {
 
     constructor(props: PageProps) {
         super(props);
-        let filteredItems = h.getFilteredItems(props.cards, '', false);
+        let filteredItems = h.getFilteredItems(props.cards, props.searchValue, props.showAllCards);
         this.state = {
             currentCardType: props.currentCardType,
-            showClosedCards: false,
-            searchValue: '',
             items: h.getItems(filteredItems, 0, this.itemCount),
             itemCount: filteredItems.count(),
             scrollTop: props.cardListScrollTop,
+            searchValueText: props.searchValue
         };
     }
 
     componentWillMount() {
         this.debouncedHandleScroll = _.debounce(this.handle_scroll, 400);
+        this.debouncedSearch = _.debounce(this.updateSearch, 200);
     }
 
     componentWillReceiveProps(nextProps: PageProps) {
+        this.cache.clearAll();
         if (nextProps.currentCardType.name !== this.state.currentCardType.name) {
             this.setState({
                 currentCardType: nextProps.currentCardType
             });
         }
-        let filteredItems = h.getFilteredItems(nextProps.cards, this.state.searchValue, this.state.showClosedCards);
+        let filteredItems = h.getFilteredItems(nextProps.cards, nextProps.searchValue, nextProps.showAllCards);
         this.setState({
+            searchValueText: nextProps.searchValue,
             items: h.getItems(filteredItems, 0, this.itemCount),
             itemCount: filteredItems.count(),
             scrollTop: 0,
         });
-        this.cache.clearAll();
     }
 
     handle_scroll(scrollTop: number) {
         this.setState({ scrollTop });
+    }
+
+    updateSearch() {
+        this.props.setSearchValue(this.state.searchValueText);
     }
 
     private isRowLoaded({ index }: any) {
@@ -96,7 +103,7 @@ class CardsPage extends React.Component<PageProps, State> {
     }
 
     private loadMoreRows({ startIndex, stopIndex }: any) {
-        let filteredItems = h.getFilteredItems(this.props.cards, this.state.searchValue, this.state.showClosedCards);
+        let filteredItems = h.getFilteredItems(this.props.cards, this.props.searchValue, this.props.showAllCards);
         let items = this.state.items.concat(h.getItems(filteredItems, startIndex, stopIndex - startIndex + 1));
         this.setState({ items, itemCount: filteredItems.count() });
         this.cache.clearAll();
@@ -104,7 +111,7 @@ class CardsPage extends React.Component<PageProps, State> {
 
     private renderCardList() {
 
-        if (this.state.itemCount < this.itemCount * 2) {
+        if (!this.props.searchValue && this.state.itemCount < this.itemCount * 2) {
             return <DraggableCardList
                 items={this.state.items}
                 onDragEnd={r => this.onDragEnd(r)}
@@ -226,8 +233,11 @@ class CardsPage extends React.Component<PageProps, State> {
                 <TextField
                     className={this.props.classes.search}
                     label="Search"
-                    value={this.state.searchValue}
-                    onChange={e => this.setState({ searchValue: e.target.value })}
+                    value={this.state.searchValueText}
+                    onChange={e => {
+                        this.setState({ searchValueText: e.target.value });
+                        this.debouncedSearch();
+                    }}
                 />
                 <Paper className={this.props.classes.content}>
                     {this.renderCardList()}
@@ -256,7 +266,7 @@ class CardsPage extends React.Component<PageProps, State> {
                     {
                         icon: 'Show Hidden Cards',
                         onClick: () => {
-                            this.setState({ showClosedCards: !this.state.showClosedCards });
+                            this.props.setShowAllCards(!this.props.showAllCards);
                         }
                     },
                     {
@@ -313,7 +323,9 @@ const mapStateToProps = (state: ApplicationState) => ({
     card: state.cards.currentCard,
     cardTypes: state.config.cardTypes,
     currentCardType: state.cards.currentCardType,
-    cardListScrollTop: state.cards.cardListScrollTop
+    cardListScrollTop: state.cards.cardListScrollTop,
+    searchValue: state.cards.searchValue,
+    showAllCards: state.cards.showAllCards
 });
 
 export default decorate(connect(

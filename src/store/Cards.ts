@@ -22,6 +22,8 @@ export interface State {
     isLoaded: boolean;
     protocol: any;
     cardListScrollTop: number;
+    searchValue: string;
+    showAllCards: boolean;
 }
 
 export class StateRecord extends Record<State>({
@@ -32,7 +34,9 @@ export class StateRecord extends Record<State>({
     cards: List<CardRecord>(),
     isLoaded: false,
     protocol: undefined,
-    cardListScrollTop: 0
+    cardListScrollTop: 0,
+    searchValue: '',
+    showAllCards: false
 }) { }
 
 type SetCommitProtocolAction = {
@@ -84,9 +88,20 @@ type SetCardListScrollTopAction = {
     value: number
 };
 
+type SetSearchValueAction = {
+    type: 'SET_SEARCH_VALUE',
+    value: string
+};
+
+type SetShowAllCardsAction = {
+    type: 'SET_SHOW_ALL_CARDS',
+    value: boolean
+};
+
 type KnownActions = AddPendingActionAction | CommitCardAction | CommitReceivedAction
     | LoadCardAction | LoadCardRequestAction | LoadCardSuccessAction | LoadCardFailAction
-    | SetCommitProtocolAction | SetCurrentCardTypeAction | SetCardListScrollTopAction;
+    | SetCommitProtocolAction | SetCurrentCardTypeAction | SetCardListScrollTopAction |
+    SetSearchValueAction | SetShowAllCardsAction;
 
 function getEditor(action: ActionRecord, observer: any): Promise<ActionRecord> {
     return new Promise<ActionRecord>((resolve, reject) => {
@@ -189,6 +204,12 @@ export const reducer: Reducer<StateRecord> = (
         }
         case 'SET_CARD_LIST_SCROLL_TOP': {
             return state.set('cardListScrollTop', action.value);
+        }
+        case 'SET_SEARCH_VALUE': {
+            return state.set('searchValue', action.value);
+        }
+        case 'SET_SHOW_ALL_CARDS': {
+            return state.set('showAllCards', action.value);
         }
         default:
             return state;
@@ -299,5 +320,13 @@ export const actionCreators = {
     setCardListScrollTop: (value: number):
         AppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({ type: 'SET_CARD_LIST_SCROLL_TOP', value });
+        },
+    setSearchValue: (value: string):
+        AppThunkAction<KnownActions> => (dispatch, getState) => {
+            dispatch({ type: 'SET_SEARCH_VALUE', value });
+        },
+    setShowAllCards: (value: boolean):
+        AppThunkAction<KnownActions> => (dispatch, getState) => {
+            dispatch({ type: 'SET_SHOW_ALL_CARDS', value });
         }
 };

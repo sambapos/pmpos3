@@ -27,6 +27,8 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     },
     content: {
         height: '100%',
+        display: 'flex',
+        flexFlow: 'column',
         [breakpoints.up('sm')]: {
             maxWidth: '600px',
             width: '100%',

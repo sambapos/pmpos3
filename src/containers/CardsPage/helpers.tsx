@@ -4,7 +4,8 @@ import { List } from 'immutable';
 import * as faker from 'faker';
 
 export const getListStyle = isDraggingOver => ({
-    background: isDraggingOver ? 'lightblue' : ''
+    background: isDraggingOver ? 'lightblue' : '',
+    overflow: 'auto' as 'auto'
 });
 
 export const getItemStyle = (isDragging, draggableStyle) => ({
