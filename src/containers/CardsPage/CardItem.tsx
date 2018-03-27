@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { ListItem, ListItemText } from 'material-ui';
 
-export default (props: { card: any, onClick: (card: any) => void }) => {
+export default (props: { card: any, onClick: (card: any) => void, style?: any }) => {
     return (
         <ListItem button divider component="div"
+            style={props.style}
             key={props.card.id}
             onClick={
                 () => props.onClick(props.card)
