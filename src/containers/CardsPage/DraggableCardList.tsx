@@ -4,7 +4,7 @@ import CardItem from './CardItem';
 import { Draggable, DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { List } from 'material-ui';
 
-const cardRenderer = (card: any, index: number, onClick: (c: any) => void) => {
+const cardRenderer = (card: any, index: number, onClick: (c: any) => void, template: string) => {
     return (
         <Draggable key={card.id} draggableId={card.id} index={index}>
             {(provided1, snapshot1) => (
@@ -19,6 +19,7 @@ const cardRenderer = (card: any, index: number, onClick: (c: any) => void) => {
                         )}
                     >
                         <CardItem
+                            template={template}
                             card={card}
                             onClick={c => onClick(c)} />
 
@@ -33,7 +34,8 @@ const cardRenderer = (card: any, index: number, onClick: (c: any) => void) => {
 export default (props: {
     items: any[],
     onDragEnd: (r: any) => void,
-    onClick: (c: any) => void
+    onClick: (c: any) => void,
+    template: string
 }) => {
     return <DragDropContext onDragEnd={props.onDragEnd}>
         <Droppable droppableId="droppable">
@@ -43,7 +45,7 @@ export default (props: {
                     style={h.getListStyle(snapshot.isDraggingOver)}
                 >
                     <List>
-                        {props.items.map((item, index) => cardRenderer(item, index, props.onClick))}
+                        {props.items.map((item, index) => cardRenderer(item, index, props.onClick, props.template))}
                     </List>
                     {provided.placeholder}
                 </div>

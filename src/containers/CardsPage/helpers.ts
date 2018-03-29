@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { CardRecord } from '../../models/Card';
 import { List } from 'immutable';
 import * as faker from 'faker';
@@ -33,22 +32,6 @@ export function getItems(
         .skip(startIndex)
         .take(itemCount)
         .sort((x, y) => x.index - y.index)
-        .map(card => {
-            return {
-                text: card.display,
-                id: card.id,
-                secondary: card.tags.valueSeq()
-                    .filter(tag => tag.name !== 'Name')
-                    .map(tag => (
-                        <span
-                            style={{ marginRight: '8px' }}
-                            key={tag.name}
-                        >
-                            {tag.display}
-                        </span>)),
-                action: card.balanceDisplay
-            };
-        })
         .toArray();
     return result;
 }

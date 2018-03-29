@@ -9,7 +9,8 @@ const cardRenderer = (
     { key, index, style, parent }: any,
     items: any[],
     cache: any,
-    onClick: (c: any) => void
+    onClick: (c: any) => void,
+    template: string
 ) => {
 
     if (index >= items.length) { return 'NA'; }
@@ -24,6 +25,7 @@ const cardRenderer = (
         {({ measure }) => {
             return (
                 <CardItem
+                    template={template}
                     style={style}
                     card={card}
                     onClick={c => onClick(c)} />
@@ -42,6 +44,7 @@ interface VirtualCardListProps {
     onClick: (c: any) => void;
     debouncedHandleScroll: (x: number) => void;
     items: any[];
+    template: string;
 }
 
 export default (props: VirtualCardListProps) => {
@@ -67,7 +70,7 @@ export default (props: VirtualCardListProps) => {
                         height={height}
                         scrollTop={props.scrollTop}
                         onScroll={(x) => props.debouncedHandleScroll(x.scrollTop)}
-                        rowRenderer={(x) => cardRenderer(x, props.items, props.cache, props.onClick)}
+                        rowRenderer={(x) => cardRenderer(x, props.items, props.cache, props.onClick, props.template)}
                     />
                 )}
             </AutoSizer>

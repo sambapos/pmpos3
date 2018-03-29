@@ -15,7 +15,6 @@ import { List } from 'immutable';
 import { ActionRecord } from '../../models/Action';
 import { CardRecord } from '../../models/Card';
 import { CommitRecord } from '../../models/Commit';
-import { CardTagRecord } from '../../models/CardTag';
 import { cardOperations } from '../../modules/CardOperations';
 import CardOperation from '../../modules/CardOperations/CardOperation';
 
@@ -215,7 +214,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
                             buttons: this.getButtons(card),
                             anchorEl: target
                         })}
-                        handleTagClick={(card: CardRecord, cardTag: CardTagRecord) => {
+                        handleCardClick={(card: CardRecord) => {
                             this.setState({ selectedCard: card });
                         }}
                     />

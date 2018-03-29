@@ -115,6 +115,7 @@ class CardsPage extends React.Component<PageProps, State> {
             return <DraggableCardList
                 items={this.state.items}
                 onDragEnd={r => this.onDragEnd(r)}
+                template={this.state.currentCardType ? this.state.currentCardType.listDisplayFormat : ''}
                 onClick={c => {
                     this.props.setCardListScrollTop(this.state.scrollTop);
                     this.props.history.push(
@@ -136,6 +137,7 @@ class CardsPage extends React.Component<PageProps, State> {
             }}
             debouncedHandleScroll={x => this.debouncedHandleScroll(x)}
             items={this.state.items}
+            template={this.state.currentCardType ? this.state.currentCardType.listDisplayFormat : ''}
         />;
 
         // return <InfiniteLoader

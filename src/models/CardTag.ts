@@ -1,5 +1,4 @@
 import { Record } from 'immutable';
-import * as tmpl from 'blueimp-tmpl';
 
 export interface CardTag {
     id: string;
@@ -52,10 +51,6 @@ export class CardTagRecord extends Record<CardTag>({
             return result;
         }
         return this.amount;
-    }
-    getFormattedDisplay(displayFormat: string) {
-        if (!displayFormat || !displayFormat.includes('{%')) { return this.display; }
-        return tmpl(displayFormat, this);
     }
     getInQuantityFor(location?: string): number {
         location = location && location.toLowerCase();

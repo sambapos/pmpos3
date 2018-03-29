@@ -87,6 +87,14 @@ export class CardRecord extends Record<Card>({
         return this.tags.getIn(['Name', 'value']) || '';
     }
 
+    get allTags(): CardTagRecord[] {
+        return this.tags.valueSeq().toArray();
+    }
+
+    get allCards(): CardRecord[] {
+        return this.cards.valueSeq().toArray();
+    }
+
     getSubCard(id: string): CardRecord | undefined {
         return this.cards.find(x => x.getCard(id) !== undefined);
     }

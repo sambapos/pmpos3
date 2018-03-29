@@ -3,7 +3,6 @@ import { CardRecord } from '../../models/Card';
 import CardPageContent from './CardPageContent';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import decorate, { Style } from './style';
-import { CardTagRecord } from '../../models/CardTag';
 import CardList from '../../modules/CardList';
 import * as _ from 'lodash';
 
@@ -11,7 +10,7 @@ interface SubCardProps {
     card: CardRecord;
     selectedCardId: string;
     onClick: (card: CardRecord, target: any) => void;
-    handleTagClick: (Card: CardRecord, value: CardTagRecord) => void;
+    handleCardClick: (Card: CardRecord) => void;
 }
 
 type PageProps = SubCardProps & WithStyles<keyof Style>;
@@ -61,7 +60,7 @@ class SubCards extends React.Component<PageProps, { tagCount: number }> {
                                 cardType={CardList.getCardType(card.typeId)}
                                 selectedCardId={this.props.selectedCardId}
                                 onClick={this.props.onClick}
-                                handleTagClick={this.props.handleTagClick}
+                                handleCardClick={this.props.handleCardClick}
                             />
                         );
                     })}

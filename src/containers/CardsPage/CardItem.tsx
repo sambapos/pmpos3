@@ -2,22 +2,31 @@ import * as React from 'react';
 import { ListItem, ListItemText } from 'material-ui';
 import * as tmpl from 'blueimp-tmpl';
 import Interweave from 'interweave';
+import { CardRecord } from '../../models/Card';
 
-const getDefaultContent = (card: any) => {
+const getDefaultContent = (card: CardRecord) => {
     return (
         <>
             <ListItemText
-                primary={card.text}
-                secondary={card.secondary}
+                primary={card.display}
+                secondary={card.tags.valueSeq()
+                    .filter(tag => tag.name !== 'Name')
+                    .map(tag => (
+                        <span
+                            style={{ marginRight: '8px' }}
+                            key={tag.name}
+                        >
+                            {tag.display}
+                        </span>))}
             />
-            <div style={{ float: 'right', right: 10, fontSize: '1.2 em' }}>
-                {card.action}
+            <div style={{ float: 'right', right: 10, fontSize: '1.2em' }}>
+                {card.balanceDisplay}
             </div>
         </>
     );
 };
 
-const getTemplatedContent = (card: any, template: string) => {
+const getTemplatedContent = (card: CardRecord, template: string) => {
     let content = tmpl(template, card);
     return (<Interweave
         tagName="div"
@@ -26,13 +35,13 @@ const getTemplatedContent = (card: any, template: string) => {
     );
 };
 
-const getContent = (card: any, template?: string) => {
+const getContent = (card: CardRecord, template?: string) => {
     if (template && template.includes('{%')) { return getTemplatedContent(card, template); }
     return getDefaultContent(card);
 };
 
 export default (props: {
-    card: any,
+    card: CardRecord,
     onClick: (card: any) => void,
     style?: any,
     template?: string

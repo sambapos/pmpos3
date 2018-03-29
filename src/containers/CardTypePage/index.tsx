@@ -20,14 +20,21 @@ type PageProps =
 interface PageState {
     name: string;
     reference: string;
-    displayFormat: string;
+    listDisplayFormat: string;
+    cardDisplayFormat: string;
     commands: string;
 }
 
 export class CardTypePage extends React.Component<PageProps, PageState> {
     constructor(props: PageProps) {
         super(props);
-        this.state = { name: '', reference: '', commands: '', displayFormat: '' };
+        this.state = {
+            name: '',
+            reference: '',
+            commands: '',
+            listDisplayFormat: '',
+            cardDisplayFormat: ''
+        };
     }
 
     public componentWillReceiveProps(props: PageProps) {
@@ -35,7 +42,8 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
             this.setState({
                 name: props.cardType.name,
                 reference: props.cardType.reference,
-                displayFormat: props.cardType.displayFormat,
+                listDisplayFormat: props.cardType.listDisplayFormat,
+                cardDisplayFormat: props.cardType.cardDisplayFormat,
                 commands: props.cardType.commands.join('\n')
             });
         }
@@ -46,7 +54,8 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
             this.setState({
                 name: this.props.cardType.name,
                 reference: this.props.cardType.reference,
-                displayFormat: this.props.cardType.displayFormat,
+                listDisplayFormat: this.props.cardType.listDisplayFormat,
+                cardDisplayFormat: this.props.cardType.cardDisplayFormat,
                 commands: this.props.cardType.commands.join('\n')
             });
         }
@@ -80,7 +89,8 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
                                     id: this.props.cardType.id,
                                     name: this.state.name,
                                     reference: this.state.reference,
-                                    displayFormat: this.state.displayFormat,
+                                    listDisplayFormat: this.state.listDisplayFormat,
+                                    cardDisplayFormat: this.state.cardDisplayFormat,
                                     commands: this.state.commands.split('\n')
                                 }));
                                 this.props.history.goBack();
@@ -96,7 +106,6 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
                             name: e.target.value
                         })}
                     />
-
                     <TextField
                         label="Reference"
                         value={this.state.reference}
@@ -104,17 +113,32 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
                             reference: e.target.value
                         })}
                     />
-
                     <TextField
-                        label="Display Format"
-                        value={this.state.displayFormat}
+                        inputProps={{ className: this.props.classes.fixedEdit }}
+                        multiline
+                        rowsMax={6}
+                        label="List Display Format"
+                        value={this.state.listDisplayFormat}
                         onChange={(e) => this.setState({
-                            displayFormat: e.target.value
+                            listDisplayFormat: e.target.value
+                        })}
+                    />
+                    <TextField
+                        inputProps={{ className: this.props.classes.fixedEdit }}
+                        multiline
+                        rowsMax={6}
+                        label="Card Display Format"
+                        value={this.state.cardDisplayFormat}
+                        onChange={(e) => this.setState({
+                            cardDisplayFormat: e.target.value
                         })}
                     />
 
                     <TextField
+                        inputProps={{ className: this.props.classes.fixedEdit }}
                         multiline
+                        rows={3}
+                        rowsMax={6}
                         label="Commands"
                         value={this.state.commands}
                         onChange={(e) => this.setState({

@@ -10,6 +10,7 @@ export interface Style {
     tagSection: any;
     tagItem: any;
     tagItemContent: any;
+    tagBalance: any;
     selectedCardLine: any;
     cardLine: any;
     cardLineIcon: any;
@@ -43,21 +44,29 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     tagSection: {
         display: 'inline-flex',
         flex: 1,
-        flexFlow: 'column'
+        flexFlow: 'column',
+        paddingBottom: spacing.unit / 2,
+        paddingTop: spacing.unit,
     },
     tagItem: {
         display: 'inline-flex',
-        width: '100%'
+        width: '100%',
+        paddingBottom: spacing.unit / 2
     },
     tagItemContent: {
         flex: 1,
-        padding: spacing.unit / 2
+        alignSelf: 'center',
+        paddingLeft: spacing.unit / 2
+    },
+    tagBalance: {
+        fontSize: '1.2em',
+        paddingRight: 8,
+        alignSelf: 'center'
     },
     cardLine: {
         flex: 'none',
         display: 'flex',
         flexWrap: 'wrap',
-        paddingTop: spacing.unit / 2,
         borderBottom: '1px solid ' + palette.divider,
         '&:hover': {
             background: palette.grey.A100

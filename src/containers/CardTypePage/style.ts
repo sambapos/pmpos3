@@ -13,6 +13,7 @@ export interface Style {
     cardLineIcon: any;
     node: any;
     leaf: any;
+    fixedEdit: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
@@ -97,5 +98,8 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
 
         flex: '1 1 auto',
         overflowX: 'auto' as 'auto',
+    },
+    fixedEdit: {
+        fontFamily: `Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Courier New, monospace`
     }
 }));
