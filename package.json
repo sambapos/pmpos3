@@ -1,6 +1,6 @@
 {
   "name": "pmpos3",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "private": true,
   "dependencies": {
     "autosuggest-highlight": "^3.1.1",
@@ -9,6 +9,7 @@
     "history": "^4.7.2",
     "immutability-helper": "^2.6.6",
     "immutable": "^4.0.0-rc.9",
+    "interweave": "^8.0.2",
     "material-ui": "^1.0.0-beta.36",
     "moment": "^2.21.0",
     "react": "^16.2.0",

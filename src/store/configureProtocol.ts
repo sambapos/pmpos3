@@ -3,8 +3,7 @@ require('y-array/y-array.js');
 require('y-websockets-client')(Y);
 require('y-memory');
 require('y-map');
-
-// import ipfsConnector from 'y-ipfs-connector';
+require('y-indexeddb')(Y);
 
 import { ApplicationState } from './index';
 import { Commit } from '../models/Commit';
@@ -17,12 +16,16 @@ export default (
     getState: () => ApplicationState,
     cb: (protocol: any) => void) => {
 
-    let y = new Y(networkName, {
-        connector: {
-            name: 'websockets-client',
-            url: 'https://my-websockets-server.herokuapp.com/'
-        }
-    });
+    const persistence = new Y.IndexedDB();
+
+    let y = new Y(
+        networkName, {
+            connector: {
+                name: 'websockets-client',
+                url: 'https://my-websockets-server.herokuapp.com/'
+            }
+        },
+        persistence);
 
     let chatprotocol = y.define('chat', Y.Array);
     let commitProtocol = y.define('commits', Y.Array);
@@ -38,7 +41,9 @@ export default (
 
     dispatchCommitEvent(dispatch, commitProtocol.toArray());
     commitProtocol.observe(event => {
-        event.addedElements.forEach(x => dispatchCommitEvent(dispatch, x._content));
+        let values: any[] = [];
+        event.addedElements.forEach(x => values = values.concat(x._content));
+        dispatchCommitEvent(dispatch, values);
     });
 
     chatprotocol.toArray().forEach(x => dispatchChatEvent(dispatch, x));
