@@ -41,7 +41,7 @@ const getTemplatedContent = (card: CardRecord, template: string) => {
 };
 
 const getNullContent = (): JSX.Element => {
-    return <div style={{ height: 90 }} />;
+    return <div style={{ height: 30 }} />;
 };
 
 const isStaticContent = (template?: string) => {
@@ -86,18 +86,20 @@ export default class extends React.Component<CardItemProps, { content: JSX.Eleme
     }
 
     componentWillReceiveProps(nextProps: CardItemProps) {
-        if (!isStaticContent(nextProps.template)) {
-            getTemplatedContentFromRule(nextProps.card, nextProps.template)
-                .then(x => {
-                    this.setState({ content: x });
-                    if (nextProps.onUpdate) {
-                        nextProps.onUpdate(nextProps.card);
-                    }
-                });
-        } else {
-            this.setState({ content: getStaticContent(nextProps.card, nextProps.template) });
-            if (nextProps.onUpdate && nextProps.card.id !== this.props.card.id) {
-                nextProps.onUpdate(nextProps.card);
+        if (nextProps.card.id !== this.props.card.id) {
+            if (!isStaticContent(nextProps.template)) {
+                getTemplatedContentFromRule(nextProps.card, nextProps.template)
+                    .then(x => {
+                        this.setState({ content: x });
+                        if (this.props.onUpdate) {
+                            this.props.onUpdate(this.props.card);
+                        }
+                    });
+            } else {
+                this.setState({ content: getStaticContent(nextProps.card, nextProps.template) });
+                if (nextProps.onUpdate) {
+                    nextProps.onUpdate(nextProps.card);
+                }
             }
         }
     }

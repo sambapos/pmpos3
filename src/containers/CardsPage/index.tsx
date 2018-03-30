@@ -79,16 +79,16 @@ class CardsPage extends React.Component<PageProps, State> {
             this.setState({
                 currentCardType: nextProps.currentCardType
             });
+            this.cache.clearAll();
         }
         let filteredItems = h.getFilteredItems(nextProps.cards, nextProps.searchValue, nextProps.showAllCards);
-        if (this.state.items.length === 0 || this.props.searchValue !== nextProps.searchValue) {
-            this.setState({
-                searchValueText: nextProps.searchValue,
-                items: h.getItems(filteredItems, 0, this.itemCount),
-                itemCount: filteredItems.count(),
-                scrollTop: 0
-            });
-        }
+        this.setState({
+            searchValueText: nextProps.searchValue,
+            items: h.getItems(filteredItems, 0, this.itemCount),
+            itemCount: filteredItems.count(),
+            scrollTop: 0
+        });
+        console.log(filteredItems);
     }
 
     handle_scroll(scrollTop: number) {
@@ -107,7 +107,6 @@ class CardsPage extends React.Component<PageProps, State> {
         let filteredItems = h.getFilteredItems(this.props.cards, this.props.searchValue, this.props.showAllCards);
         let items = this.state.items.concat(h.getItems(filteredItems, startIndex, stopIndex - startIndex + 1));
         this.setState({ items, itemCount: filteredItems.count() });
-        // this.cache.clearAll();
     }
 
     private renderCardList() {
