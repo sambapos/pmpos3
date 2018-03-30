@@ -39,5 +39,5 @@ PM-POS is a point of sale project started by [SambaPOS](https://sambapos.com) te
 | [nools-ts](https://github.com/taoqf/nools-ts)                    | To build and execute rules               |
 | [material-ui](http://www.material-ui.com/)                       | For mobile UI components                 |
 | [typescript](https://www.typescriptlang.org/)                    | To add type safety to JS                 |
-| [blueimp](https://github.com/blueimp/JavaScript-Templates)       | To create string templates               |
+| [blueimp-tmpl](https://github.com/blueimp/JavaScript-Templates)  | To create string templates               |
 | [react-virtualized](https://github.com/bvaughn/react-virtualized)| To create virtual lists                  | 
