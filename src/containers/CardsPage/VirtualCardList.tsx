@@ -28,6 +28,9 @@ const cardRenderer = (
                     template={template}
                     style={style}
                     card={card}
+                    onUpdate={(c) => {
+                        if (index < items.length) { cache.clear(index, 0); }
+                    }}
                     onClick={c => onClick(c)} />
             );
         }}
@@ -68,8 +71,11 @@ export default (props: VirtualCardListProps) => {
                         rowHeight={props.cache.rowHeight}
                         width={width}
                         height={height}
+                        scrollToIndex={props.scrollTop === 0 ? 0 : -1}
                         scrollTop={props.scrollTop}
-                        onScroll={(x) => props.debouncedHandleScroll(x.scrollTop)}
+                        onScroll={(x) => {
+                            props.debouncedHandleScroll(x.scrollTop);
+                        }}
                         rowRenderer={(x) => cardRenderer(x, props.items, props.cache, props.onClick, props.template)}
                     />
                 )}

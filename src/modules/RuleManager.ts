@@ -54,6 +54,24 @@ class ResultType {
     }
 }
 
+class ContentType {
+    lines: string[];
+
+    constructor() {
+        this.lines = [];
+    }
+
+    clear() {
+        while (this.lines.length > 0) {
+            this.lines.pop();
+        }
+    }
+
+    add(line: string) {
+        this.lines.push(line);
+    }
+}
+
 class RuleManager {
     state: Map<string, any>;
     flows: any[];
@@ -83,6 +101,7 @@ class RuleManager {
         defines.set('State', ActionData);
         defines.set('Action', ActionType);
         defines.set('Result', ResultType);
+        defines.set('Content', ContentType);
         let filteredRules = rules
             .filter(x => !x.name.startsWith('_') && x.content.includes('when'))
             .valueSeq().toArray().filter(rule => this.testRule(rule));
@@ -100,6 +119,7 @@ class RuleManager {
             defines.set('State', ActionData);
             defines.set('Action', ActionType);
             defines.set('Result', ResultType);
+            defines.set('Content', ContentType);
             Nools.compile(rule.content, {
                 define: defines,
                 scope: new Map<string, any>([['r', []]])
@@ -155,6 +175,29 @@ class RuleManager {
             Promise.all(promises).then(results => {
                 let result = results.reduce((r, a) => r.concat(a.actions), [] as ActionType[]);
                 resolve(this.getNewActionsFrom(result, actionCardId));
+            });
+        });
+    }
+
+    async getContent(actionType: string, actionData: any, card: CardRecord, root: CardRecord)
+        : Promise<string[]> {
+        return new Promise<string[]>(resolve => {
+            let promises = this.flows.map(async flow => {
+                let result = new ContentType();
+                let session = flow.getSession(
+                    new ActionData(
+                        new ActionType(actionType, actionData),
+                        card, root, this.state
+                    ),
+                    result
+                );
+                await session.match();
+                session.dispose();
+                return result;
+            });
+            Promise.all(promises).then(results => {
+                let result = results.reduce((r, a) => r.concat(a.lines), [] as string[]);
+                resolve(result);
             });
         });
     }

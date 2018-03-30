@@ -70,24 +70,25 @@ class CardsPage extends React.Component<PageProps, State> {
     }
 
     componentWillMount() {
-        this.debouncedHandleScroll = _.debounce(this.handle_scroll, 400);
+        this.debouncedHandleScroll = _.debounce(this.handle_scroll, 100);
         this.debouncedSearch = _.debounce(this.updateSearch, 200);
     }
 
     componentWillReceiveProps(nextProps: PageProps) {
-        this.cache.clearAll();
         if (nextProps.currentCardType.name !== this.state.currentCardType.name) {
             this.setState({
                 currentCardType: nextProps.currentCardType
             });
         }
         let filteredItems = h.getFilteredItems(nextProps.cards, nextProps.searchValue, nextProps.showAllCards);
-        this.setState({
-            searchValueText: nextProps.searchValue,
-            items: h.getItems(filteredItems, 0, this.itemCount),
-            itemCount: filteredItems.count(),
-            scrollTop: 0,
-        });
+        if (this.state.items.length === 0 || this.props.searchValue !== nextProps.searchValue) {
+            this.setState({
+                searchValueText: nextProps.searchValue,
+                items: h.getItems(filteredItems, 0, this.itemCount),
+                itemCount: filteredItems.count(),
+                scrollTop: 0
+            });
+        }
     }
 
     handle_scroll(scrollTop: number) {
@@ -106,7 +107,7 @@ class CardsPage extends React.Component<PageProps, State> {
         let filteredItems = h.getFilteredItems(this.props.cards, this.props.searchValue, this.props.showAllCards);
         let items = this.state.items.concat(h.getItems(filteredItems, startIndex, stopIndex - startIndex + 1));
         this.setState({ items, itemCount: filteredItems.count() });
-        this.cache.clearAll();
+        // this.cache.clearAll();
     }
 
     private renderCardList() {
