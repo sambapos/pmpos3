@@ -21,7 +21,7 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
     },
     appBarShift: {
         width: `calc(100% - ${drawerWidth}px)`,
-        [breakpoints.down('md')]: {
+        [breakpoints.down('sm')]: {
             width: '100%',
         },
         transition: transitions.create(['margin', 'width'], {

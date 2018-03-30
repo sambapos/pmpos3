@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ListItem, ListItemText } from 'material-ui';
-import Interweave from 'interweave';
 import { CardRecord } from '../../models/Card';
 import RuleManager from '../../modules/RuleManager';
 import tmpl from 'blueimp-tmpl';
@@ -29,15 +28,18 @@ const getDefaultContent = (card: CardRecord) => {
 
 const getTemplatedContentFromRule = async (card: CardRecord, template?: string) => {
     let content = await RuleManager.getContent('GET_CONTENT', template, card, card);
-    return (<Interweave
-        tagName="div"
-        content={content.join('\n')}
-    />);
+    return <div
+        style={{ width: '100%' }}
+        dangerouslySetInnerHTML={{ __html: content.join('<br/>') }}
+    />;
 };
 
 const getTemplatedContent = (card: CardRecord, template: string) => {
     let content = tmpl(template, card);
-    return <div dangerouslySetInnerHTML={{ __html: content }} />;
+    return <div
+        style={{ width: '100%' }}
+        dangerouslySetInnerHTML={{ __html: content }}
+    />;
 };
 
 const getNullContent = (): JSX.Element => {
@@ -86,7 +88,7 @@ export default class extends React.Component<CardItemProps, { content: JSX.Eleme
     }
 
     componentWillReceiveProps(nextProps: CardItemProps) {
-        if (nextProps.card.id !== this.props.card.id) {
+        if (nextProps.card.id !== this.props.card.id || nextProps.template !== this.props.template) {
             if (!isStaticContent(nextProps.template)) {
                 getTemplatedContentFromRule(nextProps.card, nextProps.template)
                     .then(x => {

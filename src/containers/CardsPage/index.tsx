@@ -88,7 +88,6 @@ class CardsPage extends React.Component<PageProps, State> {
             itemCount: filteredItems.count(),
             scrollTop: 0
         });
-        console.log(filteredItems);
     }
 
     handle_scroll(scrollTop: number) {

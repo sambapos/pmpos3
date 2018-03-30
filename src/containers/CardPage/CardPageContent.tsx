@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as tmpl from 'blueimp-tmpl';
-import Interweave from 'interweave';
 import Tags from './Tags';
 import SubCards from './SubCards';
 import classNames from 'classnames';
@@ -31,12 +30,10 @@ const getCustomCardContent = (
     card: CardRecord,
     template: string) => {
     let content = tmpl(template, card);
-    return (
-        <Interweave
-            tagName="div"
-            content={content}
-        />
-    );
+    return <div
+        style={{ width: '100%' }}
+        dangerouslySetInnerHTML={{ __html: content.join('<br/>') }}
+    />;
 };
 
 const getCardContent = (
