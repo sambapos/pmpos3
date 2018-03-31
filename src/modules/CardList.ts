@@ -7,11 +7,13 @@ import { makeDeepCommit } from '../models/makers';
 import { Suggestion } from './CardOperations/Plugins/SetCardTag/AutoSuggest';
 import { CardTypeRecord } from '../models/CardType';
 import CardTagData from '../models/CardTagData';
+import { TagTypeRecord } from '../models/TagType';
 
 class CardList {
     commits: IMap<string, List<CommitRecord>>;
     cards: IMap<string, CardRecord>;
     cardTypes: IMap<string, CardTypeRecord>;
+    tagTypes: IMap<string, TagTypeRecord>;
     cardTypeIndex: IMap<string, List<string>>;
 
     constructor() {
@@ -22,6 +24,10 @@ class CardList {
 
     setCardTypes(cardTypes: IMap<string, CardTypeRecord>) {
         this.cardTypes = cardTypes;
+    }
+
+    setTagTypes(tagTypes: IMap<string, TagTypeRecord>) {
+        this.tagTypes = tagTypes;
     }
 
     readConcurrencyData(actionType: string, card: CardRecord, actionData: any): any {

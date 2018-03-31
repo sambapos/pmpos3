@@ -23,10 +23,10 @@ import CardPageContent from './CardPageContent';
 import CardBalance from './CardBalance';
 import CardList from '../../modules/CardList';
 import { CommandButton } from './CommandButton';
-import { Fragment } from 'react';
 import DialogContent from 'material-ui/Dialog/DialogContent';
 import DialogActions from 'material-ui/Dialog/DialogActions';
 import { CardTypeRecord } from '../../models/CardType';
+import Accounts from './Accounts';
 
 type PageProps =
     {
@@ -175,7 +175,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
                             menuItems: [{
                                 icon: 'Display Commits', onClick: () => {
                                     this.props.SetModalComponent((
-                                        <Fragment>
+                                        <>
                                             <DialogContent>
                                                 <Commits
                                                     pendingActions={this.props.pendingActions}
@@ -185,7 +185,22 @@ export class CardPage extends React.Component<PageProps, PageState> {
                                             <DialogActions>
                                                 <Button onClick={() => this.props.SetModalState(false)}>Close</Button>
                                             </DialogActions>
-                                        </Fragment>
+                                        </>
+                                    ));
+
+                                }
+                            },
+                            {
+                                icon: 'Display Accounts', onClick: () => {
+                                    this.props.SetModalComponent((
+                                        <>
+                                            <DialogContent>
+                                                <Accounts card={this.props.card} />
+                                            </DialogContent>
+                                            <DialogActions>
+                                                <Button onClick={() => this.props.SetModalState(false)}>Close</Button>
+                                            </DialogActions>
+                                        </>
                                     ));
 
                                 }

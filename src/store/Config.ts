@@ -6,13 +6,16 @@ import { CardTypeRecord } from '../models/CardType';
 import CardList from '../modules/CardList';
 import RuleManager from '../modules/RuleManager';
 import { RuleRecord } from '../models/Rule';
+import { TagTypeRecord } from '../models/TagType';
 
 interface ConfigState {
     protocol: any;
     currentCardType: CardTypeRecord;
+    currentTagType: TagTypeRecord;
     currentRule: RuleRecord;
     isLoading: boolean;
     cardTypes: IMap<string, CardTypeRecord>;
+    tagTypes: IMap<string, TagTypeRecord>;
     rules: IMap<string, RuleRecord>;
 }
 
@@ -21,7 +24,9 @@ export class ConfigStateRecord extends Record<ConfigState>({
     isLoading: false,
     currentCardType: new CardTypeRecord(),
     currentRule: new RuleRecord(),
+    currentTagType: new TagTypeRecord(),
     cardTypes: IMap<string, CardTypeRecord>(),
+    tagTypes: IMap<string, TagTypeRecord>(),
     rules: IMap<string, RuleRecord>()
 }) { }
 
@@ -89,12 +94,43 @@ type LoadCardTypeFailAction = {
     type: 'LOAD_CARD_TYPE_FAIL'
 };
 
+/// ---
+type AddTagTypeAction = {
+    type: 'ADD_TAG_TYPE'
+};
+
+type ResetTagTypeAction = {
+    type: 'RESET_TAG_TYPE'
+};
+
+type LoadTagTypeAction = {
+    type: 'LOAD_TAG_TYPE'
+    id: String
+    payload: Promise<TagTypeRecord>
+};
+
+type LoadTagTypeRequestAction = {
+    type: 'LOAD_TAG_TYPE_REQUEST'
+};
+
+type LoadTagTypeSuccessAction = {
+    type: 'LOAD_TAG_TYPE_SUCCESS'
+    payload: TagTypeRecord
+};
+
+type LoadTagTypeFailAction = {
+    type: 'LOAD_TAG_TYPE_FAIL'
+};
+
 type KnownActions = SetConfigProtocolAction | ConfigReceivedAction | ResetCardTypeAction
     | LoadCardTypeAction | LoadCardTypeFailAction | LoadCardTypeRequestAction
     | LoadCardTypeSuccessAction | AddCardTypeAction
 
-    | ResetRuleAction | LoadRuleAction | LoadRuleFailAction | LoadRuleRequestAction | LoadRuleSuccessAction
-    | AddRuleAction;
+    | ResetRuleAction | LoadRuleAction | LoadRuleFailAction | LoadRuleRequestAction
+    | LoadRuleSuccessAction | AddRuleAction
+
+    | ResetTagTypeAction | LoadTagTypeAction | LoadTagTypeFailAction | LoadTagTypeRequestAction
+    | LoadTagTypeSuccessAction | AddTagTypeAction;
 
 export const reducer: Reducer<ConfigStateRecord> = (
     state: ConfigStateRecord = new ConfigStateRecord(),
@@ -107,12 +143,19 @@ export const reducer: Reducer<ConfigStateRecord> = (
         case 'CONFIG_RECEIVED': {
             let cardTypeMap = IMap<string, CardTypeRecord>();
             let ruleMap = IMap<string, RuleRecord>();
+            let tagTypeMap = IMap<string, TagTypeRecord>();
 
             if (action.payload.has('cardTypes')) {
                 let cardTypes = action.payload.get('cardTypes');
                 cardTypeMap = Object.keys(cardTypes)
                     .reduce((x, y) => x.set(y, new CardTypeRecord(cardTypes[y])), IMap<string, CardTypeRecord>());
                 CardList.setCardTypes(cardTypeMap);
+            }
+            if (action.payload.has('tagTypes')) {
+                let tagTypes = action.payload.get('tagTypes');
+                tagTypeMap = Object.keys(tagTypes).
+                    reduce((x, y) => x.set(y, new TagTypeRecord(tagTypes[y])), IMap<string, TagTypeRecord>());
+                CardList.setTagTypes(tagTypeMap);
             }
             if (action.payload.has('rules')) {
                 let rules = action.payload.get('rules');
@@ -122,6 +165,7 @@ export const reducer: Reducer<ConfigStateRecord> = (
             }
             return state
                 .set('cardTypes', cardTypeMap)
+                .set('tagTypes', tagTypeMap)
                 .set('rules', ruleMap);
         }
         case 'LOAD_CARD_TYPE_REQUEST': {
@@ -151,6 +195,35 @@ export const reducer: Reducer<ConfigStateRecord> = (
                     id: shortid.generate()
                 }));
         }
+        // --
+        case 'LOAD_TAG_TYPE_REQUEST': {
+            return state
+                .set('isLoading', true)
+                .set('currentTagType', new TagTypeRecord());
+        }
+        case 'LOAD_TAG_TYPE_FAIL': {
+            return state
+                .set('isLoading', false)
+                .set('currentTagType', new TagTypeRecord());
+        }
+        case 'LOAD_TAG_TYPE_SUCCESS': {
+            return state
+                .set('isLoading', false)
+                .set('currentTagType', action.payload);
+        }
+        case 'RESET_TAG_TYPE': {
+            return state
+                .set('isLoading', false)
+                .set('currentTagType', new TagTypeRecord());
+        }
+        case 'ADD_TAG_TYPE': {
+            return state
+                .set('isLoading', false)
+                .set('currentTagType', new TagTypeRecord({
+                    id: shortid.generate()
+                }));
+        }
+        // --
         case 'LOAD_RULE_REQUEST': {
             return state
                 .set('isLoading', true)
@@ -198,6 +271,13 @@ export const actionCreators = {
             type: 'RESET_RULE'
         });
     },
+    deleteTagType: (id: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
+        let result = getState().config.tagTypes.delete(id);
+        getState().config.protocol.set('tagTypes', result.toJS());
+        dispatch({
+            type: 'RESET_TAG_TYPE'
+        });
+    },
     saveCardType: (cardType: CardTypeRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
         let cardTypes = getState().config.cardTypes;
         let result = cardTypes.set(cardType.id, cardType);
@@ -214,6 +294,14 @@ export const actionCreators = {
             type: 'RESET_RULE'
         });
     },
+    saveTagType: (tagType: TagTypeRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
+        let tagTypes = getState().config.tagTypes;
+        let result = tagTypes.set(tagType.id, tagType);
+        getState().config.protocol.set('tagTypes', result.toJS());
+        dispatch({
+            type: 'RESET_TAG_TYPE'
+        });
+    },
     addCardType: ():
         AppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({
@@ -224,6 +312,12 @@ export const actionCreators = {
         AppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({
                 type: 'ADD_RULE'
+            });
+        },
+    addTagType: ():
+        AppThunkAction<KnownActions> => (dispatch, getState) => {
+            dispatch({
+                type: 'ADD_TAG_TYPE'
             });
         },
     loadCardType: (id: string):
@@ -252,6 +346,21 @@ export const actionCreators = {
                         reject(`${id} not found`);
                     } else {
                         resolve(rule);
+                    }
+                })
+            });
+        },
+    loadTagType: (id: string):
+        AppThunkAction<KnownActions> => (dispatch, getState) => {
+            dispatch({
+                type: 'LOAD_TAG_TYPE',
+                id,
+                payload: new Promise<TagTypeRecord>((resolve, reject) => {
+                    let tagType = getState().config.tagTypes.get(id);
+                    if (!tagType) {
+                        reject(`${id} not found`);
+                    } else {
+                        resolve(tagType);
                     }
                 })
             });

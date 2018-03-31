@@ -9,6 +9,8 @@ import CardsPage from './containers/CardsPage';
 import CardPage from './containers/CardPage';
 import CardTypesPage from './containers/CardTypesPage';
 import CardTypePage from './containers/CardTypePage';
+import TagTypesPage from './containers/TagTypesPage';
+import TagTypePage from './containers/TagTypePage';
 import RulesPage from './containers/RulesPage';
 import RulePage from './containers/RulePage';
 import ReportPage from './containers/ReportPage';
@@ -28,6 +30,8 @@ export const subRoutes = (
         <Route exact path={process.env.PUBLIC_URL + '/login'} component={LoginPage} />
         <Route exact path={process.env.PUBLIC_URL + '/cardTypes'} component={CardTypesPage} />
         <Route exact path={process.env.PUBLIC_URL + '/cardType'} component={CardTypePage} />
+        <Route exact path={process.env.PUBLIC_URL + '/tagTypes'} component={TagTypesPage} />
+        <Route exact path={process.env.PUBLIC_URL + '/tagType'} component={TagTypePage} />
         <Route exact path={process.env.PUBLIC_URL + '/rules'} component={RulesPage} />
         <Route exact path={process.env.PUBLIC_URL + '/rule'} component={RulePage} />
         <Route exact path={process.env.PUBLIC_URL + '/cards'} component={CardsPage} />
