@@ -2,6 +2,7 @@ import { Record } from 'immutable';
 
 export interface CardTag {
     id: string;
+    typeId: string;
     name: string;
     value: string;
     quantity: number;
@@ -15,6 +16,7 @@ export interface CardTag {
 
 export class CardTagRecord extends Record<CardTag>({
     id: '',
+    typeId: '',
     name: '',
     value: '',
     quantity: 0,
@@ -82,9 +84,4 @@ export class CardTagRecord extends Record<CardTag>({
             || this.source.toLowerCase().includes(sv)
             || this.target.toLowerCase().includes(sv);
     }
-
-    // getBalanceDisplay(parentAmount: number): string {
-    //     let balance = this.getBalance(parentAmount);
-    //     return balance !== 0 ? balance.toFixed(2) : '';
-    // }
 }

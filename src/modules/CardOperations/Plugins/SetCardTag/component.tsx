@@ -1,89 +1,115 @@
 import * as React from 'react';
 import { TextField, Button, DialogContent, DialogTitle, DialogActions } from 'material-ui';
 import * as shortid from 'shortid';
-import AutoSuggest from './AutoSuggest';
+import AutoSuggest from '../../../../components/AutoSuggest';
 import CardList from '../../../CardList';
 import { CardTagRecord } from '../../../../models/CardTag';
 import { Fragment } from 'react';
+import { TagTypeRecord } from '../../../../models/TagType';
 
 export default class extends React.Component<
     {
         success: (actionType: string, data: any) => void,
         cancel: () => void,
         actionName: string,
-        current?: CardTagRecord
+        current: { tagType: TagTypeRecord, tag: CardTagRecord }
     },
     {
         name: string, value: string, quantity: string, unit: string,
-        amount: string, rate: string, source: string, target: string
+        amount: string, rate: string, source: string, target: string,
+        typeId: string
     }> {
     constructor(props: any) {
         super(props);
         this.state = {
             name: '', value: '', quantity: '', unit: '',
-            amount: '', rate: '', source: '', target: ''
+            amount: '', rate: '', source: '', target: '',
+            typeId: ''
         };
     }
     componentDidMount() {
-        if (this.props.current) {
+        if (this.props.current && this.props.current.tag) {
             this.setState({
-                name: this.props.current.name,
-                value: this.props.current.value,
-                quantity: String(this.props.current.quantity),
-                unit: this.props.current.unit,
-                amount: String(this.props.current.amount),
-                rate: String(this.props.current.rate),
-                source: this.props.current.source,
-                target: this.props.current.target
+                name: this.props.current.tag.name,
+                value: this.props.current.tag.value,
+                quantity: String(this.props.current.tag.quantity),
+                unit: this.props.current.tag.unit,
+                amount: String(this.props.current.tag.amount),
+                rate: String(this.props.current.tag.rate),
+                source: this.props.current.tag.source,
+                target: this.props.current.tag.target
             });
+        }
+        if (this.props.current && this.props.current.tagType) {
+            this.setState({
+                typeId: this.props.current.tagType.id
+            });
+            if (!this.props.current.tag.name) {
+                this.setState({
+                    name: this.props.current.tagType.cardTypeReferenceName
+                });
+            }
         }
     }
 
     render() {
+        let tagType = this.props.current.tagType;
+        let canEditName = Boolean(
+            !this.props.current.tag.name && !tagType.id
+        );
+        let canEditQuantity = !tagType.id || tagType.showQuantity;
+        let canEditUnit = !tagType.id || tagType.showUnit;
+        let canEditAmount = !tagType.id || tagType.showAmount;
+        let canEditRate = !tagType.id || tagType.showRate;
+
         return (
             <Fragment>
-                <DialogTitle>Set Card Tag</DialogTitle>
+                <DialogTitle>{
+                    `Set ${tagType.id
+                        ? tagType.cardTypeReferenceName
+                        : ' Card Tag'}`
+                }
+                </DialogTitle>
                 <DialogContent>
-                    {Boolean(!this.props.current || !this.props.current.name) &&
-                        <TextField
-                            fullWidth
-                            label="Tag Name"
-                            value={this.state.name}
-                            onChange={e => this.setState({ name: e.target.value })}
-                        />}
+                    {canEditName && <TextField
+                        fullWidth
+                        label="Tag Name"
+                        value={this.state.name}
+                        onChange={e => this.setState({ name: e.target.value })}
+                    />}
                     <AutoSuggest
                         label="Tag Value"
-                        value={this.props.current ? this.props.current.value || '' : ''}
+                        value={this.props.current ? this.props.current.tag.value || '' : ''}
                         getSuggestions={value => CardList.getCardSuggestions(this.state.name, value)}
                         handleChange={(e, value) => this.setState({ value })}
                     />
-                    <TextField
+                    {canEditQuantity && <TextField
                         fullWidth
                         label="Quantity"
                         type="number"
                         value={this.state.quantity}
                         onChange={e => this.setState({ quantity: e.target.value })}
-                    />
-                    <TextField
+                    />}
+                    {canEditUnit && <TextField
                         fullWidth
                         label="Unit"
                         value={this.state.unit}
                         onChange={e => this.setState({ unit: e.target.value })}
-                    />
-                    <TextField
+                    />}
+                    {canEditAmount && <TextField
                         fullWidth
                         label="Amount"
                         type="number"
                         value={this.state.amount}
                         onChange={e => this.setState({ amount: e.target.value })}
-                    />
-                    <TextField
+                    />}
+                    {canEditRate && <TextField
                         fullWidth
                         label="Rate"
                         type="number"
                         value={this.state.rate}
                         onChange={e => this.setState({ rate: e.target.value })}
-                    />
+                    />}
                     <TextField
                         fullWidth
                         label="Source"
@@ -112,7 +138,8 @@ export default class extends React.Component<
                                     amount: Number(this.state.amount),
                                     rate: Number(this.state.rate),
                                     source: this.state.source,
-                                    target: this.state.target
+                                    target: this.state.target,
+                                    typeId: this.state.typeId
                                 });
                         }}
                     >

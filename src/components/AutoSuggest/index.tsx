@@ -67,25 +67,6 @@ function getSuggestionValue(suggestion: Suggestion) {
     return suggestion.label;
 }
 
-// function getSuggestions(value: string, source: Suggestion[]): Suggestion[] {
-//     const inputValue = value.trim().toLowerCase();
-//     const inputLength = inputValue.length;
-//     let count = 0;
-
-//     return inputLength === 0
-//         ? []
-//         : source.filter(suggestion => {
-//             const keep =
-//                 count < 5 && getSuggestionValue(suggestion).toLowerCase().slice(0, inputLength) === inputValue;
-
-//             if (keep) {
-//                 count += 1;
-//             }
-
-//             return keep;
-//         });
-// }
-
 interface SuggestProps {
     getSuggestions: (value: string) => Suggestion[];
     handleChange: (event: any, newValue: string) => void;

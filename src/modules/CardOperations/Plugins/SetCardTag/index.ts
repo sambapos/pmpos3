@@ -6,6 +6,7 @@ import { ActionRecord } from '../../../../models/Action';
 import { CardTagRecord } from '../../../../models/CardTag';
 import TagEditor from './component';
 import CardList from '../../../CardList';
+import { TagTypeRecord } from '../../../../models/TagType';
 
 export default class SetCardTag extends CardOperation {
 
@@ -22,7 +23,10 @@ export default class SetCardTag extends CardOperation {
     createEditor(success: (actionType: string, data: any) => void, cancel: () => void, current: any) {
         return React.createElement(TagEditor, {
             success, cancel, actionName: this.type,
-            current: new CardTagRecord(current)
+            current: {
+                tag: new CardTagRecord(current.tag),
+                tagType: new TagTypeRecord(current.tagType)
+            }
         });
     }
 
@@ -50,8 +54,13 @@ export default class SetCardTag extends CardOperation {
         return data;
     }
 
-    canApply(card: CardRecord, data: CardTagRecord): boolean {
-        if (!data.name || (data.name.startsWith('_') && !data.value)) { return false; }
+    valueNeeded(data: any): boolean {
+        console.log(data);
+        return data.name.startsWith('_') || data.typeId;
+    }
+
+    canApply(card: CardRecord, data: any): boolean {
+        if (!data.name || (this.valueNeeded(data) && !data.value)) { return false; }
         let currentValue = card.getIn(['tags', data.name]) as CardTagRecord;
         return !currentValue
             || currentValue.value !== data.value

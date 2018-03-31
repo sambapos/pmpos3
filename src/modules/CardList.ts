@@ -4,7 +4,7 @@ import { CardRecord } from '../models/Card';
 import { cardOperations } from './CardOperations/index';
 import { ActionRecord } from '../models/Action';
 import { makeDeepCommit } from '../models/makers';
-import { Suggestion } from './CardOperations/Plugins/SetCardTag/AutoSuggest';
+import { Suggestion } from '../components/AutoSuggest';
 import { CardTypeRecord } from '../models/CardType';
 import CardTagData from '../models/CardTagData';
 import { TagTypeRecord } from '../models/TagType';
@@ -153,6 +153,7 @@ class CardList {
             let cards = index.map(id => this.cards.get(id) as CardRecord);
             result = cards
                 .filter(c => c.name.toLowerCase().trim().includes(inputValue))
+                .take(100)
                 .map(c => {
                     return { label: c.name };
                 })

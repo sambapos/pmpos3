@@ -19,6 +19,8 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         marginBottom: spacing.unit * 3,
         left: 0,
         right: 0,
+        overflow: 'auto',
+        maxHeight: 200
     },
     suggestion: {
         display: 'block',

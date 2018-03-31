@@ -8,7 +8,7 @@ export default class extends React.Component<
         success: (actionType: string, data: any) => void,
         cancel: () => void,
         actionName: string,
-        current?: CardRecord
+        current?: { card: CardRecord }
     },
     { index: string }> {
     constructor(props: any) {
@@ -17,7 +17,7 @@ export default class extends React.Component<
     }
     componentDidMount() {
         if (this.props.current) {
-            this.setState({ index: this.props.current.index.toString() });
+            this.setState({ index: this.props.current.card.index.toString() });
         }
     }
 

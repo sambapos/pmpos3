@@ -164,6 +164,9 @@ export class CardPage extends React.Component<PageProps, PageState> {
             );
         }
 
+        let cardTags = this.state.selectedCard.tags.valueSeq();
+        let unselectedTagTypes = CardList.tagTypes.filter(x => !cardTags.find(y => y.typeId === x.id));
+
         return (
             <div className={this.props.classes.root}>
                 <TopBar
@@ -261,33 +264,48 @@ export class CardPage extends React.Component<PageProps, PageState> {
                         },
                     }}
                 >
-                    {this.state.operations.map(option => (
-                        <MenuItem
-                            key={'cmd_' + option.type}
-                            onClick={e => {
-                                this.handleOperation(option, this.state.selectedCard);
+                    {unselectedTagTypes.map(tagType => {
+                        return (<MenuItem
+                            key={'set_' + tagType.name}
+                            onClick={() => {
+                                this.handleOperation(
+                                    this.state.operations.find(x => x.type === 'SET_CARD_TAG') as CardOperation,
+                                    { tagType }
+                                );
                                 this.handleMenuClose();
                             }}
                         >
-                            {option.description}
-                        </MenuItem>
-                    ))}
-                    {this.state.selectedCard.tags.count() > 0 && <Divider />}
-                    {this.state.selectedCard.tags.valueSeq().map(tag => {
+                            Select {tagType.cardTypeReferenceName}
+                        </MenuItem>);
+                    })}
+                    {cardTags.map(tag => {
                         return (
                             <MenuItem
                                 key={'edit_' + tag.name}
                                 onClick={() => {
                                     this.handleOperation(
                                         this.state.operations.find(x => x.type === 'SET_CARD_TAG') as CardOperation,
-                                        tag
+                                        { tagType: CardList.tagTypes.find(x => x.id === tag.typeId), tag }
                                     );
                                     this.handleMenuClose();
                                 }}
-                            >Edit {!tag.name.startsWith('_') ? tag.name : tag.value}
+                            >Change {!tag.name.startsWith('_') ? tag.name : tag.value}
                             </MenuItem>
                         );
                     })}
+                    {(cardTags.count() > 0 || unselectedTagTypes.count() > 0) && <Divider />}
+                    {this.state.operations.map(option => (
+                        <MenuItem
+                            key={'cmd_' + option.type}
+                            onClick={e => {
+                                this.handleOperation(option, { card: this.state.selectedCard });
+                                this.handleMenuClose();
+                            }}
+                        >
+                            {option.description}
+                        </MenuItem>
+                    ))}
+
                     {this.state.buttons.length > 0 && <Divider />}
                     {this.state.buttons.map(button => (
                         <MenuItem
