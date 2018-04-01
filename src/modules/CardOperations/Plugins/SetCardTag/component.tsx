@@ -47,8 +47,6 @@ export default class extends React.Component<
             if (!this.props.current.tag.name) {
                 this.setState({
                     name: this.props.current.tagType.cardTypeReferenceName
-                        ? '_' + this.props.current.tagType.cardTypeReferenceName
-                        : ''
                 });
             }
         }
@@ -130,18 +128,6 @@ export default class extends React.Component<
                         }
                         handleChange={(e, target) => this.setState({ target })}
                     />}
-                    {/* <TextField
-                        fullWidth
-                        label="Source"
-                        value={this.state.source}
-                        onChange={e => this.setState({ source: e.target.value })}
-                    />
-                    <TextField
-                        fullWidth
-                        label="Target"
-                        value={this.state.target}
-                        onChange={e => this.setState({ target: e.target.value })}
-                    /> */}
                 </DialogContent>
                 <DialogActions>
                     {/* <Button onClick={() => this.props.cancel()}>Cancel</Button> */}

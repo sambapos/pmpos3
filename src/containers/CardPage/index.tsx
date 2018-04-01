@@ -2,58 +2,39 @@ import * as React from 'react';
 import * as moment from 'moment';
 import * as shortid from 'shortid';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
 import * as CardStore from '../../store/Cards';
 import * as ClientStore from '../../store/Client';
 import { ApplicationState } from '../../store/index';
 
-import { WithStyles, Typography, Menu, MenuItem, Paper, Divider, Button } from 'material-ui';
-import decorate, { Style } from './style';
+import { Typography, Menu, MenuItem, Paper, Divider, Button } from 'material-ui';
+import decorate from './style';
 import * as Extender from '../../lib/Extender';
 import TopBar from '../TopBar';
-import { List } from 'immutable';
-import { ActionRecord } from '../../models/Action';
 import { CardRecord } from '../../models/Card';
-import { CommitRecord } from '../../models/Commit';
-import { cardOperations } from '../../modules/CardOperations';
 import CardOperation from '../../modules/CardOperations/CardOperation';
 
-import Commits from './Commits';
 import CardPageContent from './CardPageContent';
 import CardBalance from './CardBalance';
 import CardList from '../../modules/CardList';
 import { CommandButton } from './CommandButton';
-import DialogContent from 'material-ui/Dialog/DialogContent';
-import DialogActions from 'material-ui/Dialog/DialogActions';
 import { CardTypeRecord } from '../../models/CardType';
-import Accounts from './Accounts';
-
-type PageProps =
-    {
-        isLoaded: boolean,
-        pendingActions: List<ActionRecord>
-        card: CardRecord,
-        commits: List<CommitRecord>
-    }
-    & WithStyles<keyof Style>
-    & typeof CardStore.actionCreators
-    & typeof ClientStore.actionCreators
-    & RouteComponentProps<{ id?: string }>;
+import CardPageTopbar from './CardPageTopbar';
+import TagMenuItems from './TagMenuItems';
+import { CardPageProps } from './CardPageProps';
+import { Link } from 'react-router-dom';
 
 interface PageState {
     anchorEl: any;
-    operations: CardOperation[];
     selectedCard: CardRecord;
     buttons: CommandButton[];
     footerButtons: CommandButton[];
 }
 
-export class CardPage extends React.Component<PageProps, PageState> {
-    constructor(props: PageProps) {
+export class CardPage extends React.Component<CardPageProps, PageState> {
+    constructor(props: CardPageProps) {
         super(props);
         this.state = {
             anchorEl: undefined,
-            operations: cardOperations.getOperations(),
             selectedCard: props.card,
             buttons: [],
             footerButtons: this.getButtons(props.card)
@@ -77,7 +58,8 @@ export class CardPage extends React.Component<PageProps, PageState> {
         this.handleModalClose();
     }
 
-    handleOperation(operation: CardOperation, currentData?: any) {
+    handleOperation(operation?: CardOperation, currentData?: any) {
+        if (!operation) { return; }
         if (operation.getEditor) {
             let component = operation.getEditor(
                 (at, data) => this.handleCardMutation(this.state.selectedCard, at, data),
@@ -111,18 +93,10 @@ export class CardPage extends React.Component<PageProps, PageState> {
         }
     }
 
-    public componentWillReceiveProps(props: PageProps) {
+    public componentWillReceiveProps(props: CardPageProps) {
         if (props.isLoaded) {
             this.setState({ footerButtons: this.getButtons(props.card) });
         }
-    }
-
-    getTitle() {
-        let ct = CardList.getCardType(this.props.card.typeId);
-        let cap = ct ? ct.reference : `Card`;
-        return !this.props.card.name
-            ? `New ${cap}`
-            : `${this.props.card.display}`;
     }
 
     getButtonsForCommand(command: string): CommandButton[] {
@@ -154,6 +128,17 @@ export class CardPage extends React.Component<PageProps, PageState> {
     }
 
     public render() {
+        if (this.props.failed) {
+            return (
+                <div>
+                    <TopBar
+                        title="Can't Load Card"
+                    />
+                    <Link to={process.env.PUBLIC_URL + '/cards/'}>Go Back</Link>
+                </div>
+            );
+        }
+
         if (!this.props.isLoaded || !this.props.card) {
             return (
                 <div>
@@ -164,60 +149,9 @@ export class CardPage extends React.Component<PageProps, PageState> {
             );
         }
 
-        let cardTags = this.state.selectedCard.tags.valueSeq();
-        let unselectedTagTypes = CardList.tagTypes.valueSeq()
-            .filter(x => !cardTags.find(y => y.typeId === x.id));
-
         return (
             <div className={this.props.classes.root}>
-                <TopBar
-                    title={this.getTitle()}
-                    menuCommand={{ icon: 'close', onClick: () => { this.props.history.goBack(); } }}
-                    secondaryCommands={[
-                        {
-                            icon: 'folder_open',
-                            menuItems: [{
-                                icon: 'Display Commits', onClick: () => {
-                                    this.props.SetModalComponent((
-                                        <>
-                                            <DialogContent>
-                                                <Commits
-                                                    pendingActions={this.props.pendingActions}
-                                                    commits={this.props.commits}
-                                                />
-                                            </DialogContent>
-                                            <DialogActions>
-                                                <Button onClick={() => this.props.SetModalState(false)}>Close</Button>
-                                            </DialogActions>
-                                        </>
-                                    ));
-
-                                }
-                            },
-                            {
-                                icon: 'Display Accounts', onClick: () => {
-                                    this.props.SetModalComponent((
-                                        <>
-                                            <DialogContent>
-                                                <Accounts card={this.props.card} />
-                                            </DialogContent>
-                                            <DialogActions>
-                                                <Button onClick={() => this.props.SetModalState(false)}>Close</Button>
-                                            </DialogActions>
-                                        </>
-                                    ));
-
-                                }
-                            }]
-                        },
-                        {
-                            icon: 'check', onClick: () => {
-                                this.props.commitCard();
-                                this.props.history.goBack();
-                            }
-                        }
-                    ]}
-                />
+                <CardPageTopbar {...this.props} />
                 <Paper className={this.props.classes.content}>
                     <div className={this.props.classes.indexHeader}>
                         <Typography>{this.props.card.id}</Typography>
@@ -253,7 +187,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
                         );
                     })}</div>
                 </div>
-                <Menu
+                {this.state.anchorEl && <Menu
                     id="long-menu"
                     anchorEl={this.state.anchorEl}
                     open={Boolean(this.state.anchorEl)}
@@ -265,47 +199,11 @@ export class CardPage extends React.Component<PageProps, PageState> {
                         },
                     }}
                 >
-                    {unselectedTagTypes.map(tagType => {
-                        return (<MenuItem
-                            key={'set_' + tagType.name}
-                            onClick={() => {
-                                this.handleOperation(
-                                    this.state.operations.find(x => x.type === 'SET_CARD_TAG') as CardOperation,
-                                    { tagType }
-                                );
-                                this.handleMenuClose();
-                            }}
-                        >
-                            Select {tagType.cardTypeReferenceName}
-                        </MenuItem>);
-                    })}
-                    {cardTags.map(tag => {
-                        return (
-                            <MenuItem
-                                key={'edit_' + tag.name}
-                                onClick={() => {
-                                    this.handleOperation(
-                                        this.state.operations.find(x => x.type === 'SET_CARD_TAG') as CardOperation,
-                                        { tagType: CardList.tagTypes.find(x => x.id === tag.typeId), tag }
-                                    );
-                                    this.handleMenuClose();
-                                }}
-                            >Change {!tag.name.startsWith('_') ? tag.name : tag.value}
-                            </MenuItem>
-                        );
-                    })}
-                    {(cardTags.count() > 0 || unselectedTagTypes.count() > 0) && <Divider />}
-                    {this.state.operations.map(option => (
-                        <MenuItem
-                            key={'cmd_' + option.type}
-                            onClick={e => {
-                                this.handleOperation(option, { card: this.state.selectedCard });
-                                this.handleMenuClose();
-                            }}
-                        >
-                            {option.description}
-                        </MenuItem>
-                    ))}
+                    <TagMenuItems
+                        selectedCard={this.state.selectedCard}
+                        handleOperation={(op, data) => this.handleOperation(op, data)}
+                        handleMenuClose={() => this.handleMenuClose()}
+                        {...this.props} />
 
                     {this.state.buttons.length > 0 && <Divider />}
                     {this.state.buttons.map(button => (
@@ -319,7 +217,7 @@ export class CardPage extends React.Component<PageProps, PageState> {
                             {button.caption}
                         </MenuItem>
                     ))}
-                </Menu>
+                </Menu>}
             </div>
         );
     }
@@ -329,7 +227,8 @@ const mapStateToProps = (state: ApplicationState) => ({
     card: state.cards.currentCard,
     commits: state.cards.currentCommits,
     pendingActions: state.cards.pendingActions,
-    isLoaded: state.cards.isLoaded
+    isLoaded: state.cards.isLoaded,
+    failed: state.cards.failed
 });
 
 export default decorate(connect(

@@ -14,6 +14,9 @@ class CardOperations {
     canHandle(action: ActionRecord) {
         return this.operations.has(action.actionType);
     }
+    get(actionType: string) {
+        return this.operations.get(actionType);
+    }
     getConcurrencyData(actionType: string, card: CardRecord, actionData: any) {
         let operation = this.operations.get(actionType);
         return operation && operation.readConcurrencyData(card, actionData);

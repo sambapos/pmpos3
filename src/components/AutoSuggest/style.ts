@@ -14,11 +14,11 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         position: 'relative'
     },
     suggestionsContainerOpen: {
-        position: 'absolute',
+        position: 'fixed',
         marginTop: spacing.unit,
         marginBottom: spacing.unit * 3,
-        left: 0,
-        right: 0,
+        // left: 0,
+        // right: 0,
         overflow: 'auto',
         maxHeight: 200
     },

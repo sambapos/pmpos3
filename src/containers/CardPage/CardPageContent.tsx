@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as tmpl from 'blueimp-tmpl';
 import Tags from './Tags';
 import SubCards from './SubCards';
 import classNames from 'classnames';
@@ -17,34 +16,6 @@ interface CardContentProps {
 }
 
 type PageProps = CardContentProps & WithStyles<keyof Style>;
-
-const getDefaultCardContent = (
-    card: CardRecord,
-    handleCardClick: (card: CardRecord) => void) => {
-    return <Tags
-        card={card}
-    />;
-};
-
-const getCustomCardContent = (
-    card: CardRecord,
-    template: string) => {
-    let content = tmpl(template, card);
-    return <div
-        style={{ width: '100%' }}
-        dangerouslySetInnerHTML={{ __html: content.join('<br/>') }}
-    />;
-};
-
-const getCardContent = (
-    card: CardRecord,
-    cardType: CardTypeRecord | undefined,
-    handleTagClick: (card: CardRecord) => void) => {
-    if (cardType && cardType.cardDisplayFormat && cardType.cardDisplayFormat.includes('{%')) {
-        return getCustomCardContent(card, cardType.cardDisplayFormat);
-    }
-    return getDefaultCardContent(card, handleTagClick);
-};
 
 const CardPageContent = (props: PageProps) => {
     return (
@@ -66,7 +37,7 @@ const CardPageContent = (props: PageProps) => {
                 >
                     more_vert
                 </Icon>
-                {getCardContent(props.card, props.cardType, props.handleCardClick)}
+                <Tags card={props.card} />
             </div>
             <SubCards
                 card={props.card}

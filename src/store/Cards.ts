@@ -24,6 +24,7 @@ export interface State {
     cardListScrollTop: number;
     searchValue: string;
     showAllCards: boolean;
+    failed: boolean;
 }
 
 export class StateRecord extends Record<State>({
@@ -36,7 +37,8 @@ export class StateRecord extends Record<State>({
     protocol: undefined,
     cardListScrollTop: 0,
     searchValue: '',
-    showAllCards: false
+    showAllCards: false,
+    failed: false
 }) { }
 
 type SetCommitProtocolAction = {
@@ -195,7 +197,8 @@ export const reducer: Reducer<StateRecord> = (
         }
         case 'LOAD_CARD_FAIL': {
             return state
-                .set('isLoaded', false);
+                .set('isLoaded', false)
+                .set('failed', true);
         }
         case 'SET_CURRENT_CARD_TYPE': {
             return state
@@ -221,7 +224,8 @@ function resetCurrentCard(state: StateRecord) {
         .set('currentCard', new CardRecord())
         .set('pendingActions', state.pendingActions.clear())
         .set('currentCommits', undefined)
-        .set('isLoaded', false);
+        .set('isLoaded', false)
+        .set('failed', false);
 }
 
 export const actionCreators = {

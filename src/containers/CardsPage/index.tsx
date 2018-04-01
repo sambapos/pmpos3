@@ -74,10 +74,6 @@ class CardsPage extends React.Component<PageProps, State> {
         this.debouncedSearch = _.debounce(this.updateSearch, 200);
     }
 
-    componentDidMount() {
-        this.cache.clearAll();
-    }
-
     componentWillReceiveProps(nextProps: PageProps) {
         if (nextProps.currentCardType.name !== this.state.currentCardType.name) {
             this.setState({
@@ -118,7 +114,7 @@ class CardsPage extends React.Component<PageProps, State> {
             return <DraggableCardList
                 items={this.state.items}
                 onDragEnd={r => this.onDragEnd(r)}
-                template={this.state.currentCardType ? this.state.currentCardType.listDisplayFormat : ''}
+                template={this.state.currentCardType ? this.state.currentCardType.displayFormat : ''}
                 onClick={c => {
                     this.props.setCardListScrollTop(this.state.scrollTop);
                     this.props.history.push(
@@ -140,93 +136,9 @@ class CardsPage extends React.Component<PageProps, State> {
             }}
             debouncedHandleScroll={x => this.debouncedHandleScroll(x)}
             items={this.state.items}
-            template={this.state.currentCardType ? this.state.currentCardType.listDisplayFormat : ''}
+            template={this.state.currentCardType ? this.state.currentCardType.displayFormat : ''}
         />;
-
-        // return <InfiniteLoader
-        //     isRowLoaded={(x) => this.isRowLoaded(x)}
-        //     loadMoreRows={(x) => this.loadMoreRows(x)}
-        //     rowCount={rowCount}
-        //     minimumBatchSize={this.itemCount}
-        //     threshold={this.itemThresold}
-        // >
-        //     {({ onRowsRendered, registerChild }) => (
-        //         <AutoSizer onResize={() => {
-        //             this.cache.clearAll();
-        //         }}>
-        //             {({ height, width }) => (
-        //                 <DragDropContext onDragEnd={r => this.onDragEnd(r)}>
-        //                     <Droppable droppableId="droppable">
-        //                         {(provided, snapshot) => (
-        //                             <div
-        //                                 ref={provided.innerRef}
-        //                                 style={h.getListStyle(snapshot.isDraggingOver)}
-        //                             >
-        //                                 <List
-        //                                     onRowsRendered={onRowsRendered}
-        //                                     deferredMeasurementCache={this.cache}
-        //                                     ref={registerChild}
-        //                                     rowCount={rowCount}
-        //                                     rowHeight={this.cache.rowHeight}
-        //                                     width={width}
-        //                                     height={height}
-        //                                     scrollTop={this.state.scrollTop}
-        //                                     onScroll={(x) => this.debouncedHandleScroll(x.scrollTop)}
-        //                                     rowRenderer={(x) => this.cardRenderer(x)}
-        //                                 />
-        //                                 {provided.placeholder}
-        //                             </div>
-        //                         )}
-        //                     </Droppable>
-        //                 </DragDropContext>
-        //             )}
-        //         </AutoSizer>
-        //     )}
-        // </InfiniteLoader>;
     }
-
-    // private cardRenderer({ key, index, style, parent }: any) {
-    //     if (index >= this.state.items.length) { return 'NA'; }
-    //     var card = this.state.items[index];
-    //     return (<CellMeasurer
-    //         cache={this.cache}
-    //         columnIndex={0}
-    //         key={key}
-    //         parent={parent}
-    //         rowIndex={index}
-    //     >
-    //         {({ measure }) => {
-    //             return (
-    //                 <Draggable key={card.id} draggableId={card.id} index={index}>
-    //                     {(provided1, snapshot1) => (
-    //                         <div style={style}>
-    //                             <div
-    //                                 ref={provided1.innerRef}
-    //                                 {...provided1.draggableProps}
-    //                                 {...provided1.dragHandleProps}
-    //                                 style={h.getItemStyle(
-    //                                     snapshot1.isDragging,
-    //                                     provided1.draggableProps.style
-    //                                 )}
-    //                             >
-    //                                 <CardItem
-    //                                     card={card}
-    //                                     onClick={c => {
-    //                                         this.props.setCardListScrollTop(this.state.scrollTop);
-    //                                         this.props.history.push(
-    //                                             process.env.PUBLIC_URL + '/card/' + c.id);
-    //                                     }} />
-
-    //                             </div>
-    //                             {provided1.placeholder}
-    //                         </div>
-    //                     )}
-    //                 </Draggable>
-    //             );
-    //         }}
-    //     </CellMeasurer>
-    //     );
-    // }
 
     public render() {
         return (

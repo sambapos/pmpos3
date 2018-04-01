@@ -20,8 +20,7 @@ type PageProps =
 interface PageState {
     name: string;
     reference: string;
-    listDisplayFormat: string;
-    cardDisplayFormat: string;
+    displayFormat: string;
     commands: string;
 }
 
@@ -32,8 +31,7 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
             name: '',
             reference: '',
             commands: '',
-            listDisplayFormat: '',
-            cardDisplayFormat: ''
+            displayFormat: ''
         };
     }
 
@@ -42,8 +40,7 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
             this.setState({
                 name: props.cardType.name,
                 reference: props.cardType.reference,
-                listDisplayFormat: props.cardType.listDisplayFormat,
-                cardDisplayFormat: props.cardType.cardDisplayFormat,
+                displayFormat: props.cardType.displayFormat,
                 commands: props.cardType.commands.join('\n')
             });
         }
@@ -54,8 +51,7 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
             this.setState({
                 name: this.props.cardType.name,
                 reference: this.props.cardType.reference,
-                listDisplayFormat: this.props.cardType.listDisplayFormat,
-                cardDisplayFormat: this.props.cardType.cardDisplayFormat,
+                displayFormat: this.props.cardType.displayFormat,
                 commands: this.props.cardType.commands.join('\n')
             });
         }
@@ -89,8 +85,7 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
                                     id: this.props.cardType.id,
                                     name: this.state.name,
                                     reference: this.state.reference,
-                                    listDisplayFormat: this.state.listDisplayFormat,
-                                    cardDisplayFormat: this.state.cardDisplayFormat,
+                                    displayFormat: this.state.displayFormat,
                                     commands: this.state.commands.split('\n')
                                 }));
                                 this.props.history.goBack();
@@ -117,20 +112,10 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
                         inputProps={{ className: this.props.classes.fixedEdit }}
                         multiline
                         rowsMax={6}
-                        label="List Display Format"
-                        value={this.state.listDisplayFormat}
+                        label="Display Format"
+                        value={this.state.displayFormat}
                         onChange={(e) => this.setState({
-                            listDisplayFormat: e.target.value
-                        })}
-                    />
-                    <TextField
-                        inputProps={{ className: this.props.classes.fixedEdit }}
-                        multiline
-                        rowsMax={6}
-                        label="Card Display Format"
-                        value={this.state.cardDisplayFormat}
-                        onChange={(e) => this.setState({
-                            cardDisplayFormat: e.target.value
+                            displayFormat: e.target.value
                         })}
                     />
 
