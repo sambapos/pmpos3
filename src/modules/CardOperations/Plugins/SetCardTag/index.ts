@@ -55,7 +55,6 @@ export default class SetCardTag extends CardOperation {
     }
 
     valueNeeded(data: any): boolean {
-        console.log(data);
         return data.name.startsWith('_') || data.typeId;
     }
 
@@ -74,13 +73,32 @@ export default class SetCardTag extends CardOperation {
     processPendingAction(action: ActionRecord): ActionRecord {
         let data = action.data;
         data.cardId = '';
-        if (!action.data || !action.data.name || !action.data.value) {
+        if (!action.data || !action.data.typeId || !action.data.name || !action.data.value) {
             return action.set('data', data);
         }
-        let cardType = CardList.getCardTypeByRef(action.data.name);
-        if (cardType) {
-            let card = CardList.getCardByName(cardType.name, action.data.value);
-            data.cardId = card ? card.id : '';
+        let tagType = CardList.tagTypes.get(data.typeId);
+        if (tagType) {
+            let cardType = CardList.getCardTypeByRef(tagType.cardTypeReferenceName);
+            if (cardType) {
+                let card = CardList.getCardByName(cardType.name, action.data.value);
+                data.cardId = card ? card.id : '';
+            }
+
+            if (data.source && tagType.sourceCardTypeReferenceName) {
+                let sourceCardType = CardList.getCardTypeByRef(tagType.sourceCardTypeReferenceName);
+                if (sourceCardType) {
+                    let sourceCard = CardList.getCardByName(sourceCardType.name, data.source);
+                    data.sourceCardId = sourceCard ? sourceCard.id : '';
+                }
+            }
+
+            if (data.target && tagType.targetCardTypeReferenceName) {
+                let targetCardType = CardList.getCardTypeByRef(tagType.targetCardTypeReferenceName);
+                if (targetCardType) {
+                    let targetCard = CardList.getCardByName(targetCardType.name, data.target);
+                    data.targetCardId = targetCard ? targetCard.id : '';
+                }
+            }
         }
         return action.set('data', data);
     }

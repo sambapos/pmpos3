@@ -12,6 +12,8 @@ export interface CardTag {
     source: string;
     target: string;
     cardId: string;
+    sourceCardId: string;
+    targetCardId: string;
 }
 
 export class CardTagRecord extends Record<CardTag>({
@@ -25,16 +27,16 @@ export class CardTagRecord extends Record<CardTag>({
     rate: 0,
     source: '',
     target: '',
-    cardId: ''
+    cardId: '',
+    sourceCardId: '',
+    targetCardId: ''
 }) {
 
     get display(): string {
-        // let b = this.balance !== 0 ? this.balance : '';
         let u = this.unit ? this.unit : '';
         let q = this.quantity !== 0 ? this.quantity + u + ' ' : '';
         let vl = this.value ? q + this.value : '';
         let key = !this.name || this.name[0] === '_' ? '' : this.name + ': ';
-        // let st = this.source || this.target ? `${this.source} > ${this.target}` : '';
         return `${key}${vl}`;
     }
     get realQuantity(): number {

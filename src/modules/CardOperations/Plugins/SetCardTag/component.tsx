@@ -61,6 +61,8 @@ export default class extends React.Component<
         let canEditUnit = !tagType.id || tagType.showUnit;
         let canEditAmount = !tagType.id || tagType.showAmount;
         let canEditRate = !tagType.id || tagType.showRate;
+        let canEditSource = !tagType.id || tagType.sourceCardTypeReferenceName;
+        let canEditTarget = !tagType.id || tagType.targetCardTypeReferenceName;
 
         return (
             <Fragment>
@@ -80,7 +82,7 @@ export default class extends React.Component<
                     <AutoSuggest
                         label="Tag Value"
                         value={this.props.current ? this.props.current.tag.value || '' : ''}
-                        getSuggestions={value => CardList.getCardSuggestions(this.state.name, value)}
+                        getSuggestions={value => CardList.getCardSuggestions(tagType.cardTypeReferenceName, value)}
                         handleChange={(e, value) => this.setState({ value })}
                     />
                     {canEditQuantity && <TextField
@@ -110,7 +112,23 @@ export default class extends React.Component<
                         value={this.state.rate}
                         onChange={e => this.setState({ rate: e.target.value })}
                     />}
-                    <TextField
+                    {canEditSource && <AutoSuggest
+                        label={tagType.sourceCardTypeReferenceName || 'Source'}
+                        value={this.props.current.tag.source}
+                        getSuggestions={
+                            value => CardList.getCardSuggestions(tagType.sourceCardTypeReferenceName, value)
+                        }
+                        handleChange={(e, source) => this.setState({ source })}
+                    />}
+                    {canEditTarget && <AutoSuggest
+                        label={tagType.targetCardTypeReferenceName || 'Target'}
+                        value={this.props.current.tag.target}
+                        getSuggestions={
+                            value => CardList.getCardSuggestions(tagType.targetCardTypeReferenceName, value)
+                        }
+                        handleChange={(e, target) => this.setState({ target })}
+                    />}
+                    {/* <TextField
                         fullWidth
                         label="Source"
                         value={this.state.source}
@@ -121,7 +139,7 @@ export default class extends React.Component<
                         label="Target"
                         value={this.state.target}
                         onChange={e => this.setState({ target: e.target.value })}
-                    />
+                    /> */}
                 </DialogContent>
                 <DialogActions>
                     {/* <Button onClick={() => this.props.cancel()}>Cancel</Button> */}

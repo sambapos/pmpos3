@@ -9,6 +9,7 @@ interface LoginPageState {
 
 interface LoginPageProps {
     onPinEntered: (pin: string) => void;
+    captureKeys: boolean;
 }
 
 type PageProps =
@@ -28,11 +29,15 @@ class LoginControl extends React.Component<PageProps, LoginPageState> {
     }
 
     handleSubmit() {
-        this.props.onPinEntered(this.state.pin);
+        let pin = this.state.pin;
         this.setState({ pin: '' });
+        this.props.onPinEntered(pin);
     }
 
     handleKeyDown = (event) => {
+        if (!this.props.captureKeys) {
+            return;
+        }
         if ('1234567890'.indexOf(event.key) !== -1) {
             this.handleClick(event.key);
             event.preventDefault();
@@ -41,7 +46,7 @@ class LoginControl extends React.Component<PageProps, LoginPageState> {
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         document.addEventListener('keydown', this.handleKeyDown, false);
     }
 

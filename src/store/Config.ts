@@ -279,6 +279,7 @@ export const actionCreators = {
         });
     },
     saveCardType: (cardType: CardTypeRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
+        if (!cardType.name) { return; }
         let cardTypes = getState().config.cardTypes;
         let result = cardTypes.set(cardType.id, cardType);
         getState().config.protocol.set('cardTypes', result.toJS());
@@ -287,6 +288,7 @@ export const actionCreators = {
         });
     },
     saveRule: (rule: RuleRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
+        if (!rule.name) { return; }
         let rules = getState().config.rules;
         let result = rules.set(rule.id, rule);
         getState().config.protocol.set('rules', result.toJS());
@@ -295,6 +297,7 @@ export const actionCreators = {
         });
     },
     saveTagType: (tagType: TagTypeRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
+        if (!tagType.name) { return; }
         let tagTypes = getState().config.tagTypes;
         let result = tagTypes.set(tagType.id, tagType);
         getState().config.protocol.set('tagTypes', result.toJS());

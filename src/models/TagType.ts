@@ -8,6 +8,8 @@ export interface TagType {
     showUnit: boolean;
     showAmount: boolean;
     showRate: boolean;
+    sourceCardTypeReferenceName: string;
+    targetCardTypeReferenceName: string;
 }
 
 export class TagTypeRecord extends Record<TagType>({
@@ -17,5 +19,7 @@ export class TagTypeRecord extends Record<TagType>({
     showQuantity: true,
     showUnit: true,
     showAmount: true,
-    showRate: true
+    showRate: true,
+    sourceCardTypeReferenceName: '',
+    targetCardTypeReferenceName: ''
 }) { }

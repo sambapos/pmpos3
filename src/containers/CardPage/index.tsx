@@ -165,7 +165,8 @@ export class CardPage extends React.Component<PageProps, PageState> {
         }
 
         let cardTags = this.state.selectedCard.tags.valueSeq();
-        let unselectedTagTypes = CardList.tagTypes.filter(x => !cardTags.find(y => y.typeId === x.id));
+        let unselectedTagTypes = CardList.tagTypes.valueSeq()
+            .filter(x => !cardTags.find(y => y.typeId === x.id));
 
         return (
             <div className={this.props.classes.root}>

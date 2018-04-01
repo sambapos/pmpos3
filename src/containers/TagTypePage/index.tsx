@@ -24,6 +24,8 @@ interface PageState {
     showUnit: boolean;
     showAmount: boolean;
     showRate: boolean;
+    sourceCardTypeReferenceName: string;
+    targetCardTypeReferenceName: string;
 }
 
 export class TagTypePage extends React.Component<PageProps, PageState> {
@@ -35,7 +37,9 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
             showQuantity: true,
             showUnit: true,
             showAmount: true,
-            showRate: true
+            showRate: true,
+            sourceCardTypeReferenceName: '',
+            targetCardTypeReferenceName: ''
         };
     }
 
@@ -47,7 +51,9 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                 showQuantity: props.tagType.showQuantity,
                 showUnit: props.tagType.showUnit,
                 showAmount: props.tagType.showAmount,
-                showRate: props.tagType.showRate
+                showRate: props.tagType.showRate,
+                sourceCardTypeReferenceName: props.tagType.sourceCardTypeReferenceName,
+                targetCardTypeReferenceName: props.tagType.targetCardTypeReferenceName
             });
         }
     }
@@ -60,7 +66,9 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                 showQuantity: this.props.tagType.showQuantity,
                 showUnit: this.props.tagType.showUnit,
                 showAmount: this.props.tagType.showAmount,
-                showRate: this.props.tagType.showRate
+                showRate: this.props.tagType.showRate,
+                sourceCardTypeReferenceName: this.props.tagType.sourceCardTypeReferenceName,
+                targetCardTypeReferenceName: this.props.tagType.targetCardTypeReferenceName
             });
         }
     }
@@ -96,7 +104,9 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                                     showQuantity: this.state.showQuantity,
                                     showUnit: this.state.showUnit,
                                     showAmount: this.state.showAmount,
-                                    showRate: this.state.showRate
+                                    showRate: this.state.showRate,
+                                    sourceCardTypeReferenceName: this.state.sourceCardTypeReferenceName,
+                                    targetCardTypeReferenceName: this.state.targetCardTypeReferenceName
                                 }));
                                 this.props.history.goBack();
                             }
@@ -105,6 +115,7 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                 />
                 <Paper className={this.props.classes.content}>
                     <TextField
+                        required
                         label="Tag Type Name"
                         value={this.state.name}
                         onChange={(e) => this.setState({
@@ -118,7 +129,7 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                             cardTypeReferenceName: e.target.value
                         })}
                     />
-                    <FormGroup>
+                    <FormGroup row>
                         <FormControlLabel
                             control={
                                 <Checkbox
@@ -156,6 +167,20 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                             label="Show Rate"
                         />
                     </FormGroup>
+                    <TextField
+                        label="Source Card Type Reference Name"
+                        value={this.state.sourceCardTypeReferenceName}
+                        onChange={(e) => this.setState({
+                            sourceCardTypeReferenceName: e.target.value
+                        })}
+                    />
+                    <TextField
+                        label="Target Card Type Reference Name"
+                        value={this.state.targetCardTypeReferenceName}
+                        onChange={(e) => this.setState({
+                            targetCardTypeReferenceName: e.target.value
+                        })}
+                    />
                 </Paper >
             </div>
         );

@@ -10,11 +10,10 @@ import decorate, { Style } from './style';
 import TopBar from '../TopBar';
 import Typography from 'material-ui/Typography/Typography';
 import LoginControl from './LoginControl';
-import TextField from 'material-ui/TextField/TextField';
 import DialogContent from 'material-ui/Dialog/DialogContent';
 import DialogActions from 'material-ui/Dialog/DialogActions';
 import Button from 'material-ui/Button/Button';
-import DialogTitle from 'material-ui/Dialog/DialogTitle';
+import NetworkDialog from './NetworkDialog';
 
 type DispatchType = typeof ClientStore.actionCreators & typeof ChatStore.actionCreators;
 
@@ -24,39 +23,10 @@ export type PageProps =
     & DispatchType
     & RouteComponentProps<{}>;
 
-class NetworkDialog extends React.Component<
-    { networkName: string, onClick: (name: string) => void },
-    { networkName: string }> {
-
-    constructor(props: any) {
-        super(props);
-        this.state = { networkName: props.networkName };
-    }
-
-    render() {
-        return (
-            <div>
-                <DialogTitle>Select Network</DialogTitle>
-                <DialogContent>
-                    <TextField label="Network Name"
-                        margin="dense"
-                        value={this.state.networkName}
-                        onChange={e => this.setState({ networkName: e.target.value })} />
-                    <DialogActions>
-                        <Button onClick={e => {
-                            this.props.onClick(this.state.networkName);
-                        }}>Submit</Button>
-                    </DialogActions>
-                </DialogContent>
-            </div>
-        );
-    }
-}
-
-class LoginPage extends React.Component<PageProps, { networkName: string }> {
+class LoginPage extends React.Component<PageProps, { networkName: string, networkDialogShown: boolean }> {
     constructor(props: PageProps) {
         super(props);
-        this.state = { networkName: props.networkName };
+        this.state = { networkName: props.networkName, networkDialogShown: false };
     }
 
     getDialog() {
@@ -66,6 +36,7 @@ class LoginPage extends React.Component<PageProps, { networkName: string }> {
                     <div>Please Reload to change the Network</div>
                     <DialogActions>
                         <Button onClick={e => {
+                            this.setState({ networkDialogShown: false });
                             this.props.SetModalState(false);
                         }}>Close</Button>
                     </DialogActions>
@@ -76,7 +47,7 @@ class LoginPage extends React.Component<PageProps, { networkName: string }> {
             <NetworkDialog
                 networkName={this.state.networkName}
                 onClick={networkName => {
-                    this.setState({ networkName });
+                    this.setState({ networkName, networkDialogShown: false });
                     this.props.SetModalState(false);
                 }} />
         );
@@ -91,8 +62,10 @@ class LoginPage extends React.Component<PageProps, { networkName: string }> {
                     secondaryCommands={[
                         {
                             icon: 'home',
-                            onClick: () =>
-                                this.props.SetModalComponent(this.getDialog())
+                            onClick: () => {
+                                this.setState({ networkDialogShown: true });
+                                this.props.SetModalComponent(this.getDialog());
+                            }
                         }
                     ]}
                 />
@@ -100,6 +73,7 @@ class LoginPage extends React.Component<PageProps, { networkName: string }> {
                     <Typography variant="headline">Welcome to PM-POS</Typography>
 
                     <LoginControl
+                        captureKeys={!this.state.networkDialogShown}
                         onPinEntered={pin => {
                             this.props.SetLoggedInUser(pin);
                             this.props.SetTerminalId(this.props.terminalId, this.state.networkName);
