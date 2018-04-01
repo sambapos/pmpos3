@@ -74,6 +74,10 @@ class CardsPage extends React.Component<PageProps, State> {
         this.debouncedSearch = _.debounce(this.updateSearch, 200);
     }
 
+    componentDidMount() {
+        this.cache.clearAll();
+    }
+
     componentWillReceiveProps(nextProps: PageProps) {
         if (nextProps.currentCardType.name !== this.state.currentCardType.name) {
             this.setState({

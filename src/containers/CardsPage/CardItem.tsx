@@ -30,7 +30,7 @@ const getTemplatedContentFromRule = async (card: CardRecord, template?: string) 
     let content = await RuleManager.getContent('GET_CONTENT', template, card, card);
     return <div
         style={{ width: '100%' }}
-        dangerouslySetInnerHTML={{ __html: content.join('<br/>') }}
+        dangerouslySetInnerHTML={{ __html: content.filter(x => x).join('\n') }}
     />;
 };
 
@@ -43,7 +43,7 @@ const getTemplatedContent = (card: CardRecord, template: string) => {
 };
 
 const getNullContent = (): JSX.Element => {
-    return <div style={{ height: 30 }} />;
+    return <div style={{ height: 100 }} />;
 };
 
 const isStaticContent = (template?: string) => {
@@ -79,10 +79,10 @@ export default class extends React.Component<CardItemProps, { content: JSX.Eleme
         if (!isStaticContent(this.props.template)) {
             getTemplatedContentFromRule(this.props.card, this.props.template)
                 .then(x => {
-                    this.setState({ content: x });
                     if (this.props.onUpdate) {
                         this.props.onUpdate(this.props.card);
                     }
+                    this.setState({ content: x });
                 });
         }
     }

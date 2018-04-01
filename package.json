@@ -1,6 +1,6 @@
 {
   "name": "pmpos3",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "private": true,
   "dependencies": {
     "autosuggest-highlight": "^3.1.1",
@@ -24,6 +24,7 @@
     "react-virtualized": "^9.18.5",
     "redux": "^3.7.2",
     "redux-observable": "^0.17.0",
+    "redux-raven-middleware": "^1.2.0",
     "redux-thunk": "^2.2.0",
     "rxjs": "^5.5.6",
     "shortid": "^2.2.8",
