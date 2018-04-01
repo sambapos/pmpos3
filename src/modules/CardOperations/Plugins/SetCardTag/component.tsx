@@ -47,6 +47,8 @@ export default class extends React.Component<
             if (!this.props.current.tag.name) {
                 this.setState({
                     name: this.props.current.tagType.cardTypeReferenceName
+                        ? '_' + this.props.current.tagType.cardTypeReferenceName
+                        : ''
                 });
             }
         }

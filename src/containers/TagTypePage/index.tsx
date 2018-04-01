@@ -26,6 +26,7 @@ interface PageState {
     showRate: boolean;
     sourceCardTypeReferenceName: string;
     targetCardTypeReferenceName: string;
+    displayFormat: string;
 }
 
 export class TagTypePage extends React.Component<PageProps, PageState> {
@@ -39,7 +40,8 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
             showAmount: true,
             showRate: true,
             sourceCardTypeReferenceName: '',
-            targetCardTypeReferenceName: ''
+            targetCardTypeReferenceName: '',
+            displayFormat: ''
         };
     }
 
@@ -53,7 +55,8 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                 showAmount: props.tagType.showAmount,
                 showRate: props.tagType.showRate,
                 sourceCardTypeReferenceName: props.tagType.sourceCardTypeReferenceName,
-                targetCardTypeReferenceName: props.tagType.targetCardTypeReferenceName
+                targetCardTypeReferenceName: props.tagType.targetCardTypeReferenceName,
+                displayFormat: props.tagType.displayFormat
             });
         }
     }
@@ -68,7 +71,8 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                 showAmount: this.props.tagType.showAmount,
                 showRate: this.props.tagType.showRate,
                 sourceCardTypeReferenceName: this.props.tagType.sourceCardTypeReferenceName,
-                targetCardTypeReferenceName: this.props.tagType.targetCardTypeReferenceName
+                targetCardTypeReferenceName: this.props.tagType.targetCardTypeReferenceName,
+                displayFormat: this.props.tagType.displayFormat
             });
         }
     }
@@ -106,7 +110,8 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                                     showAmount: this.state.showAmount,
                                     showRate: this.state.showRate,
                                     sourceCardTypeReferenceName: this.state.sourceCardTypeReferenceName,
-                                    targetCardTypeReferenceName: this.state.targetCardTypeReferenceName
+                                    targetCardTypeReferenceName: this.state.targetCardTypeReferenceName,
+                                    displayFormat: this.state.displayFormat
                                 }));
                                 this.props.history.goBack();
                             }
@@ -179,6 +184,16 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                         value={this.state.targetCardTypeReferenceName}
                         onChange={(e) => this.setState({
                             targetCardTypeReferenceName: e.target.value
+                        })}
+                    />
+                    <TextField
+                        inputProps={{ className: this.props.classes.fixedEdit }}
+                        multiline
+                        rowsMax={6}
+                        label="Display Format"
+                        value={this.state.displayFormat}
+                        onChange={(e) => this.setState({
+                            displayFormat: e.target.value
                         })}
                     />
                 </Paper >
