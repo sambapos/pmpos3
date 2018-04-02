@@ -85,12 +85,17 @@ class CardsPage extends React.Component<PageProps, State> {
             });
             this.cache.clearAll();
         }
+        let scrollTop = nextProps.cardListScrollTop;
+        if (this.props.searchValue !== nextProps.searchValue
+            || nextProps.currentCardType.name !== this.state.currentCardType.name) {
+            scrollTop = 0;
+        }
         let filteredItems = h.getFilteredItems(nextProps.cards, nextProps.searchValue, nextProps.showAllCards);
         this.setState({
             searchValueText: nextProps.searchValue,
             items: h.getItems(filteredItems, 0, this.itemCount),
             itemCount: filteredItems.count(),
-            scrollTop: 0
+            scrollTop
         });
     }
 
@@ -103,7 +108,6 @@ class CardsPage extends React.Component<PageProps, State> {
             const item = list[index];
             if (item.index !== index) {
                 list[index] = item.set('index', index);
-                console.log('reindex', index, item);
                 let actionData =
                     new ActionRecord({
                         id: shortid.generate(),

@@ -88,7 +88,7 @@ export default class extends React.Component<CardItemProps, { content: JSX.Eleme
     }
 
     componentWillReceiveProps(nextProps: CardItemProps) {
-        if (nextProps.card.id !== this.props.card.id || nextProps.template !== this.props.template) {
+        if (nextProps.card !== this.props.card || nextProps.template !== this.props.template) {
             if (!isStaticContent(nextProps.template)) {
                 getTemplatedContentFromRule(nextProps.card, nextProps.template)
                     .then(x => {

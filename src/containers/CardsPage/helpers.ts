@@ -24,10 +24,7 @@ export function getFilteredItems(items: List<CardRecord>, searchValue: string, s
             || Boolean(x.tags.find(t => t.value.toLowerCase().includes(searchValue.toLowerCase()))));
 }
 
-export function getItems(
-    cards: List<CardRecord>,
-    startIndex: number,
-    itemCount: number) {
+export function getItems(cards: List<CardRecord>, startIndex: number, itemCount: number) {
     let result = cards
         .skip(startIndex)
         .take(itemCount)

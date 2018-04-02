@@ -66,12 +66,6 @@
                 "severity": "warning"
             }
         ],
-        "no-unused-locals": [
-            true,
-            {
-                "severity": "warning"
-            }
-        ],
         "no-use-before-declare": true,
         "one-line": [
             true,
