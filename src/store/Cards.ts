@@ -12,6 +12,7 @@ import { ActionsObservable } from 'redux-observable';
 import { Observable } from 'rxjs/Observable';
 import { cardOperations } from '../modules/CardOperations/index';
 import { ActionState } from '../models/ActionState';
+import { ApplicationState } from '.';
 
 export interface State {
     cards: List<CardRecord>;
@@ -228,6 +229,19 @@ function resetCurrentCard(state: StateRecord) {
         .set('failed', false);
 }
 
+function createAndPostCommit(state: ApplicationState, card: CardRecord, actions: List<ActionRecord>) {
+    let commit = {
+        id: shortid.generate(),
+        time: new Date().getTime(),
+        terminalId: state.client.terminalId,
+        user: state.client.loggedInUser,
+        cardId: card.id,
+        state: card.toJS(),
+        actions: actions.toJS()
+    };
+    state.cards.protocol.push([commit]);
+}
+
 export const actionCreators = {
     addCard: (cardType: CardTypeRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
         let cardCreateAction = new ActionRecord({
@@ -262,22 +276,16 @@ export const actionCreators = {
                 });
             }
         },
+    postCommit: (card: CardRecord, actions: List<ActionRecord>):
+        AppThunkAction<KnownActions> => (dispatch, getState) => {
+            createAndPostCommit(getState(), card, actions);
+        },
     commitCard: (): AppThunkAction<KnownActions> => (dispatch, getState) => {
         const state = getState().cards;
 
         if (state.pendingActions.count() > 0) {
             let processedActions = state.pendingActions.map(a => cardOperations.processPendingAction(a));
-
-            let commit = {
-                id: shortid.generate(),
-                time: new Date().getTime(),
-                terminalId: getState().client.terminalId,
-                user: getState().client.loggedInUser,
-                cardId: state.currentCard.id,
-                state: state.currentCard.toJS(),
-                actions: processedActions.toJS()
-            };
-            state.protocol.push([commit]);
+            createAndPostCommit(getState(), state.currentCard, processedActions);
         }
 
         dispatch({

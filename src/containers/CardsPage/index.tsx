@@ -2,9 +2,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as _ from 'lodash';
 import * as CardStore from '../../store/Cards';
+import shortid from 'shortid';
 import { RouteComponentProps } from 'react-router';
 import { CellMeasurerCache } from 'react-virtualized';
-import { WithStyles, Paper } from 'material-ui';
+import { WithStyles, Paper, Snackbar, Button, IconButton, Icon } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';
@@ -15,6 +16,7 @@ import TextField from 'material-ui/TextField/TextField';
 import * as h from './helpers';
 import VirtualCardList from './VirtualCardList';
 import DraggableCardList from './DraggableCardList';
+import { ActionRecord } from '../../models/Action';
 
 type PageProps =
     {
@@ -36,9 +38,10 @@ interface State {
     itemCount: number;
     scrollTop: number;
     searchValueText: string;
+    snackbarOpen: boolean;
 }
 
-const reorder = (list, startIndex, endIndex) => {
+const reorder = (list: CardRecord[], startIndex: number, endIndex: number) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
@@ -65,7 +68,8 @@ class CardsPage extends React.Component<PageProps, State> {
             items: h.getItems(filteredItems, 0, this.itemCount),
             itemCount: filteredItems.count(),
             scrollTop: props.cardListScrollTop,
-            searchValueText: props.searchValue
+            searchValueText: props.searchValue,
+            snackbarOpen: false
         };
     }
 
@@ -92,6 +96,32 @@ class CardsPage extends React.Component<PageProps, State> {
 
     handle_scroll(scrollTop: number) {
         this.setState({ scrollTop });
+    }
+
+    saveSortOrder = (list: CardRecord[]) => {
+        for (let index = 0; index < list.length; index++) {
+            const item = list[index];
+            if (item.index !== index) {
+                list[index] = item.set('index', index);
+                console.log('reindex', index, item);
+                let actionData =
+                    new ActionRecord({
+                        id: shortid.generate(),
+                        cardId: item.id,
+                        actionType: 'SET_CARD_INDEX',
+                        data: { index }
+                    });
+                this.props.postCommit(item, IList<ActionRecord>([actionData]));
+            }
+        }
+        return list;
+    }
+
+    handleSnackbarClose = (event, reason?) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        this.setState({ snackbarOpen: false });
     }
 
     updateSearch() {
@@ -159,6 +189,36 @@ class CardsPage extends React.Component<PageProps, State> {
                 <Paper className={this.props.classes.content}>
                     {this.renderCardList()}
                 </Paper>
+
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                    open={this.state.snackbarOpen}
+                    onClose={this.handleSnackbarClose}
+                    SnackbarContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">Sort Order changed</span>}
+                    action={[
+                        <Button key="save" color="secondary" size="small"
+                            onClick={e => {
+                                this.saveSortOrder(this.state.items);
+                                this.handleSnackbarClose(e);
+                            }}>
+                            Save
+                        </Button>,
+                        <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            onClick={this.handleSnackbarClose}
+                        >
+                            <Icon>close</Icon>
+                        </IconButton>,
+                    ]}
+                />
             </div>
         );
     }
@@ -223,7 +283,7 @@ class CardsPage extends React.Component<PageProps, State> {
             return;
         }
 
-        const items = reorder(
+        let items = reorder(
             this.state.items,
             result.source.index,
             result.destination.index
@@ -231,6 +291,7 @@ class CardsPage extends React.Component<PageProps, State> {
 
         this.setState({
             items,
+            snackbarOpen: true
         });
     }
 }
