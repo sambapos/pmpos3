@@ -213,7 +213,9 @@ export const reducer: Reducer<StateRecord> = (
             return state.set('searchValue', action.value);
         }
         case 'SET_SHOW_ALL_CARDS': {
-            return state.set('showAllCards', action.value);
+            return state
+                .set('showAllCards', action.value)
+                .set('cardListScrollTop', 0);
         }
         default:
             return state;
