@@ -153,6 +153,7 @@ class CardList {
             let cards = index.map(id => this.cards.get(id) as CardRecord);
             result = cards
                 .filter(c => c.name.toLowerCase().trim().includes(inputValue))
+                .sortBy(c => c.name)
                 .take(100)
                 .map(c => {
                     return { label: c.name };

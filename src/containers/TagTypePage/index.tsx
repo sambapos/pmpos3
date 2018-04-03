@@ -46,7 +46,7 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
     }
 
     public componentWillReceiveProps(props: PageProps) {
-        if (!props.isLoading) {
+        if (!props.isLoading && props.tagType !== this.props.tagType && props.tagType.id) {
             this.setState({
                 name: props.tagType.name,
                 cardTypeReferenceName: props.tagType.cardTypeReferenceName,

@@ -1,12 +1,17 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import * as ConfigStore from '../../store/Config';
+import * as ClientStore from '../../store/Client';
+import { reorder } from '../../lib/helpers';
 import { RouteComponentProps } from 'react-router';
-import { WithStyles, TextField, Paper } from 'material-ui';
+import { CardActions, Typography, WithStyles, TextField, Paper, Button } from 'material-ui';
+import * as Extender from '../../lib/Extender';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
 import { CardTypeRecord } from '../../models/CardType';
+import TagTypeSelectionDialog from './TagTypeSelectionDialog';
+import TagList from './TagList';
 
 type PageProps =
     {
@@ -15,6 +20,7 @@ type PageProps =
     }
     & WithStyles<keyof Style>
     & typeof ConfigStore.actionCreators
+    & typeof ClientStore.actionCreators
     & RouteComponentProps<{ id?: string }>;
 
 interface PageState {
@@ -22,6 +28,7 @@ interface PageState {
     reference: string;
     displayFormat: string;
     commands: string;
+    tagTypes: string[];
 }
 
 export class CardTypePage extends React.Component<PageProps, PageState> {
@@ -31,17 +38,19 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
             name: '',
             reference: '',
             commands: '',
-            displayFormat: ''
+            displayFormat: '',
+            tagTypes: []
         };
     }
 
     public componentWillReceiveProps(props: PageProps) {
-        if (!props.isLoading) {
+        if (!props.isLoading && props.cardType !== this.props.cardType && props.cardType.id) {
             this.setState({
                 name: props.cardType.name,
                 reference: props.cardType.reference,
                 displayFormat: props.cardType.displayFormat,
-                commands: props.cardType.commands.join('\n')
+                commands: props.cardType.commands.join('\n'),
+                tagTypes: props.cardType.tagTypes
             });
         }
     }
@@ -52,13 +61,64 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
                 name: this.props.cardType.name,
                 reference: this.props.cardType.reference,
                 displayFormat: this.props.cardType.displayFormat,
-                commands: this.props.cardType.commands.join('\n')
+                commands: this.props.cardType.commands.join('\n'),
+                tagTypes: this.props.cardType.tagTypes
             });
         }
     }
 
     getTitle() {
         return this.props.cardType.name ? `Card Type (${this.props.cardType.name})` : 'New Card Type';
+    }
+
+    showSelectionDialog() {
+        let component = (<TagTypeSelectionDialog
+            tagTypes={this.state.tagTypes}
+            onSubmit={tagTypes => {
+                this.setState({ tagTypes });
+                this.props.SetModalState(false);
+            }}
+        />);
+
+        this.props.SetModalComponent(component);
+    }
+
+    getTagTypeList() {
+        if (this.state.tagTypes.length === 0) {
+            return (
+                <Typography style={{ padding: 8 }} className={this.props.classes.list}>
+                    No tag types selected for {this.props.cardType.name} card type.
+                    Click Select Tag Types button to select tag types.
+                 </Typography>);
+        }
+        return (<TagList
+            onDragEnd={x => this.onDragEnd(x)}
+            tagTypes={this.state.tagTypes}
+            classes={this.props.classes}
+            onClick={id => {
+                if (id) {
+                    this.props.history.push(
+                        process.env.PUBLIC_URL + '/tagType');
+                    this.props.loadTagType(id);
+                }
+            }}
+        />);
+    }
+
+    onDragEnd(result: any) {
+        if (!result.destination) {
+            return;
+        }
+
+        let items = reorder(
+            this.state.tagTypes,
+            result.source.index,
+            result.destination.index
+        );
+
+        this.setState({
+            tagTypes: items
+        });
     }
 
     public render() {
@@ -86,14 +146,15 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
                                     name: this.state.name,
                                     reference: this.state.reference,
                                     displayFormat: this.state.displayFormat,
-                                    commands: this.state.commands.split('\n')
+                                    commands: this.state.commands.split('\n'),
+                                    tagTypes: this.state.tagTypes
                                 }));
                                 this.props.history.goBack();
                             }
                         }
                     ]}
                 />
-                <Paper className={this.props.classes.content}>
+                <Paper className={this.props.classes.paper}>
                     <TextField
                         label="Card Type Name"
                         value={this.state.name}
@@ -131,6 +192,19 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
                         })}
                     />
                 </Paper >
+                <Paper className={this.props.classes.content}>
+                    <Typography variant="title">Tag Types</Typography>
+                    {this.getTagTypeList()}
+                    <CardActions>
+                        <Button
+                            color="secondary"
+                            style={{ float: 'right' }}
+                            onClick={e => this.showSelectionDialog()}
+                        >
+                            Select Tag Types
+                        </Button>
+                    </CardActions>
+                </Paper>
             </div>
         );
     }
@@ -143,5 +217,5 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 export default decorate(connect(
     mapStateToProps,
-    ConfigStore.actionCreators
+    Extender.extend(ClientStore.actionCreators, ConfigStore.actionCreators)
 )(CardTypePage));

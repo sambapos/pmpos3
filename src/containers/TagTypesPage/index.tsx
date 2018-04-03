@@ -32,7 +32,7 @@ class TagTypesPage extends React.Component<PageProps, {}> {
     }
 
     renderTags(tagTypes: TagTypeRecord[]) {
-        return tagTypes.map(tagType => {
+        return tagTypes.sort((x, y) => x.name > y.name ? 1 : -1).map(tagType => {
             return tagType && (
                 <div key={tagType.id}>
                     <ListItem

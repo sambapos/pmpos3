@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import * as _ from 'lodash';
 import * as CardStore from '../../store/Cards';
 import shortid from 'shortid';
+import { reorder } from '../../lib/helpers';
 import { RouteComponentProps } from 'react-router';
 import { CellMeasurerCache } from 'react-virtualized';
 import { WithStyles, Paper, Snackbar, Button, IconButton, Icon } from 'material-ui';
@@ -40,13 +41,6 @@ interface State {
     searchValueText: string;
     snackbarOpen: boolean;
 }
-
-const reorder = (list: CardRecord[], startIndex: number, endIndex: number) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    return result;
-};
 
 class CardsPage extends React.Component<PageProps, State> {
 
