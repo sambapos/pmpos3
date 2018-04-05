@@ -1,4 +1,5 @@
 import { Record } from 'immutable';
+import { Parser } from 'expr-eval';
 
 export interface CardTag {
     id: string;
@@ -9,6 +10,7 @@ export interface CardTag {
     unit: string;
     amount: number;
     rate: number;
+    func: string;
     source: string;
     target: string;
     cardId: string;
@@ -25,6 +27,7 @@ export class CardTagRecord extends Record<CardTag>({
     unit: '',
     amount: 0,
     rate: 0,
+    func: '',
     source: '',
     target: '',
     cardId: '',
@@ -56,6 +59,9 @@ export class CardTagRecord extends Record<CardTag>({
             let amount = ((parentAmount * this.rate) / 100) + this.amount;
             let result = Math.round(amount * 100) / 100;
             return result;
+        }
+        if (this.func) {
+            return Parser.evaluate(this.func, { a: this.amount, p: parentAmount });
         }
         return this.amount;
     }

@@ -2,11 +2,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as ConfigStore from '../../store/Config';
 import { RouteComponentProps } from 'react-router';
-import { FormControlLabel, FormGroup, WithStyles, TextField, Paper, Checkbox } from 'material-ui';
+import { WithStyles, TextField, Paper } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
 import { TagTypeRecord } from '../../models/TagType';
+import InputCheckBox from './InputCheckBox';
 
 type PageProps =
     {
@@ -20,13 +21,23 @@ type PageProps =
 interface PageState {
     name: string;
     cardTypeReferenceName: string;
+    showValue: boolean;
     showQuantity: boolean;
     showUnit: boolean;
     showAmount: boolean;
-    showRate: boolean;
+    showSource: boolean;
+    showTarget: boolean;
+    showFunction: boolean;
     sourceCardTypeReferenceName: string;
     targetCardTypeReferenceName: string;
     displayFormat: string;
+    defaultValue: string;
+    defaultFunction: string;
+    defaultQuantity: string;
+    defaultUnit: string;
+    defaultAmount: string;
+    defaultSource: string;
+    defaultTarget: string;
 }
 
 export class TagTypePage extends React.Component<PageProps, PageState> {
@@ -35,13 +46,23 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
         this.state = {
             name: '',
             cardTypeReferenceName: '',
+            showValue: true,
             showQuantity: true,
             showUnit: true,
             showAmount: true,
-            showRate: true,
+            showSource: true,
+            showTarget: true,
+            showFunction: false,
             sourceCardTypeReferenceName: '',
             targetCardTypeReferenceName: '',
-            displayFormat: ''
+            defaultValue: '',
+            displayFormat: '',
+            defaultFunction: '',
+            defaultQuantity: '',
+            defaultUnit: '',
+            defaultAmount: '',
+            defaultSource: '',
+            defaultTarget: ''
         };
     }
 
@@ -50,13 +71,27 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
             this.setState({
                 name: props.tagType.name,
                 cardTypeReferenceName: props.tagType.cardTypeReferenceName,
+                showValue: props.tagType.showValue,
                 showQuantity: props.tagType.showQuantity,
                 showUnit: props.tagType.showUnit,
                 showAmount: props.tagType.showAmount,
-                showRate: props.tagType.showRate,
+                showSource: props.tagType.showSource,
+                showTarget: props.tagType.showTarget,
+                showFunction: props.tagType.showFunction,
                 sourceCardTypeReferenceName: props.tagType.sourceCardTypeReferenceName,
                 targetCardTypeReferenceName: props.tagType.targetCardTypeReferenceName,
-                displayFormat: props.tagType.displayFormat
+                displayFormat: props.tagType.displayFormat,
+                defaultValue: props.tagType.defaultValue,
+                defaultFunction: props.tagType.defaultFunction,
+                defaultQuantity: props.tagType.defaultQuantity !== 0
+                    ? String(props.tagType.defaultQuantity)
+                    : '',
+                defaultUnit: props.tagType.defaultUnit,
+                defaultAmount: props.tagType.defaultAmount !== 0
+                    ? String(props.tagType.defaultAmount)
+                    : '',
+                defaultSource: props.tagType.defaultSource,
+                defaultTarget: props.tagType.defaultTarget
             });
         }
     }
@@ -66,13 +101,27 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
             this.setState({
                 name: this.props.tagType.name,
                 cardTypeReferenceName: this.props.tagType.cardTypeReferenceName,
+                showValue: this.props.tagType.showValue,
                 showQuantity: this.props.tagType.showQuantity,
                 showUnit: this.props.tagType.showUnit,
                 showAmount: this.props.tagType.showAmount,
-                showRate: this.props.tagType.showRate,
+                showSource: this.props.tagType.showSource,
+                showTarget: this.props.tagType.showTarget,
+                showFunction: this.props.tagType.showFunction,
                 sourceCardTypeReferenceName: this.props.tagType.sourceCardTypeReferenceName,
                 targetCardTypeReferenceName: this.props.tagType.targetCardTypeReferenceName,
-                displayFormat: this.props.tagType.displayFormat
+                displayFormat: this.props.tagType.displayFormat,
+                defaultValue: this.props.tagType.defaultValue,
+                defaultFunction: this.props.tagType.defaultFunction,
+                defaultQuantity: this.props.tagType.defaultQuantity !== 0
+                    ? String(this.props.tagType.defaultQuantity)
+                    : '',
+                defaultUnit: this.props.tagType.defaultUnit,
+                defaultAmount: this.props.tagType.defaultAmount !== 0
+                    ? String(this.props.tagType.defaultAmount)
+                    : '',
+                defaultSource: this.props.tagType.defaultSource,
+                defaultTarget: this.props.tagType.defaultTarget
             });
         }
     }
@@ -105,13 +154,23 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                                     id: this.props.tagType.id,
                                     name: this.state.name,
                                     cardTypeReferenceName: this.state.cardTypeReferenceName,
+                                    showValue: this.state.showValue,
                                     showQuantity: this.state.showQuantity,
                                     showUnit: this.state.showUnit,
                                     showAmount: this.state.showAmount,
-                                    showRate: this.state.showRate,
+                                    showSource: this.state.showSource,
+                                    showTarget: this.state.showTarget,
+                                    showFunction: this.state.showFunction,
                                     sourceCardTypeReferenceName: this.state.sourceCardTypeReferenceName,
                                     targetCardTypeReferenceName: this.state.targetCardTypeReferenceName,
-                                    displayFormat: this.state.displayFormat
+                                    displayFormat: this.state.displayFormat,
+                                    defaultValue: this.state.defaultValue,
+                                    defaultFunction: this.state.defaultFunction,
+                                    defaultQuantity: Number(this.state.defaultQuantity),
+                                    defaultUnit: this.state.defaultUnit,
+                                    defaultAmount: Number(this.state.defaultAmount),
+                                    defaultSource: this.state.defaultSource,
+                                    defaultTarget: this.state.defaultTarget
                                 }));
                                 this.props.history.goBack();
                             }
@@ -121,6 +180,7 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                 <Paper className={this.props.classes.content}>
                     <TextField
                         required
+                        fullWidth
                         label="Tag Type Name"
                         value={this.state.name}
                         onChange={(e) => this.setState({
@@ -128,51 +188,55 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                         })}
                     />
                     <TextField
+                        fullWidth
                         label="Card Type Reference Name"
                         value={this.state.cardTypeReferenceName}
                         onChange={(e) => this.setState({
                             cardTypeReferenceName: e.target.value
                         })}
                     />
-                    <FormGroup row>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={this.state.showQuantity}
-                                    onChange={e => this.setState({ showQuantity: e.target.checked })}
-                                />
-                            }
-                            label="Show Quantity"
+                    <InputCheckBox
+                        label="Default Value"
+                        value={this.state.defaultValue}
+                        onChange={e => this.setState({ defaultValue: e.target.value })}
+                        onCheckboxClick={() => this.setState({ showValue: !this.state.showValue })}
+                        isChecked={this.state.showValue}
+                    />
+                    <div className={this.props.classes.grouper}>
+                        <InputCheckBox
+                            label="Default Quantity"
+                            type="number"
+                            value={this.state.defaultQuantity}
+                            onChange={e => this.setState({ defaultQuantity: e.target.value })}
+                            onCheckboxClick={() => this.setState({ showQuantity: !this.state.showQuantity })}
+                            isChecked={this.state.showQuantity}
                         />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={this.state.showUnit}
-                                    onChange={e => this.setState({ showUnit: e.target.checked })}
-                                />
-                            }
-                            label="Show Unit"
+                        <div className={this.props.classes.spacer} />
+                        <InputCheckBox
+                            label="Default Unit"
+                            value={this.state.defaultUnit}
+                            onChange={e => this.setState({ defaultUnit: e.target.value })}
+                            onCheckboxClick={() => this.setState({ showUnit: !this.state.showUnit })}
+                            isChecked={this.state.showUnit}
                         />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={this.state.showAmount}
-                                    onChange={e => this.setState({ showAmount: e.target.checked })}
-                                />
-                            }
-                            label="Show Amount"
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={this.state.showRate}
-                                    onChange={e => this.setState({ showRate: e.target.checked })}
-                                />
-                            }
-                            label="Show Rate"
-                        />
-                    </FormGroup>
+                    </div>
+                    <InputCheckBox
+                        label="Default Amount"
+                        type="number"
+                        value={this.state.defaultAmount}
+                        onChange={e => this.setState({ defaultAmount: e.target.value })}
+                        onCheckboxClick={() => this.setState({ showAmount: !this.state.showAmount })}
+                        isChecked={this.state.showAmount}
+                    />
+                    <InputCheckBox
+                        label="Default Function"
+                        value={this.state.defaultFunction}
+                        onChange={e => this.setState({ defaultFunction: e.target.value })}
+                        onCheckboxClick={() => this.setState({ showFunction: !this.state.showFunction })}
+                        isChecked={this.state.showFunction}
+                    />
                     <TextField
+                        fullWidth
                         label="Source Card Type Reference Name"
                         value={this.state.sourceCardTypeReferenceName}
                         onChange={(e) => this.setState({
@@ -180,16 +244,35 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                         })}
                     />
                     <TextField
+                        fullWidth
                         label="Target Card Type Reference Name"
                         value={this.state.targetCardTypeReferenceName}
                         onChange={(e) => this.setState({
                             targetCardTypeReferenceName: e.target.value
                         })}
                     />
+                    <div className={this.props.classes.grouper}>
+                        <InputCheckBox
+                            label="Default Source"
+                            value={this.state.defaultSource}
+                            onChange={e => this.setState({ defaultSource: e.target.value })}
+                            onCheckboxClick={() => this.setState({ showSource: !this.state.showSource })}
+                            isChecked={this.state.showSource}
+                        />
+                        <div className={this.props.classes.spacer} />
+                        <InputCheckBox
+                            label="Default Target"
+                            value={this.state.defaultTarget}
+                            onChange={e => this.setState({ defaultTarget: e.target.value })}
+                            onCheckboxClick={() => this.setState({ showTarget: !this.state.showTarget })}
+                            isChecked={this.state.showTarget}
+                        />
+                    </div>
                     <TextField
+                        fullWidth
                         inputProps={{ className: this.props.classes.fixedEdit }}
                         multiline
-                        rowsMax={6}
+                        rowsMax={12}
                         label="Display Format"
                         value={this.state.displayFormat}
                         onChange={(e) => this.setState({

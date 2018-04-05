@@ -4,7 +4,6 @@ export interface Style {
     card: any;
     content: any;
     paper: any;
-    modal: any;
     root: any;
     footer: any;
     tagItem: any;
@@ -14,6 +13,8 @@ export interface Style {
     node: any;
     leaf: any;
     fixedEdit: any;
+    grouper: any;
+    spacer: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
@@ -57,9 +58,7 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     },
     content: {
         height: '100%',
-        display: 'flex',
         overflowX: 'auto',
-        flexFlow: 'column',
         padding: spacing.unit,
         [breakpoints.up('sm')]: {
             maxWidth: 600,
@@ -76,18 +75,6 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         },
         flex: 'none'
     },
-    modal: {
-        position: 'absolute',
-        width: '80%',
-        maxWidth: spacing.unit * 50,
-        top: `50%`,
-        left: `50%`,
-        transform: `translate(-50%, -50%)`,
-        border: '1px solid #e5e5e5',
-        backgroundColor: '#fff',
-        boxShadow: '0 5px 15px rgba(0, 0, 0, .5)',
-        padding: spacing.unit * 3,
-    },
     paper: {
         [breakpoints.down('sm')]: {
             marginTop: spacing.unit * 3,
@@ -101,5 +88,20 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     },
     fixedEdit: {
         fontFamily: `Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Courier New, monospace`
+    },
+    spacer: {
+        [breakpoints.up('sm')]: {
+            marginRight: spacing.unit * 3
+        },
+        width: 0,
+        height: 0
+    },
+    grouper: {
+        flex: 1,
+        display: 'flex',
+        flexFlow: 'column',
+        [breakpoints.up('sm')]: {
+            flexFlow: 'row'
+        },
     }
 }));
