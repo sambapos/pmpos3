@@ -36,12 +36,26 @@ export class CardRecord extends Record<Card>({
     }
 
     get debit(): number {
-        let tagDebit = this.tags.reduce((x, y) => x + y.getDebit(this.subCardDebit + x), 0);
+        let preTotal = 0;
+        let tagDebit = this.tags.reduce(
+            (r, t) => {
+                let result = r + t.getDebit(this.subCardBalance + preTotal);
+                preTotal = preTotal + t.getBalance(this.subCardBalance + preTotal);
+                return result;
+            },
+            0);
         return tagDebit + this.subCardDebit;
     }
 
     get credit(): number {
-        let tagCredit = this.tags.reduce((x, y) => x + y.getCredit(this.subCardCredit + x), 0);
+        let preTotal = 0;
+        let tagCredit = this.tags.reduce(
+            (r, t) => {
+                let result = r + t.getCredit(this.subCardBalance + preTotal);
+                preTotal = preTotal + t.getBalance(this.subCardBalance + preTotal);
+                return result;
+            },
+            0);
         return tagCredit + this.subCardCredit;
     }
 

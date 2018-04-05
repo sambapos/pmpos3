@@ -7,6 +7,7 @@ export interface CardType {
     displayFormat: string;
     commands: string[];
     tagTypes: string[];
+    subCardTypes: string[];
 }
 
 export class CardTypeRecord extends Record<CardType>({
@@ -15,5 +16,6 @@ export class CardTypeRecord extends Record<CardType>({
     reference: '',
     displayFormat: '',
     commands: [],
-    tagTypes: []
+    tagTypes: [],
+    subCardTypes: []
 }) { }

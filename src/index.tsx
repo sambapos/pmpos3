@@ -16,6 +16,7 @@ let routes = RoutesModule.routes;
 const history = createBrowserHistory();
 const initialState = undefined; // loadState();
 const store = configureStore(history, initialState);
+// localStorage.debug = 'y*';
 
 let terminalId = localStorage.getItem('terminalId');
 if (!terminalId) {

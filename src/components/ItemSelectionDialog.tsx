@@ -1,27 +1,31 @@
 import * as React from 'react';
 import { List as IList } from 'immutable';
 import { DialogTitle, DialogContent, List, ListItem, Checkbox, DialogActions, Button, ListItemText } from 'material-ui';
-import CardList from '../../modules/CardList';
+import { Identifyable } from './Identifyable';
 
-export default class extends React.Component<{
-    tagTypes: string[],
-    onSubmit: (items: string[]) => void;
-}, { selectedTagTypes: IList<string> }> {
+interface ItemSelectionProps {
+    sourceItems: Identifyable[];
+    selectedItems: string[];
+    onSubmit: (selectedItems: string[]) => void;
+}
+
+export default class extends React.Component<ItemSelectionProps,
+    { selectedItems: IList<string> }> {
 
     constructor(props: any) {
         super(props);
-        this.state = { selectedTagTypes: IList<string>(props.tagTypes) };
+        this.state = { selectedItems: IList<string>(props.selectedItems) };
     }
 
     handleToggleSelectTagType(id: string) {
-        let items = this.state.selectedTagTypes;
+        let items = this.state.selectedItems;
         let checked = items.indexOf(id) !== -1;
         if (!checked) {
             items = items.push(id);
         } else {
             items = items.splice(items.indexOf(id), 1);
         }
-        this.setState({ selectedTagTypes: items });
+        this.setState({ selectedItems: items });
     }
 
     render() {
@@ -29,8 +33,8 @@ export default class extends React.Component<{
             <DialogTitle>Select Tag Types</DialogTitle>
             <DialogContent>
                 <List>
-                    {CardList.tagTypes.valueSeq().sort((x, y) => x.name > y.name ? 1 : 0).map(tt => {
-                        let checked = this.state.selectedTagTypes.indexOf(tt.id) !== -1;
+                    {this.props.sourceItems.sort((x, y) => x.name > y.name ? 1 : 0).map(tt => {
+                        let checked = this.state.selectedItems.indexOf(tt.id) !== -1;
                         return <ListItem
                             key={tt.id + '.'}
                             disableGutters
@@ -46,12 +50,12 @@ export default class extends React.Component<{
                             />
                             <ListItemText primary={tt.name} />
                         </ListItem>;
-                    }).toArray()}
+                    })}
                 </List>
             </DialogContent>
             <DialogActions>
                 <Button onClick={e => {
-                    this.props.onSubmit(this.state.selectedTagTypes.toArray());
+                    this.props.onSubmit(this.state.selectedItems.toArray());
                 }}>Submit</Button>
             </DialogActions>
         </>);

@@ -126,7 +126,7 @@ class NavPage extends React.Component<Props> {
                     </main>
                 </div>
                 <Dialog
-                    className={this.props.classes.modal}
+                    fullWidth
                     disableBackdropClick
                     transition={undefined}
                     open={this.props.modalOpen}

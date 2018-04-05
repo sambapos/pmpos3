@@ -98,3 +98,68 @@ it('sums multiple card balances and applies discount', () => {
         }));
     expect(c.balance).toEqual(14);
 });
+
+it('calulates parent vat', () => {
+    let c = new CardRecord();
+    c = c.sub('1', card => card
+        .tag({
+            name: 'Product',
+            value: 'Blue Stamp',
+            quantity: 1,
+            amount: 10,
+            source: 'Book'
+        }));
+    c = c.tag({
+        name: 'VAT',
+        value: 'State VAT',
+        rate: 10,
+        source: 'Vat'
+    });
+    expect(c.balance).toEqual(11);
+});
+
+it('calulates parent discount', () => {
+    let c = new CardRecord();
+    c = c.sub('1', card => card
+        .tag({
+            name: 'Product',
+            value: 'Blue Stamp',
+            quantity: 1,
+            amount: 10,
+            source: 'Book'
+        }));
+    c = c.tag({
+        name: 'DISCOUNT',
+        value: 'Customer Discount',
+        rate: -10,
+        source: 'Discount'
+    });
+    expect(c.debit).toEqual(9);
+});
+
+it('calulates included vat', () => {
+    let c = new CardRecord();
+    c = c.sub('1', card => card
+        .tag({
+            id: '1',
+            name: 'Product',
+            value: 'Blue Stamp',
+            quantity: 1,
+            amount: 10,
+            source: 'Book'
+        })
+        .tag({
+            id: '2',
+            name: 'VAT',
+            value: 'State VAT',
+            rate: 10,
+            source: 'Vat',
+            target: 'Included'
+        }));
+    expect(c.debit).toEqual(11);
+    expect(c.credit).toEqual(1);
+    // expect(tag.getDebit(0)).toEqual(1);
+    // expect(sc.subCardBalance).toEqual(0);
+    // expect(sc.debit).toEqual(11);
+    // expect(sc.credit).toEqual(1);
+});

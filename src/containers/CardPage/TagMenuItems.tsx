@@ -5,6 +5,8 @@ import { CardRecord } from '../../models/Card';
 import { MenuItem, Divider } from 'material-ui';
 import CardOperation from '../../modules/CardOperations/CardOperation';
 import { cardOperations } from '../../modules/CardOperations';
+import { TagTypeRecord } from '../../models/TagType';
+import { CardTypeRecord } from '../../models/CardType';
 
 interface TagMenuItemsProps {
     selectedCard: CardRecord;
@@ -15,10 +17,32 @@ interface TagMenuItemsProps {
 export default (props: CardPageProps & TagMenuItemsProps) => {
 
     let cardTags = props.selectedCard.tags.valueSeq();
-    let unselectedTagTypes = CardList.tagTypes.valueSeq()
-        .filter(x => !cardTags.find(y => y.typeId === x.id));
+    let cardType = CardList.getCardType(props.selectedCard.typeId);
+    let unselectedTagTypes: TagTypeRecord[] = [];
+    let subCardTypes: CardTypeRecord[] = [];
+
+    if (cardType) {
+        let tagTypes = cardType.tagTypes.map(x => CardList.tagTypes.get(x) as TagTypeRecord).filter(x => x);
+        unselectedTagTypes = tagTypes
+            .filter(x => !cardTags.find(y => y.typeId === x.id));
+        subCardTypes = cardType.subCardTypes.map(x => CardList.cardTypes.get(x) as CardTypeRecord);
+    }
 
     return (<>
+        {subCardTypes.map(ct => {
+            return <MenuItem
+                key={'ct_' + ct.id}
+                onClick={() => {
+                    props.handleOperation(
+                        cardOperations.get('CREATE_CARD'),
+                        { typeId: ct.id }
+                    );
+                    props.handleMenuClose();
+                }}>
+                Add {ct.reference}
+            </MenuItem>;
+        })}
+        {subCardTypes.length > 0 && <Divider />}
         {unselectedTagTypes.map(tagType => {
             return (<MenuItem
                 key={'set_' + tagType.name}
@@ -30,7 +54,7 @@ export default (props: CardPageProps & TagMenuItemsProps) => {
                     props.handleMenuClose();
                 }}
             >
-                Select {tagType.cardTypeReferenceName}
+                Set {tagType.cardTypeReferenceName}
             </MenuItem>);
         })}
         {cardTags.map(tag => {
@@ -44,11 +68,11 @@ export default (props: CardPageProps & TagMenuItemsProps) => {
                         );
                         props.handleMenuClose();
                     }}
-                >Change {!tag.name.startsWith('_') ? tag.name : tag.value}
+                >Edit {!tag.name.startsWith('_') ? tag.name : tag.value}
                 </MenuItem>
             );
         })}
-        {(cardTags.count() > 0 || unselectedTagTypes.count() > 0) && <Divider />}
+        {(cardTags.count() > 0 || unselectedTagTypes.length > 0) && <Divider />}
         {cardOperations.getOperations().map(option => (
             <MenuItem
                 key={'cmd_' + option.type}

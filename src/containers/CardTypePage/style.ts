@@ -4,9 +4,10 @@ export interface Style {
     content: any;
     paper: any;
     root: any;
-    footer: any;
     fixedEdit: any;
-    list: any;
+    subHeader: any;
+    dynamicRow: any;
+    fixedRow: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
@@ -15,10 +16,11 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         flexFlow: 'column',
         flex: '1 1 auto'
     },
-    list: {
+    subHeader: {
         flex: 1,
         overflow: 'auto',
-        marginTop: spacing.unit
+        marginTop: spacing.unit,
+        padding: spacing.unit
     },
     content: {
         height: '100%',
@@ -35,26 +37,39 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
             marginTop: spacing.unit * 3
         },
     },
-    footer: {
+    dynamicRow: {
+        display: 'flex',
+        flexFlow: 'column',
+        flex: '1',
+        maxWidth: 600,
+        width: '100%',
+        alignSelf: 'center',
+        [breakpoints.down('xs')]: {
+            fontSize: '0.9em'
+        },
         [breakpoints.up('sm')]: {
-            maxWidth: '600px',
+            flexFlow: 'row',
+            padding: spacing.unit * 3
+        },
+    },
+    fixedRow: {
+        display: 'flex',
+        flexFlow: 'column',
+        [breakpoints.up('sm')]: {
+            maxWidth: 600,
+            flexFlow: 'row',
             width: '100%',
             alignSelf: 'center',
         },
-        flex: 'none'
     },
     paper: {
         display: 'flex',
-        overflowX: 'auto',
         flexFlow: 'column',
         padding: spacing.unit,
-        flex: 'none',
         [breakpoints.up('sm')]: {
-            maxWidth: 600,
-            width: '100%',
-            alignSelf: 'center',
             padding: spacing.unit * 3,
         },
+        width: '100%'
     },
     fixedEdit: {
         fontFamily: `Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Courier New, monospace`

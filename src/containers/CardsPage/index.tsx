@@ -279,6 +279,8 @@ class CardsPage extends React.Component<PageProps, State> {
             return;
         }
 
+        if (result.source.index === result.destination.index) { return; }
+
         let items = reorder(
             this.state.items,
             result.source.index,

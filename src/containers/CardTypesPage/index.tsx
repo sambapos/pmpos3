@@ -64,7 +64,9 @@ class CardTypesPage extends React.Component<PageProps, {}> {
 
                 <Paper className={this.props.classes.content}>
                     <List>
-                        {this.renderCards(this.props.cardTypes.valueSeq().toArray())}
+                        {this.renderCards(this.props.cardTypes.valueSeq()
+                            .sort((x, y) => x.name > y.name ? 1 : -1)
+                            .toArray())}
                     </List>
                 </Paper>
             </div>

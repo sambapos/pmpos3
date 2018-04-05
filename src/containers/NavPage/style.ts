@@ -12,7 +12,6 @@ export interface Style {
     contentShift: any;
     contentShiftLeft: any;
     contentShiftRight: any;
-    modal: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints, mixins, transitions }): Style => ({
@@ -84,8 +83,5 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
         [breakpoints.up('md')]: {
             marginRight: drawerWidth,
         }
-    },
-    modal: {
-        minWidth: 300
-    },
+    }
 }));

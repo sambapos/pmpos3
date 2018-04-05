@@ -48,6 +48,9 @@ export class CardTagRecord extends Record<CardTag>({
     getCredit(parentAmount: number): number {
         return this.target ? this.realQuantity * this.getRealAmount(parentAmount) : 0;
     }
+    getBalance(parentAmount: number): number {
+        return this.getDebit(parentAmount) - this.getCredit(parentAmount);
+    }
     getRealAmount(parentAmount: number): number {
         if (this.rate !== 0) {
             let amount = ((parentAmount * this.rate) / 100) + this.amount;

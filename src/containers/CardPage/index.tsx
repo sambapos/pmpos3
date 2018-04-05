@@ -69,9 +69,10 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
                 this.props.SetModalComponent(component);
             }
         } else {
-            this.handleCardMutation(this.state.selectedCard, operation.type, {
-                id: shortid.generate(), time: new Date().getTime()
-            });
+            let data = currentData || {};
+            data.id = shortid.generate();
+            data.time = new Date().getTime();
+            this.handleCardMutation(this.state.selectedCard, operation.type, data);
         }
     }
 
