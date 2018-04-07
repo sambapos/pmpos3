@@ -15,7 +15,7 @@ interface ConfigState {
     currentRule: RuleRecord;
     isLoading: boolean;
     cardTypes: IMap<string, CardTypeRecord>;
-    rootCardTypes: IMap<string, CardTypeRecord>;
+    rootCardTypes: string[];
     tagTypes: IMap<string, TagTypeRecord>;
     rules: IMap<string, RuleRecord>;
 }
@@ -27,7 +27,7 @@ export class ConfigStateRecord extends Record<ConfigState>({
     currentRule: new RuleRecord(),
     currentTagType: new TagTypeRecord(),
     cardTypes: IMap<string, CardTypeRecord>(),
-    rootCardTypes: IMap<string, CardTypeRecord>(),
+    rootCardTypes: [],
     tagTypes: IMap<string, TagTypeRecord>(),
     rules: IMap<string, RuleRecord>()
 }) { }

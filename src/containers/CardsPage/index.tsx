@@ -24,7 +24,7 @@ type PageProps =
         cards: IList<CardRecord>,
         card: CardRecord,
         cardTypes: IMap<string, CardTypeRecord>,
-        rootCardTypes: IMap<string, CardTypeRecord>,
+        rootCardTypes: string[],
         currentCardType: CardTypeRecord,
         cardListScrollTop: number,
         searchValue: string,
@@ -224,15 +224,15 @@ class CardsPage extends React.Component<PageProps, State> {
         let result = [
             {
                 icon: 'arrow_drop_down',
-                menuItems: this.props.rootCardTypes.valueSeq().sortBy(x => x.name).map(ct => {
+                menuItems: this.props.rootCardTypes.map(ct => {
                     return {
-                        icon: ct.name, onClick: () => {
-                            let item = this.props.cardTypes.valueSeq().find(c => c.name === ct.name);
+                        icon: ct, onClick: () => {
+                            let item = this.props.cardTypes.valueSeq().find(c => c.name === ct);
                             if (item) { this.setState({ currentCardType: item }); }
                             this.props.setCurrentCardType(item);
                         }
                     };
-                }).toArray()
+                })
             },
             {
                 icon: 'developer_mode',

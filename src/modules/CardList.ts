@@ -116,9 +116,14 @@ class CardList {
         return this.cardTypes.get(id);
     }
 
-    getRootCardTypes(): IMap<string, CardTypeRecord> {
+    getRootCardTypes(): string[] {
         let sc = this.getSubCardTypes();
-        return this.cardTypes.filter(x => sc.indexOf(x.id) === -1);
+        return this.cardTypes
+            .valueSeq()
+            .filter(x => sc.indexOf(x.id) === -1)
+            .map(x => x.name)
+            .sortBy(x => x)
+            .toArray();
     }
 
     private getSubCardTypes(): string[] {
