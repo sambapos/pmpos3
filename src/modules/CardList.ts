@@ -91,10 +91,9 @@ class CardList {
         if (typeId && this.otherIndex) {
             let index = this.otherIndex.get(typeId);
             if (index) {
-                return index
+                return index.toList()
                     .map(id => this.cards.get(id) as CardRecord)
-                    .sort((a, b) => a.time - b.time)
-                    .toList()
+                    .sortBy(x => x.time)
                     || List<CardRecord>();
             }
         }

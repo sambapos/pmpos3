@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as _ from 'lodash';
 import * as CardStore from '../../store/Cards';
-import shortid from 'shortid';
+import * as shortid from 'shortid';
 import { reorder } from '../../lib/helpers';
 import { RouteComponentProps } from 'react-router';
 import { CellMeasurerCache } from 'react-virtualized';
@@ -136,8 +136,8 @@ class CardsPage extends React.Component<PageProps, State> {
     }
 
     private renderCardList() {
-        let groupedMap = IMap<string, any[]>(_.groupBy(this.state.items, x => x.category));
         if (!this.props.searchValue && this.state.itemCount < this.itemCount * 2) {
+            let groupedMap = IMap<string, any[]>(_.groupBy(this.state.items, x => x.category));
             return <DraggableCardList
                 items={groupedMap}
                 onDragEnd={r => this.onDragEnd(r)}

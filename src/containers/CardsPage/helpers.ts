@@ -1,7 +1,7 @@
 import { CardRecord } from '../../models/Card';
 import { List } from 'immutable';
 import * as faker from 'faker';
-import shortid from 'shortid';
+import * as shortid from 'shortid';
 import { ActionRecord } from '../../models/Action';
 import { CardTypeRecord } from '../../models/CardType';
 

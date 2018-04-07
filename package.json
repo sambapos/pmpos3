@@ -1,8 +1,9 @@
 {
   "name": "pmpos3",
-  "version": "0.3.16",
+  "version": "0.3.17",
   "private": true,
   "dependencies": {
+    "@types/shortid": "0.0.29",
     "autosuggest-highlight": "^3.1.1",
     "blueimp-tmpl": "^3.11.0",
     "expr-eval": "^1.2.1",
