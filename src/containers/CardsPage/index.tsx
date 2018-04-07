@@ -24,6 +24,7 @@ type PageProps =
         cards: IList<CardRecord>,
         card: CardRecord,
         cardTypes: IMap<string, CardTypeRecord>,
+        rootCardTypes: IMap<string, CardTypeRecord>,
         currentCardType: CardTypeRecord,
         cardListScrollTop: number,
         searchValue: string,
@@ -223,7 +224,7 @@ class CardsPage extends React.Component<PageProps, State> {
         let result = [
             {
                 icon: 'arrow_drop_down',
-                menuItems: this.props.cardTypes.valueSeq().map(ct => {
+                menuItems: this.props.rootCardTypes.valueSeq().sortBy(x => x.name).map(ct => {
                     return {
                         icon: ct.name, onClick: () => {
                             let item = this.props.cardTypes.valueSeq().find(c => c.name === ct.name);
@@ -298,6 +299,7 @@ const mapStateToProps = (state: ApplicationState) => ({
     cards: state.cards.cards,
     card: state.cards.currentCard,
     cardTypes: state.config.cardTypes,
+    rootCardTypes: state.config.rootCardTypes,
     currentCardType: state.cards.currentCardType,
     cardListScrollTop: state.cards.cardListScrollTop,
     searchValue: state.cards.searchValue,

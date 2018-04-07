@@ -1,4 +1,4 @@
-import { List, Map as IMap } from 'immutable';
+import { List, Map as IMap, Set as ISet } from 'immutable';
 import { CommitRecord, Commit } from '../models/Commit';
 import { CardRecord } from '../models/Card';
 import { cardOperations } from './CardOperations/index';
@@ -14,12 +14,13 @@ class CardList {
     cards: IMap<string, CardRecord>;
     cardTypes: IMap<string, CardTypeRecord>;
     tagTypes: IMap<string, TagTypeRecord>;
-    cardTypeIndex: IMap<string, List<string>>;
+    otherIndex: IMap<string, ISet<string>>;
 
     constructor() {
         this.commits = IMap<string, List<CommitRecord>>();
         this.cards = IMap<string, CardRecord>();
         this.cardTypes = IMap<string, CardTypeRecord>();
+        this.otherIndex = IMap<string, ISet<string>>();
     }
 
     setCardTypes(cardTypes: IMap<string, CardTypeRecord>) {
@@ -50,29 +51,17 @@ class CardList {
     }
 
     commitReduce = (card: CardRecord, commit: CommitRecord) => {
-        return commit.actions.reduce(this.actionReduce, card);
-    }
-
-    getCardTypeIndex() {
-        return this.cards.reduce(
-            (r: IMap<string, List<string>>, card) => {
-                return r.update(card.typeId, list => {
-                    if (!list) {
-                        list = List<string>();
-                    }
-                    return list.push(card.id);
-                });
-            },
-            IMap<string, List<string>>());
-    }
-
-    reIndexCardType() {
-        this.cardTypeIndex = this.getCardTypeIndex();
+        let result = commit.actions.reduce(this.actionReduce, card);
+        this.otherIndex = this.otherIndex.update(result.typeId, set => {
+            if (!set) { set = ISet<string>(); }
+            return set.add(result.id);
+        });
+        return result;
     }
 
     addCommits(commits: Commit[]) {
         commits.forEach(x => this.addCommit(x));
-        this.reIndexCardType();
+        console.log('cards', this.cards.count());
     }
 
     getCards(): IMap<string, CardRecord> {
@@ -99,12 +88,13 @@ class CardList {
     }
 
     getCardsByType(typeId: string): List<CardRecord> {
-        if (typeId && this.cardTypeIndex) {
-            let index = this.cardTypeIndex.get(typeId);
+        if (typeId && this.otherIndex) {
+            let index = this.otherIndex.get(typeId);
             if (index) {
                 return index
                     .map(id => this.cards.get(id) as CardRecord)
                     .sort((a, b) => a.time - b.time)
+                    .toList()
                     || List<CardRecord>();
             }
         }
@@ -124,6 +114,26 @@ class CardList {
 
     getCardType(id: string): CardTypeRecord | undefined {
         return this.cardTypes.get(id);
+    }
+
+    getRootCardTypes(): IMap<string, CardTypeRecord> {
+        let sc = this.getSubCardTypes();
+        return this.cardTypes.filter(x => sc.indexOf(x.id) === -1);
+    }
+
+    private getSubCardTypes(): string[] {
+        let result: ISet<string> = ISet<string>();
+        result = this.cardTypes.reduce((r, ct) => this.pushSubCardTypes(ct, r), result);
+        return result.toArray();
+    }
+
+    private pushSubCardTypes(cardType: CardTypeRecord, result: ISet<string>): ISet<string> {
+        let subCards = cardType.subCardTypes
+            .filter(x => this.cardTypes.has(x) && !result.has(x))
+            .map(x => this.getCardType(x) as CardTypeRecord);
+        result = result.concat(subCards.map(x => x.id));
+        result = subCards.reduce((r, ct) => this.pushSubCardTypes(ct, r), result);
+        return result;
     }
 
     getCard(id: string): CardRecord {
@@ -149,7 +159,7 @@ class CardList {
 
         let result = [] as Suggestion[];
         if (cardType.name) {
-            let index = this.cardTypeIndex.get(cardType.id) || List<string>();
+            let index = this.otherIndex.get(cardType.id) || ISet<string>();
             let cards = index.map(id => this.cards.get(id) as CardRecord);
             result = cards
                 .filter(c => c.name.toLowerCase().trim().includes(inputValue))

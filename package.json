@@ -1,6 +1,6 @@
 {
   "name": "pmpos3",
-  "version": "0.3.15",
+  "version": "0.3.16",
   "private": true,
   "dependencies": {
     "autosuggest-highlight": "^3.1.1",

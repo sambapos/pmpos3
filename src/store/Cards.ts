@@ -278,6 +278,15 @@ export const actionCreators = {
                 });
             }
         },
+    postCommits: (commits: any[]):
+        AppThunkAction<KnownActions> => (dispatch, getState) => {
+            commits = commits.map(x => {
+                x.terminalId = getState().client.terminalId;
+                x.user = getState().client.loggedInUser;
+                return x;
+            });
+            getState().cards.protocol.push(commits);
+        },
     postCommit: (card: CardRecord, actions: List<ActionRecord>):
         AppThunkAction<KnownActions> => (dispatch, getState) => {
             createAndPostCommit(getState(), card, actions);

@@ -93,8 +93,7 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
         let component = (
             <ItemSelectionDialog
                 selectedItems={this.state.subCardTypes}
-                sourceItems={CardList.cardTypes.valueSeq()
-                    .filter(x => x.id !== this.props.cardType.id).toArray()}
+                sourceItems={CardList.cardTypes.valueSeq().toArray()}
                 onSubmit={subCardTypes => {
                     this.setState({ subCardTypes });
                     this.props.SetModalState(false);

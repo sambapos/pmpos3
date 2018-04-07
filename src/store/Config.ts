@@ -15,6 +15,7 @@ interface ConfigState {
     currentRule: RuleRecord;
     isLoading: boolean;
     cardTypes: IMap<string, CardTypeRecord>;
+    rootCardTypes: IMap<string, CardTypeRecord>;
     tagTypes: IMap<string, TagTypeRecord>;
     rules: IMap<string, RuleRecord>;
 }
@@ -26,6 +27,7 @@ export class ConfigStateRecord extends Record<ConfigState>({
     currentRule: new RuleRecord(),
     currentTagType: new TagTypeRecord(),
     cardTypes: IMap<string, CardTypeRecord>(),
+    rootCardTypes: IMap<string, CardTypeRecord>(),
     tagTypes: IMap<string, TagTypeRecord>(),
     rules: IMap<string, RuleRecord>()
 }) { }
@@ -165,6 +167,7 @@ export const reducer: Reducer<ConfigStateRecord> = (
             }
             return state
                 .set('cardTypes', cardTypeMap)
+                .set('rootCardTypes', CardList.getRootCardTypes())
                 .set('tagTypes', tagTypeMap)
                 .set('rules', ruleMap);
         }
@@ -186,7 +189,8 @@ export const reducer: Reducer<ConfigStateRecord> = (
         case 'RESET_CARD_TYPE': {
             return state
                 .set('isLoading', false)
-                .set('currentCardType', new CardTypeRecord());
+                .set('currentCardType', new CardTypeRecord())
+                .set('rootCardTypes', CardList.getRootCardTypes());
         }
         case 'ADD_CARD_TYPE': {
             return state

@@ -1,6 +1,9 @@
 import { CardRecord } from '../../models/Card';
 import { List } from 'immutable';
 import * as faker from 'faker';
+import shortid from 'shortid';
+import { ActionRecord } from '../../models/Action';
+import { CardTypeRecord } from '../../models/CardType';
 
 export const getListStyle = isDraggingOver => ({
     background: isDraggingOver ? 'lightblue' : '',
@@ -33,18 +36,66 @@ export function getItems(cards: List<CardRecord>, startIndex: number, itemCount:
     return result;
 }
 
+function getCardCreateAction(cardId: string, cardType: CardTypeRecord) {
+    return new ActionRecord({
+        actionType: 'CREATE_CARD',
+        id: shortid.generate(),
+        data: {
+            id: cardId,
+            typeId: cardType.id,
+            type: cardType.name,
+            time: new Date().getTime()
+        }
+    });
+}
+
+function getTagCardAction(cardId: string, data: any) {
+    return new ActionRecord({
+        actionType: 'SET_CARD_TAG',
+        id: shortid.generate(),
+        cardId,
+        data
+    });
+}
+
+function getCardCommit(props: any) {
+    let cardId = shortid.generate();
+    let actions = List<ActionRecord>();
+    actions = actions.push(getCardCreateAction(cardId, props.currentCardType));
+    actions = actions.push(getTagCardAction(cardId, {
+        name: 'Name', value: faker.name.findName()
+    }));
+    actions = actions.push(getTagCardAction(cardId, {
+        name: 'Address', value: faker.address.streetAddress()
+    }));
+    actions = actions.push(getTagCardAction(cardId, {
+        name: 'Phone', value: faker.phone.phoneNumber()
+    }));
+    let commit = {
+        id: shortid.generate(),
+        time: new Date().getTime(),
+        cardId: cardId,
+        actions: actions.toJS(),
+    };
+    return commit;
+}
+
 export function createTestCards(props: any) {
+    let commits: any[] = [];
     for (let index = 0; index < 500; index++) {
-        props.addCard(props.currentCardType);
-        props.addPendingAction(undefined, 'SET_CARD_TAG', {
-            name: 'Name', value: faker.name.findName()
-        });
-        props.addPendingAction(undefined, 'SET_CARD_TAG', {
-            name: 'Address', value: faker.address.streetAddress()
-        });
-        props.addPendingAction(undefined, 'SET_CARD_TAG', {
-            name: 'Phone', value: faker.phone.phoneNumber()
-        });
-        props.commitCard();
+        let commit = getCardCommit(props);
+        commits.push(commit);
+        // props.addCard(props.currentCardType);
+        // props.addPendingAction(undefined, 'SET_CARD_TAG', {
+        //     name: 'Name', value: faker.name.findName()
+        // });
+        // props.addPendingAction(undefined, 'SET_CARD_TAG', {
+        //     name: 'Address', value: faker.address.streetAddress()
+        // });
+        // props.addPendingAction(undefined, 'SET_CARD_TAG', {
+        //     name: 'Phone', value: faker.phone.phoneNumber()
+        // });
+        // props.commitCard();
     }
+    props.postCommits(commits);
 }
