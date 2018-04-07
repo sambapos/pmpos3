@@ -136,10 +136,10 @@ class CardsPage extends React.Component<PageProps, State> {
     }
 
     private renderCardList() {
-
+        let groupedMap = IMap<string, any[]>(_.groupBy(this.state.items, x => x.category));
         if (!this.props.searchValue && this.state.itemCount < this.itemCount * 2) {
             return <DraggableCardList
-                items={this.state.items}
+                items={groupedMap}
                 onDragEnd={r => this.onDragEnd(r)}
                 template={this.state.currentCardType ? this.state.currentCardType.displayFormat : ''}
                 onClick={c => {

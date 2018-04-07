@@ -101,6 +101,10 @@ export class CardRecord extends Record<Card>({
         return this.tags.getIn(['Name', 'value']) || '';
     }
 
+    get category(): string {
+        return this.tags.getIn(['Category', 'value']) || '';
+    }
+
     get allTags(): CardTagRecord[] {
         return this.tags.valueSeq().toArray();
     }

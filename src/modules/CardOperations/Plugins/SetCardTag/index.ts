@@ -36,6 +36,9 @@ export default class SetCardTag extends CardOperation {
 
     reduce(card: CardRecord, data: CardTagRecord): CardRecord {
         let r = new CardTagRecord(this.fixData(data));
+        if (card.tags.has(data.name) && !data.value && data.amount === 0) {
+            return card.deleteIn(['tags', data.name]);
+        }
         return card.setIn(['tags', data.name], r);
     }
 

@@ -83,6 +83,10 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
         });
     }
 
+    public shouldComponentUpdate(props: CardPageProps) {
+        return Boolean(props.card.id);
+    }
+
     public componentDidMount() {
         if (this.props.match.params.id) {
             this.props.loadCard(this.props.match.params.id);
@@ -95,7 +99,7 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
     }
 
     public componentWillReceiveProps(props: CardPageProps) {
-        if (props.isLoaded) {
+        if (props.isLoaded && props.card !== this.props.card) {
             this.setState({ footerButtons: this.getButtons(props.card) });
         }
     }

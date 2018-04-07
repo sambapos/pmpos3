@@ -6,8 +6,7 @@ import { ActionRecord } from '../../models/Action';
 import { CardTypeRecord } from '../../models/CardType';
 
 export const getListStyle = isDraggingOver => ({
-    background: isDraggingOver ? 'lightblue' : '',
-    overflow: 'auto' as 'auto'
+    background: isDraggingOver ? 'lightblue' : ''
 });
 
 export const getItemStyle = (isDragging, draggableStyle) => ({
