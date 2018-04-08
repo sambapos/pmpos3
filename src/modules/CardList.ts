@@ -164,13 +164,13 @@ class CardList {
         let result = [] as Suggestion[];
         if (cardType.name) {
             let index = this.otherIndex.get(cardType.id) || ISet<string>();
-            let cards = index.map(id => this.cards.get(id) as CardRecord);
+            let cards = index.toList().map(id => (this.cards.get(id) as CardRecord).name);
             result = cards
-                .filter(c => c.name.toLowerCase().trim().includes(inputValue))
-                .sortBy(c => c.name)
+                .filter(c => c.toLowerCase().trim().includes(inputValue))
+                .sortBy(c => c)
                 .take(100)
-                .map(c => {
-                    return { label: c.name };
+                .map(label => {
+                    return { label };
                 })
                 .toArray();
         }

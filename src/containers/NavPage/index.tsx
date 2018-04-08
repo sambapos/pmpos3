@@ -126,6 +126,7 @@ class NavPage extends React.Component<Props> {
                     </main>
                 </div>
                 <Dialog
+                    PaperProps={{ style: { overflow: 'unset' } }}
                     fullWidth
                     disableBackdropClick
                     transition={undefined}
