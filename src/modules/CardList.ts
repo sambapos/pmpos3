@@ -20,6 +20,7 @@ class CardList {
         this.commits = IMap<string, List<CommitRecord>>();
         this.cards = IMap<string, CardRecord>();
         this.cardTypes = IMap<string, CardTypeRecord>();
+        this.tagTypes = IMap<string, TagTypeRecord>();
         this.otherIndex = IMap<string, ISet<string>>();
     }
 
@@ -61,7 +62,6 @@ class CardList {
 
     addCommits(commits: Commit[]) {
         commits.forEach(x => this.addCommit(x));
-        console.log('cards', this.cards.count());
     }
 
     getCards(): IMap<string, CardRecord> {
@@ -93,7 +93,7 @@ class CardList {
             if (index) {
                 return index.toList()
                     .map(id => this.cards.get(id) as CardRecord)
-                    .sortBy(x => x.time)
+                    .sortBy(x => -x.time)
                     || List<CardRecord>();
             }
         }
@@ -185,7 +185,7 @@ class CardList {
         this.cards = this.cards.update(commit.cardId, cardRecord => {
             let commits = this.commits.get(commit.cardId) as List<CommitRecord>;
             return commits
-                .sort((a, b) => a.time - b.time)
+                .sortBy(x => x.time)
                 .reduce(this.commitReduce, new CardRecord());
         });
     }

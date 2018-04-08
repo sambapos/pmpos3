@@ -1,9 +1,8 @@
 {
   "name": "pmpos3",
-  "version": "0.3.17",
+  "version": "0.3.18",
   "private": true,
   "dependencies": {
-    "@types/shortid": "0.0.29",
     "autosuggest-highlight": "^3.1.1",
     "blueimp-tmpl": "^3.11.0",
     "expr-eval": "^1.2.1",
@@ -47,6 +46,7 @@
     "deploy": "gh-pages -d build"
   },
   "devDependencies": {
+    "@types/shortid": "0.0.29",
     "@types/enzyme": "^3.1.9",
     "@types/enzyme-adapter-react-16": "^1.0.2",
     "@types/history": "^4.6.2",

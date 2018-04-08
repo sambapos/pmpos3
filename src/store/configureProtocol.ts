@@ -1,8 +1,8 @@
 var Y = require('yjs');
 require('y-array/y-array.js');
-require('y-websockets-client')(Y);
 require('y-memory');
 require('y-map');
+import yclient from '../lib/y-websockets-client';
 require('y-indexeddb')(Y);
 
 import { ApplicationState } from './index';
@@ -16,6 +16,7 @@ export default (
     getState: () => ApplicationState,
     cb: (protocol: any) => void) => {
 
+    yclient(Y);
     const persistence = new Y.IndexedDB();
 
     let y = new Y(
@@ -34,25 +35,26 @@ export default (
     dispatchCommitProtocol(dispatch, commitProtocol);
     dispatchConfigProtocol(dispatch, configProtocol);
 
-    dispatchConfigEvent(dispatch, configProtocol);
+    // dispatchConfigEvent(dispatch, configProtocol);
     configProtocol.observe(event => {
         dispatchConfigEvent(dispatch, event.target);
     });
 
-    dispatchCommitEvent(dispatch, commitProtocol.toArray());
+    // dispatchCommitEvent(dispatch, commitProtocol.toArray());
     commitProtocol.observe(event => {
         let values: any[] = [];
         event.addedElements.forEach(x => values = values.concat(x._content));
         dispatchCommitEvent(dispatch, values);
     });
 
-    chatprotocol.toArray().forEach(x => dispatchChatEvent(dispatch, x));
+    // chatprotocol.toArray().forEach(x => dispatchChatEvent(dispatch, x));
     chatprotocol.observe(event => {
         event.addedElements.forEach(x => dispatchChatEvent(dispatch, x._content[0]));
         if (chatprotocol.length > 10) {
             chatprotocol.delete(0, chatprotocol.length - 10);
         }
     });
+    console.log('network init', y);
     cb(y);
 };
 

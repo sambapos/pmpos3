@@ -22,9 +22,9 @@ export default (props: CardPageProps & TagMenuItemsProps) => {
     let subCardTypes: CardTypeRecord[] = [];
 
     if (cardType) {
-        let tagTypes = cardType.tagTypes.map(x => CardList.tagTypes.get(x) as TagTypeRecord).filter(x => x);
-        unselectedTagTypes = tagTypes
-            .filter(x => !cardTags.find(y => y.typeId === x.id));
+        unselectedTagTypes = cardType.tagTypes
+            .filter(x => !cardTags.find(y => y.typeId === x))
+            .map(x => CardList.tagTypes.get(x) as TagTypeRecord);
         subCardTypes = cardType.subCardTypes.map(x => CardList.cardTypes.get(x) as CardTypeRecord);
     }
 

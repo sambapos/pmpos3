@@ -34,9 +34,22 @@ export default class SetCardTag extends CardOperation {
         return card.getIn(['tags', data.name]);
     }
 
+    private tagValueRemoved(card: CardRecord, data: CardTagRecord) {
+        return card.tags.has(data.name)
+            && card.getTag(data.name, undefined)
+            && !data.value;
+    }
+
+    private tagAmountRemoved(card: CardRecord, data: CardTagRecord) {
+        return card.tags.has(data.name) && data.func && data.amount === 0;
+    }
+
     reduce(card: CardRecord, data: CardTagRecord): CardRecord {
         let r = new CardTagRecord(this.fixData(data));
-        if (card.tags.has(data.name) && !data.value && data.amount === 0) {
+        if (this.tagValueRemoved(card, data)) {
+            return card.deleteIn(['tags', data.name]);
+        }
+        if (this.tagAmountRemoved(card, data)) {
             return card.deleteIn(['tags', data.name]);
         }
         return card.setIn(['tags', data.name], r);
@@ -57,13 +70,18 @@ export default class SetCardTag extends CardOperation {
         return data;
     }
 
-    valueNeeded(data: any): boolean {
-        return data.name.startsWith('_') || data.typeId;
+    valueNeeded(data: any, currentValue: CardTagRecord): boolean {
+        return (!currentValue || !currentValue.value) && (data.name.startsWith('_') || data.typeId);
+    }
+
+    amountNeeded(data: any, currentValue: CardTagRecord): boolean {
+        return (!currentValue || currentValue.amount === 0) && data.func;
     }
 
     canApply(card: CardRecord, data: any): boolean {
-        if (!data.name || (this.valueNeeded(data) && !data.value)) { return false; }
         let currentValue = card.getIn(['tags', data.name]) as CardTagRecord;
+        if (!data.name || (this.valueNeeded(data, currentValue) && !data.value)) { return false; }
+        if (this.amountNeeded(data, currentValue) && data.amount === 0) { return false; }
         return !currentValue
             || currentValue.value !== data.value
             || currentValue.quantity !== data.quantity
