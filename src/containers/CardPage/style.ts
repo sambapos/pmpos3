@@ -67,10 +67,10 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         flex: 'none',
         display: 'flex',
         flexWrap: 'wrap',
-        borderBottom: '1px solid ' + palette.divider,
-        '&:hover': {
-            background: palette.grey.A100
-        }
+        borderBottom: '1px solid ' + palette.divider
+        // '&:hover': {
+        //     background: palette.grey.A100
+        // }
 
         // borderLeft: '1px solid ' + palette.text.divider,
         // borderRight: '1px solid ' + palette.text.divider,

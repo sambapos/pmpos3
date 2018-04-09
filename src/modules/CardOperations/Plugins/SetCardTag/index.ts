@@ -78,19 +78,24 @@ export default class SetCardTag extends CardOperation {
         return (!currentValue || currentValue.amount === 0) && data.func;
     }
 
+    valueChanged(currentValue: CardTagRecord, data: any) {
+        if (!currentValue) { console.log('ncv'); return true; }
+        if (currentValue.value !== data.value) { console.log('vd'); return true; }
+        if (currentValue.quantity !== data.quantity) { console.log('qd'); return true; }
+        if (currentValue.unit !== data.unit) { console.log('ud'); return true; }
+        if (currentValue.amount !== data.amount) { console.log('ad'); return true; }
+        if (currentValue.func !== data.func) { console.log('fd'); return true; }
+        if (currentValue.source !== data.source) { console.log('sd'); return true; }
+        if (currentValue.target !== data.target) { console.log('td'); return true; }
+        return false;
+    }
+
     canApply(card: CardRecord, data: any): boolean {
         let currentValue = card.getIn(['tags', data.name]) as CardTagRecord;
         if (!data.name || (this.valueNeeded(data, currentValue) && !data.value)) { return false; }
         if (this.amountNeeded(data, currentValue) && data.amount === 0) { return false; }
-        return !currentValue
-            || currentValue.value !== data.value
-            || currentValue.quantity !== data.quantity
-            || currentValue.unit !== data.unit
-            || currentValue.amount !== data.amount
-            || currentValue.rate !== data.rate
-            || currentValue.func !== data.func
-            || currentValue.source !== data.source
-            || currentValue.target !== data.target;
+        console.log('Can Apply', currentValue, data);
+        return this.valueChanged(currentValue, data);
     }
     processPendingAction(action: ActionRecord): ActionRecord {
         let data = action.data;

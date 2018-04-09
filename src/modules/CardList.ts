@@ -8,8 +8,10 @@ import { Suggestion } from '../components/AutoSuggest';
 import { CardTypeRecord } from '../models/CardType';
 import CardTagData from '../models/CardTagData';
 import { TagTypeRecord } from '../models/TagType';
+import { CardTagRecord } from '../models/CardTag';
 
 class CardList {
+
     commits: IMap<string, List<CommitRecord>>;
     cards: IMap<string, CardRecord>;
     cardTypes: IMap<string, CardTypeRecord>;
@@ -175,6 +177,11 @@ class CardList {
                 .toArray();
         }
         return result;
+    }
+
+    getTagSortIndexByCard(card: CardRecord, tag: CardTagRecord): number {
+        let ct = this.getCardType(card.typeId);
+        return ct ? ct.tagTypes.indexOf(tag.typeId) : -1;
     }
 
     private addCommit(commit: Commit) {

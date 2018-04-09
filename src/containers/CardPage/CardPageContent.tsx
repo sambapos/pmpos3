@@ -22,9 +22,6 @@ const CardPageContent = (props: PageProps) => {
         <div
             className={props.card.cards.count() > 0 ? props.classes.node : props.classes.leaf} >
             <div
-                onClick={() => {
-                    props.handleCardClick(props.card);
-                }}
                 className={classNames(
                     props.classes.cardLine, {
                         [props.classes.selectedCardLine]: props.selectedCardId === props.card.id
@@ -37,7 +34,7 @@ const CardPageContent = (props: PageProps) => {
                 >
                     more_vert
                 </Icon>
-                <Tags card={props.card} />
+                <Tags card={props.card} handleCardClick={props.handleCardClick} />
             </div>
             <SubCards
                 card={props.card}

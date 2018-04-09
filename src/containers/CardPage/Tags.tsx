@@ -20,13 +20,13 @@ class CardTagWrapper {
     get source() { return this.tag.source; }
     get target() { return this.tag.target; }
     get amount() { return this.tag.amount; }
-    get rate() { return this.tag.rate; }
     get quantity() { return this.tag.quantity; }
     get balance() { return this.card.getTagTotal(this.tag); }
 }
 
 interface TagsProps {
     card: CardRecord;
+    handleCardClick: (card: CardRecord) => void;
 }
 
 const getCustomDisplay = (template: string, tag: CardTagWrapper) => {
@@ -66,19 +66,28 @@ const getDisplayFor = (card: CardRecord, tag: CardTagRecord, classes: Record<key
     return getDefaultDisplay(card, tag, classes);
 };
 
+const sortIndex = (card: CardRecord, tag: CardTagRecord) => {
+    CardList.getTagSortIndexByCard(card, tag);
+};
+
 const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
     return (
-        <div className={props.classes.tagSection}>
+        <div className={props.classes.tagSection}
+            onClick={() => {
+                props.handleCardClick(props.card);
+            }}>
             {
-                props.card.tags.entrySeq().map(([k, v]) => {
-                    return (
-                        <div
-                            key={k}
-                            className={props.classes.tagItem}
-                        >
-                            {getDisplayFor(props.card, v, props.classes)}
-                        </div>);
-                })
+                props.card.tags.entrySeq()
+                    .sortBy(x => sortIndex(props.card, x[1]))
+                    .map(([k, v]) => {
+                        return (
+                            <div
+                                key={k}
+                                className={props.classes.tagItem}
+                            >
+                                {getDisplayFor(props.card, v, props.classes)}
+                            </div>);
+                    })
             }
         </div>
     );

@@ -91,16 +91,19 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
         if (this.props.match.params.id) {
             this.props.loadCard(this.props.match.params.id);
         }
-        if (this.props.isLoaded) {
-            this.setState({
-                selectedCard: this.props.card,
-            });
-        }
+        // if (this.props.isLoaded) {
+        //     this.setState({
+        //         selectedCard: this.props.card,
+        //     });
+        // }
     }
 
     public componentWillReceiveProps(props: CardPageProps) {
         if (props.isLoaded && props.card !== this.props.card) {
-            this.setState({ footerButtons: this.getButtons(props.card) });
+            this.setState({
+                footerButtons: this.getButtons(props.card),
+                selectedCard: props.card
+            });
         }
     }
 
@@ -132,7 +135,12 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
             : [];
     }
 
+    getSelectedCard(card: CardRecord): CardRecord {
+        return card !== this.state.selectedCard ? card : this.props.card;
+    }
+
     public render() {
+        console.log(this.state.selectedCard);
         if (this.props.failed) {
             return (
                 <div>
@@ -173,7 +181,7 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
                             anchorEl: target
                         })}
                         handleCardClick={(card: CardRecord) => {
-                            this.setState({ selectedCard: card });
+                            this.setState({ selectedCard: this.getSelectedCard(card) });
                         }}
                     />
                 </Paper >

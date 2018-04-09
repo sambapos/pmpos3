@@ -3,6 +3,7 @@ import { ListItem, ListItemText } from 'material-ui';
 import { CardRecord } from '../../models/Card';
 import RuleManager from '../../modules/RuleManager';
 import tmpl from 'blueimp-tmpl';
+import CardList from '../../modules/CardList';
 
 const getDefaultContent = (card: CardRecord) => {
     return (
@@ -10,6 +11,7 @@ const getDefaultContent = (card: CardRecord) => {
             <ListItemText
                 primary={card.display}
                 secondary={card.tags.valueSeq()
+                    .sortBy(tag => CardList.getTagSortIndexByCard(card, tag))
                     .filter(tag => tag.name !== 'Name')
                     .map(tag => (
                         <span

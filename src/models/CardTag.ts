@@ -9,7 +9,6 @@ export interface CardTag {
     quantity: number;
     unit: string;
     amount: number;
-    rate: number;
     func: string;
     source: string;
     target: string;
@@ -26,7 +25,6 @@ export class CardTagRecord extends Record<CardTag>({
     quantity: 0,
     unit: '',
     amount: 0,
-    rate: 0,
     func: '',
     source: '',
     target: '',
@@ -55,11 +53,11 @@ export class CardTagRecord extends Record<CardTag>({
         return this.getDebit(parentAmount) - this.getCredit(parentAmount);
     }
     getRealAmount(parentAmount: number): number {
-        if (this.rate !== 0) {
-            let amount = ((parentAmount * this.rate) / 100) + this.amount;
-            let result = Math.round(amount * 100) / 100;
-            return result;
-        }
+        // if (this.rate !== 0) {
+        //     let amount = ((parentAmount * this.rate) / 100) + this.amount;
+        //     let result = Math.round(amount * 100) / 100;
+        //     return result;
+        // }
         if (this.func) {
             return Parser.evaluate(this.func, { a: this.amount, p: parentAmount });
         }
