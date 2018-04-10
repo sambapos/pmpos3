@@ -30,7 +30,6 @@ class ActionData {
         this.root = root;
         this.state = state;
     }
-
     load(cardType: string, cardName: string) {
         return CardList.getCardByName(cardType, cardName);
     }
@@ -102,6 +101,7 @@ class RuleManager {
         defines.set('Action', ActionType);
         defines.set('Result', ResultType);
         defines.set('Content', ContentType);
+        defines.set('Card', CardRecord);
         let filteredRules = rules
             .filter(x => !x.name.startsWith('_') && x.content.includes('when'))
             .valueSeq().toArray().filter(rule => this.testRule(rule));
@@ -120,6 +120,7 @@ class RuleManager {
             defines.set('Action', ActionType);
             defines.set('Result', ResultType);
             defines.set('Content', ContentType);
+            defines.set('Card', CardRecord);
             Nools.compile(rule.content, {
                 define: defines,
                 scope: new Map<string, any>([['r', []]])

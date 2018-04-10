@@ -183,21 +183,15 @@ export const reducer: Reducer<StateRecord> = (
         }
         case 'REMOVE_PENDING_ACTIONS': {
             let actions = state.pendingActions;
-            let cardId = action.cardId;
-            actions = actions.filter(a => {
-                if (a.actionType === 'CREATE_CARD' && a.data.id === cardId) {
-                    return false;
-                }
-                if (a.actionType !== 'CREATE_CARD' && a.cardId === cardId) {
-                    return false;
-                }
-                return true;
-            });
-            let card = CardList.getCard(state.currentCard.id);
-            card = actions.reduce((r, a) => CardList.applyAction(r, a, false), card);
-            return state
-                .set('currentCard', card)
-                .set('pendingActions', actions);
+            actions = actions.filter(a => !a.relatesToCard(action.cardId));
+            if (actions.count() !== state.pendingActions.count()) {
+                let card = CardList.getCard(state.currentCard.id);
+                card = actions.reduce((r, a) => CardList.applyAction(r, a, false), card);
+                return state
+                    .set('currentCard', card)
+                    .set('pendingActions', actions);
+            }
+            return state;
         }
         case 'SET_COMMIT_PROTOCOL': {
             return state.set('protocol', action.protocol);

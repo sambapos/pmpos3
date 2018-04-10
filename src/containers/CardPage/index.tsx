@@ -58,12 +58,12 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
         this.handleModalClose();
     }
 
-    handleOperation(operation?: CardOperation, currentData?: any) {
+    handleOperation(card: CardRecord, operation?: CardOperation, currentData?: any) {
         if (!operation) { return; }
         if (operation.getEditor) {
             let component = operation.getEditor(
-                this.state.selectedCard,
-                (at, data) => this.handleCardMutation(this.state.selectedCard, at, data),
+                card,
+                (at, data) => this.handleCardMutation(card, at, data),
                 () => { this.handleModalClose(); },
                 currentData);
             if (component) {
@@ -73,7 +73,7 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
             let data = currentData || {};
             data.id = shortid.generate();
             data.time = new Date().getTime();
-            this.handleCardMutation(this.state.selectedCard, operation.type, data);
+            this.handleCardMutation(card, operation.type, data);
         }
     }
 
@@ -163,7 +163,7 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
         }
 
         let hasPendingUpdates = this.props.pendingActions
-            .some(a => a.data.id === this.state.selectedCard.id || a.cardId === this.state.selectedCard.id);
+            .some(a => a.relatesToCard(this.state.selectedCard.id));
 
         return (
             <div className={this.props.classes.root}>
@@ -224,7 +224,8 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
                         <Divider /></>}
                     <TagMenuItems
                         selectedCard={this.state.selectedCard}
-                        handleOperation={(op, data) => this.handleOperation(op, data)}
+                        handleOperation={(op, data) =>
+                            this.handleOperation(this.state.selectedCard, op, data)}
                         handleMenuClose={() => this.handleMenuClose()}
                         {...this.props} />
 
