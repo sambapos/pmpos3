@@ -18,6 +18,7 @@ export interface Style {
     leaf: any;
     indexHeader: any;
     subCards: any;
+    icon: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
@@ -67,16 +68,16 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         flex: 'none',
         display: 'flex',
         flexWrap: 'wrap',
-        borderBottom: '1px solid ' + palette.divider
+        borderBottom: '1px solid ' + palette.divider,
         // '&:hover': {
-        //     background: palette.grey.A100
+        //     background: palette.grey['100']
         // }
 
         // borderLeft: '1px solid ' + palette.text.divider,
         // borderRight: '1px solid ' + palette.text.divider,
     },
     selectedCardLine: {
-        backgroundColor: palette.grey.A100
+        backgroundColor: palette.grey['200']
         // borderLeft: '1px solid ' + palette.text.divider,
         // borderRight: '1px solid ' + palette.text.divider,
     },
@@ -137,5 +138,10 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
 
         flex: '1 1 auto',
         overflowX: 'auto' as 'auto',
+    },
+    icon: {
+        fontSize: '1.1rem', marginRight: 2, marginLeft: -2,
+        marginBottom: 2, opacity: 0.6,
+        height: 'auto', verticalAlign: 'middle',
     }
 }));

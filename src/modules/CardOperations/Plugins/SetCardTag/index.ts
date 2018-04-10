@@ -20,9 +20,9 @@ export default class SetCardTag extends CardOperation {
         return !action.data.value;
     }
 
-    createEditor(success: (actionType: string, data: any) => void, cancel: () => void, current: any) {
+    createEditor(card: CardRecord, success: (actionType: string, data: any) => void, cancel: () => void, current: any) {
         return React.createElement(TagEditor, {
-            success, cancel, actionName: this.type,
+            card, success, cancel, actionName: this.type,
             current: {
                 tag: new CardTagRecord(current.tag),
                 tagType: new TagTypeRecord(current.tagType)
@@ -79,14 +79,14 @@ export default class SetCardTag extends CardOperation {
     }
 
     valueChanged(currentValue: CardTagRecord, data: any) {
-        if (!currentValue) { console.log('ncv'); return true; }
-        if (currentValue.value !== data.value) { console.log('vd'); return true; }
-        if (currentValue.quantity !== data.quantity) { console.log('qd'); return true; }
-        if (currentValue.unit !== data.unit) { console.log('ud'); return true; }
-        if (currentValue.amount !== data.amount) { console.log('ad'); return true; }
-        if (currentValue.func !== data.func) { console.log('fd'); return true; }
-        if (currentValue.source !== data.source) { console.log('sd'); return true; }
-        if (currentValue.target !== data.target) { console.log('td'); return true; }
+        if (!currentValue) { return true; }
+        if (currentValue.value !== data.value) { return true; }
+        if (currentValue.quantity !== data.quantity) { return true; }
+        if (currentValue.unit !== data.unit) { return true; }
+        if (currentValue.amount !== data.amount) { return true; }
+        if (currentValue.func !== data.func) { return true; }
+        if (currentValue.source !== data.source) { return true; }
+        if (currentValue.target !== data.target) { return true; }
         return false;
     }
 
@@ -94,7 +94,6 @@ export default class SetCardTag extends CardOperation {
         let currentValue = card.getIn(['tags', data.name]) as CardTagRecord;
         if (!data.name || (this.valueNeeded(data, currentValue) && !data.value)) { return false; }
         if (this.amountNeeded(data, currentValue) && data.amount === 0) { return false; }
-        console.log('Can Apply', currentValue, data);
         return this.valueChanged(currentValue, data);
     }
     processPendingAction(action: ActionRecord): ActionRecord {

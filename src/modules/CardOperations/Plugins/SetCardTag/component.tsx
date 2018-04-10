@@ -6,41 +6,62 @@ import CardList from '../../../CardList';
 import { CardTagRecord } from '../../../../models/CardTag';
 import { Fragment } from 'react';
 import { TagTypeRecord } from '../../../../models/TagType';
+import { CardRecord } from '../../../../models/Card';
 
-export default class extends React.Component<
-    {
-        success: (actionType: string, data: any) => void,
-        cancel: () => void,
-        actionName: string,
-        current: { tagType: TagTypeRecord, tag: CardTagRecord }
-    },
-    {
-        name: string, value: string, quantity: string, unit: string,
-        amount: string, func: string,
-        source: string, target: string, typeId: string
-    }> {
-    constructor(props: any) {
+interface Props {
+    card: CardRecord;
+    success: (actionType: string, data: any) => void;
+    cancel: () => void;
+    actionName: string;
+    current: { tagType: TagTypeRecord, tag: CardTagRecord };
+}
+
+interface State {
+    name: string; value: string; quantity: string; unit: string;
+    amount: string; func: string;
+    source: string; target: string; typeId: string;
+}
+
+const getState = (props: Props): State => {
+    let { tagType, tag } = props.current;
+    return {
+        typeId: tagType.id,
+        name: tag.name || tagType.cardTypeReferenceName,
+        value: tag.value || tagType.defaultValue,
+        quantity: String(tag.quantity !== 0 ? tag.quantity : tagType.defaultQuantity),
+        unit: tag.unit || tagType.defaultUnit,
+        amount: String(tag.amount !== 0 ? tag.amount : tagType.defaultAmount),
+        func: tag.func || tagType.defaultFunction,
+        source: tag.source || tagType.defaultSource,
+        target: tag.target || tagType.defaultTarget
+    };
+};
+
+export default class extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
-        this.state = {
-            name: '', value: '', quantity: '', unit: '',
-            amount: '', func: '',
-            source: '', target: '', typeId: ''
-        };
+        this.state = getState(props);
     }
     componentDidMount() {
         if (this.props.current && this.props.current.tag) {
-            let { tagType, tag } = this.props.current;
-            this.setState({
-                typeId: tagType.id,
-                name: tag.name || tagType.cardTypeReferenceName,
-                value: tag.value || tagType.defaultValue,
-                quantity: String(tag.quantity !== 0 ? tag.quantity : tagType.defaultQuantity),
-                unit: tag.unit || tagType.defaultUnit,
-                amount: String(tag.amount !== 0 ? tag.amount : tagType.defaultAmount),
-                func: tag.func || tagType.defaultFunction,
-                source: tag.source || tagType.defaultSource,
-                target: tag.target || tagType.defaultTarget
-            });
+            this.setState(getState(this.props));
+        }
+    }
+    handleTagValueChange(value: string) {
+        this.setState({ value });
+        if (this.props.current.tagType.cardTypeReferenceName) {
+            let card = CardList.getCardByName(this.props.current.tagType.cardTypeReferenceName, value);
+            if (card) {
+                if (Number(this.state.amount) === 0) {
+                    this.setState({ amount: String(card.getTag('Amount', '')) });
+                }
+                if (!this.state.source) {
+                    this.setState({ source: String(card.getTag('Source', '')) });
+                }
+                if (!this.state.target) {
+                    this.setState({ target: String(card.getTag('Target', '')) });
+                }
+            }
         }
     }
     render() {
@@ -72,13 +93,13 @@ export default class extends React.Component<
                         onChange={e => this.setState({ name: e.target.value })}
                     />}
                     {canEditValue && <AutoSuggest
-                        label="Tag Value"
-                        value={this.props.current
-                            ? this.props.current.tag.value
-                            || this.props.current.tagType.defaultValue || ''
-                            : ''}
+                        label={this.props.current.tagType
+                            && this.props.current.tagType.cardTypeReferenceName
+                            ? this.props.current.tagType.cardTypeReferenceName
+                            : 'Tag Value'}
+                        value={this.state.value}
                         getSuggestions={value => CardList.getCardSuggestions(tagType.cardTypeReferenceName, value)}
-                        handleChange={(e, value) => this.setState({ value })}
+                        handleChange={(e, value) => this.handleTagValueChange(value)}
                     />}
                     {canEditQuantity && <TextField
                         fullWidth
@@ -108,7 +129,7 @@ export default class extends React.Component<
                     />}
                     {canEditSource && <AutoSuggest
                         label={tagType.sourceCardTypeReferenceName || 'Source'}
-                        value={this.props.current.tag.source}
+                        value={this.state.source}
                         getSuggestions={
                             value => CardList.getCardSuggestions(tagType.sourceCardTypeReferenceName, value)
                         }
@@ -116,7 +137,7 @@ export default class extends React.Component<
                     />}
                     {canEditTarget && <AutoSuggest
                         label={tagType.targetCardTypeReferenceName || 'Target'}
-                        value={this.props.current.tag.target}
+                        value={this.state.target}
                         getSuggestions={
                             value => CardList.getCardSuggestions(tagType.targetCardTypeReferenceName, value)
                         }

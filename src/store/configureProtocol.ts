@@ -35,26 +35,22 @@ export default (
     dispatchCommitProtocol(dispatch, commitProtocol);
     dispatchConfigProtocol(dispatch, configProtocol);
 
-    // dispatchConfigEvent(dispatch, configProtocol);
     configProtocol.observe(event => {
         dispatchConfigEvent(dispatch, event.target);
     });
 
-    // dispatchCommitEvent(dispatch, commitProtocol.toArray());
     commitProtocol.observe(event => {
         let values: any[] = [];
         event.addedElements.forEach(x => values = values.concat(x._content));
         dispatchCommitEvent(dispatch, values);
     });
 
-    // chatprotocol.toArray().forEach(x => dispatchChatEvent(dispatch, x));
     chatprotocol.observe(event => {
         event.addedElements.forEach(x => dispatchChatEvent(dispatch, x._content[0]));
         if (chatprotocol.length > 10) {
             chatprotocol.delete(0, chatprotocol.length - 10);
         }
     });
-    console.log('network init', y);
     cb(y);
 };
 

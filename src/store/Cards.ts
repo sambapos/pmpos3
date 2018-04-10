@@ -62,6 +62,11 @@ type AddPendingActionAction = {
     initialize: boolean
 };
 
+type RemovePendingActionsAction = {
+    type: 'REMOVE_PENDING_ACTIONS'
+    cardId: string
+};
+
 type LoadCardAction = {
     type: 'LOAD_CARD'
     cardId: String
@@ -104,12 +109,12 @@ type SetShowAllCardsAction = {
 type KnownActions = AddPendingActionAction | CommitCardAction | CommitReceivedAction
     | LoadCardAction | LoadCardRequestAction | LoadCardSuccessAction | LoadCardFailAction
     | SetCommitProtocolAction | SetCurrentCardTypeAction | SetCardListScrollTopAction |
-    SetSearchValueAction | SetShowAllCardsAction;
+    SetSearchValueAction | SetShowAllCardsAction | RemovePendingActionsAction;
 
-function getEditor(action: ActionRecord, observer: any): Promise<ActionRecord> {
+function getEditor(card: CardRecord, action: ActionRecord, observer: any): Promise<ActionRecord> {
     return new Promise<ActionRecord>((resolve, reject) => {
         let editor = cardOperations.getEditor(
-            action, (actionType, data) => {
+            card, action, (actionType, data) => {
                 observer.next({ type: 'SET_MODAL_STATE', visible: false });
                 let result = action.set('data', data);
                 resolve(result);
@@ -126,7 +131,7 @@ function getEditor(action: ActionRecord, observer: any): Promise<ActionRecord> {
 async function getResult(actionState: ActionState, action: ActionRecord, observer: any) {
     action = action.set('data', cardOperations.fixData(action.actionType, { ...action.data }));
     if (cardOperations.canEdit(action)) {
-        let result = await getEditor(action, observer);
+        let result = await getEditor(actionState.card, action, observer);
         return { type: 'ADD_PENDING_ACTION', action: result, initialize: false };
     } else { return { type: 'ADD_PENDING_ACTION', action, initialize: false }; }
 }
@@ -175,6 +180,24 @@ export const reducer: Reducer<StateRecord> = (
             return currentState
                 .update('currentCard', current => CardList.applyAction(current, action.action))
                 .update('pendingActions', list => list.push(action.action));
+        }
+        case 'REMOVE_PENDING_ACTIONS': {
+            let actions = state.pendingActions;
+            let cardId = action.cardId;
+            actions = actions.filter(a => {
+                if (a.actionType === 'CREATE_CARD' && a.data.id === cardId) {
+                    return false;
+                }
+                if (a.actionType !== 'CREATE_CARD' && a.cardId === cardId) {
+                    return false;
+                }
+                return true;
+            });
+            let card = CardList.getCard(state.currentCard.id);
+            card = actions.reduce((r, a) => CardList.applyAction(r, a, false), card);
+            return state
+                .set('currentCard', card)
+                .set('pendingActions', actions);
         }
         case 'SET_COMMIT_PROTOCOL': {
             return state.set('protocol', action.protocol);
@@ -277,6 +300,10 @@ export const actionCreators = {
                     type: 'ADD_PENDING_ACTION', action: actionData, initialize: false
                 });
             }
+        },
+    removePendingActions: (cardId: string):
+        AppThunkAction<KnownActions> => (dispatch, getState) => {
+            if (cardId) { dispatch({ type: 'REMOVE_PENDING_ACTIONS', cardId }); }
         },
     postCommits: (commits: any[]):
         AppThunkAction<KnownActions> => (dispatch, getState) => {

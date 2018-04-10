@@ -1,15 +1,33 @@
 import * as React from 'react';
-import { ListItem, ListItemText } from 'material-ui';
+import { ListItem, ListItemText, Icon } from 'material-ui';
 import { CardRecord } from '../../models/Card';
 import RuleManager from '../../modules/RuleManager';
 import tmpl from 'blueimp-tmpl';
 import CardList from '../../modules/CardList';
+import { CardTagRecord } from '../../models/CardTag';
+
+const getTagDisplay = (card: CardRecord, tag: CardTagRecord) => {
+    let tt = CardList.tagTypes.get(tag.typeId);
+    if (tt && tt.icon) {
+        if (tt.icon === '_') { return tag.valueDisplay; }
+        return (<span >
+            <Icon style={{
+                fontSize: '1rem', marginRight: 2, marginBottom: 2,
+                height: 'auto', verticalAlign: 'middle', opacity: 0.6
+            }}>
+                {tt.icon}
+            </Icon>
+            {tag.valueDisplay}
+        </span>);
+    }
+    return tag.display;
+};
 
 const getDefaultContent = (card: CardRecord) => {
     return (
         <>
             <ListItemText
-                primary={card.display}
+                primary={<div style={{ fontWeight: 400, fontSize: '1.1em' }}>{card.display}</div>}
                 secondary={card.tags.valueSeq()
                     .sortBy(tag => CardList.getTagSortIndexByCard(card, tag))
                     .filter(tag => tag.name !== 'Name')
@@ -18,7 +36,7 @@ const getDefaultContent = (card: CardRecord) => {
                             style={{ marginRight: '8px' }}
                             key={tag.name}
                         >
-                            {tag.display}
+                            {getTagDisplay(card, tag)}
                         </span>))}
             />
             <div style={{ float: 'right', right: 10, fontSize: '1.2em' }}>

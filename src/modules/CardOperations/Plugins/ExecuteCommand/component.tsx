@@ -4,9 +4,11 @@ import * as shortid from 'shortid';
 import DialogContent from 'material-ui/Dialog/DialogContent';
 import DialogActions from 'material-ui/Dialog/DialogActions';
 import DialogTitle from 'material-ui/Dialog/DialogTitle';
+import { CardRecord } from '../../../../models/Card';
 
 export default class extends React.Component<
     {
+        card: CardRecord,
         success: (actionType: string, data: any) => void,
         cancel: () => void,
         actionName: string
@@ -50,12 +52,12 @@ export default class extends React.Component<
                                     name: this.state.name,
                                     parameters: this.state.parameters.split(',')
                                         .reduce(
-                                        (r, p) => {
-                                            let parts = p.split(',');
-                                            r[parts[0]] = parts[1];
-                                            return r;
-                                        },
-                                        {})
+                                            (r, p) => {
+                                                let parts = p.split(',');
+                                                r[parts[0]] = parts[1];
+                                                return r;
+                                            },
+                                            {})
                                 });
                         }}
                     >

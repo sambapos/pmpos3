@@ -12,8 +12,8 @@ export default class SelectCard extends CardOperation {
     canEdit(action: ActionRecord): boolean {
         return true;
     }
-    createEditor(success: (actionType: string, data: any) => void, cancel: () => void, current: any) {
-        return React.createElement(Editor, { success, cancel, actionName: this.type, current });
+    createEditor(card: CardRecord, success: (actionType: string, data: any) => void, cancel: () => void, current: any) {
+        return React.createElement(Editor, { card, success, cancel, actionName: this.type, current });
     }
     canApply(card: CardRecord, data: any): boolean {
         return !card.isClosed;

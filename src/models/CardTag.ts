@@ -34,11 +34,14 @@ export class CardTagRecord extends Record<CardTag>({
 }) {
 
     get display(): string {
+        let key = !this.name || this.name[0] === '_' ? '' : this.name + ': ';
+        return `${key}${this.valueDisplay}`;
+    }
+
+    get valueDisplay(): string {
         let u = this.unit ? this.unit : '';
         let q = this.quantity !== 0 ? this.quantity + u + ' ' : '';
-        let vl = this.value ? q + this.value : '';
-        let key = !this.name || this.name[0] === '_' ? '' : this.name + ': ';
-        return `${key}${vl}`;
+        return this.value ? q + this.value : '';
     }
     get realQuantity(): number {
         return this.quantity !== 0 ? this.quantity : 1;

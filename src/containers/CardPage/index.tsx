@@ -62,6 +62,7 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
         if (!operation) { return; }
         if (operation.getEditor) {
             let component = operation.getEditor(
+                this.state.selectedCard,
                 (at, data) => this.handleCardMutation(this.state.selectedCard, at, data),
                 () => { this.handleModalClose(); },
                 currentData);
@@ -140,7 +141,6 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
     }
 
     public render() {
-        console.log(this.state.selectedCard);
         if (this.props.failed) {
             return (
                 <div>
@@ -161,6 +161,9 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
                 </div>
             );
         }
+
+        let hasPendingUpdates = this.props.pendingActions
+            .some(a => a.data.id === this.state.selectedCard.id || a.cardId === this.state.selectedCard.id);
 
         return (
             <div className={this.props.classes.root}>
@@ -212,6 +215,13 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
                         },
                     }}
                 >
+                    {hasPendingUpdates && <><MenuItem
+                        onClick={e => {
+                            this.props.removePendingActions(this.state.selectedCard.id);
+                            this.handleMenuClose();
+                        }}
+                    >Cancel</MenuItem>
+                        <Divider /></>}
                     <TagMenuItems
                         selectedCard={this.state.selectedCard}
                         handleOperation={(op, data) => this.handleOperation(op, data)}

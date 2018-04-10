@@ -66,12 +66,13 @@ class CardOperations {
         return operation !== undefined && operation.canEdit(action);
     }
     getEditor(
+        card: CardRecord,
         action: ActionRecord,
         success: (actionType: string, data: any) => void,
         cancel: () => void,
         current?: any): JSX.Element {
         let operation = this.operations.get(action.actionType) as CardOperation;
-        return operation.getEditor(success, cancel, current);
+        return operation.getEditor(card, success, cancel, current);
     }
 }
 

@@ -29,12 +29,27 @@ interface TagsProps {
     handleCardClick: (card: CardRecord) => void;
 }
 
-const getCustomDisplay = (template: string, tag: CardTagWrapper) => {
+const getCustomDisplay = (template: string, tag: CardTagWrapper, classes: Record<keyof Style, string>) => {
     let content = tmpl(template, tag);
     return <div
+        className={classes.tagItemContent}
         style={{ width: '100%' }}
         dangerouslySetInnerHTML={{ __html: content }}
     />;
+};
+
+const getTagDisplay = (card: CardRecord, tag: CardTagRecord, iconClass: string) => {
+    let tt = CardList.tagTypes.get(tag.typeId);
+    if (tt && tt.icon) {
+        if (tt.icon === '_') { return tag.valueDisplay; }
+        return (<span >
+            <Icon className={iconClass}>
+                {tt.icon}
+            </Icon>
+            {tag.valueDisplay}
+        </span>);
+    }
+    return tag.display;
 };
 
 const getDefaultDisplay = (card: CardRecord, tag: CardTagRecord, classes: Record<keyof Style, string>) => {
@@ -43,7 +58,7 @@ const getDefaultDisplay = (card: CardRecord, tag: CardTagRecord, classes: Record
     return (
         <>
             <div className={classes.tagItemContent}>
-                <div>{tag.display}</div>
+                <div>{getTagDisplay(card, tag, classes.icon)}</div>
                 {st && <div style={{ fontSize: '0.75em' }}>
                     {tag.source}<Icon style={{
                         fontSize: '1.2em', verticalAlign: 'bottom', fontWeight: 'bold'
@@ -60,7 +75,7 @@ const getDisplayFor = (card: CardRecord, tag: CardTagRecord, classes: Record<key
     if (tag.typeId) {
         let tagType = CardList.tagTypes.get(tag.typeId);
         if (tagType && tagType.displayFormat) {
-            return getCustomDisplay(tagType.displayFormat, new CardTagWrapper(tag, card));
+            return getCustomDisplay(tagType.displayFormat, new CardTagWrapper(tag, card), classes);
         }
     }
     return getDefaultDisplay(card, tag, classes);

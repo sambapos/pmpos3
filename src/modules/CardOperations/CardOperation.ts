@@ -5,7 +5,10 @@ export default abstract class CardOperation {
     type: string;
     description: string | undefined;
     canReduce: (card: CardRecord, action: ActionRecord) => boolean;
-    getEditor: (handler: (actionType: string, data: any) => void, cancel: () => void, current?: any) => JSX.Element;
+    getEditor: (
+        card: CardRecord,
+        handler: (actionType: string, data: any) => void,
+        cancel: () => void, current?: any) => JSX.Element;
     constructor(opType: string, description?: string) {
         this.type = opType;
         this.description = description;

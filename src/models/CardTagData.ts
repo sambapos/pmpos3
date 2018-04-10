@@ -13,7 +13,8 @@ export default class {
     }
 
     get display(): string {
-        return this.tag.display;
+        // return this.tag.display;
+        return this.tag.valueDisplay;
     }
 
     get id(): string {

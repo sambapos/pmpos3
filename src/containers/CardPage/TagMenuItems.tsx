@@ -73,15 +73,15 @@ export default (props: CardPageProps & TagMenuItemsProps) => {
             );
         })}
         {(cardTags.count() > 0 || unselectedTagTypes.length > 0) && <Divider />}
-        {cardOperations.getOperations().map(option => (
+        {cardOperations.getOperations().map(op => (
             <MenuItem
-                key={'cmd_' + option.type}
+                key={'cmd_' + op.type}
                 onClick={e => {
-                    props.handleOperation(option, { card: props.selectedCard });
+                    props.handleOperation(op);
                     props.handleMenuClose();
                 }}
             >
-                {option.description}
+                {op.description}
             </MenuItem>
         ))}
     </>);

@@ -31,6 +31,7 @@ interface PageState {
     sourceCardTypeReferenceName: string;
     targetCardTypeReferenceName: string;
     displayFormat: string;
+    icon: string;
     defaultValue: string;
     defaultFunction: string;
     defaultQuantity: string;
@@ -57,6 +58,7 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
             targetCardTypeReferenceName: '',
             defaultValue: '',
             displayFormat: '',
+            icon: '',
             defaultFunction: '',
             defaultQuantity: '',
             defaultUnit: '',
@@ -81,6 +83,7 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                 sourceCardTypeReferenceName: props.tagType.sourceCardTypeReferenceName,
                 targetCardTypeReferenceName: props.tagType.targetCardTypeReferenceName,
                 displayFormat: props.tagType.displayFormat,
+                icon: props.tagType.icon,
                 defaultValue: props.tagType.defaultValue,
                 defaultFunction: props.tagType.defaultFunction,
                 defaultQuantity: props.tagType.defaultQuantity !== 0
@@ -111,6 +114,7 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                 sourceCardTypeReferenceName: this.props.tagType.sourceCardTypeReferenceName,
                 targetCardTypeReferenceName: this.props.tagType.targetCardTypeReferenceName,
                 displayFormat: this.props.tagType.displayFormat,
+                icon: this.props.tagType.icon,
                 defaultValue: this.props.tagType.defaultValue,
                 defaultFunction: this.props.tagType.defaultFunction,
                 defaultQuantity: this.props.tagType.defaultQuantity !== 0
@@ -164,6 +168,7 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                                     sourceCardTypeReferenceName: this.state.sourceCardTypeReferenceName,
                                     targetCardTypeReferenceName: this.state.targetCardTypeReferenceName,
                                     displayFormat: this.state.displayFormat,
+                                    icon: this.state.icon,
                                     defaultValue: this.state.defaultValue,
                                     defaultFunction: this.state.defaultFunction,
                                     defaultQuantity: Number(this.state.defaultQuantity),
@@ -277,6 +282,14 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                         value={this.state.displayFormat}
                         onChange={(e) => this.setState({
                             displayFormat: e.target.value
+                        })}
+                    />
+                    <TextField
+                        fullWidth
+                        label="Icon"
+                        value={this.state.icon}
+                        onChange={(e) => this.setState({
+                            icon: e.target.value
                         })}
                     />
                 </Paper >

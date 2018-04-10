@@ -110,6 +110,12 @@ class AutoSuggest extends React.Component<Props, SuggestState> {
         this.props.handleChange(event, newValue);
     }
 
+    componentWillReceiveProps(props: any) {
+        if (props.value !== this.state.value) {
+            this.setState({ value: props.value });
+        }
+    }
+
     render() {
         const { classes } = this.props;
 

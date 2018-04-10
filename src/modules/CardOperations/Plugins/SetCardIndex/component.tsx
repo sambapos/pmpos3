@@ -5,10 +5,11 @@ import { CardRecord } from '../../../../models/Card';
 
 export default class extends React.Component<
     {
+        card: CardRecord,
         success: (actionType: string, data: any) => void,
         cancel: () => void,
         actionName: string,
-        current?: { card: CardRecord }
+        current?: any
     },
     { index: string }> {
     constructor(props: any) {
@@ -16,8 +17,8 @@ export default class extends React.Component<
         this.state = { index: '' };
     }
     componentDidMount() {
-        if (this.props.current) {
-            this.setState({ index: this.props.current.card.index.toString() });
+        if (this.props.card) {
+            this.setState({ index: this.props.card.index.toString() });
         }
     }
 

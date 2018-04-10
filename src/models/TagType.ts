@@ -14,6 +14,7 @@ export interface TagType {
     sourceCardTypeReferenceName: string;
     targetCardTypeReferenceName: string;
     displayFormat: string;
+    icon: string;
     defaultFunction: string;
     defaultValue: string;
     defaultSource: string;
@@ -37,6 +38,7 @@ export class TagTypeRecord extends Record<TagType>({
     sourceCardTypeReferenceName: '',
     targetCardTypeReferenceName: '',
     displayFormat: '',
+    icon: '',
     defaultFunction: '',
     defaultValue: '',
     defaultSource: '',

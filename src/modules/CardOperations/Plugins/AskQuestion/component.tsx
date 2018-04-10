@@ -8,6 +8,7 @@ import decorate, { Style } from './style';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import { Map as IMap } from 'immutable';
 import RuleManager from '../../../RuleManager';
+import { CardRecord } from '../../../../models/Card';
 
 interface State {
     question: string;
@@ -16,6 +17,7 @@ interface State {
 }
 
 interface PageProps {
+    card: CardRecord;
     success: (actionType: string, data: any) => void;
     cancel: () => void;
     actionName: string;
