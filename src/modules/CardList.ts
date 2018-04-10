@@ -184,6 +184,17 @@ class CardList {
         return ct ? ct.tagTypes.indexOf(tag.typeId) : -1;
     }
 
+    getCount(cardType: string) {
+        let cti = this.getCardTypeIdByRef(cardType);
+        let index = this.otherIndex.get(cti);
+        return index ? index.count() : 0;
+    }
+
+    getTagTypeIdByName(typeName: string) {
+        let tt = this.tagTypes.find(x => x.name === typeName);
+        return tt ? tt.id : '';
+    }
+
     private addCommit(commit: Commit) {
         this.commits = this.commits.update(commit.cardId, list => {
             if (!list) { list = List<CommitRecord>(); }

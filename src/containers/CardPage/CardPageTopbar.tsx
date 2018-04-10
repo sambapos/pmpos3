@@ -57,8 +57,7 @@ export default (props: any) => {
             },
             {
                 icon: 'check', onClick: () => {
-                    props.commitCard();
-                    props.history.goBack();
+                    if (props.onClose) { props.onClose(); }
                 }
             }
         ]}

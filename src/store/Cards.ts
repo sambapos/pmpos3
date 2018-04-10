@@ -314,15 +314,17 @@ export const actionCreators = {
         },
     commitCard: (): AppThunkAction<KnownActions> => (dispatch, getState) => {
         const state = getState().cards;
-
-        if (state.pendingActions.count() > 0) {
-            let processedActions = state.pendingActions.map(a => cardOperations.processPendingAction(a));
-            createAndPostCommit(getState(), state.currentCard, processedActions);
-        }
-
-        dispatch({
-            type: 'COMMIT_CARD'
-        });
+        RuleManager.getNextActions('COMMIT_CARD', {}, state.currentCard.id, state.currentCard, state.currentCard)
+            .then(commitActions => {
+                let pendingActions = state.pendingActions.concat(commitActions);
+                if (pendingActions.count() > 0) {
+                    let processedActions = pendingActions.map(a => cardOperations.processPendingAction(a));
+                    createAndPostCommit(getState(), state.currentCard, processedActions);
+                }
+                dispatch({
+                    type: 'COMMIT_CARD'
+                });
+            });
     },
 
     deleteCards: (cardTypeId: string): AppThunkAction<KnownActions> => (dispatch, getState) => {

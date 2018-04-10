@@ -6,14 +6,14 @@ import SetState from './SetState';
 import AskQuestion from './AskQuestion/index';
 import SelectCard from './SelectCard/index';
 import SetCardIndex from './SetCardIndex';
-import SubmitCard from './SubmitCard';
+import CommitCard from './CommitCard';
 import DisplayCard from './DisplayCard';
 
 export default [
     new CreateCard(),
     new SetCardTag(),
     new CloseCard(),
-    new SubmitCard(),
+    new CommitCard(),
     new DisplayCard(),
     new SetCardIndex(),
     new ExecuteCommand(),

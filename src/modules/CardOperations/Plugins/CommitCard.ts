@@ -2,9 +2,9 @@ import CardOperation from '../CardOperation';
 import { CardRecord } from '../../../models/Card';
 import { ActionRecord } from '../../../models/Action';
 
-export default class CloseCard extends CardOperation {
+export default class CommitCard extends CardOperation {
     constructor() {
-        super('SUBMIT_CARD', 'Submit Card');
+        super('COMMIT_CARD', 'Commit Card');
     }
     canEdit(action: ActionRecord): boolean {
         return false;

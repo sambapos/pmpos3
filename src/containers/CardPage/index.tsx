@@ -167,7 +167,11 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
 
         return (
             <div className={this.props.classes.root}>
-                <CardPageTopbar {...this.props} />
+                <CardPageTopbar {...this.props}
+                    onClose={() => {
+                        this.props.commitCard();
+                        this.props.history.goBack();
+                    }} />
                 <Paper className={this.props.classes.content}>
                     <div className={this.props.classes.indexHeader}>
                         <Typography>{this.props.card.id}</Typography>

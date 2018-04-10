@@ -1,4 +1,5 @@
 import * as shortid from 'shortid';
+import * as _ from 'lodash';
 import { ActionRecord } from '../models/Action';
 import { Map as IMap } from 'immutable';
 import { RuleRecord } from '../models/Rule';
@@ -32,6 +33,12 @@ class ActionData {
     }
     load(cardType: string, cardName: string) {
         return CardList.getCardByName(cardType, cardName);
+    }
+    count(cardType: string): number {
+        return CardList.getCount(cardType);
+    }
+    padStart(val: string, count: number, ch: string) {
+        return _.padStart(val, count, ch);
     }
 }
 
