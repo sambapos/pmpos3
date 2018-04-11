@@ -64,29 +64,62 @@ export default class SetCardTag extends CardOperation {
     }
 
     fixData(data: any) {
-        if (!data.name && data.value) {
-            data.name = '_' + shortid.generate();
-        }
         if (!Number.isNaN(Number(data.quantity))) { data.quantity = Number(data.quantity); }
         if (!Number.isNaN(Number(data.amount))) { data.amount = Number(data.amount); }
-        if (!Number.isNaN(Number(data.rate))) { data.rate = Number(data.rate); }
-        if (!data.typeId && data.typeName) { data.typeId = CardList.getTagTypeIdByName(data.typeName); }
-        return data;
-    }
 
-    fixType(card: CardRecord, data: any) {
-        if (!data.typeId && !data.typeName && card.typeId) {
-            let ct = CardList.getCardType(card.typeId);
-            if (ct) {
-                let tt = ct.tagTypes.find(t => {
-                    let ft = CardList.tagTypes.get(t);
-                    if (ft && ft.tagName === data.name) {
-                        return true;
+        if (!data.typeId && data.type) {
+            let tt = CardList.tagTypes.find(x => x.name === data.type);
+            // if (!tt) { data.type = ''; } 
+            // Should we clear that? If we have a type that never exists it will continously try to fix that.
+            if (tt) {
+                data.typeId = tt.id;
+                if (!data.name && tt.tagName) {
+                    data.name = tt.tagName;
+                }
+                if (!data.value && tt.defaultValue) {
+                    data.value = tt.defaultValue;
+                }
+                if ((!data.quantity || data.quantity === 0) && tt.defaultQuantity) {
+                    data.quantity = tt.defaultQuantity;
+                }
+                if (!data.unit && tt.defaultUnit) { data.unit = tt.defaultUnit; }
+                if ((!data.amount || data.amount === 0) && tt.defaultAmount) {
+                    data.amount = tt.defaultAmount;
+                }
+                if (!data.func && tt.defaultFunction) {
+                    data.func = tt.defaultFunction;
+                }
+                if (!data.source && tt.defaultSource) {
+                    data.source = tt.defaultSource;
+                }
+                if (!data.target && tt.defaultTarget) {
+                    data.target = tt.defaultTarget;
+                }
+                if (tt.cardTypeReferenceName && data.value) {
+                    let card = CardList.getCardByName(tt.cardTypeReferenceName, data.value);
+                    if (card) {
+                        if (!data.name) {
+                            data.name = tt.cardTypeReferenceName;
+                        }
+                        if (!data.amount || data.amount === 0) {
+                            let amount = card.getTag('Amount', 0);
+                            if (amount) { data.amount = amount; }
+                        }
+                        if (!data.source) {
+                            let source = card.getTag('Source', '');
+                            if (source) { data.source = source; }
+                        }
+                        if (!data.target) {
+                            let target = card.getTag('Target', undefined);
+                            if (target) { data.target = target; }
+                        }
                     }
-                    return false;
-                });
-                if (tt) { data.typeId = tt; }
+                }
             }
+            console.log('fix tag type', data);
+        }
+        if (!data.name && data.value) {
+            data.name = '_' + shortid.generate();
         }
         return data;
     }
@@ -112,6 +145,7 @@ export default class SetCardTag extends CardOperation {
     }
 
     canApply(card: CardRecord, data: any): boolean {
+        console.log('ca', data);
         let currentValue = card.getIn(['tags', data.name]) as CardTagRecord;
         if (!data.name || (this.valueNeeded(data, currentValue) && !data.value)) { return false; }
         if (this.amountNeeded(data, currentValue) && data.amount === 0) { return false; }

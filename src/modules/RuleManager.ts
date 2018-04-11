@@ -14,8 +14,8 @@ class ActionType {
     params: {};
     constructor(type: string, data: any) {
         this.type = type;
-        this.data = data;
-        this.params = data.params;
+        this.data = data || {};
+        this.params = this.data.params;
     }
 }
 

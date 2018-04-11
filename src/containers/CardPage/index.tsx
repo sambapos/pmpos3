@@ -114,7 +114,7 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
             let ct = CardList.getCardTypes().find(c => c.name === parts[1]);
             if (ct) {
                 let cards = CardList.getCardsByType(ct.id);
-                return cards.map(c =>
+                return cards.sortBy(x => x.index).map(c =>
                     new CommandButton(`${c.name}=${parts[0]}:${
                         c.tags.reduce((r, t) => r + (r ? ',' : '') + `${t.name}=${t.value}`, '')
                         }`)).toArray();
