@@ -21,11 +21,12 @@ export default class SetCardTag extends CardOperation {
     }
 
     createEditor(card: CardRecord, success: (actionType: string, data: any) => void, cancel: () => void, current: any) {
+        let currentData = current || {};
         return React.createElement(TagEditor, {
             card, success, cancel, actionName: this.type,
             current: {
-                tag: new CardTagRecord(current.tag),
-                tagType: new TagTypeRecord(current.tagType)
+                tag: new CardTagRecord(currentData.tag),
+                tagType: new TagTypeRecord(currentData.tagType)
             }
         });
     }
