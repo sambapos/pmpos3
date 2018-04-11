@@ -158,7 +158,7 @@ class CardList {
     getCardSuggestions(ref: string, value: string): Suggestion[] {
         const inputValue = value.trim().toLowerCase();
         const inputLength = inputValue.length;
-        if (inputLength === 0) { return []; }
+        if (inputLength === 0 || !ref) { return []; }
 
         let cardType = this.cardTypes
             .find(x => x.reference === ref) || new CardTypeRecord();

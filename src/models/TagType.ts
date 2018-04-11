@@ -3,6 +3,7 @@ import { Record } from 'immutable';
 export interface TagType {
     id: string;
     name: string;
+    tagName: string;
     cardTypeReferenceName: string;
     showValue: boolean;
     showQuantity: boolean;
@@ -27,6 +28,7 @@ export interface TagType {
 export class TagTypeRecord extends Record<TagType>({
     id: '',
     name: '',
+    tagName: '',
     cardTypeReferenceName: '',
     showValue: true,
     showQuantity: true,

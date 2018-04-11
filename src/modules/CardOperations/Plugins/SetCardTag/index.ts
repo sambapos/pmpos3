@@ -46,7 +46,9 @@ export default class SetCardTag extends CardOperation {
     }
 
     reduce(card: CardRecord, data: CardTagRecord): CardRecord {
-        let r = new CardTagRecord(this.fixData(data));
+        let fixedData = this.fixData(data);
+        // fixedData = this.fixType(card, fixedData);
+        let r = new CardTagRecord(fixedData);
         if (this.tagValueRemoved(card, data)) {
             return card.deleteIn(['tags', data.name]);
         }
@@ -69,6 +71,23 @@ export default class SetCardTag extends CardOperation {
         if (!Number.isNaN(Number(data.amount))) { data.amount = Number(data.amount); }
         if (!Number.isNaN(Number(data.rate))) { data.rate = Number(data.rate); }
         if (!data.typeId && data.typeName) { data.typeId = CardList.getTagTypeIdByName(data.typeName); }
+        return data;
+    }
+
+    fixType(card: CardRecord, data: any) {
+        if (!data.typeId && !data.typeName && card.typeId) {
+            let ct = CardList.getCardType(card.typeId);
+            if (ct) {
+                let tt = ct.tagTypes.find(t => {
+                    let ft = CardList.tagTypes.get(t);
+                    if (ft && ft.tagName === data.name) {
+                        return true;
+                    }
+                    return false;
+                });
+                if (tt) { data.typeId = tt; }
+            }
+        }
         return data;
     }
 

@@ -54,7 +54,7 @@ export default (props: CardPageProps & TagMenuItemsProps) => {
                     props.handleMenuClose();
                 }}
             >
-                Set {tagType.cardTypeReferenceName}
+                Set {tagType.tagName}
             </MenuItem>);
         })}
         {cardTags.map(tag => {

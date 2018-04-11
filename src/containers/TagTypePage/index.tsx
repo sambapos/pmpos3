@@ -20,6 +20,7 @@ type PageProps =
 
 interface PageState {
     name: string;
+    tagName: string;
     cardTypeReferenceName: string;
     showValue: boolean;
     showQuantity: boolean;
@@ -46,6 +47,7 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
         super(props);
         this.state = {
             name: '',
+            tagName: '',
             cardTypeReferenceName: '',
             showValue: true,
             showQuantity: true,
@@ -72,6 +74,7 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
         if (!props.isLoading && props.tagType !== this.props.tagType && props.tagType.id) {
             this.setState({
                 name: props.tagType.name,
+                tagName: props.tagType.tagName,
                 cardTypeReferenceName: props.tagType.cardTypeReferenceName,
                 showValue: props.tagType.showValue,
                 showQuantity: props.tagType.showQuantity,
@@ -103,6 +106,7 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
         if (!this.props.isLoading && this.props.tagType) {
             this.setState({
                 name: this.props.tagType.name,
+                tagName: this.props.tagType.tagName,
                 cardTypeReferenceName: this.props.tagType.cardTypeReferenceName,
                 showValue: this.props.tagType.showValue,
                 showQuantity: this.props.tagType.showQuantity,
@@ -157,6 +161,7 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                                 this.props.saveTagType(new TagTypeRecord({
                                     id: this.props.tagType.id,
                                     name: this.state.name,
+                                    tagName: this.state.tagName,
                                     cardTypeReferenceName: this.state.cardTypeReferenceName,
                                     showValue: this.state.showValue,
                                     showQuantity: this.state.showQuantity,
@@ -190,6 +195,14 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                         value={this.state.name}
                         onChange={(e) => this.setState({
                             name: e.target.value
+                        })}
+                    />
+                    <TextField
+                        fullWidth
+                        label="Tag Name"
+                        value={this.state.tagName}
+                        onChange={(e) => this.setState({
+                            tagName: e.target.value
                         })}
                     />
                     <TextField

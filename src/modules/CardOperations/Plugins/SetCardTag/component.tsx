@@ -26,7 +26,7 @@ const getState = (props: Props): State => {
     let { tagType, tag } = props.current;
     return {
         typeId: tagType.id,
-        name: tag.name || tagType.cardTypeReferenceName,
+        name: tag.name || tagType.tagName || tagType.cardTypeReferenceName,
         value: tag.value || tagType.defaultValue,
         quantity: String(tag.quantity !== 0 ? tag.quantity : tagType.defaultQuantity),
         unit: tag.unit || tagType.defaultUnit,
@@ -81,7 +81,7 @@ export default class extends React.Component<Props, State> {
             <Fragment>
                 <DialogTitle>{
                     `Set ${tagType.id
-                        ? tagType.cardTypeReferenceName
+                        ? tagType.tagName || tagType.cardTypeReferenceName
                         : ' Card Tag'}`
                 }
                 </DialogTitle>
@@ -94,8 +94,8 @@ export default class extends React.Component<Props, State> {
                     />}
                     {canEditValue && <AutoSuggest
                         label={this.props.current.tagType
-                            && this.props.current.tagType.cardTypeReferenceName
-                            ? this.props.current.tagType.cardTypeReferenceName
+                            && this.props.current.tagType.tagName
+                            ? this.props.current.tagType.tagName
                             : 'Tag Value'}
                         value={this.state.value}
                         getSuggestions={value => CardList.getCardSuggestions(tagType.cardTypeReferenceName, value)}
