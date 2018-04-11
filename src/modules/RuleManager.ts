@@ -145,16 +145,16 @@ class RuleManager {
         let lastCardId = cardId;
         for (const act of acts) {
             let processedData = cardOperations.fixData(act.type, { ...act.data });
-            // if (!processedData.id) {
-            //     processedData.id = shortid.generate();
-            // }
+            if (!processedData.id) {
+                processedData.id = shortid.generate();
+            }
             actions.push(new ActionRecord({
                 id: shortid.generate(),
                 actionType: act.type,
                 cardId: lastCardId,
                 data: processedData
             }));
-            if (processedData.id) {
+            if (act.type === 'CREATE_CARD' && processedData.id) {
                 lastCardId = processedData.id;
             }
         }

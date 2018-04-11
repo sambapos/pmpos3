@@ -121,6 +121,9 @@ export default class SetCardTag extends CardOperation {
         if (!data.name && data.value) {
             data.name = '_' + shortid.generate();
         }
+        if (!data.id) {
+            data.id = shortid.generate();
+        }
         return data;
     }
 
