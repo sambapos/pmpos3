@@ -10,14 +10,14 @@ const getTagDisplay = (card: CardRecord, tag: CardTagRecord) => {
     let tt = CardList.tagTypes.get(tag.typeId);
     if (tt && tt.icon) {
         if (tt.icon === '_') { return tag.valueDisplay; }
-        return (<span >
+        return (<span style={{ display: 'inline-block' }}>
             <Icon style={{
-                fontSize: '1rem', marginRight: 2, marginBottom: 2,
-                height: 'auto', verticalAlign: 'middle', opacity: 0.6
+                fontSize: '1rem', marginRight: 2, lineHeight: 'unset',
+                height: 'auto', verticalAlign: 'bottom', opacity: 0.6
             }}>
                 {tt.icon}
             </Icon>
-            {tag.valueDisplay}
+            <span>{tag.valueDisplay}</span>
         </span>);
     }
     return tag.display;

@@ -46,23 +46,26 @@ export class CardTagRecord extends Record<CardTag>({
     get realQuantity(): number {
         return this.quantity !== 0 ? this.quantity : 1;
     }
-    getDebit(parentAmount: number): number {
-        return this.source ? this.realQuantity * this.getRealAmount(parentAmount) : 0;
+    getDebit(parentDebit: number, parentCredit: number): number {
+        return this.source ? this.realQuantity * this.getRealAmount(parentDebit, parentCredit) : 0;
     }
-    getCredit(parentAmount: number): number {
-        return this.target ? this.realQuantity * this.getRealAmount(parentAmount) : 0;
+    getCredit(parentDebit: number, parentCredit: number): number {
+        return this.target ? this.realQuantity * this.getRealAmount(parentDebit, parentCredit) : 0;
     }
-    getBalance(parentAmount: number): number {
-        return this.getDebit(parentAmount) - this.getCredit(parentAmount);
+    getBalance(parentDebit: number, parentCredit: number): number {
+        return this.getDebit(parentDebit, parentCredit) - this.getCredit(parentDebit, parentCredit);
     }
-    getRealAmount(parentAmount: number): number {
+    getRealAmount(parentDebit: number, parentCredit: number): number {
         // if (this.rate !== 0) {
         //     let amount = ((parentAmount * this.rate) / 100) + this.amount;
         //     let result = Math.round(amount * 100) / 100;
         //     return result;
         // }
         if (this.func) {
-            return Parser.evaluate(this.func, { a: this.amount, p: parentAmount });
+            return Parser.evaluate(this.func, {
+                a: this.amount, d: parentDebit, c: parentCredit,
+                p: parentDebit - parentCredit
+            });
         }
         return this.amount;
     }

@@ -9,6 +9,8 @@ export interface Style {
     footer: any;
     tagSection: any;
     tagItem: any;
+    tagItemPrice: any;
+    tagLocation: any;
     tagItemContent: any;
     tagBalance: any;
     selectedCardLine: any;
@@ -43,13 +45,22 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         height: '1px'
     },
     tagSection: {
-        display: 'inline-flex',
+        // display: 'inline-flex',
         flex: 1,
-        flexFlow: 'column',
+        // flexFlow: 'column',
         paddingBottom: spacing.unit / 2,
         paddingTop: spacing.unit,
     },
     tagItem: {
+        display: 'inline-flex',
+        backgroundColor: palette.divider,
+        // width: '100%',
+        borderRadius: 4,
+        padding: spacing.unit / 2,
+        marginRight: spacing.unit / 2,
+        marginBottom: spacing.unit / 2
+    },
+    tagItemPrice: {
         display: 'inline-flex',
         width: '100%',
         paddingBottom: spacing.unit / 2
@@ -58,6 +69,10 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         flex: 1,
         alignSelf: 'center',
         paddingLeft: spacing.unit / 2
+    },
+    tagLocation: {
+        fontSize: '0.75em',
+        color: palette.text.secondary
     },
     tagBalance: {
         fontSize: '1.2em',
@@ -140,8 +155,8 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         overflowX: 'auto' as 'auto',
     },
     icon: {
-        fontSize: '1.1rem', marginRight: 2, marginLeft: -2,
-        marginBottom: 2, opacity: 0.6,
-        height: 'auto', verticalAlign: 'middle',
+        fontSize: '1.1rem', marginRight: 2,
+        opacity: 0.8,
+        height: 'auto', verticalAlign: 'bottom',
     }
 }));

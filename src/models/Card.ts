@@ -23,24 +23,61 @@ export class CardRecord extends Record<Card>({
     cards: IMap<string, CardRecord>()
 }) {
     getTagTotal(tag: CardTagRecord): number {
-        let val = 0;
+        let debit = 0;
+        let credit = 0;
         for (const key of this.tags.keySeq().toArray()) {
             const t = this.tags.get(key) as CardTagRecord;
-            let b = t.getRealAmount(this.subCardBalance + val) * t.realQuantity;
+            let d = t.getDebit(this.subCardDebit + debit, this.subCardCredit + credit);
+            let c = t.getCredit(this.subCardDebit + debit, this.subCardCredit + credit);
             if (t.id === tag.id) {
-                return b;
+                return d - c;
             }
-            val = val + b;
+            debit = debit + d;
+            credit = credit + c;
         }
-        return val;
+        return debit - credit;
+    }
+
+    getTagDebit(tag: CardTagRecord): number {
+        let debit = 0;
+        let credit = 0;
+        for (const key of this.tags.keySeq().toArray()) {
+            const t = this.tags.get(key) as CardTagRecord;
+            let d = t.getDebit(this.subCardDebit + debit, this.subCardCredit + credit);
+            let c = t.getCredit(this.subCardDebit + debit, this.subCardCredit + credit);
+            if (t.id === tag.id) {
+                return d;
+            }
+            debit = debit + d;
+            credit = credit + c;
+        }
+        return debit;
+    }
+
+    getTagCredit(tag: CardTagRecord): number {
+        let debit = 0;
+        let credit = 0;
+        for (const key of this.tags.keySeq().toArray()) {
+            const t = this.tags.get(key) as CardTagRecord;
+            let d = t.getDebit(this.subCardDebit + debit, this.subCardCredit + credit);
+            let c = t.getCredit(this.subCardDebit + debit, this.subCardCredit + credit);
+            if (t.id === tag.id) {
+                return c;
+            }
+            debit = debit + d;
+            credit = credit + c;
+        }
+        return credit;
     }
 
     get debit(): number {
-        let preTotal = 0;
+        let preDebit = 0;
+        let preCredit = 0;
         let tagDebit = this.tags.reduce(
             (r, t) => {
-                let result = r + t.getDebit(this.subCardBalance + preTotal);
-                preTotal = preTotal + t.getBalance(this.subCardBalance + preTotal);
+                let result = r + t.getDebit(this.subCardDebit + preDebit, this.subCardCredit + preCredit);
+                preDebit = preDebit + t.getDebit(this.subCardDebit + preDebit, this.subCardCredit + preCredit);
+                preCredit = preCredit + t.getCredit(this.subCardDebit + preDebit, this.subCardCredit + preCredit);
                 return result;
             },
             0);
@@ -48,11 +85,13 @@ export class CardRecord extends Record<Card>({
     }
 
     get credit(): number {
-        let preTotal = 0;
+        let preDebit = 0;
+        let preCredit = 0;
         let tagCredit = this.tags.reduce(
             (r, t) => {
-                let result = r + t.getCredit(this.subCardBalance + preTotal);
-                preTotal = preTotal + t.getBalance(this.subCardBalance + preTotal);
+                let result = r + t.getCredit(this.subCardDebit + preDebit, this.subCardCredit + preCredit);
+                preDebit = preDebit + t.getDebit(this.subCardDebit + preDebit, this.subCardCredit + preCredit);
+                preCredit = preCredit + t.getCredit(this.subCardDebit + preDebit, this.subCardCredit + preCredit);
                 return result;
             },
             0);

@@ -181,7 +181,10 @@ class CardList {
 
     getTagSortIndexByCard(card: CardRecord, tag: CardTagRecord): number {
         let ct = this.getCardType(card.typeId);
-        return ct ? ct.tagTypes.indexOf(tag.typeId) : -1;
+        let result = ct ? ct.tagTypes.indexOf(tag.typeId) : -1;
+        if (result === -1) { result = 99999; }
+        console.log('SO > ' + result, tag);
+        return result;
     }
 
     getCount(cardType: string) {

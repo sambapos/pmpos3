@@ -71,7 +71,7 @@ export default class {
 
     getDebitFor(filter: string): number {
         if (this.isAccount(filter)) {
-            return this.isTargetAccount(filter) ? Math.abs(this.card.getTagTotal(this.tag)) : 0;
+            return this.isTargetAccount(filter) ? this.card.getTagCredit(this.tag) : 0;
         }
         if (!this.tag.acceptsFilter(filter)) { return 0; }
         if (!this.tag.source && !this.tag.target) {
@@ -85,7 +85,7 @@ export default class {
 
     getCreditFor(filter: string): number {
         if (this.isAccount(filter)) {
-            return this.isSourceAccount(filter) ? Math.abs(this.card.getTagTotal(this.tag)) : 0;
+            return this.isSourceAccount(filter) ? this.card.getTagDebit(this.tag) : 0;
         }
         if (!this.tag.acceptsFilter(filter)) { return 0; }
         if (!this.tag.source && !this.tag.target) {

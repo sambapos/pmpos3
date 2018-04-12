@@ -18,6 +18,7 @@ interface CardContentProps {
 type PageProps = CardContentProps & WithStyles<keyof Style>;
 
 const CardPageContent = (props: PageProps) => {
+    let drawIcon = props.card.id === props.selectedCardId;
     return (
         <div
             className={props.card.cards.count() > 0 ? props.classes.node : props.classes.leaf} >
@@ -27,13 +28,13 @@ const CardPageContent = (props: PageProps) => {
                         [props.classes.selectedCardLine]: props.selectedCardId === props.card.id
                     }
                 )}>
-                <Icon
+                {drawIcon && <Icon
                     onClick={e => props.onClick(props.card, e.target)}
                     color="primary"
                     className={props.classes.cardLineIcon}
                 >
                     more_vert
-                </Icon>
+                </Icon>}
                 <Tags card={props.card} handleCardClick={props.handleCardClick} />
             </div>
             <SubCards

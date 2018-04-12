@@ -6,6 +6,7 @@ import { CardRecord } from '../../models/Card';
 import { Icon } from 'material-ui';
 import { CardTagRecord } from '../../models/CardTag';
 import CardList from '../../modules/CardList';
+import { TagTypeRecord } from '../../models/TagType';
 
 class CardTagWrapper {
     constructor(tag: CardTagRecord, card: CardRecord) {
@@ -46,7 +47,7 @@ const getTagDisplay = (card: CardRecord, tag: CardTagRecord, iconClass: string) 
             <Icon className={iconClass}>
                 {tt.icon}
             </Icon>
-            {tag.valueDisplay}
+            <span>{tag.valueDisplay}</span>
         </span>);
     }
     return tag.display;
@@ -59,7 +60,7 @@ const getDefaultDisplay = (card: CardRecord, tag: CardTagRecord, classes: Record
         <>
             <div className={classes.tagItemContent}>
                 <div>{getTagDisplay(card, tag, classes.icon)}</div>
-                {st && <div style={{ fontSize: '0.75em' }}>
+                {st && <div className={classes.tagLocation}>
                     {tag.source}<Icon style={{
                         fontSize: '1.2em', verticalAlign: 'bottom', fontWeight: 'bold'
                     }}>keyboard_arrow_right</Icon>{tag.target}
@@ -71,18 +72,21 @@ const getDefaultDisplay = (card: CardRecord, tag: CardTagRecord, classes: Record
         </>);
 };
 
-const getDisplayFor = (card: CardRecord, tag: CardTagRecord, classes: Record<keyof Style, string>) => {
-    if (tag.typeId) {
-        let tagType = CardList.tagTypes.get(tag.typeId);
-        if (tagType && tagType.displayFormat) {
-            return getCustomDisplay(tagType.displayFormat, new CardTagWrapper(tag, card), classes);
-        }
+const getDisplayFor = (
+    card: CardRecord, tag: CardTagRecord, tagType: TagTypeRecord | undefined,
+    classes: Record<keyof Style, string>) => {
+    if (tagType && tagType.displayFormat) {
+        return getCustomDisplay(tagType.displayFormat, new CardTagWrapper(tag, card), classes);
     }
     return getDefaultDisplay(card, tag, classes);
 };
 
-const sortIndex = (card: CardRecord, tag: CardTagRecord) => {
-    CardList.getTagSortIndexByCard(card, tag);
+const getTagItemClassName = (
+    tag: CardTagRecord, tagType: TagTypeRecord | undefined, classes: Record<keyof Style, string>) => {
+    if (!tagType) { return tag.amount !== 0 || !tag.name.startsWith('_') ? classes.tagItemPrice : classes.tagItem; }
+    return !tagType.icon || tagType.icon === '_' || tag.amount > 0
+        ? classes.tagItemPrice
+        : classes.tagItem;
 };
 
 const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
@@ -93,15 +97,17 @@ const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
             }}>
             {
                 props.card.tags.entrySeq()
-                    .sortBy(x => sortIndex(props.card, x[1]))
-                    .map(([k, v]) => {
+                    .filter(x => x[1].name !== 'Name')
+                    .sortBy(x => CardList.getTagSortIndexByCard(props.card, x[1]))
+                    .map(([key, tag]) => {
+                        let tagType = CardList.tagTypes.get(tag.typeId);
                         return (
-                            <div
-                                key={k}
-                                className={props.classes.tagItem}
+                            <span
+                                key={key}
+                                className={getTagItemClassName(tag, tagType, props.classes)}
                             >
-                                {getDisplayFor(props.card, v, props.classes)}
-                            </div>);
+                                {getDisplayFor(props.card, tag, tagType, props.classes)}
+                            </span>);
                     })
             }
         </div>
