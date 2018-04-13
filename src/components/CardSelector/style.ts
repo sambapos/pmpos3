@@ -11,15 +11,24 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         flex: 1,
         flexWrap: 'wrap',
         display: 'flex',
-        paddingTop: 2
+        paddingTop: 2,
+        overflow: 'auto',
+        backgroundColor: palette.background.paper,
+        [breakpoints.up('sm')]: {
+            maxWidth: '600px',
+            padding: spacing.unit / 2,
+            alignSelf: 'center'
+        },
     },
     button: {
         flex: '1 1 auto',
         margin: 2,
-        fontSize: '1.4em'
+        fontSize: '1.4em',
+        [breakpoints.up('sm')]: {
+            margin: 4
+        },
     },
     highlightedButton: {
-        color: palette.primary.contrastText,
-        backgroundColor: 'darkorange'
+
     }
 }));

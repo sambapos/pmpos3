@@ -233,39 +233,47 @@ class CardsPage extends React.Component<PageProps, State> {
                     title={this.state.currentCardType ? this.state.currentCardType.name : 'Cards'}
                     secondaryCommands={this.getSecondaryCommands()}
                 />
-                <TextField
-                    className={this.props.classes.search}
-                    label="Search"
-                    value={this.state.searchValueText}
-                    onChange={e => {
-                        this.setState({ searchValueText: e.target.value });
-                        this.debouncedSearch();
-                    }}
-                />
-                {this.state.tabs.length > 1 && <AppBar position="static" color="default">
-                    <Tabs
-                        value={this.props.tabIndex}
-                        onChange={(e, v) => this.handleChangeListIndex(v)}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        fullWidth
-                    >
-                        {
-                            this.state.tabs.map(t => (
-                                <Tab label={t} />
-                            ))
-                        }
-                    </Tabs>
-                </AppBar>}
 
-                {this.props.tabIndex === 0 && <Paper className={this.props.classes.content}>
-                    {this.renderCardList()}
-                </Paper>}
-                {this.props.tabIndex !== 0 && <CardSelector
-                    sourceCards={this.state.items}
-                    cardType={this.state.tabs[this.props.tabIndex]}
-                    onSelectCard={(card, cardType, cards) => this.handleCardSelection(card, cardType, cards)}
-                />}
+                {this.props.tabIndex === 0 &&
+                    <>
+                        <TextField
+                            className={this.props.classes.search}
+                            label="Search"
+                            value={this.state.searchValueText}
+                            onChange={e => {
+                                this.setState({ searchValueText: e.target.value });
+                                this.debouncedSearch();
+                            }}
+                        />
+                        <Paper className={this.props.classes.content}>
+                            {this.renderCardList()}
+                        </Paper>
+                    </>}
+                {this.props.tabIndex !== 0 &&
+                    <Paper className={this.props.classes.content}>
+                        <CardSelector
+                            sourceCards={this.state.items}
+                            cardType={this.state.tabs[this.props.tabIndex]}
+                            onSelectCard={(card, cardType, cards) => this.handleCardSelection(card, cardType, cards)}
+                        />
+                    </Paper>
+                }
+                {this.state.tabs.length > 1 &&
+                    <AppBar position="static" color="default" className={this.props.classes.tabBar}>
+                        <Tabs
+                            value={this.props.tabIndex}
+                            onChange={(e, v) => this.handleChangeListIndex(v)}
+                            indicatorColor="primary"
+                            textColor="primary"
+                            fullWidth
+                        >
+                            {
+                                this.state.tabs.map(t => (
+                                    <Tab label={t} />
+                                ))
+                            }
+                        </Tabs>
+                    </AppBar>}
                 <Snackbar
                     anchorOrigin={{
                         vertical: 'bottom',

@@ -16,7 +16,6 @@ const CardSelector = (props: CardSelectorProps & WithStyles<keyof Style>) => {
     let cardType = CardList.getCardTypeByRef(props.cardType);
     if (!cardType) { return (<div>Card Type `${props.cardType}` not found</div>); }
     let cards = CardList.getCardsByType(cardType.id).sortBy(x => x.name).take(50);
-    console.log('renderRRR');
     return <div className={props.classes.container}>
         {cards.map(card => <CardSelectorButton
             key={card.id}

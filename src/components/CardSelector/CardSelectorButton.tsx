@@ -35,6 +35,7 @@ class CardSelectorButton extends React.Component<CardSelectorButtonProps & WithS
 
     render() {
         return <Button variant="raised"
+            color={this.state.sourceCards.length > 0 ? 'primary' : 'default'}
             className={classNames(this.props.classes.button, {
                 [this.props.classes.highlightedButton]: this.state.sourceCards.length > 0
             })}

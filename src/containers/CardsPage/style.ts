@@ -8,9 +8,17 @@ export interface Style {
     search: any;
     draggableList: any;
     sectionList: any;
+    tabBar: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
+    tabBar: {
+        [breakpoints.up('sm')]: {
+            maxWidth: '600px',
+            width: '100%',
+            alignSelf: 'center'
+        }
+    },
     draggableList: {
         overflow: 'auto',
         backgroundColor: palette.background.paper
