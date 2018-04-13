@@ -183,7 +183,6 @@ class CardList {
         let ct = this.getCardType(card.typeId);
         let result = ct ? ct.tagTypes.indexOf(tag.typeId) : -1;
         if (result === -1) { result = 99999; }
-        console.log('SO > ' + result, tag);
         return result;
     }
 

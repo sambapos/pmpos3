@@ -13,6 +13,7 @@ import { Observable } from 'rxjs/Observable';
 import { cardOperations } from '../modules/CardOperations/index';
 import { ActionState } from '../models/ActionState';
 import { ApplicationState } from '.';
+import { CardTag } from '../models/CardTag';
 
 export interface State {
     cards: List<CardRecord>;
@@ -26,6 +27,7 @@ export interface State {
     searchValue: string;
     showAllCards: boolean;
     failed: boolean;
+    tabIndex: number;
 }
 
 export class StateRecord extends Record<State>({
@@ -39,7 +41,8 @@ export class StateRecord extends Record<State>({
     cardListScrollTop: 0,
     searchValue: '',
     showAllCards: false,
-    failed: false
+    failed: false,
+    tabIndex: 0
 }) { }
 
 type SetCommitProtocolAction = {
@@ -106,10 +109,15 @@ type SetShowAllCardsAction = {
     value: boolean
 };
 
+type SetTabIndexAction = {
+    type: 'SET_TAB_INDEX',
+    value: number
+};
+
 type KnownActions = AddPendingActionAction | CommitCardAction | CommitReceivedAction
     | LoadCardAction | LoadCardRequestAction | LoadCardSuccessAction | LoadCardFailAction
     | SetCommitProtocolAction | SetCurrentCardTypeAction | SetCardListScrollTopAction |
-    SetSearchValueAction | SetShowAllCardsAction | RemovePendingActionsAction;
+    SetSearchValueAction | SetShowAllCardsAction | RemovePendingActionsAction | SetTabIndexAction;
 
 function getEditor(card: CardRecord, action: ActionRecord, observer: any): Promise<ActionRecord> {
     return new Promise<ActionRecord>((resolve, reject) => {
@@ -221,7 +229,8 @@ export const reducer: Reducer<StateRecord> = (
         case 'SET_CURRENT_CARD_TYPE': {
             return state
                 .set('cards', CardList.getCardsByType(action.cardType.id))
-                .set('currentCardType', action.cardType);
+                .set('currentCardType', action.cardType)
+                .set('tabIndex', 0);
         }
         case 'SET_CARD_LIST_SCROLL_TOP': {
             return state.set('cardListScrollTop', action.value);
@@ -233,6 +242,9 @@ export const reducer: Reducer<StateRecord> = (
             return state
                 .set('showAllCards', action.value)
                 .set('cardListScrollTop', 0);
+        }
+        case 'SET_TAB_INDEX': {
+            return state.set('tabIndex', action.value);
         }
         default:
             return state;
@@ -262,23 +274,36 @@ function createAndPostCommit(state: ApplicationState, card: CardRecord, actions:
 }
 
 export const actionCreators = {
-    addCard: (cardType: CardTypeRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
-        let cardCreateAction = new ActionRecord({
-            actionType: 'CREATE_CARD',
-            id: shortid.generate(),
-            data: {
+    addCard: (cardType: CardTypeRecord, tags: CardTag[])
+        : AppThunkAction<KnownActions> => (dispatch, getState) => {
+            let cardId = shortid.generate();
+            let cardCreateAction = new ActionRecord({
+                actionType: 'CREATE_CARD',
                 id: shortid.generate(),
-                typeId: cardType.id,
-                type: cardType.name,
-                time: new Date().getTime()
-            }
-        });
-        dispatch({
-            type: 'ADD_PENDING_ACTION',
-            action: cardCreateAction,
-            initialize: true
-        });
-    },
+                data: {
+                    id: cardId,
+                    typeId: cardType.id,
+                    type: cardType.name,
+                    time: new Date().getTime()
+                }
+            });
+            dispatch({
+                type: 'ADD_PENDING_ACTION',
+                action: cardCreateAction,
+                initialize: true
+            });
+            tags.forEach((tag: CardTag) => {
+                let actionData = new ActionRecord({
+                    id: shortid.generate(),
+                    cardId: cardId,
+                    actionType: 'SET_CARD_TAG',
+                    data: { name: tag.name, value: tag.value, typeId: tag.typeId }
+                });
+                dispatch({
+                    type: 'ADD_PENDING_ACTION', action: actionData, initialize: false
+                });
+            });
+        },
     addPendingAction: (card: CardRecord | undefined, actionType: string, data: any):
         AppThunkAction<KnownActions> => (dispatch, getState) => {
             let c = card || getState().cards.currentCard;
@@ -374,5 +399,9 @@ export const actionCreators = {
     setShowAllCards: (value: boolean):
         AppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({ type: 'SET_SHOW_ALL_CARDS', value });
+        },
+    setTabIndex: (value: number):
+        AppThunkAction<KnownActions> => (dispatch, getState) => {
+            dispatch({ type: 'SET_TAB_INDEX', value });
         }
 };
