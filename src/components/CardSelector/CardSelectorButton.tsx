@@ -27,6 +27,12 @@ class CardSelectorButton extends React.Component<CardSelectorButtonProps & WithS
         return sourceCards.filter(sc => sc.hasTag(cardType.reference, card.name));
     }
 
+    componentWillReceiveProps(props: CardSelectorButtonProps) {
+        if (props.sourceCards !== this.props.sourceCards) {
+            this.setState({ sourceCards: this.getCardsByTag(props.sourceCards, props.cardType, props.card) });
+        }
+    }
+
     render() {
         return <Button variant="raised"
             className={classNames(this.props.classes.button, {

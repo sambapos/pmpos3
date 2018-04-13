@@ -226,6 +226,7 @@ class CardsPage extends React.Component<PageProps, State> {
     }
 
     public render() {
+        console.log('cards render');
         return (
             <div className={this.props.classes.root}>
                 <TopBar

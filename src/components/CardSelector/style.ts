@@ -14,7 +14,6 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         paddingTop: 2
     },
     button: {
-        maxHeight: 100,
         flex: '1 1 auto',
         margin: 2,
         fontSize: '1.4em'
