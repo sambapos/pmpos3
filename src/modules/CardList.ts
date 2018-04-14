@@ -155,26 +155,29 @@ class CardList {
         return this.commits.get(id);
     }
 
+    findCards(cardType: CardTypeRecord, value: string) {
+        let index = this.otherIndex.get(cardType.id) || ISet<string>();
+        let resultItems: CardRecord[] = [];
+        index.toList().every(i => {
+            let card = this.cards.get(i) as CardRecord;
+            if (card.name.toLowerCase().trim().startsWith(value)) {
+                resultItems.push(card);
+            }
+            return resultItems.length < 100;
+        });
+        return resultItems;
+    }
+
     getCardSuggestions(ref: string, value: string): Suggestion[] {
         const inputValue = value.trim().toLowerCase();
         const inputLength = inputValue.length;
         if (inputLength === 0 || !ref) { return []; }
-
         let cardType = this.cardTypes
             .find(x => x.reference === ref) || new CardTypeRecord();
-
         let result = [] as Suggestion[];
         if (cardType.name) {
-            let index = this.otherIndex.get(cardType.id) || ISet<string>();
-            let cards = index.toList().map(id => (this.cards.get(id) as CardRecord).name);
-            result = cards
-                .filter(c => c.toLowerCase().trim().includes(inputValue))
-                .sortBy(c => c)
-                .take(100)
-                .map(label => {
-                    return { label };
-                })
-                .toArray();
+            result = this.findCards(cardType, inputValue)
+                .map(r => { return { label: r.name }; });
         }
         return result;
     }

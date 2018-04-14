@@ -10,13 +10,13 @@ import {
     WithStyles, Paper, Snackbar, Button, IconButton, Icon,
     AppBar, Tab, Tabs
 } from 'material-ui';
+import SearchEdit from '../../components/SearchEdit';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import { CardRecord } from '../../models/Card';
 import { CardTypeRecord } from '../../models/CardType';
-import TextField from 'material-ui/TextField/TextField';
 import * as h from './helpers';
 import VirtualCardList from './VirtualCardList';
 import DraggableCardList from './DraggableCardList';
@@ -53,7 +53,7 @@ interface State {
 
 class CardsPage extends React.Component<PageProps, State> {
 
-    private debouncedSearch;
+    // private debouncedSearch;
     private debouncedHandleScroll;
     private itemCount = 50;
 
@@ -79,7 +79,7 @@ class CardsPage extends React.Component<PageProps, State> {
 
     componentWillMount() {
         this.debouncedHandleScroll = _.debounce(this.handle_scroll, 100);
-        this.debouncedSearch = _.debounce(this.updateSearch, 200);
+        // this.debouncedSearch = _.debounce(this.updateSearch, 200);
     }
 
     componentWillReceiveProps(nextProps: PageProps) {
@@ -236,7 +236,7 @@ class CardsPage extends React.Component<PageProps, State> {
 
                 {this.props.tabIndex === 0 &&
                     <>
-                        <TextField
+                        {/* <TextField
                             className={this.props.classes.search}
                             label="Search"
                             value={this.state.searchValueText}
@@ -244,8 +244,15 @@ class CardsPage extends React.Component<PageProps, State> {
                                 this.setState({ searchValueText: e.target.value });
                                 this.debouncedSearch();
                             }}
-                        />
+                        /> */}
+
                         <Paper className={this.props.classes.content}>
+                            <SearchEdit value={this.state.searchValueText}
+                                onChange={value => {
+                                    this.setState({ searchValueText: value });
+                                    // this.debouncedSearch();
+                                    this.props.setSearchValue(value);
+                                }} />
                             {this.renderCardList()}
                         </Paper>
                     </>}
@@ -253,6 +260,7 @@ class CardsPage extends React.Component<PageProps, State> {
                     <Paper className={this.props.classes.content}>
                         <CardSelector
                             sourceCards={this.state.items}
+                            sourceCardType={this.props.currentCardType}
                             cardType={this.state.tabs[this.props.tabIndex]}
                             onSelectCard={(card, cardType, cards) => this.handleCardSelection(card, cardType, cards)}
                         />
