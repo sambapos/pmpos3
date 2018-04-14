@@ -226,7 +226,6 @@ class CardsPage extends React.Component<PageProps, State> {
     }
 
     public render() {
-        console.log('cards render');
         return (
             <div className={this.props.classes.root}>
                 <TopBar
@@ -235,27 +234,16 @@ class CardsPage extends React.Component<PageProps, State> {
                 />
 
                 {this.props.tabIndex === 0 &&
-                    <>
-                        {/* <TextField
-                            className={this.props.classes.search}
-                            label="Search"
-                            value={this.state.searchValueText}
-                            onChange={e => {
-                                this.setState({ searchValueText: e.target.value });
-                                this.debouncedSearch();
-                            }}
-                        /> */}
-
-                        <Paper className={this.props.classes.content}>
-                            <SearchEdit value={this.state.searchValueText}
-                                onChange={value => {
-                                    this.setState({ searchValueText: value });
-                                    // this.debouncedSearch();
-                                    this.props.setSearchValue(value);
-                                }} />
-                            {this.renderCardList()}
-                        </Paper>
-                    </>}
+                    <Paper className={this.props.classes.content}>
+                        <SearchEdit value={this.state.searchValueText}
+                            onChange={value => {
+                                this.setState({ searchValueText: value });
+                                // this.debouncedSearch();
+                                this.props.setSearchValue(value);
+                            }} />
+                        {this.renderCardList()}
+                    </Paper>
+                }
                 {this.props.tabIndex !== 0 &&
                     <Paper className={this.props.classes.content}>
                         <CardSelector

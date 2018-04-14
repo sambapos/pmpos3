@@ -7,6 +7,7 @@ require('y-indexeddb')(Y);
 
 import { ApplicationState } from './index';
 import { Commit } from '../models/Commit';
+import CardList from '../modules/CardList';
 
 export default (
     terminalId: string,
@@ -40,9 +41,14 @@ export default (
     });
 
     commitProtocol.observe(event => {
-        let values: any[] = [];
-        event.addedElements.forEach(x => values = values.concat(x._content));
-        dispatchCommitEvent(dispatch, values);
+        let elements: any[] = Array.from(event.addedElements);
+        let commits = elements.reduce(
+            (r: any[], e) => {
+                r.push(...e._content);
+                return r;
+            },
+            []);
+        dispatchCommitEvent(dispatch, commits);
     });
 
     chatprotocol.observe(event => {
@@ -76,10 +82,20 @@ function dispatchConfigEvent(dispatch: any, value: any) {
 }
 
 function dispatchCommitEvent(dispatch: any, values: Commit[]) {
-    dispatch({
-        type: 'COMMIT_RECEIVED',
-        values
-    });
+    if (values.length > 100) {
+        dispatch({
+            type: 'COMMIT_RECEIVED',
+            payload: new Promise(resolve => {
+                CardList.addCommits(values);
+                resolve();
+            })
+        });
+    } else {
+        dispatch({
+            type: 'COMMIT_RECEIVED',
+            values
+        });
+    }
 }
 
 function dispatchChatEvent(dispatch: any, value: any) {

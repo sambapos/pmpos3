@@ -116,7 +116,6 @@ export default class SetCardTag extends CardOperation {
                     }
                 }
             }
-            console.log('fix tag type', data);
         }
         if (!data.name && data.value) {
             data.name = '_' + shortid.generate();
@@ -148,7 +147,6 @@ export default class SetCardTag extends CardOperation {
     }
 
     canApply(card: CardRecord, data: any): boolean {
-        console.log('ca', data);
         let currentValue = card.getIn(['tags', data.name]) as CardTagRecord;
         if (!data.name || (this.valueNeeded(data, currentValue) && !data.value)) { return false; }
         if (this.amountNeeded(data, currentValue) && data.amount === 0) { return false; }

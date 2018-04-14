@@ -84,7 +84,6 @@ class ReportPage extends React.Component<PageProps, {
                             tags: this.state.tags.count() > 0 ? this.state.tags.clear() : this.state.tags
                         })}
                         onKeyDown={e => {
-                            console.time();
                             if (e.key === 'Enter') {
                                 let parts = this.state.edit.split(',');
                                 this.setState({
@@ -94,7 +93,6 @@ class ReportPage extends React.Component<PageProps, {
                             } else {
                                 this.setState({ search: '' });
                             }
-                            console.timeEnd();
                         }}
                     />
                 </div>

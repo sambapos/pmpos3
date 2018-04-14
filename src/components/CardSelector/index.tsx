@@ -25,16 +25,12 @@ const CardSelector = (props: CardSelectorProps & WithStyles<keyof Style>) => {
             let tt = CardList.tagTypes.get(x);
             return tt !== undefined && tt.cardTypeReferenceName === cardType.reference;
         });
-        console.log('props', props);
-        console.log('tagType', props.sourceCardType);
         if (tagType) {
             cardList = props.sourceCards.reduce(
                 (r, c) => {
                     let tag = c.tags.find(t => t.typeId === tagType);
-                    console.log('tagCheck', tag);
                     if (tag) {
                         let card = CardList.cards.get(tag.cardId);
-                        console.log('cardCheck', card);
                         if (card) { r.push(card); }
                     }
                     return r;

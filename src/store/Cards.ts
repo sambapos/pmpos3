@@ -55,6 +55,10 @@ type CommitReceivedAction = {
     values: Commit[]
 };
 
+type CommitReceivedSuccessAction = {
+    type: 'COMMIT_RECEIVED_SUCCESS'
+};
+
 type CommitCardAction = {
     type: 'COMMIT_CARD'
 };
@@ -114,7 +118,7 @@ type SetTabIndexAction = {
     value: number
 };
 
-type KnownActions = AddPendingActionAction | CommitCardAction | CommitReceivedAction
+type KnownActions = AddPendingActionAction | CommitCardAction | CommitReceivedAction | CommitReceivedSuccessAction
     | LoadCardAction | LoadCardRequestAction | LoadCardSuccessAction | LoadCardFailAction
     | SetCommitProtocolAction | SetCurrentCardTypeAction | SetCardListScrollTopAction |
     SetSearchValueAction | SetShowAllCardsAction | RemovePendingActionsAction | SetTabIndexAction;
@@ -206,6 +210,9 @@ export const reducer: Reducer<StateRecord> = (
         }
         case 'COMMIT_RECEIVED': {
             CardList.addCommits(action.values);
+            return state.set('cards', CardList.getCardsByType(state.currentCardType.id));
+        }
+        case 'COMMIT_RECEIVED_SUCCESS': {
             return state.set('cards', CardList.getCardsByType(state.currentCardType.id));
         }
         case 'COMMIT_CARD': {
@@ -364,7 +371,6 @@ export const actionCreators = {
             }
         }
     },
-
     loadCard: (id: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
         dispatch({
             type: 'LOAD_CARD',
