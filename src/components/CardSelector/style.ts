@@ -13,18 +13,21 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         display: 'flex',
         flexFlow: 'column',
         [breakpoints.up('sm')]: {
-            maxWidth: '600px',
-            padding: spacing.unit / 2,
-            alignSelf: 'center'
+            maxWidth: '600px'
         },
     },
     container: {
         flex: 1,
         flexWrap: 'wrap',
         display: 'flex',
-        paddingTop: 2,
         overflow: 'auto',
-        backgroundColor: palette.background.paper
+        backgroundColor: palette.background.paper,
+        [breakpoints.down('xs')]: {
+            paddingTop: 2,
+        },
+        [breakpoints.up('sm')]: {
+            padding: spacing.unit / 2
+        },
     },
     button: {
         flex: '1 1 auto',

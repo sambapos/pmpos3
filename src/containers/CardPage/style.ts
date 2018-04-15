@@ -6,6 +6,9 @@ export interface Style {
     paper: any;
     modal: any;
     root: any;
+    cardView: any;
+    container: any;
+    commandButtons: any;
     footer: any;
     tagSection: any;
     tagItem: any;
@@ -121,6 +124,31 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
             maxWidth: '600px',
             width: '100%',
             alignSelf: 'center'
+        },
+    },
+    cardView: {
+        display: 'flex',
+        flexFlow: 'column',
+        flex: '1'
+    },
+    container: {
+        display: 'flex',
+        flexFlow: 'column',
+        flex: '1',
+        width: '100%',
+        alignSelf: 'center',
+        maxWidth: 1024,
+        [breakpoints.up('sm')]: {
+            flexFlow: 'row'
+        },
+    },
+    commandButtons: {
+        flex: 'none',
+        [breakpoints.up('sm')]: {
+            flex: 1
+        },
+        [breakpoints.up('md')]: {
+            flex: 2
         },
     },
     footer: {

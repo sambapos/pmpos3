@@ -6,7 +6,7 @@ import * as CardStore from '../../store/Cards';
 import * as ClientStore from '../../store/Client';
 import { ApplicationState } from '../../store/index';
 
-import { Typography, Menu, MenuItem, Paper, Divider, Button } from 'material-ui';
+import { Typography, Menu, MenuItem, Paper, Divider } from 'material-ui';
 import decorate from './style';
 import * as Extender from '../../lib/Extender';
 import TopBar from '../TopBar';
@@ -22,6 +22,7 @@ import CardPageTopbar from './CardPageTopbar';
 import TagMenuItems from './TagMenuItems';
 import { CardPageProps } from './CardPageProps';
 import { Link } from 'react-router-dom';
+import CommandButtons from './CommandButtons';
 
 interface PageState {
     anchorEl: any;
@@ -172,40 +173,40 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
                         this.props.commitCard();
                         this.props.history.goBack();
                     }} />
-                <Paper className={this.props.classes.content}>
-                    <div className={this.props.classes.indexHeader}>
-                        <Typography>{this.props.card.id}</Typography>
-                        <Typography>{moment(this.props.card.time).format('LLL')}</Typography>
-                        <Typography>{this.props.card.isClosed && 'CLOSED!'}</Typography>
+                <div className={this.props.classes.container}>
+                    <div className={this.props.classes.cardView}>
+                        <Paper className={this.props.classes.content}>
+                            <div className={this.props.classes.indexHeader}>
+                                <Typography>{this.props.card.id}</Typography>
+                                <Typography>{moment(this.props.card.time).format('LLL')}</Typography>
+                                <Typography>{this.props.card.isClosed && 'CLOSED!'}</Typography>
+                            </div>
+                            <CardPageContent
+                                card={this.props.card}
+                                cardType={CardList.getCardType(this.props.card.typeId)}
+                                selectedCardId={this.state.selectedCard ? this.state.selectedCard.id : ''}
+                                onClick={(card, target) => this.setState({
+                                    selectedCard: card,
+                                    buttons: this.getButtons(card),
+                                    anchorEl: target
+                                })}
+                                handleCardClick={(card: CardRecord) => {
+                                    this.setState({ selectedCard: this.getSelectedCard(card) });
+                                }}
+                            />
+                        </Paper >
+                        <div className={this.props.classes.footer}>
+                            <CardBalance card={this.props.card} />
+                            <Divider />
+                        </div>
                     </div>
-                    <CardPageContent
-                        card={this.props.card}
-                        cardType={CardList.getCardType(this.props.card.typeId)}
-                        selectedCardId={this.state.selectedCard ? this.state.selectedCard.id : ''}
-                        onClick={(card, target) => this.setState({
-                            selectedCard: card,
-                            buttons: this.getButtons(card),
-                            anchorEl: target
-                        })}
-                        handleCardClick={(card: CardRecord) => {
-                            this.setState({ selectedCard: this.getSelectedCard(card) });
-                        }}
-                    />
-                </Paper >
-                <div className={this.props.classes.footer}>
-                    <CardBalance card={this.props.card} />
-                    <Divider />
-                    <div>{this.state.footerButtons.map(button => {
-                        return (
-                            <Button
-                                key={`f_${button.caption}`}
-                                onClick={e => {
-                                    this.handleButtonClick(this.props.card, button);
-                                }}>
-                                {button.caption}
-                            </Button>
-                        );
-                    })}</div>
+                    <div className={this.props.classes.commandButtons}>
+                        <CommandButtons
+                            handleButtonClick={(card, button) => this.handleButtonClick(card, button)}
+                            card={this.props.card}
+                            buttons={this.state.footerButtons}
+                        />
+                    </div>
                 </div>
                 {this.state.anchorEl && <Menu
                     id="long-menu"
