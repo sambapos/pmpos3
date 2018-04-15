@@ -137,7 +137,6 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         flex: '1',
         width: '100%',
         alignSelf: 'center',
-        maxWidth: 1024,
         [breakpoints.up('sm')]: {
             flexFlow: 'row'
         },

@@ -16,13 +16,13 @@ import CardOperation from '../../modules/CardOperations/CardOperation';
 import CardPageContent from './CardPageContent';
 import CardBalance from './CardBalance';
 import CardList from '../../modules/CardList';
-import { CommandButton } from './CommandButton';
+import { CommandButton } from '../../components/CommandButton';
 import { CardTypeRecord } from '../../models/CardType';
 import CardPageTopbar from './CardPageTopbar';
 import TagMenuItems from './TagMenuItems';
 import { CardPageProps } from './CardPageProps';
 import { Link } from 'react-router-dom';
-import CommandButtons from './CommandButtons';
+import CommandButtons from '../../components/CommandButtons';
 
 interface PageState {
     anchorEl: any;
