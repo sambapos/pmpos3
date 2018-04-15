@@ -63,7 +63,9 @@ class CardList {
     }
 
     addCommits(commits: Commit[]) {
-        commits.forEach(x => this.addCommit(x));
+        for (const commit of commits) {
+            this.addCommit(commit);
+        }
     }
 
     getCards(): IMap<string, CardRecord> {
@@ -156,27 +158,37 @@ class CardList {
     }
 
     findCards(cardType: CardTypeRecord, value: string) {
+        const inputValue = value.toLowerCase();
         let index = this.otherIndex.get(cardType.id) || ISet<string>();
         let resultItems: CardRecord[] = [];
         index.toList().every(i => {
             let card = this.cards.get(i) as CardRecord;
-            if (card.name.toLowerCase().trim().startsWith(value)) {
+            if (card.name.toLowerCase().includes(inputValue)) {
                 resultItems.push(card);
             }
-            return resultItems.length < 100;
+            return resultItems.length < 100 || inputValue.length > 2;
         });
-        return resultItems;
+        return resultItems.sort((a, b) => this.sort(a, b, inputValue));
+    }
+
+    sort(a: CardRecord, b: CardRecord, compare: string): number {
+        let first = a.name.toLowerCase();
+        let second = b.name.toLowerCase();
+        if (first.startsWith(compare) && !second.startsWith(compare)) { return -1; }
+        if (!first.startsWith(compare) && second.startsWith(compare)) { return 1; }
+        if (first > second) { return 1; }
+        if (first < second) { return -1; }
+        return 0;
     }
 
     getCardSuggestions(ref: string, value: string): Suggestion[] {
-        const inputValue = value.trim().toLowerCase();
-        const inputLength = inputValue.length;
+        const inputLength = value.length;
         if (inputLength === 0 || !ref) { return []; }
         let cardType = this.cardTypes
             .find(x => x.reference === ref) || new CardTypeRecord();
         let result = [] as Suggestion[];
         if (cardType.name) {
-            result = this.findCards(cardType, inputValue)
+            result = this.findCards(cardType, value)
                 .map(r => { return { label: r.name }; });
         }
         return result;

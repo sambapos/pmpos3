@@ -16,6 +16,7 @@ interface SearchEditState {
 
 class SearchEdit extends React.Component<SearchEditProps & WithStyles<keyof Style>, SearchEditState> {
     private debouncedChange;
+    private input;
 
     constructor(props: SearchEditProps & WithStyles<keyof Style>) {
         super(props);
@@ -36,6 +37,7 @@ class SearchEdit extends React.Component<SearchEditProps & WithStyles<keyof Styl
                 <Input
                     fullWidth
                     value={this.state.value}
+                    inputRef={r => this.input = r}
                     onChange={e => {
                         this.setState({ value: e.target.value });
                         this.debouncedChange(e.target.value);
@@ -47,6 +49,7 @@ class SearchEdit extends React.Component<SearchEditProps & WithStyles<keyof Styl
                                 onClick={() => {
                                     this.setState({ value: '' });
                                     this.props.onChange('');
+                                    this.input.blur();
                                 }}
                                 onMouseDown={e => e.preventDefault()}
                             >

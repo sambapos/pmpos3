@@ -8,6 +8,7 @@ export interface Style {
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     containter: {
         display: 'flex',
+        flex: 'none',
         [breakpoints.up('sm')]: {
             padding: spacing.unit / 2,
         },

@@ -14,6 +14,7 @@ const LoginButton = (props: Props) => {
     return (
         <Button
             className={props.classes.loginButton}
+            component="div"
             variant="raised"
             color="primary"
             onClick={(e) => props.onClick(props.value)}

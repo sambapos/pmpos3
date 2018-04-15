@@ -3,7 +3,8 @@ require('y-array/y-array.js');
 require('y-memory');
 require('y-map');
 import yclient from '../lib/y-websockets-client';
-require('y-indexeddb')(Y);
+import yindexeddb from '../lib/y-indexed-db';
+// require('y-indexeddb')(Y);
 
 import { ApplicationState } from './index';
 import { Commit } from '../models/Commit';
@@ -18,6 +19,7 @@ export default (
     cb: (protocol: any) => void) => {
 
     yclient(Y);
+    yindexeddb(Y);
     const persistence = new Y.IndexedDB();
 
     let y = new Y(
