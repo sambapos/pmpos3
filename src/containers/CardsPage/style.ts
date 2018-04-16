@@ -13,6 +13,7 @@ export interface Style {
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     tabBar: {
+        flex: 'none',
         [breakpoints.up('sm')]: {
             maxWidth: '600px',
             width: '100%',

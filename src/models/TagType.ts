@@ -48,4 +48,13 @@ export class TagTypeRecord extends Record<TagType>({
     defaultQuantity: 0,
     defaultUnit: '',
     defaultAmount: 0
-}) { }
+}) {
+    isTagSelection(): boolean {
+        if (!this.id || !this.cardTypeReferenceName || !this.showValue
+            || this.showQuantity || this.showUnit || this.showAmount
+            || this.showSource || this.showTarget || this.showFunction) {
+            return false;
+        }
+        return true;
+    }
+}

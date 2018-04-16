@@ -101,7 +101,7 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     },
     cardLineIcon: {
         marginTop: spacing.unit,
-        fontSize: 20
+        fontSize: 26
     },
     card: {
         padding: spacing.unit,

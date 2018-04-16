@@ -94,7 +94,8 @@ class CardsPage extends React.Component<PageProps, State> {
             || nextProps.currentCardType.name !== this.state.currentCardType.name) {
             this.setState({ scrollTop: 0 });
         }
-        if (nextProps.cards !== this.props.cards
+        if (this.state.items.length === 0
+            || nextProps.cards !== this.props.cards
             || nextProps.searchValue !== this.props.searchValue
             || nextProps.showAllCards !== this.props.showAllCards) {
             let filteredItems = h.getFilteredItems(nextProps.cards, nextProps.searchValue, nextProps.showAllCards);
@@ -255,21 +256,22 @@ class CardsPage extends React.Component<PageProps, State> {
                     </Paper>
                 }
                 {this.state.tabs.length > 1 &&
-                    <AppBar position="static" color="default" className={this.props.classes.tabBar}>
-                        <Tabs
-                            value={this.props.tabIndex}
-                            onChange={(e, v) => this.handleChangeListIndex(v)}
-                            indicatorColor="primary"
-                            textColor="primary"
-                            fullWidth
-                        >
-                            {
-                                this.state.tabs.map(t => (
-                                    <Tab label={t} />
-                                ))
-                            }
-                        </Tabs>
-                    </AppBar>}
+                    <div className={this.props.classes.tabBar}>
+                        <AppBar position="static" color="default" >
+                            <Tabs
+                                value={this.props.tabIndex}
+                                onChange={(e, v) => this.handleChangeListIndex(v)}
+                                indicatorColor="primary"
+                                textColor="primary"
+                                fullWidth
+                            >
+                                {
+                                    this.state.tabs.map(t => (
+                                        <Tab key={'t_' + t} label={t} />
+                                    ))
+                                }
+                            </Tabs>
+                        </AppBar></div>}
                 <Snackbar
                     anchorOrigin={{
                         vertical: 'bottom',
