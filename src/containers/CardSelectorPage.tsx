@@ -1,24 +1,24 @@
 import * as React from 'react';
 import { List as IList } from 'immutable';
 import { connect } from 'react-redux';
-import * as CardStore from '../../../../store/Cards';
-import CardSelector from '../../../../components/CardSelector';
-import { CardTypeRecord } from '../../../../models/CardType';
-import { CardRecord } from '../../../../models/Card';
-import { ApplicationState } from '../../../../store';
+import * as CardStore from '../store/Cards';
+import CardSelector from '../components/CardSelector';
+import { CardTypeRecord } from '../models/CardType';
+import { CardRecord } from '../models/Card';
+import { ApplicationState } from '../store';
 
-interface CardSelectorComponentProps {
+interface CardSelectorPageProps {
     cardType: string;
     cards: IList<CardRecord>;
     currentCardType: CardTypeRecord;
     onSelectCard: (card: CardRecord) => void;
 }
 
-type CardSelectorComponentPropType =
-    CardSelectorComponentProps
+type CardSelectorPagePropType =
+    CardSelectorPageProps
     & typeof CardStore.actionCreators;
 
-const CardSelectorComponent = (props: CardSelectorComponentPropType) => {
+const CardSelectorPage = (props: CardSelectorPagePropType) => {
     return <CardSelector sourceCards={props.cards.filter(x => !x.isClosed).toArray()}
         sourceCardType={props.currentCardType}
         cardType={props.cardType}
@@ -34,4 +34,4 @@ const mapStateToProps = (state: ApplicationState) => ({
 export default connect(
     mapStateToProps,
     CardStore.actionCreators
-)(CardSelectorComponent);
+)(CardSelectorPage);
