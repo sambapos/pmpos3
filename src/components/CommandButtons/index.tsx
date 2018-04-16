@@ -11,9 +11,9 @@ interface CommandButtonsProps {
 }
 
 const CommandButtons = (props: CommandButtonsProps & WithStyles<keyof Style>) => {
-    return <>
+    return <div className={props.classes.commandButtonsContainer}>
         {props.buttons.map(button => (
-            <Button variant="raised" className={props.classes.button}
+            <Button size="large" variant="raised" className={props.classes.button}
                 color="primary"
                 key={`cmd_${button.caption}_${props.card.id}`}
                 onClick={e => {
@@ -22,7 +22,7 @@ const CommandButtons = (props: CommandButtonsProps & WithStyles<keyof Style>) =>
                 {button.caption}
             </Button>
         ))}
-    </>;
+    </div>;
 };
 
 export default decorate(CommandButtons);

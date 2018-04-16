@@ -36,7 +36,8 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         maxWidth: '48.5%',
         maxHeight: '50%',
         [breakpoints.up('sm')]: {
-            margin: 4
+            margin: 4,
+            minWidth: 100
         },
     },
     highlightedButton: {

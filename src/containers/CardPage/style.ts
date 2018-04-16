@@ -129,7 +129,10 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     cardView: {
         display: 'flex',
         flexFlow: 'column',
-        flex: '1'
+        flex: '1',
+        [breakpoints.up('sm')]: {
+            minWidth: 330
+        },
     },
     container: {
         display: 'flex',
@@ -143,10 +146,17 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     },
     commandButtons: {
         flex: 'none',
+        overflow: 'auto',
+        // [breakpoints.up('xs')]: {
+        //     flex: 1
+        // },
         [breakpoints.up('sm')]: {
-            flex: 1
+            flex: 1,
         },
         [breakpoints.up('md')]: {
+            flex: 1.6
+        },
+        [breakpoints.up('lg')]: {
             flex: 2
         },
     },

@@ -58,13 +58,17 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
             duration: transitions.duration.leavingScreen,
         }),
         marginTop: 56,
-        [breakpoints.up('md')]: {
-            content: {
-                height: 'calc(100% - 64px)',
-                marginTop: 64,
-            },
-        },
+        // [breakpoints.up('md')]: {
+        //     content: {
+        //         height: 'calc(100% - 64px)',
+        //         marginTop: 64,
+        //     },
+        // },
         [breakpoints.up('sm')]: {
+            padding: spacing.unit * 2,
+            marginTop: 64,
+        },
+        [breakpoints.up('md')]: {
             padding: spacing.unit * 3,
         }
     },
