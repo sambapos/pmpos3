@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { DialogTitle } from 'material-ui';
 import TagEditor from './TagEditor';
-import { TagEditorProps } from './TagEditorProps';
+import { EditorProps } from '../EditorProps';
+import { TagTypeRecord } from '../../../../models/TagType';
+import { CardTagRecord } from '../../../../models/CardTag';
 
-export default (props: TagEditorProps) => {
+export default (props: EditorProps<{ tagType: TagTypeRecord, tag: CardTagRecord }>) => {
     return <>
         <DialogTitle>{
             `Set ${props.current.tagType.id

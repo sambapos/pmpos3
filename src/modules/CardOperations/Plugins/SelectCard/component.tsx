@@ -7,7 +7,7 @@ import { WithStyles } from 'material-ui/styles/withStyles';
 import RuleManager from '../../../RuleManager';
 import CardList from '../../../CardList';
 import TextField from 'material-ui/TextField/TextField';
-import { CardRecord } from '../../../../models/Card';
+import { EditorProps } from '../EditorProps';
 
 interface State {
     cardType: string;
@@ -16,15 +16,7 @@ interface State {
     searchValue: string;
 }
 
-interface PageProps {
-    card: CardRecord;
-    success: (actionType: string, data: any) => void;
-    cancel: () => void;
-    actionName: string;
-    current?: { type: string, selected: string };
-}
-
-type Props = PageProps & WithStyles<keyof Style>;
+type Props = EditorProps<{ type: string, selected: string }> & WithStyles<keyof Style>;
 
 class Component extends React.Component<Props, State> {
 
