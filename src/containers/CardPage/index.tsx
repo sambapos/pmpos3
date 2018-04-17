@@ -11,7 +11,7 @@ import decorate from './style';
 import * as Extender from '../../lib/Extender';
 import TopBar from '../TopBar';
 import CardOperation from '../../modules/CardOperations/CardOperation';
-
+import OperationEditor from '../../modules/OperationEditor';
 import CardPageContent from './CardPageContent';
 import CardBalance from './CardBalance';
 import CardList from '../../modules/CardList';
@@ -60,8 +60,10 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
 
     handleOperation(card: CardRecord, operation?: CardOperation, currentData?: any) {
         if (!operation) { return; }
-        if (operation.getEditor) {
-            let component = operation.getEditor(
+        console.log('operation', operation);
+        if (OperationEditor.hasEditor(operation.type)) {
+            let component = OperationEditor.getEditor(
+                operation.type,
                 card,
                 (at, data) => this.handleCardMutation(card, at, data),
                 () => { this.handleModalClose(); },

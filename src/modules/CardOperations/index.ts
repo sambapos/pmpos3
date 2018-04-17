@@ -1,5 +1,6 @@
 import Plugins from './Plugins';
 import CardOperation from './CardOperation';
+import OperationEditor from '../OperationEditor';
 import { ActionRecord, CardRecord } from 'pmpos-models';
 
 class CardOperations {
@@ -69,9 +70,8 @@ class CardOperations {
         action: ActionRecord,
         success: (actionType: string, data: any) => void,
         cancel: () => void,
-        current?: any): JSX.Element {
-        let operation = this.operations.get(action.actionType) as CardOperation;
-        return operation.getEditor(card, success, cancel, current);
+        current?: any): JSX.Element | undefined {
+        return OperationEditor.getEditor(action.actionType, card, success, cancel, current);
     }
 }
 

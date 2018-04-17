@@ -1,21 +1,13 @@
-import * as React from 'react';
-import CardOperation from '../../CardOperation';
-import IndexEditor from './component';
+import CardOperation from '../CardOperation';
 import { CardRecord, ActionRecord } from 'pmpos-models';
 
 export default class SetCardTag extends CardOperation {
 
     constructor() {
         super('SET_CARD_INDEX', 'Set Card Index');
-        this.getEditor = this.createEditor;
     }
     canEdit(action: ActionRecord): boolean {
         return true;
-    }
-    createEditor(card: CardRecord, success: (actionType: string, data: any) => void, cancel: () => void, current: any) {
-        return React.createElement(IndexEditor, {
-            card, success, cancel, actionName: this.type, current
-        });
     }
     readConcurrencyData(card: CardRecord, data: any) {
         return undefined;

@@ -1,18 +1,12 @@
-import * as React from 'react';
-import CardOperation from '../../CardOperation';
-import Editor from './component';
+import CardOperation from '../CardOperation';
 import { CardRecord, ActionRecord } from 'pmpos-models';
 
-export default class SelectCard extends CardOperation {
+export default class ExecuteCommand extends CardOperation {
     constructor() {
-        super('SELECT_CARD', 'Select Card');
-        this.getEditor = this.createEditor;
+        super('EXECUTE_COMMAND', 'Execute Command');
     }
     canEdit(action: ActionRecord): boolean {
-        return true;
-    }
-    createEditor(card: CardRecord, success: (actionType: string, data: any) => void, cancel: () => void, current: any) {
-        return React.createElement(Editor, { card, success, cancel, actionName: this.type, current });
+        return !action.data.name;
     }
     canApply(card: CardRecord, data: any): boolean {
         return !card.isClosed;

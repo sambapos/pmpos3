@@ -8,7 +8,7 @@ import decorate, { Style } from './style';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import { Map as IMap } from 'immutable';
 import RuleManager from '../../../RuleManager';
-import { CardRecord } from 'pmpos-models';
+import EditorProperties from '../editorProperties';
 
 interface State {
     question: string;
@@ -16,15 +16,7 @@ interface State {
     parameterState: IMap<string, any>;
 }
 
-interface PageProps {
-    card: CardRecord;
-    success: (actionType: string, data: any) => void;
-    cancel: () => void;
-    actionName: string;
-    current?: any;
-}
-
-type Props = PageProps & WithStyles<keyof Style>;
+type Props = EditorProperties<{ question: string, parameters: Object }> & WithStyles<keyof Style>;
 
 class Component extends React.Component<Props, State> {
 
@@ -38,13 +30,16 @@ class Component extends React.Component<Props, State> {
     }
 
     componentWillReceiveProps(props: Props) {
-        if (props.current) {
-            Object.keys(props.current.parameters).forEach(key => {
-                let value = props.current.parameters[key];
-                if (Array.isArray(value)) {
-                    this.setState({ parameterState: this.state.parameterState.set(key, '') });
-                } else {
-                    this.setState({ parameterState: this.state.parameterState.set(key, value) });
+        let current = props.current;
+        if (current) {
+            Object.keys(current.parameters).forEach(key => {
+                if (current) {
+                    let value = current.parameters[key];
+                    if (Array.isArray(value)) {
+                        this.setState({ parameterState: this.state.parameterState.set(key, '') });
+                    } else {
+                        this.setState({ parameterState: this.state.parameterState.set(key, value) });
+                    }
                 }
             });
         }
@@ -113,10 +108,12 @@ class Component extends React.Component<Props, State> {
                     {/* <Button onClick={() => this.props.cancel()}>Cancel</Button> */}
                     <Button
                         onClick={(e) => {
-                            Object.keys(this.props.current.parameters).map(key => {
-                                let value = this.state.parameterState.get(key);
-                                RuleManager.setState(key, value);
-                            });
+                            if (this.props.current) {
+                                Object.keys(this.props.current.parameters).map(key => {
+                                    let value = this.state.parameterState.get(key);
+                                    RuleManager.setState(key, value);
+                                });
+                            }
                             this.props.success(this.props.actionName, this.props.current);
                         }}
                     >

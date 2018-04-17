@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { DialogTitle, DialogActions, Button } from 'material-ui';
 import CardSelectorPage from '../../../../containers/CardSelectorPage';
-import { EditorProps } from '../EditorProps';
 import { TagTypeRecord, CardTagRecord } from 'pmpos-models';
+import EditorProperties from '../editorProperties';
 
-export default (props: EditorProps<{ tagType: TagTypeRecord, tag: CardTagRecord }>) => {
-    let tagType = props.current.tagType;
+export default (props: EditorProperties<{ tagType: TagTypeRecord, tag: CardTagRecord }>) => {
+    let tagType = props.current ? props.current.tagType : new TagTypeRecord();
+    let tag = props.current ? props.current.tag : new CardTagRecord();
     return <>
         <DialogTitle>{
-            props.current.tag.value
-                ? `Change ${tagType.tagName || tagType.cardTypeReferenceName}: ${props.current.tag.value}`
+            tag.value
+                ? `Change ${tagType.tagName || tagType.cardTypeReferenceName}: ${tag.value}`
                 : `Set ${tagType.tagName || tagType.cardTypeReferenceName}`
         }
         </DialogTitle>
@@ -18,7 +19,7 @@ export default (props: EditorProps<{ tagType: TagTypeRecord, tag: CardTagRecord 
                 cardType={tagType.cardTypeReferenceName}
                 onSelectCard={card => {
                     let data = {
-                        ...props.current.tag.toJS(),
+                        ...tag.toJS(),
                         name: tagType.tagName, value: card.name, type: tagType.name
                     };
                     props.success(props.actionName, data);

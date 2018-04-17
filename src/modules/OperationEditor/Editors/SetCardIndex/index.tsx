@@ -1,17 +1,9 @@
 import * as React from 'react';
 import { TextField, Button, DialogContent, DialogTitle, DialogActions } from 'material-ui';
 import { Fragment } from 'react';
-import { CardRecord } from 'pmpos-models';
+import EditorProperties from '../editorProperties';
 
-export default class extends React.Component<
-    {
-        card: CardRecord,
-        success: (actionType: string, data: any) => void,
-        cancel: () => void,
-        actionName: string,
-        current?: any
-    },
-    { index: string }> {
+export default class extends React.Component<EditorProperties<{}>, { index: string }> {
     constructor(props: any) {
         super(props);
         this.state = { index: '' };

@@ -2,12 +2,15 @@ import * as React from 'react';
 import { Button } from 'material-ui';
 import { DialogActions, DialogTitle } from 'material-ui';
 import RuleManager from '../../../RuleManager';
-import { EditorProps } from '../EditorProps';
 import CardSelectorPage from '../../../../containers/CardSelectorPage';
+import EditorProperties from '../editorProperties';
 
-type Props = EditorProps<{ type: string, selected: string }>;
+type Props = EditorProperties<{ type: string, selected: string }>;
 
 export default (props: Props) => {
+    if (!props.current) {
+        return <div>default parameters must set</div>;
+    }
     return <>
         <DialogTitle>{
             props.current.selected
@@ -19,7 +22,9 @@ export default (props: Props) => {
             <CardSelectorPage
                 cardType={props.current.type}
                 onSelectCard={card => {
-                    RuleManager.state.set(props.current.type, card.name);
+                    if (props.current) {
+                        RuleManager.state.set(props.current.type, card.name);
+                    }
                     props.success(props.actionName, props.current);
                 }}
             />

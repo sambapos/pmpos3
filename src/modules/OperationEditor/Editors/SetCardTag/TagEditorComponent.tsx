@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { DialogTitle } from 'material-ui';
 import TagEditor from './TagEditor';
-import { EditorProps } from '../EditorProps';
 import { TagTypeRecord, CardTagRecord } from 'pmpos-models';
+import EditorProperties from '../editorProperties';
 
-export default (props: EditorProps<{ tagType: TagTypeRecord, tag: CardTagRecord }>) => {
+export default (props: EditorProperties<{ tagType: TagTypeRecord, tag: CardTagRecord }>) => {
     return <>
         <DialogTitle>{
-            `Set ${props.current.tagType.id
+            `Set ${props.current && props.current.tagType.id
                 ? props.current.tagType.tagName || props.current.tagType.cardTypeReferenceName
                 : ' Card Tag'}`
         }
         </DialogTitle>
         <TagEditor
-            tag={props.current.tag}
-            tagType={props.current.tagType}
+            tag={props.current ? props.current.tag : new CardTagRecord()}
+            tagType={props.current ? props.current.tagType : new TagTypeRecord()}
             onSubmit={data => props.success(props.actionName, data)}
         />
     </>;

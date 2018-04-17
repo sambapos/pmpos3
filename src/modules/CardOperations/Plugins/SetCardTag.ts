@@ -1,31 +1,17 @@
-import * as React from 'react';
 import * as shortid from 'shortid';
-import CardOperation from '../../CardOperation';
-import TagEditor from './component';
-import CardList from '../../../CardList';
-import { ActionRecord, CardRecord, CardTagRecord, TagTypeRecord } from 'pmpos-models';
+import CardOperation from '../CardOperation';
+import CardList from '../../CardList';
+import { ActionRecord, CardRecord, CardTagRecord } from 'pmpos-models';
 
 export default class SetCardTag extends CardOperation {
 
     constructor() {
         super('SET_CARD_TAG', 'Set Card Tag');
         this.canReduce = this.canReduceCard;
-        this.getEditor = this.createEditor;
     }
 
     canEdit(action: ActionRecord): boolean {
         return !action.data.value;
-    }
-
-    createEditor(card: CardRecord, success: (actionType: string, data: any) => void, cancel: () => void, current: any) {
-        let currentData = current || {};
-        return React.createElement(TagEditor, {
-            card, success, cancel, actionName: this.type,
-            current: {
-                tag: new CardTagRecord(currentData.tag),
-                tagType: new TagTypeRecord(currentData.tagType)
-            }
-        });
     }
 
     readConcurrencyData(card: CardRecord, data: CardTagRecord) {

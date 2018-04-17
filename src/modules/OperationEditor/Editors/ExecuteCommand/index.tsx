@@ -4,28 +4,17 @@ import * as shortid from 'shortid';
 import DialogContent from 'material-ui/Dialog/DialogContent';
 import DialogActions from 'material-ui/Dialog/DialogActions';
 import DialogTitle from 'material-ui/Dialog/DialogTitle';
-import { CardRecord } from 'pmpos-models';
+import EditorProperties from '../editorProperties';
 
-export default class extends React.Component<
-    {
-        card: CardRecord,
-        success: (actionType: string, data: any) => void,
-        cancel: () => void,
-        actionName: string
-    },
-    {
-        name: string, parameters: string
-    }> {
+interface EditorState {
+    name: string;
+    parameters: string;
+}
 
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            name: '', parameters: ''
-        };
-    }
+export default class ExecuteCommand extends React.Component<EditorProperties<{}>, EditorState> {
+    state = { name: '', parameters: '' };
 
     render() {
-
         return (
             <div>
                 <DialogTitle>Execute Command</DialogTitle>
