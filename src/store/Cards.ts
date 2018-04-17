@@ -12,6 +12,7 @@ import {
     CardRecord, CardTypeRecord, CommitRecord, ActionRecord, Commit, ActionState,
     CardTag
 } from 'pmpos-models';
+import OperationEditor from '../modules/OperationEditor';
 
 export interface State {
     cards: List<CardRecord>;
@@ -123,8 +124,10 @@ type KnownActions = AddPendingActionAction | CommitCardAction | CommitReceivedAc
 
 function getEditor(card: CardRecord, action: ActionRecord, observer: any): Promise<ActionRecord> {
     return new Promise<ActionRecord>((resolve, reject) => {
-        let editor = cardOperations.getEditor(
-            card, action, (actionType, data) => {
+        let editor = OperationEditor.getEditor(
+            action.actionType,
+            card,
+            (actionType, data) => {
                 observer.next({ type: 'SET_MODAL_STATE', visible: false });
                 let result = action.set('data', data);
                 resolve(result);

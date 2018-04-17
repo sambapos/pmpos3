@@ -12,7 +12,6 @@ var registry = (function () {
     r.registerEditor('SELECT_CARD', SelectCard);
     r.registerEditor('SET_CARD_INDEX', SetCardIndex);
     r.registerEditor('SET_CARD_TAG', SetCardTag);
-    console.log('Registry', r);
     return r;
 })();
 

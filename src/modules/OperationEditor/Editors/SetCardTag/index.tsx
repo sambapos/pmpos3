@@ -5,11 +5,11 @@ import { TagTypeRecord, CardTagRecord } from 'pmpos-models';
 import EditorProperties from '../editorProperties';
 
 export default (props: EditorProperties<{ tagType: TagTypeRecord, tag: CardTagRecord }>) => {
-    if (props.current) {
-        let tagType = props.current.tagType;
-        if (tagType.isTagSelection()) {
-            return <TagSelectionComponent {...props} />;
-        }
+    let tagType = props.current ? new TagTypeRecord(props.current.tagType) : new TagTypeRecord();
+    let tag = props.current ? new CardTagRecord(props.current.tag) : new CardTagRecord();
+    let properties = { ...props, current: { tag, tagType } };
+    if (tagType.isTagSelection()) {
+        return <TagSelectionComponent {...properties} />;
     }
-    return <TagEditorComponent {...props} />;
+    return <TagEditorComponent {...properties} />;
 };

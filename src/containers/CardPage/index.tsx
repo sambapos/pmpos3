@@ -60,7 +60,6 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
 
     handleOperation(card: CardRecord, operation?: CardOperation, currentData?: any) {
         if (!operation) { return; }
-        console.log('operation', operation);
         if (OperationEditor.hasEditor(operation.type)) {
             let component = OperationEditor.getEditor(
                 operation.type,
