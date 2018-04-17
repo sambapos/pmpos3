@@ -1,8 +1,13 @@
 import { Reducer } from 'redux';
 import { List as IList, Record } from 'immutable';
 import { AppThunkAction } from './appThunkAction';
-import configureProtocol from './configureProtocol';
+import configureProtocol from '../modules/configureProtocol';
 import * as shortid from 'shortid';
+
+type SetChatProtocolAction = {
+    type: 'SET_CHAT_PROTOCOL'
+    protocol: any
+};
 
 type IncLamportAction = {
     type: 'INC_LAMPORT'
@@ -13,19 +18,6 @@ type ConnectProtocolAction = {
     terminalId: string
     user: string
     payload: Promise<any>
-};
-
-type ConnectProtocolRequestAction = {
-    type: 'CONNECT_PROTOCOL_REQUEST'
-};
-
-type ConnectProtocolSuccessAction = {
-    type: 'CONNECT_PROTOCOL_SUCCESS'
-    payload: any
-};
-
-type ConnectProtocolFailAction = {
-    type: 'CONNECT_PROTOCOL_FAIL'
 };
 
 type AddMessageAction = {
@@ -59,14 +51,18 @@ export class StateRecord extends Record<State>({
     lamport: 1
 }) { }
 
-type KnownActions = AddMessageAction | IncLamportAction
-    | ConnectProtocolAction | ConnectProtocolSuccessAction | ConnectProtocolFailAction | ConnectProtocolRequestAction;
+type KnownActions = SetChatProtocolAction | AddMessageAction | IncLamportAction
+    | ConnectProtocolAction;
 
 export const reducer: Reducer<StateRecord> = (
     state: StateRecord = new StateRecord(),
     action: KnownActions
 ): StateRecord => {
     switch (action.type) {
+        case 'SET_CHAT_PROTOCOL':
+            return state
+                .set('protocol', action.protocol)
+                .set('connected', true);
         case 'INC_LAMPORT':
             return state.set('lamport', state.lamport);
         case 'ADD_MESSAGE':
@@ -80,54 +76,67 @@ export const reducer: Reducer<StateRecord> = (
                     lamport: action.lamport
                 });
             });
-        case 'CONNECT_PROTOCOL_SUCCESS':
-            return state
-                .set('protocol', action.payload)
-                .set('connected', true);
-        case 'CONNECT_PROTOCOL_REQUEST':
-            return state.set('connected', false);
-        case 'CONNECT_PROTOCOL_FAIL':
-            return state.set('connected', false);
         default:
             return state;
     }
 };
 
+const configProtocol = (terminalId, networkName, user, dispatch) => {
+    configureProtocol(
+        terminalId, networkName, user,
+        (chat, commit, config) => {
+            dispatch({
+                type: 'SET_CONFIG_PROTOCOL',
+                protocol: config
+            });
+            dispatch({
+                type: 'SET_COMMIT_PROTOCOL',
+                protocol: commit
+            });
+            dispatch({
+                type: 'SET_CHAT_PROTOCOL',
+                protocol: chat
+            });
+        },
+        messages =>
+            messages.forEach(value =>
+                dispatch({
+                    type: 'ADD_MESSAGE',
+                    time: value.time,
+                    message: value.message,
+                    user: value.user,
+                    id: value.id,
+                    lamport: value.lamport
+                })),
+        config => dispatch({
+            type: 'CONFIG_RECEIVED',
+            payload: config
+        }),
+        commits => dispatch({
+            type: 'COMMIT_RECEIVED',
+            values: commits
+        })
+    );
+};
+
 export const actionCreators = {
-    addMessage: (message: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
-        dispatch({ type: 'INC_LAMPORT' });
-        getState().chat.protocol.share.chat.push([{
-            id: shortid.generate(),
-            time: new Date().getTime(),
-            lamport: getState().chat.lamport,
-            message: message,
-            user: getState().client.loggedInUser
-        }]);
-    },
+    addMessage: (message: string):
+        AppThunkAction<KnownActions> => (dispatch, getState) => {
+            dispatch({ type: 'INC_LAMPORT' });
+            getState().chat.protocol.share.chat.push([{
+                id: shortid.generate(),
+                time: new Date().getTime(),
+                lamport: getState().chat.lamport,
+                message: message,
+                user: getState().client.loggedInUser
+            }]);
+        },
     connectProtocol: (terminalId: string, networkName: string, user: string):
         AppThunkAction<KnownActions> => (dispatch, getState) => {
             let currentProtocol = getState().cards.protocol;
             if (currentProtocol) {
                 return;
             }
-
-            dispatch({
-                type: 'CONNECT_PROTOCOL',
-                terminalId,
-                user,
-                payload: new Promise<any>((resolve, reject) => {
-                    try {
-                        configureProtocol(
-                            terminalId, networkName, user,
-                            dispatch, getState,
-                            protocol => {
-                                resolve(protocol);
-                            }
-                        );
-                    } catch (error) {
-                        reject(error);
-                    }
-                })
-            });
+            configProtocol(terminalId, networkName, user, dispatch);
         }
 };
