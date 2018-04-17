@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Button, WithStyles } from 'material-ui';
 import { CommandButton } from '../CommandButton';
-import { CardRecord } from '../../models/Card';
 import decorate, { Style } from './style';
+import { CardRecord } from 'pmpos-models';
 
 interface CommandButtonsProps {
     buttons: CommandButton[];

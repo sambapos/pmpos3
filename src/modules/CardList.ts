@@ -1,14 +1,10 @@
 import { List, Map as IMap, Set as ISet } from 'immutable';
-import { CommitRecord, Commit } from '../models/Commit';
-import { CardRecord } from '../models/Card';
+import {
+    CommitRecord, Commit, CardRecord, CardTypeRecord, TagTypeRecord, ActionRecord,
+    CardTagData, CardTagRecord, makeDeepCommit
+} from 'pmpos-models';
 import { cardOperations } from './CardOperations/index';
-import { ActionRecord } from '../models/Action';
-import { makeDeepCommit } from '../models/makers';
 import { Suggestion } from '../components/AutoSuggest';
-import { CardTypeRecord } from '../models/CardType';
-import CardTagData from '../models/CardTagData';
-import { TagTypeRecord } from '../models/TagType';
-import { CardTagRecord } from '../models/CardTag';
 
 class CardList {
 

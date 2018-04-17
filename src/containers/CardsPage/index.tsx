@@ -15,15 +15,12 @@ import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';
 import TopBar from '../TopBar';
-import { CardRecord } from '../../models/Card';
-import { CardTypeRecord } from '../../models/CardType';
 import * as h from './helpers';
 import VirtualCardList from './VirtualCardList';
 import DraggableCardList from './DraggableCardList';
-import { ActionRecord } from '../../models/Action';
 import CardList from '../../modules/CardList';
 import CardSelector from '../../components/CardSelector';
-import { CardTag, CardTagRecord } from '../../models/CardTag';
+import { CardRecord, CardTypeRecord, ActionRecord, CardTag, CardTagRecord } from 'pmpos-models';
 
 type PageProps =
     {

@@ -6,13 +6,13 @@ import { WithStyles, TextField, Paper } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
-import { RuleRecord } from '../../models/Rule';
 import AceEditor from 'react-ace';
 
 import 'brace/mode/drools';
 import 'brace/theme/github';
 import 'brace/ext/language_tools';
 import 'brace/snippets/drools';
+import { RuleRecord } from 'pmpos-models';
 
 type PageProps =
     {

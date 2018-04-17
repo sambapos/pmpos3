@@ -4,8 +4,8 @@ import { List as IList } from 'immutable';
 import { Paper } from 'material-ui';
 import decorate, { Style } from './style';
 import { WithStyles } from 'material-ui/styles/withStyles';
-import CardTagData from '../../models/CardTagData';
 import THead from './THead';
+import { CardTagData } from 'pmpos-models';
 
 interface PageProps {
     searchValue: string;

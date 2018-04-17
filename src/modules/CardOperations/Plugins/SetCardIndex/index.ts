@@ -1,8 +1,7 @@
 import * as React from 'react';
 import CardOperation from '../../CardOperation';
-import { CardRecord } from '../../../../models/Card';
-import { ActionRecord } from '../../../../models/Action';
 import IndexEditor from './component';
+import { CardRecord, ActionRecord } from 'pmpos-models';
 
 export default class SetCardTag extends CardOperation {
 

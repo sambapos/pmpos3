@@ -1,12 +1,10 @@
 import * as React from 'react';
 import CardList from '../../modules/CardList';
 import { CardPageProps } from './CardPageProps';
-import { CardRecord } from '../../models/Card';
 import { MenuItem, Divider } from 'material-ui';
 import CardOperation from '../../modules/CardOperations/CardOperation';
 import { cardOperations } from '../../modules/CardOperations';
-import { TagTypeRecord } from '../../models/TagType';
-import { CardTypeRecord } from '../../models/CardType';
+import { CardRecord, TagTypeRecord, CardTypeRecord } from 'pmpos-models';
 
 interface TagMenuItemsProps {
     selectedCard: CardRecord;

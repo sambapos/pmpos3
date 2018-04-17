@@ -1,8 +1,7 @@
 import CardOperation from '../CardOperation';
-import { CardRecord } from '../../../models/Card';
 import * as shortid from 'shortid';
 import CardList from '../../CardList';
-import { ActionRecord } from '../../../models/Action';
+import { ActionRecord, CardRecord } from 'pmpos-models';
 
 export default class CreateCard extends CardOperation {
     constructor() {

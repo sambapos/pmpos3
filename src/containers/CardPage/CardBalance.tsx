@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Typography, ListItem } from 'material-ui';
-import { CardRecord } from '../../models/Card';
+import { CardRecord } from 'pmpos-models';
 
 interface Props {
     card: CardRecord;

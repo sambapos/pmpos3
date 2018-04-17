@@ -3,7 +3,7 @@ import { Card } from 'material-ui';
 import * as moment from 'moment';
 import Typography from 'material-ui/Typography/Typography';
 import ActionList from './ActionList';
-import { CommitRecord } from '../models/Commit';
+import { CommitRecord } from 'pmpos-models';
 
 interface CommitItemProps {
     commit: CommitRecord;

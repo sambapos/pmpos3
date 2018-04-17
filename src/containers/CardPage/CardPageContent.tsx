@@ -2,10 +2,9 @@ import * as React from 'react';
 import Tags from './Tags';
 import SubCards from './SubCards';
 import classNames from 'classnames';
-import { CardRecord } from '../../models/Card';
 import { WithStyles, Icon } from 'material-ui';
 import decorate, { Style } from './style';
-import { CardTypeRecord } from '../../models/CardType';
+import { CardRecord, CardTypeRecord } from 'pmpos-models';
 
 interface CardContentProps {
     card: CardRecord;

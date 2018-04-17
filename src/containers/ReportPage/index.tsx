@@ -6,12 +6,11 @@ import { List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import CardList from '../../modules/CardList';
 import TextField from 'material-ui/TextField/TextField';
-import CardTagData from '../../models/CardTagData';
 import InventoryTable from './InventoryTable';
 import AccountTable from './AccountTable';
 import LocationTable from './LocationTable';
-import { CardTypeRecord } from '../../models/CardType';
 import BalanceTable from './BalanceTable';
+import { CardTagData, CardTypeRecord } from 'pmpos-models';
 
 type PageProps =
     WithStyles<keyof Style>

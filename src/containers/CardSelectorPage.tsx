@@ -3,9 +3,8 @@ import { List as IList } from 'immutable';
 import { connect } from 'react-redux';
 import * as CardStore from '../store/Cards';
 import CardSelector from '../components/CardSelector';
-import { CardTypeRecord } from '../models/CardType';
-import { CardRecord } from '../models/Card';
 import { ApplicationState } from '../store';
+import { CardRecord, CardTypeRecord } from 'pmpos-models';
 
 interface CardSelectorPageProps {
     cardType: string;

@@ -1,9 +1,7 @@
-import { CardRecord } from '../../models/Card';
 import { List } from 'immutable';
 import * as faker from 'faker';
 import * as shortid from 'shortid';
-import { ActionRecord } from '../../models/Action';
-import { CardTypeRecord } from '../../models/CardType';
+import { CardRecord, CardTypeRecord, ActionRecord } from 'pmpos-models';
 
 export const getListStyle = isDraggingOver => ({
     background: isDraggingOver ? 'lightblue' : ''

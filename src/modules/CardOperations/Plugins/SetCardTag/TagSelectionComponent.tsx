@@ -2,8 +2,7 @@ import * as React from 'react';
 import { DialogTitle, DialogActions, Button } from 'material-ui';
 import CardSelectorPage from '../../../../containers/CardSelectorPage';
 import { EditorProps } from '../EditorProps';
-import { TagTypeRecord } from '../../../../models/TagType';
-import { CardTagRecord } from '../../../../models/CardTag';
+import { TagTypeRecord, CardTagRecord } from 'pmpos-models';
 
 export default (props: EditorProps<{ tagType: TagTypeRecord, tag: CardTagRecord }>) => {
     let tagType = props.current.tagType;

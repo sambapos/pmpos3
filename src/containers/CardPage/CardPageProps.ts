@@ -1,12 +1,10 @@
-import { ActionRecord } from '../../models/Action';
 import { List } from 'immutable';
-import { CardRecord } from '../../models/Card';
-import { CommitRecord } from '../../models/Commit';
 import { WithStyles } from 'material-ui';
 import { Style } from './style';
 import { RouteComponentProps } from 'react-router';
 import * as CardStore from '../../store/Cards';
 import * as ClientStore from '../../store/Client';
+import { ActionRecord, CardRecord, CommitRecord } from 'pmpos-models';
 
 export type CardPageProps =
     {

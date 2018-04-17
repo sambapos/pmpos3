@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { WithStyles, Card, Typography } from 'material-ui';
 import decorate, { Style } from './style';
-import { CardRecord } from '../../models/Card';
-import { CardTagRecord } from '../../models/CardTag';
 import { Map as IMap, List } from 'immutable';
+import { CardRecord, CardTagRecord } from 'pmpos-models';
 
 type AccountProps =
     { card: CardRecord }

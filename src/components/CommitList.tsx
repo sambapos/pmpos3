@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { List } from 'immutable';
 import CommitItem from './CommitItem';
-import { CommitRecord } from '../models/Commit';
+import { CommitRecord } from 'pmpos-models';
 
 interface CommitListProps {
     commits: List<CommitRecord>;

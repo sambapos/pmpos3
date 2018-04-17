@@ -4,7 +4,7 @@ import * as shortid from 'shortid';
 import DialogContent from 'material-ui/Dialog/DialogContent';
 import DialogActions from 'material-ui/Dialog/DialogActions';
 import DialogTitle from 'material-ui/Dialog/DialogTitle';
-import { CardRecord } from '../../../../models/Card';
+import { CardRecord } from 'pmpos-models';
 
 export default class extends React.Component<
     {

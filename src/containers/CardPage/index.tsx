@@ -10,19 +10,18 @@ import { Typography, Menu, MenuItem, Paper, Divider } from 'material-ui';
 import decorate from './style';
 import * as Extender from '../../lib/Extender';
 import TopBar from '../TopBar';
-import { CardRecord } from '../../models/Card';
 import CardOperation from '../../modules/CardOperations/CardOperation';
 
 import CardPageContent from './CardPageContent';
 import CardBalance from './CardBalance';
 import CardList from '../../modules/CardList';
 import { CommandButton } from '../../components/CommandButton';
-import { CardTypeRecord } from '../../models/CardType';
 import CardPageTopbar from './CardPageTopbar';
 import TagMenuItems from './TagMenuItems';
 import { CardPageProps } from './CardPageProps';
 import { Link } from 'react-router-dom';
 import CommandButtons from '../../components/CommandButtons';
+import { CardRecord, CardTypeRecord } from 'pmpos-models';
 
 interface PageState {
     anchorEl: any;

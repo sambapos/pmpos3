@@ -1,12 +1,10 @@
 import * as shortid from 'shortid';
 import * as _ from 'lodash';
-import { ActionRecord } from '../models/Action';
 import { Map as IMap } from 'immutable';
-import { RuleRecord } from '../models/Rule';
 import { cardOperations } from './CardOperations/index';
 import * as Nools from '../lib/nools-ts.min';
-import { CardRecord } from '../models/Card';
 import CardList from './CardList';
+import { CardRecord, RuleRecord, ActionRecord } from 'pmpos-models';
 
 class ActionType {
     data: any;

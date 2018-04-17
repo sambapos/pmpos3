@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TextField, Button, DialogContent, DialogTitle, DialogActions } from 'material-ui';
 import { Fragment } from 'react';
-import { CardRecord } from '../../../../models/Card';
+import { CardRecord } from 'pmpos-models';
 
 export default class extends React.Component<
     {

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { CardRecord } from '../../models/Card';
 import CardPageContent from './CardPageContent';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import decorate, { Style } from './style';
 import CardList from '../../modules/CardList';
 import * as _ from 'lodash';
+import { CardRecord } from 'pmpos-models';
 
 interface SubCardProps {
     card: CardRecord;

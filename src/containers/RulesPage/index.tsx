@@ -9,7 +9,7 @@ import { Map as IMap } from 'immutable';
 import TopBar from '../TopBar';
 import Divider from 'material-ui/Divider/Divider';
 import ListItemText from 'material-ui/List/ListItemText';
-import { RuleRecord } from '../../models/Rule';
+import { RuleRecord } from 'pmpos-models';
 
 type PageProps =
     { rules: IMap<string, RuleRecord> }

@@ -4,7 +4,7 @@ import Accounts from './Accounts';
 import TopBar from '../TopBar';
 import Commits from './Commits';
 import CardList from '../../modules/CardList';
-import { CardRecord } from '../../models/Card';
+import { CardRecord } from 'pmpos-models';
 
 const getTitle = (card: CardRecord) => {
     let ct = CardList.getCardType(card.typeId);

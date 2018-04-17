@@ -1,7 +1,7 @@
 import { List } from 'immutable';
 import * as React from 'react';
-import { ActionRecord } from '../models/Action';
 import ActionItem from './ActionItem';
+import { ActionRecord } from 'pmpos-models';
 
 interface ActionListProps {
     actions: List<ActionRecord>;

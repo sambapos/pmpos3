@@ -8,11 +8,10 @@ import * as Extender from '../../lib/Extender';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
-import { CardTypeRecord } from '../../models/CardType';
 import DraggableItemList from '../../components/DraggableItemList';
 import CardList from '../../modules/CardList';
-import { TagTypeRecord } from '../../models/TagType';
 import ItemSelectionDialog from '../../components/ItemSelectionDialog';
+import { CardTypeRecord, TagTypeRecord } from 'pmpos-models';
 
 type PageProps =
     {

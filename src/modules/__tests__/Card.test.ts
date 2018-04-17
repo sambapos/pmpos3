@@ -1,4 +1,4 @@
-import { CardRecord } from '../Card';
+import { CardRecord } from 'pmpos-models';
 
 it('creates card', () => {
     let c = new CardRecord({ id: '0' });

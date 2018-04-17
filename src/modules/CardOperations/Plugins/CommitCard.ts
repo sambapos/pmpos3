@@ -1,6 +1,5 @@
 import CardOperation from '../CardOperation';
-import { CardRecord } from '../../../models/Card';
-import { ActionRecord } from '../../../models/Action';
+import { ActionRecord, CardRecord } from 'pmpos-models';
 
 export default class CommitCard extends CardOperation {
     constructor() {

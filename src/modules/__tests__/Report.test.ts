@@ -1,4 +1,4 @@
-import { CardRecord } from '../Card';
+import { CardRecord } from 'pmpos-models';
 import CardList from '../../modules/CardList';
 import { Map as IMap } from 'immutable';
 

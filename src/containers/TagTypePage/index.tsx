@@ -6,8 +6,8 @@ import { WithStyles, TextField, Paper } from 'material-ui';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
-import { TagTypeRecord } from '../../models/TagType';
 import InputCheckBox from './InputCheckBox';
+import { TagTypeRecord } from 'pmpos-models';
 
 type PageProps =
     {

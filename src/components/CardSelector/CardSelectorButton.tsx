@@ -1,10 +1,9 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { Button } from 'material-ui';
-import { CardRecord } from '../../models/Card';
-import { CardTypeRecord } from '../../models/CardType';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import decorate, { Style } from './style';
+import { CardRecord, CardTypeRecord } from 'pmpos-models';
 
 interface CardSelectorButtonProps {
     card: CardRecord;

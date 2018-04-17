@@ -7,8 +7,8 @@ import yindexeddb from '../lib/y-indexed-db';
 // require('y-indexeddb')(Y);
 
 import { ApplicationState } from './index';
-import { Commit } from '../models/Commit';
 import CardList from '../modules/CardList';
+import { Commit } from 'pmpos-models';
 
 export default (
     terminalId: string,

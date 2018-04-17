@@ -1,7 +1,6 @@
 import Plugins from './Plugins';
 import CardOperation from './CardOperation';
-import { ActionRecord } from '../../models/Action';
-import { CardRecord } from '../../models/Card';
+import { ActionRecord, CardRecord } from 'pmpos-models';
 
 class CardOperations {
     operations: Map<string, CardOperation>;

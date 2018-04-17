@@ -2,11 +2,9 @@ import * as React from 'react';
 import tmpl from 'blueimp-tmpl';
 import decorate, { Style } from './style';
 import { WithStyles } from 'material-ui/styles/withStyles';
-import { CardRecord } from '../../models/Card';
 import { Icon } from 'material-ui';
-import { CardTagRecord } from '../../models/CardTag';
 import CardList from '../../modules/CardList';
-import { TagTypeRecord } from '../../models/TagType';
+import { CardRecord, CardTagRecord, TagTypeRecord } from 'pmpos-models';
 
 class CardTagWrapper {
     constructor(tag: CardTagRecord, card: CardRecord) {

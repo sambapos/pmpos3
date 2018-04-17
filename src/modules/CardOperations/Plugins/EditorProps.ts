@@ -1,4 +1,4 @@
-import { CardRecord } from '../../../models/Card';
+import { CardRecord } from 'pmpos-models';
 
 export interface EditorProps<TData> {
     card: CardRecord;

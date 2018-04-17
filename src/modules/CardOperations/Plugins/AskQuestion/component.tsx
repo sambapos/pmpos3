@@ -8,7 +8,7 @@ import decorate, { Style } from './style';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import { Map as IMap } from 'immutable';
 import RuleManager from '../../../RuleManager';
-import { CardRecord } from '../../../../models/Card';
+import { CardRecord } from 'pmpos-models';
 
 interface State {
     question: string;

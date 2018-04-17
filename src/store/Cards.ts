@@ -1,19 +1,17 @@
 import { Reducer } from 'redux';
 import { AppThunkAction } from './appThunkAction';
 import * as shortid from 'shortid';
-import { CardRecord } from '../models/Card';
-import { ActionRecord } from '../models/Action';
-import { Commit, CommitRecord } from '../models/Commit';
 import CardList from '../modules/CardList';
 import RuleManager from '../modules/RuleManager';
 import { List, Record } from 'immutable';
-import { CardTypeRecord } from '../models/CardType';
 import { ActionsObservable } from 'redux-observable';
 import { Observable } from 'rxjs/Observable';
 import { cardOperations } from '../modules/CardOperations/index';
-import { ActionState } from '../models/ActionState';
 import { ApplicationState } from '.';
-import { CardTag } from '../models/CardTag';
+import {
+    CardRecord, CardTypeRecord, CommitRecord, ActionRecord, Commit, ActionState,
+    CardTag
+} from 'pmpos-models';
 
 export interface State {
     cards: List<CardRecord>;

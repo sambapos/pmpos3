@@ -9,7 +9,7 @@ import { Map as IMap } from 'immutable';
 import TopBar from '../TopBar';
 import Divider from 'material-ui/Divider/Divider';
 import ListItemText from 'material-ui/List/ListItemText';
-import { CardTypeRecord } from '../../models/CardType';
+import { CardTypeRecord } from 'pmpos-models';
 
 type PageProps =
     { cardTypes: IMap<string, CardTypeRecord> }

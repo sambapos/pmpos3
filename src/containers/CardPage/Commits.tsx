@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { ActionRecord } from '../../models/Action';
 import { List } from 'immutable';
 import { WithStyles, Card, Typography } from 'material-ui';
 import decorate, { Style } from './style';
 import ActionList from '../../components/ActionList';
 import CommitList from '../../components/CommitList';
-import { CommitRecord } from '../../models/Commit';
+import { CommitRecord, ActionRecord } from 'pmpos-models';
 
 type CommitProps =
     {
