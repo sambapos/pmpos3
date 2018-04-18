@@ -4,13 +4,13 @@ import { WithStyles, ListItem, Typography } from 'material-ui';
 import decorate, { Style } from './style';
 import { List as IList } from 'immutable';
 import TopBar from '../TopBar';
-import CardList from '../../modules/CardList';
 import TextField from 'material-ui/TextField/TextField';
 import InventoryTable from './InventoryTable';
 import AccountTable from './AccountTable';
 import LocationTable from './LocationTable';
 import BalanceTable from './BalanceTable';
 import { CardTagData, CardTypeRecord } from 'pmpos-models';
+import { CardList } from 'pmpos-modules';
 
 type PageProps =
     WithStyles<keyof Style>

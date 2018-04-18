@@ -3,8 +3,8 @@ import { DialogContent, DialogActions, Button } from 'material-ui';
 import Accounts from './Accounts';
 import TopBar from '../TopBar';
 import Commits from './Commits';
-import CardList from '../../modules/CardList';
 import { CardRecord } from 'pmpos-models';
+import { CardList } from 'pmpos-modules';
 
 const getTitle = (card: CardRecord) => {
     let ct = CardList.getCardType(card.typeId);

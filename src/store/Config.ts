@@ -2,8 +2,7 @@ import { Reducer } from 'redux';
 import * as shortid from 'shortid';
 import { Record, Map as IMap } from 'immutable';
 import { AppThunkAction } from './appThunkAction';
-import CardList from '../modules/CardList';
-import RuleManager from '../modules/RuleManager';
+import { RuleManager, CardList } from 'pmpos-modules';
 import { CardTypeRecord, TagTypeRecord, RuleRecord } from 'pmpos-models';
 
 interface ConfigState {

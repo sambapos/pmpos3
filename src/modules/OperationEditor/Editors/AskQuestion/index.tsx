@@ -7,8 +7,8 @@ import Typography from 'material-ui/Typography/Typography';
 import decorate, { Style } from './style';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import { Map as IMap } from 'immutable';
-import RuleManager from '../../../RuleManager';
 import EditorProperties from '../editorProperties';
+import { RuleManager } from 'pmpos-modules';
 
 interface State {
     question: string;

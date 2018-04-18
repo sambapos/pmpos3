@@ -9,9 +9,9 @@ import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
 import DraggableItemList from '../../components/DraggableItemList';
-import CardList from '../../modules/CardList';
 import ItemSelectionDialog from '../../components/ItemSelectionDialog';
 import { CardTypeRecord, TagTypeRecord } from 'pmpos-models';
+import { CardList } from 'pmpos-modules';
 
 type PageProps =
     {

@@ -3,8 +3,8 @@ import tmpl from 'blueimp-tmpl';
 import decorate, { Style } from './style';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import { Icon } from 'material-ui';
-import CardList from '../../modules/CardList';
 import { CardRecord, CardTagRecord, TagTypeRecord } from 'pmpos-models';
+import { CardList } from 'pmpos-modules';
 
 class CardTagWrapper {
     constructor(tag: CardTagRecord, card: CardRecord) {

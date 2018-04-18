@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Button } from 'material-ui';
 import { DialogActions, DialogTitle } from 'material-ui';
-import RuleManager from '../../../RuleManager';
 import CardSelectorPage from '../../../../containers/CardSelectorPage';
 import EditorProperties from '../editorProperties';
+import { RuleManager } from 'pmpos-modules';
 
 type Props = EditorProperties<{ type: string, selected: string }>;
 

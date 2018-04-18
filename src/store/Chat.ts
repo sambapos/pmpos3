@@ -1,8 +1,8 @@
 import { Reducer } from 'redux';
 import { List as IList, Record } from 'immutable';
 import { AppThunkAction } from './appThunkAction';
-import configureProtocol from '../modules/configureProtocol';
 import * as shortid from 'shortid';
+import { configureProtocol } from 'pmpos-modules';
 
 type SetChatProtocolAction = {
     type: 'SET_CHAT_PROTOCOL'

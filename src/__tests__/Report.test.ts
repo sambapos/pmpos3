@@ -1,6 +1,6 @@
 import { CardRecord } from 'pmpos-models';
 import { Map as IMap } from 'immutable';
-import CardList from '../modules/CardList';
+import { CardList } from 'pmpos-modules';
 
 it('calculates wallet balance', () => {
 

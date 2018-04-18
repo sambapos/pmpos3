@@ -2,9 +2,9 @@ import * as React from 'react';
 import CardSelectorButton from './CardSelectorButton';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import decorate, { Style } from './style';
-import CardList from '../../modules/CardList';
 import SearchEdit from '../SearchEdit';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
+import { CardList } from 'pmpos-modules';
 
 interface GridSelectorProps {
     cards: CardRecord[];

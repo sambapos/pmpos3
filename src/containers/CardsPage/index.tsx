@@ -18,9 +18,9 @@ import TopBar from '../TopBar';
 import * as h from './helpers';
 import VirtualCardList from './VirtualCardList';
 import DraggableCardList from './DraggableCardList';
-import CardList from '../../modules/CardList';
 import CardSelector from '../../components/CardSelector';
 import { CardRecord, CardTypeRecord, ActionRecord, CardTag, CardTagRecord } from 'pmpos-models';
+import { CardList } from 'pmpos-modules';
 
 type PageProps =
     {
