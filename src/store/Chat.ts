@@ -83,6 +83,7 @@ export const reducer: Reducer<StateRecord> = (
 
 const configProtocol = (terminalId, networkName, user, dispatch) => {
     configureProtocol(
+        true,
         terminalId, networkName, user,
         (chat, commit, config) => {
             dispatch({
@@ -123,7 +124,7 @@ export const actionCreators = {
     addMessage: (message: string):
         AppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({ type: 'INC_LAMPORT' });
-            getState().chat.protocol.share.chat.push([{
+            getState().chat.protocol.push([{
                 id: shortid.generate(),
                 time: new Date().getTime(),
                 lamport: getState().chat.lamport,
