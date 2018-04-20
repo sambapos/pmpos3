@@ -9,6 +9,9 @@ interface CardSelectorProps {
     sourceCards: CardRecord[];
     sourceCardType: CardTypeRecord;
     cardType: string;
+    scrollTop: number;
+    onSaveSortOrder?: (items: any[]) => void;
+    onScrollChange?: (scrollTop: number) => void;
     onSelectCard?: (selectedCard: CardRecord, cardType: CardTypeRecord, cards: CardRecord[]) => void;
 }
 
@@ -37,8 +40,15 @@ const CardSelector = (props: CardSelectorProps & WithStyles<keyof Style>) => {
                 [] as CardRecord[]);
         }
     }
-    return <GridSelector cards={cardList} sourceCards={props.sourceCards}
-        cardType={cardType} sourceCardType={props.sourceCardType} onSelectCard={props.onSelectCard} />;
+    return <GridSelector cards={cardList}
+        sourceCards={props.sourceCards}
+        cardType={cardType}
+        sourceCardType={props.sourceCardType}
+        onSelectCard={props.onSelectCard}
+        scrollTop={props.scrollTop}
+        onScrollChange={props.onScrollChange}
+        onSaveSortOrder={props.onSaveSortOrder}
+    />;
 };
 
 export default decorate(CardSelector);

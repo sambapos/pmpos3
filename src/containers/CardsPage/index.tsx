@@ -1,27 +1,25 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import * as _ from 'lodash';
+import * as shortid from 'shortid';
 import * as CardStore from '../../store/Cards';
 import * as ClientStore from '../../store/Client';
-import * as shortid from 'shortid';
 import * as Extender from '../../lib/Extender';
-import { reorder } from '../../lib/helpers';
 import { RouteComponentProps } from 'react-router';
-import { CellMeasurerCache } from 'react-virtualized';
 import {
-    WithStyles, Paper, Snackbar, Button, IconButton, Icon,
+    WithStyles, Paper, Button,
     AppBar, Tab, Tabs, DialogTitle, Divider, DialogActions
 } from 'material-ui';
-import SearchEdit from '../../components/SearchEdit';
+// import SearchEdit from '../../components/SearchEdit';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import * as h from './helpers';
-import VirtualCardList from './VirtualCardList';
+// import CardLister from './CardLister';
 import DraggableCardList from '../../components/DraggableCardList';
 import CardSelector from '../../components/CardSelector';
-import { CardRecord, CardTypeRecord, ActionRecord, CardTag, CardTagRecord } from 'pmpos-models';
+import { CardRecord, CardTypeRecord, CardTag, CardTagRecord, ActionRecord } from 'pmpos-models';
 import { CardList } from 'pmpos-modules';
 
 type PageProps =
@@ -43,43 +41,21 @@ type PageProps =
 
 interface State {
     currentCardType: CardTypeRecord;
-    items: any[];
     itemCount: number;
-    scrollTop: number;
     searchValueText: string;
-    snackbarOpen: boolean;
     tabs: string[];
 }
 
 class CardsPage extends React.Component<PageProps, State> {
-
-    // private debouncedSearch;
-    private debouncedHandleScroll;
-    private itemCount = 50;
-
-    public cache = new CellMeasurerCache({
-        defaultWidth: 100,
-        defaultHeight: 999999,
-        fixedWidth: true
-    });
-
     constructor(props: PageProps) {
         super(props);
         let filteredItems = h.getFilteredItems(props.cards, props.searchValue, props.showAllCards);
         this.state = {
             currentCardType: props.currentCardType,
-            items: h.getItems(filteredItems, 0, this.itemCount),
             itemCount: filteredItems.count(),
-            scrollTop: props.cardListScrollTop,
             searchValueText: props.searchValue,
-            snackbarOpen: false,
             tabs: this.getTabValues(props.currentCardType),
         };
-    }
-
-    componentWillMount() {
-        this.debouncedHandleScroll = _.debounce(this.handle_scroll, 100);
-        // this.debouncedSearch = _.debounce(this.updateSearch, 200);
     }
 
     componentWillReceiveProps(nextProps: PageProps) {
@@ -88,34 +64,39 @@ class CardsPage extends React.Component<PageProps, State> {
                 currentCardType: nextProps.currentCardType,
                 tabs: this.getTabValues(nextProps.currentCardType),
             });
-            this.cache.clearAll();
         }
-        if (this.props.searchValue !== nextProps.searchValue
-            || nextProps.currentCardType.name !== this.state.currentCardType.name) {
-            this.setState({ scrollTop: 0 });
-        }
-        if (this.state.items.length === 0
-            || nextProps.cards !== this.props.cards
+        if (nextProps.cards !== this.props.cards
             || nextProps.searchValue !== this.props.searchValue
             || nextProps.showAllCards !== this.props.showAllCards) {
             let filteredItems = h.getFilteredItems(nextProps.cards, nextProps.searchValue, nextProps.showAllCards);
             this.setState({
                 searchValueText: nextProps.searchValue,
-                items: h.getItems(filteredItems, 0, this.itemCount),
                 itemCount: filteredItems.count(),
             });
         }
-    }
-
-    handle_scroll(scrollTop: number) {
-        this.setState({ scrollTop });
     }
 
     handleChangeListIndex = index => {
         this.props.setTabIndex(index);
     }
 
-    saveSortOrder = (list: CardRecord[]) => {
+    updateSearch() {
+        this.props.setSearchValue(this.state.searchValueText);
+    }
+
+    private displayCard(c: CardRecord) {
+        this.props.history.push(
+            process.env.PUBLIC_URL + '/card/' + c.id);
+    }
+
+    private addNewCard(tags: CardTag[]) {
+        if (this.props.currentCardType.id) {
+            this.props.addCard(this.props.currentCardType, tags);
+            this.props.history.push(process.env.PUBLIC_URL + '/card');
+        }
+    }
+
+    onSaveSortOrder = (list: CardRecord[]) => {
         for (let index = 0; index < list.length; index++) {
             const item = list[index];
             if (item.index !== index) {
@@ -130,65 +111,6 @@ class CardsPage extends React.Component<PageProps, State> {
                 this.props.postCommit(item, IList<ActionRecord>([actionData]));
             }
         }
-        return list;
-    }
-
-    handleSnackbarClose = (event, reason?) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        this.setState({ snackbarOpen: false });
-    }
-
-    updateSearch() {
-        this.props.setSearchValue(this.state.searchValueText);
-    }
-
-    private isRowLoaded({ index }: any) {
-        return !!this.state.items[index];
-    }
-
-    private loadMoreRows({ startIndex, stopIndex }: any) {
-        let filteredItems = h.getFilteredItems(this.props.cards, this.props.searchValue, this.props.showAllCards);
-        let items = this.state.items.concat(h.getItems(filteredItems, startIndex, stopIndex - startIndex + 1));
-        this.setState({ items, itemCount: filteredItems.count() });
-    }
-
-    private displayCard(c: CardRecord) {
-        this.props.setCardListScrollTop(this.state.scrollTop);
-        this.props.history.push(
-            process.env.PUBLIC_URL + '/card/' + c.id);
-    }
-
-    private addNewCard(tags: CardTag[]) {
-        if (this.props.currentCardType.id) {
-            this.props.addCard(this.props.currentCardType, tags);
-            this.props.history.push(process.env.PUBLIC_URL + '/card');
-        }
-    }
-
-    private renderCardList() {
-        if (!this.props.searchValue && this.state.itemCount < this.itemCount * 2) {
-            let groupedMap = IMap<string, any[]>(_.groupBy(this.state.items, x => x.category));
-            return <DraggableCardList
-                items={groupedMap}
-                onDragEnd={r => this.onDragEnd(r)}
-                template={this.state.currentCardType ? this.state.currentCardType.displayFormat : ''}
-                onClick={c => this.displayCard(c)}
-            />;
-        }
-
-        return <VirtualCardList
-            rowCount={this.state.itemCount}
-            scrollTop={this.state.scrollTop}
-            cache={this.cache}
-            isRowLoaded={x => this.isRowLoaded(x)}
-            loadMoreRows={x => this.loadMoreRows(x)}
-            onClick={c => this.displayCard(c)}
-            debouncedHandleScroll={x => this.debouncedHandleScroll(x)}
-            items={this.state.items}
-            template={this.state.currentCardType ? this.state.currentCardType.displayFormat : ''}
-        />;
     }
 
     private getTabValues(currentCardType: CardTypeRecord): string[] {
@@ -230,7 +152,7 @@ class CardsPage extends React.Component<PageProps, State> {
                 <Divider />
                 <DraggableCardList
                     items={groupedMap}
-                    onDragEnd={r => this.onDragEnd(r)}
+                    onDragEnd={r => false}
                     template={this.state.currentCardType ? this.state.currentCardType.displayFormat : ''}
                     onClick={c => this.displayCard(c)}
                 />
@@ -249,27 +171,38 @@ class CardsPage extends React.Component<PageProps, State> {
                     secondaryCommands={this.getSecondaryCommands()}
                 />
 
-                {this.props.tabIndex === 0 &&
+                {/* {this.props.tabIndex === 0 &&
                     <Paper className={this.props.classes.content}>
                         <SearchEdit value={this.state.searchValueText}
                             onChange={value => {
                                 this.setState({ searchValueText: value });
-                                // this.debouncedSearch();
                                 this.props.setSearchValue(value);
                             }} />
-                        {this.renderCardList()}
+                        <CardLister
+                            cards={this.props.cards}
+                            cardType={this.state.currentCardType}
+                            searchValue={this.state.searchValueText}
+                            showAllCards={this.props.showAllCards}
+                            onClick={c => this.displayCard(c)}
+                            cardListScrollTop={this.props.cardListScrollTop}
+                            onScrollChange={sp => this.props.setCardListScrollTop(sp)}
+                            onSaveSortOrder={items => this.onSaveSortOrder(items)}
+                        />;
                     </Paper>
                 }
-                {this.props.tabIndex !== 0 &&
-                    <Paper className={this.props.classes.content}>
-                        <CardSelector
-                            sourceCards={this.state.items}
-                            sourceCardType={this.props.currentCardType}
-                            cardType={this.state.tabs[this.props.tabIndex]}
-                            onSelectCard={(card, cardType, cards) => this.handleCardSelection(card, cardType, cards)}
-                        />
-                    </Paper>
-                }
+                {this.props.tabIndex !== 0 && */}
+                <Paper className={this.props.classes.content}>
+                    <CardSelector
+                        sourceCards={this.props.cards.filter(x => !x.isClosed).toArray()}
+                        sourceCardType={this.props.currentCardType}
+                        cardType={this.state.tabs[this.props.tabIndex]}
+                        scrollTop={this.props.cardListScrollTop}
+                        onScrollChange={sp => this.props.setCardListScrollTop(sp)}
+                        onSaveSortOrder={items => this.onSaveSortOrder(items)}
+                        onSelectCard={(card, cardType, cards) => this.handleCardSelection(card, cardType, cards)}
+                    />
+                </Paper>
+                {/* } */}
                 {this.state.tabs.length > 1 &&
                     <div className={this.props.classes.tabBar}>
                         <AppBar position="static" color="default" >
@@ -287,35 +220,6 @@ class CardsPage extends React.Component<PageProps, State> {
                                 }
                             </Tabs>
                         </AppBar></div>}
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'right',
-                    }}
-                    open={this.state.snackbarOpen}
-                    onClose={this.handleSnackbarClose}
-                    SnackbarContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<span id="message-id">Sort Order changed</span>}
-                    action={[
-                        <Button key="save" color="secondary" size="small"
-                            onClick={e => {
-                                this.saveSortOrder(this.state.items);
-                                this.handleSnackbarClose(e);
-                            }}>
-                            Save
-                        </Button>,
-                        <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="inherit"
-                            onClick={this.handleSnackbarClose}
-                        >
-                            <Icon>close</Icon>
-                        </IconButton>,
-                    ]}
-                />
             </div>
         );
     }
@@ -367,26 +271,6 @@ class CardsPage extends React.Component<PageProps, State> {
             }
         ];
         return result;
-    }
-
-    onDragEnd(result: any) {
-        // dropped outside the list
-        if (!result.destination) {
-            return;
-        }
-
-        if (result.source.index === result.destination.index) { return; }
-
-        let items = reorder(
-            this.state.items,
-            result.source.index,
-            result.destination.index
-        );
-
-        this.setState({
-            items,
-            snackbarOpen: true
-        });
     }
 }
 

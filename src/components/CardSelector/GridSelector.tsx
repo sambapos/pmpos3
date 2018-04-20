@@ -1,19 +1,23 @@
 import * as React from 'react';
-import * as _ from 'lodash';
-import { Map as IMap } from 'immutable';
+// import * as _ from 'lodash';
+import { List } from 'immutable';
 import CardSelectorButton from './CardSelectorButton';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import decorate, { Style } from './style';
 import SearchEdit from '../SearchEdit';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 import { CardList } from 'pmpos-modules';
-import DraggableCardList from '../../components/DraggableCardList';
+// import DraggableCardList from '../../components/DraggableCardList';
+import CardLister from './CardLister';
 
 interface GridSelectorProps {
     cards: CardRecord[];
     cardType: CardTypeRecord;
     sourceCardType: CardTypeRecord;
     sourceCards: CardRecord[];
+    scrollTop: number;
+    onScrollChange?: (scrollTop: number) => void;
+    onSaveSortOrder?: (items: any[]) => void;
     onSelectCard?: (selectedCard: CardRecord, cardType: CardTypeRecord, cards: CardRecord[]) => void;
 }
 
@@ -37,17 +41,43 @@ class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof 
         }
     }
     getCardList(
-        cards: CardRecord[]
+        cards: List<CardRecord>
     ) {
-        let groupedMap = IMap<string, any[]>(_.groupBy(cards, x => x.category));
-        return <>
-            <DraggableCardList
-                items={groupedMap}
-                onDragEnd={r => false}
-                template={this.props.cardType.displayFormat}
-                onClick={c => this.props.onSelectCard &&
-                    this.props.onSelectCard(c, this.props.cardType, [])}
-            /></>;
+        return <CardLister
+            cards={cards}
+            searchValue={this.state.searchValue}
+            showAllCards={false}
+            cardType={this.props.sourceCardType}
+            onClick={c => {
+                let sc: any[] = [];
+                if (this.props.sourceCardType.name === this.props.cardType.name) {
+                    sc.push(c);
+                }
+                if (this.props.onSelectCard) {
+                    this.props.onSelectCard(c, this.props.cardType, sc);
+                }
+            }}
+            cardListScrollTop={this.props.scrollTop}
+            onScrollChange={st => this.props.onScrollChange && this.props.onScrollChange(st)}
+            onSaveSortOrder={items => this.props.onSaveSortOrder && this.props.onSaveSortOrder(items)}
+        />;
+        // let groupedMap = IMap<string, any[]>(_.groupBy(cards, x => x.category));
+        // return <>
+        //     <DraggableCardList
+        //         items={groupedMap}
+        //         onDragEnd={r => false}
+        //         template={this.props.cardType.displayFormat}
+        //         onClick={c => {
+        //             let sc: any[] = [];
+        //             if (this.props.sourceCardType.name === this.props.cardType.name) {
+        //                 sc.push(c);
+        //             }
+        //             if (this.props.onSelectCard) {
+        //                 this.props.onSelectCard(c, this.props.cardType, sc);
+        //             }
+        //         }}
+        //     />
+        // </>;
     }
     getButtonList(cards: CardRecord[]) {
         return cards.map(card =>
@@ -60,8 +90,11 @@ class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof 
             />);
     }
     getList() {
+        if (this.props.cardType.name === this.props.sourceCardType.name) {
+            return this.getCardList(List<CardRecord>(this.props.sourceCards));
+        }
         if (this.state.items !== this.props.cards) {
-            return this.getCardList(this.state.items);
+            return this.getCardList(List<CardRecord>(this.state.items));
         }
         return this.getButtonList(this.state.items);
     }

@@ -22,6 +22,7 @@ const CardSelectorPage = (props: CardSelectorPagePropType) => {
         sourceCardType={props.currentCardType}
         cardType={props.cardType}
         onSelectCard={c => props.onSelectCard(c)}
+        scrollTop={0}
     />;
 };
 
