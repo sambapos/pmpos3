@@ -349,7 +349,8 @@ export const actionCreators = {
             .then(commitActions => {
                 let pendingActions = state.pendingActions.concat(commitActions);
                 if (pendingActions.count() > 0) {
-                    let processedActions = pendingActions.map(a => cardOperations.processPendingAction(a));
+                    let processedActions = pendingActions
+                        .map(a => cardOperations.processPendingAction(a));
                     createAndPostCommit(getState(), state.currentCard, processedActions);
                 }
                 dispatch({

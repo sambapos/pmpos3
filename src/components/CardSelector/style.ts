@@ -34,7 +34,7 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         margin: 2,
         fontSize: '1.4em',
         maxWidth: '48.5%',
-        maxHeight: '50%',
+        maxHeight: '53%',
         [breakpoints.up('sm')]: {
             margin: 4,
             minWidth: 100

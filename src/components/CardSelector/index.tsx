@@ -38,7 +38,7 @@ const CardSelector = (props: CardSelectorProps & WithStyles<keyof Style>) => {
         }
     }
     return <GridSelector cards={cardList} sourceCards={props.sourceCards}
-        cardType={cardType} onSelectCard={props.onSelectCard} />;
+        cardType={cardType} sourceCardType={props.sourceCardType} onSelectCard={props.onSelectCard} />;
 };
 
 export default decorate(CardSelector);

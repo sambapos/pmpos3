@@ -6,8 +6,6 @@ export interface Style {
     root: any;
     formControl: any;
     search: any;
-    draggableList: any;
-    sectionList: any;
     tabBar: any;
 }
 
@@ -19,14 +17,6 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
             width: '100%',
             alignSelf: 'center'
         }
-    },
-    draggableList: {
-        overflow: 'auto',
-        backgroundColor: palette.background.paper
-    },
-    sectionList: {
-        padding: 0,
-        backgroundColor: palette.background.paper
     },
     card: {
         minWidth: 275,

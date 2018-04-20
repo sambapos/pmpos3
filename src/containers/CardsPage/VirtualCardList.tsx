@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { InfiniteLoader, List, AutoSizer, CellMeasurer } from 'react-virtualized';
-import CardItem from './CardItem';
+import CardItem from '../../components/CardItem';
 
 const itemCount = 50;
 const itemThresold = 25;

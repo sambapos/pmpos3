@@ -2,13 +2,15 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as _ from 'lodash';
 import * as CardStore from '../../store/Cards';
+import * as ClientStore from '../../store/Client';
 import * as shortid from 'shortid';
+import * as Extender from '../../lib/Extender';
 import { reorder } from '../../lib/helpers';
 import { RouteComponentProps } from 'react-router';
 import { CellMeasurerCache } from 'react-virtualized';
 import {
     WithStyles, Paper, Snackbar, Button, IconButton, Icon,
-    AppBar, Tab, Tabs
+    AppBar, Tab, Tabs, DialogTitle, Divider, DialogActions
 } from 'material-ui';
 import SearchEdit from '../../components/SearchEdit';
 import decorate, { Style } from './style';
@@ -17,7 +19,7 @@ import { Map as IMap, List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import * as h from './helpers';
 import VirtualCardList from './VirtualCardList';
-import DraggableCardList from './DraggableCardList';
+import DraggableCardList from '../../components/DraggableCardList';
 import CardSelector from '../../components/CardSelector';
 import { CardRecord, CardTypeRecord, ActionRecord, CardTag, CardTagRecord } from 'pmpos-models';
 import { CardList } from 'pmpos-modules';
@@ -36,6 +38,7 @@ type PageProps =
     }
     & WithStyles<keyof Style>
     & typeof CardStore.actionCreators
+    & typeof ClientStore.actionCreators
     & RouteComponentProps<{}>;
 
 interface State {
@@ -220,6 +223,21 @@ class CardsPage extends React.Component<PageProps, State> {
                 value: selectedCard.name
             };
             this.addNewCard([new CardTagRecord(tag)]);
+        } else if (cards.length > 1) {
+            let groupedMap = IMap<string, any[]>(_.groupBy(cards, x => x.category));
+            this.props.SetModalComponent(<>
+                <DialogTitle>Select {this.state.currentCardType.reference}</DialogTitle>
+                <Divider />
+                <DraggableCardList
+                    items={groupedMap}
+                    onDragEnd={r => this.onDragEnd(r)}
+                    template={this.state.currentCardType ? this.state.currentCardType.displayFormat : ''}
+                    onClick={c => this.displayCard(c)}
+                />
+                <DialogActions>
+                    <Button onClick={() => this.props.SetModalState(false)}>Cancel</Button>
+                </DialogActions>
+            </>);
         }
     }
 
@@ -386,5 +404,5 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 export default decorate(connect(
     mapStateToProps,
-    CardStore.actionCreators
+    Extender.extend(ClientStore.actionCreators, CardStore.actionCreators)
 )(CardsPage));
