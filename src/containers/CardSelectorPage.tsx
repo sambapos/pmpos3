@@ -18,7 +18,8 @@ type CardSelectorPagePropType =
     & typeof CardStore.actionCreators;
 
 const CardSelectorPage = (props: CardSelectorPagePropType) => {
-    return <CardSelector sourceCards={props.cards.filter(x => !x.isClosed).toArray()}
+    return <CardSelector
+        sourceCards={props.cards.filter(x => !x.isClosed)}
         sourceCardType={props.currentCardType}
         cardType={props.cardType}
         onSelectCard={c => props.onSelectCard(c)}

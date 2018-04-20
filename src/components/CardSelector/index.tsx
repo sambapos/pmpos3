@@ -4,9 +4,10 @@ import decorate, { Style } from './style';
 import GridSelector from './GridSelector';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 import { CardList } from 'pmpos-modules';
+import { List } from 'immutable';
 
 interface CardSelectorProps {
-    sourceCards: CardRecord[];
+    sourceCards: List<CardRecord>;
     sourceCardType: CardTypeRecord;
     cardType: string;
     scrollTop: number;
@@ -16,28 +17,32 @@ interface CardSelectorProps {
 }
 
 const CardSelector = (props: CardSelectorProps & WithStyles<keyof Style>) => {
-    let cardList: CardRecord[] = [];
-    let cardCount = CardList.getCount(props.cardType);
+    let cardList: List<CardRecord> = List<CardRecord>();
     let cardType = CardList.getCardTypeByRef(props.cardType) as CardTypeRecord;
     if (!cardType) { return (<div>Card Type `${props.cardType}` not found</div>); }
-    if (cardCount <= 100) {
-        cardList = CardList.getCardsByType(cardType.id).sortBy(x => x.name).toArray();
+    if (cardType.name === props.sourceCardType.name) {
+        cardList = props.sourceCards;
     } else {
-        let tagType = props.sourceCardType.tagTypes.find(x => {
-            let tt = CardList.tagTypes.get(x);
-            return tt !== undefined && tt.cardTypeReferenceName === cardType.reference;
-        });
-        if (tagType) {
-            cardList = props.sourceCards.reduce(
-                (r, c) => {
-                    let tag = c.tags.find(t => t.typeId === tagType);
-                    if (tag) {
-                        let card = CardList.cards.get(tag.cardId);
-                        if (card) { r.push(card); }
-                    }
-                    return r;
-                },
-                [] as CardRecord[]);
+        let cardCount = CardList.getCount(props.cardType);
+        if (cardCount <= 100) {
+            cardList = CardList.getCardsByType(cardType.id).sortBy(x => x.name);
+        } else {
+            let tagType = props.sourceCardType.tagTypes.find(x => {
+                let tt = CardList.tagTypes.get(x);
+                return tt !== undefined && tt.cardTypeReferenceName === cardType.reference;
+            });
+            if (tagType) {
+                cardList = props.sourceCards.reduce(
+                    (r, c) => {
+                        let tag = c.tags.find(t => t.typeId === tagType);
+                        if (tag) {
+                            let card = CardList.cards.get(tag.cardId);
+                            if (card) { r = r.push(card); }
+                        }
+                        return r;
+                    },
+                    List<CardRecord>());
+            }
         }
     }
     return <GridSelector cards={cardList}

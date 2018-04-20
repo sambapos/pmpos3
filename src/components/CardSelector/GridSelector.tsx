@@ -1,5 +1,4 @@
 import * as React from 'react';
-// import * as _ from 'lodash';
 import { List } from 'immutable';
 import CardSelectorButton from './CardSelectorButton';
 import { WithStyles } from 'material-ui/styles/withStyles';
@@ -7,14 +6,13 @@ import decorate, { Style } from './style';
 import SearchEdit from '../SearchEdit';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 import { CardList } from 'pmpos-modules';
-// import DraggableCardList from '../../components/DraggableCardList';
 import CardLister from './CardLister';
 
 interface GridSelectorProps {
-    cards: CardRecord[];
+    cards: List<CardRecord>;
     cardType: CardTypeRecord;
     sourceCardType: CardTypeRecord;
-    sourceCards: CardRecord[];
+    sourceCards: List<CardRecord>;
     scrollTop: number;
     onScrollChange?: (scrollTop: number) => void;
     onSaveSortOrder?: (items: any[]) => void;
@@ -23,7 +21,7 @@ interface GridSelectorProps {
 
 interface GridSelectorState {
     searchValue: string;
-    items: CardRecord[];
+    items: List<CardRecord>;
 }
 
 class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof Style>, GridSelectorState> {
@@ -85,7 +83,7 @@ class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof 
                 key={card.id}
                 card={card}
                 cardType={this.props.cardType as CardTypeRecord}
-                sourceCards={this.props.sourceCards}
+                sourceCards={this.props.sourceCards.toArray()}
                 onSelectCard={this.props.onSelectCard}
             />);
     }
@@ -96,7 +94,7 @@ class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof 
         if (this.state.items !== this.props.cards) {
             return this.getCardList(List<CardRecord>(this.state.items));
         }
-        return this.getButtonList(this.state.items);
+        return this.getButtonList(this.state.items.toArray());
     }
     render() {
         return <div className={this.props.classes.content}>

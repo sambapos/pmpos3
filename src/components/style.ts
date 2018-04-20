@@ -13,6 +13,7 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         marginTop: spacing.unit
     },
     draggableList: {
+        flex: 1,
         overflow: 'auto',
         backgroundColor: palette.background.paper
     },

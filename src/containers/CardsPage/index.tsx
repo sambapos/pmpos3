@@ -10,13 +10,11 @@ import {
     WithStyles, Paper, Button,
     AppBar, Tab, Tabs, DialogTitle, Divider, DialogActions
 } from 'material-ui';
-// import SearchEdit from '../../components/SearchEdit';
 import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import * as h from './helpers';
-// import CardLister from './CardLister';
 import DraggableCardList from '../../components/DraggableCardList';
 import CardSelector from '../../components/CardSelector';
 import { CardRecord, CardTypeRecord, CardTag, CardTagRecord, ActionRecord } from 'pmpos-models';
@@ -170,30 +168,9 @@ class CardsPage extends React.Component<PageProps, State> {
                     title={this.state.currentCardType ? this.state.currentCardType.name : 'Cards'}
                     secondaryCommands={this.getSecondaryCommands()}
                 />
-
-                {/* {this.props.tabIndex === 0 &&
-                    <Paper className={this.props.classes.content}>
-                        <SearchEdit value={this.state.searchValueText}
-                            onChange={value => {
-                                this.setState({ searchValueText: value });
-                                this.props.setSearchValue(value);
-                            }} />
-                        <CardLister
-                            cards={this.props.cards}
-                            cardType={this.state.currentCardType}
-                            searchValue={this.state.searchValueText}
-                            showAllCards={this.props.showAllCards}
-                            onClick={c => this.displayCard(c)}
-                            cardListScrollTop={this.props.cardListScrollTop}
-                            onScrollChange={sp => this.props.setCardListScrollTop(sp)}
-                            onSaveSortOrder={items => this.onSaveSortOrder(items)}
-                        />;
-                    </Paper>
-                }
-                {this.props.tabIndex !== 0 && */}
-                <Paper className={this.props.classes.content}>
+                {this.state.currentCardType && <Paper className={this.props.classes.content}>
                     <CardSelector
-                        sourceCards={this.props.cards.filter(x => !x.isClosed).toArray()}
+                        sourceCards={this.props.cards.filter(x => !x.isClosed)}
                         sourceCardType={this.props.currentCardType}
                         cardType={this.state.tabs[this.props.tabIndex]}
                         scrollTop={this.props.cardListScrollTop}
@@ -201,8 +178,7 @@ class CardsPage extends React.Component<PageProps, State> {
                         onSaveSortOrder={items => this.onSaveSortOrder(items)}
                         onSelectCard={(card, cardType, cards) => this.handleCardSelection(card, cardType, cards)}
                     />
-                </Paper>
-                {/* } */}
+                </Paper>}
                 {this.state.tabs.length > 1 &&
                     <div className={this.props.classes.tabBar}>
                         <AppBar position="static" color="default" >
