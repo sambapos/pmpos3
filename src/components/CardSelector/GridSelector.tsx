@@ -21,13 +21,14 @@ interface GridSelectorProps {
 
 interface GridSelectorState {
     searchValue: string;
+    scrollTop: number;
     items: List<CardRecord>;
 }
 
 class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof Style>, GridSelectorState> {
     constructor(props: GridSelectorProps & WithStyles<keyof Style>) {
         super(props);
-        this.state = { searchValue: '', items: props.cards };
+        this.state = { searchValue: '', items: props.cards, scrollTop: 0 };
     }
     updateSearchValue(searchValue: string) {
         let items = searchValue ? CardList.findCards(this.props.cardType, searchValue) : this.props.cards;
@@ -38,13 +39,9 @@ class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof 
             this.setState({ items: props.cards, searchValue: '' });
         }
     }
-    getCardList(
-        cards: List<CardRecord>
-    ) {
+    getCardList() {
         return <CardLister
-            cards={cards}
-            searchValue={this.state.searchValue}
-            showAllCards={false}
+            cards={this.state.items}
             cardType={this.props.sourceCardType}
             onClick={c => {
                 let sc: any[] = [];
@@ -77,8 +74,8 @@ class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof 
         //     />
         // </>;
     }
-    getButtonList(cards: CardRecord[]) {
-        return cards.map(card =>
+    getButtonList() {
+        return this.state.items.toArray().map(card =>
             <CardSelectorButton
                 key={card.id}
                 card={card}
@@ -89,12 +86,12 @@ class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof 
     }
     getList() {
         if (this.props.cardType.name === this.props.sourceCardType.name) {
-            return this.getCardList(List<CardRecord>(this.props.sourceCards));
+            return this.getCardList();
         }
         if (this.state.items !== this.props.cards) {
-            return this.getCardList(List<CardRecord>(this.state.items));
+            return this.getCardList();
         }
-        return this.getButtonList(this.state.items.toArray());
+        return this.getButtonList();
     }
     render() {
         return <div className={this.props.classes.content}>

@@ -12,8 +12,6 @@ import { CardRecord, CardTypeRecord } from 'pmpos-models';
 
 interface CardListProps {
     cards: List<CardRecord>;
-    searchValue: string;
-    showAllCards: boolean;
     cardType: CardTypeRecord;
     cardListScrollTop: number;
     onClick: (c: any) => void;
@@ -22,7 +20,6 @@ interface CardListProps {
 }
 
 interface CardListState {
-    itemCount: number;
     scrollTop: number;
     items: any[];
     snackbarOpen: boolean;
@@ -31,7 +28,7 @@ interface CardListState {
 export default class extends React.Component<CardListProps, CardListState> {
 
     private debouncedHandleScroll;
-    private itemCount = 50;
+    private itemCount = 500;
 
     cache = new CellMeasurerCache({
         defaultWidth: 100,
@@ -41,10 +38,8 @@ export default class extends React.Component<CardListProps, CardListState> {
 
     constructor(props: CardListProps) {
         super(props);
-        let filteredItems = this.getFilteredItems(props.cards, props.searchValue, props.showAllCards);
         this.state = {
-            items: this.getItems(filteredItems, 0, this.itemCount),
-            itemCount: filteredItems.count(),
+            items: this.getItems(props.cards, 0, this.itemCount),
             scrollTop: props.cardListScrollTop,
             snackbarOpen: false
         };
@@ -63,20 +58,15 @@ export default class extends React.Component<CardListProps, CardListState> {
 
     componentWillReceiveProps(nextProps: CardListProps) {
         if (nextProps.cardType.name !== this.props.cardType.name) {
+            console.log('CLEAR CACHE');
             this.cache.clearAll();
-        }
-        if (this.props.searchValue !== nextProps.searchValue
-            || nextProps.cardType.name !== this.props.cardType.name) {
             this.setState({ scrollTop: 0 });
         }
         if (this.state.items.length === 0
-            || nextProps.cards !== this.props.cards
-            || nextProps.searchValue !== this.props.searchValue
-            || nextProps.showAllCards !== this.props.showAllCards) {
-            let filteredItems = this.getFilteredItems(nextProps.cards, nextProps.searchValue, nextProps.showAllCards);
+            || nextProps.cards !== this.props.cards) {
             this.setState({
-                items: this.getItems(filteredItems, 0, this.itemCount),
-                itemCount: filteredItems.count(),
+                items: this.getItems(nextProps.cards, 0, this.itemCount),
+                scrollTop: 0
             });
         }
     }
@@ -90,18 +80,11 @@ export default class extends React.Component<CardListProps, CardListState> {
     }
 
     private loadMoreRows({ startIndex, stopIndex }: any) {
-        let filteredItems = this.getFilteredItems(this.props.cards, this.props.searchValue, this.props.showAllCards);
-        let items = this.state.items.concat(this.getItems(filteredItems, startIndex, stopIndex - startIndex + 1));
-        this.setState({ items, itemCount: filteredItems.count() });
-    }
-
-    getFilteredItems(items: List<CardRecord>, searchValue: string, showClosedCards: boolean) {
-        return items.filter(x =>
-            searchValue
-            || showClosedCards
-            || !x.isClosed)
-            .filter(x => !searchValue
-                || Boolean(x.tags.find(t => t.value.toLowerCase().includes(searchValue.toLowerCase()))));
+        console.log('LMR');
+        console.time();
+        let items = this.state.items.concat(this.getItems(this.props.cards, startIndex, stopIndex - startIndex + 1));
+        this.setState({ items });
+        console.timeEnd();
     }
 
     getItems(cards: List<CardRecord>, startIndex: number, itemCount: number) {
@@ -139,7 +122,7 @@ export default class extends React.Component<CardListProps, CardListState> {
     }
 
     getCardList() {
-        if (!this.props.searchValue && this.state.itemCount < this.itemCount * 2) {
+        if (this.props.cards.count() < this.itemCount * 2) {
             let groupedMap = IMap<string, any[]>(_.groupBy(this.state.items, x => x.category));
             return <DraggableCardList
                 items={groupedMap}
@@ -150,7 +133,7 @@ export default class extends React.Component<CardListProps, CardListState> {
         }
 
         return <VirtualCardList
-            rowCount={this.state.itemCount}
+            rowCount={this.props.cards.count()}
             scrollTop={this.state.scrollTop}
             cache={this.cache}
             isRowLoaded={x => this.isRowLoaded(x)}
