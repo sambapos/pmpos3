@@ -16,46 +16,61 @@ interface CardSelectorProps {
     onSelectCard: (selectedCard: CardRecord, cardType: CardTypeRecord, cards: CardRecord[]) => void;
 }
 
-const CardSelector = (props: CardSelectorProps & WithStyles<keyof Style>) => {
-    let cardList: List<CardRecord> = List<CardRecord>();
-    let cardType = props.cardType
-        ? CardList.getCardTypeByRef(props.cardType) as CardTypeRecord
-        : props.sourceCardType;
-    if (!cardType) { return (<div>Card Type `${props.cardType}` not found</div>); }
-    if (cardType.name === props.sourceCardType.name) {
-        cardList = props.sourceCards;
-    } else if (props.cardType) {
-        let cardCount = CardList.getCount(props.cardType);
-        if (cardCount <= 100) {
-            cardList = CardList.getCardsByType(cardType.id).sortBy(x => x.name);
-        } else {
-            let tagType = props.sourceCardType.tagTypes.find(x => {
-                let tt = CardList.tagTypes.get(x);
-                return tt !== undefined && tt.cardTypeReferenceName === cardType.reference;
-            });
-            if (tagType) {
-                cardList = props.sourceCards.reduce(
-                    (r, c) => {
-                        let tag = c.tags.find(t => t.typeId === tagType);
-                        if (tag) {
-                            let card = CardList.cards.get(tag.cardId);
-                            if (card) { r = r.push(card); }
-                        }
-                        return r;
-                    },
-                    List<CardRecord>());
+type Props = CardSelectorProps & WithStyles<keyof Style>;
+
+interface CardSelectorState {
+
+}
+
+class CardSelector extends React.Component<Props, CardSelectorState> {
+    getCardList(cardType: CardTypeRecord) {
+        let cardList: List<CardRecord> = List<CardRecord>();
+        if (cardType.name === this.props.sourceCardType.name) {
+            cardList = this.props.sourceCards;
+        } else if (this.props.cardType) {
+            let cardCount = CardList.getCount(this.props.cardType);
+            if (cardCount <= 100) {
+                cardList = CardList.getCardsByType(cardType.id).sortBy(x => x.name);
+            } else {
+                let tagType = this.props.sourceCardType.tagTypes.find(x => {
+                    let tt = CardList.tagTypes.get(x);
+                    return tt !== undefined && tt.cardTypeReferenceName === cardType.reference;
+                });
+                if (tagType) {
+                    cardList = this.props.sourceCards.reduce(
+                        (r, c) => {
+                            let tag = c.tags.find(t => t.typeId === tagType);
+                            if (tag) {
+                                let card = CardList.cards.get(tag.cardId);
+                                if (card) { r = r.push(card); }
+                            }
+                            return r;
+                        },
+                        List<CardRecord>());
+                }
             }
         }
+        return cardList;
     }
-    return <CardItemSelector cards={cardList}
-        sourceCards={props.sourceCards}
-        cardType={cardType}
-        sourceCardType={props.sourceCardType}
-        onSelectCard={props.onSelectCard}
-        scrollTop={props.scrollTop || 0}
-        onScrollChange={props.onScrollChange}
-        onSaveSortOrder={props.onSaveSortOrder}
-    />;
-};
+
+    render() {
+        let cardType = this.props.cardType
+            ? CardList.getCardTypeByRef(this.props.cardType) as CardTypeRecord
+            : this.props.sourceCardType;
+        if (!cardType) { return (<div>Card Type `${this.props.cardType}` not found</div>); }
+
+        let cardList = this.getCardList(cardType);
+
+        return <CardItemSelector cards={cardList}
+            sourceCards={this.props.sourceCards}
+            cardType={cardType}
+            sourceCardType={this.props.sourceCardType}
+            onSelectCard={this.props.onSelectCard}
+            scrollTop={this.props.scrollTop || 0}
+            onScrollChange={this.props.onScrollChange}
+            onSaveSortOrder={this.props.onSaveSortOrder}
+        />;
+    }
+}
 
 export default decorate(CardSelector);
