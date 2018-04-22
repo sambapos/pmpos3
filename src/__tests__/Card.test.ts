@@ -36,7 +36,7 @@ it('tags source value', () => {
         name: 'Product',
         value: 'Blue Stamp',
         quantity: 1,
-        amount: 5,
+        price: 5,
         source: 'Book'
     });
     expect(c.balance).toEqual(5);
@@ -47,7 +47,7 @@ it('tranfers tag value', () => {
         name: 'Product',
         value: 'Blue Stamp',
         quantity: 1,
-        amount: 5,
+        price: 5,
         source: 'Book',
         target: 'Other Book'
     });
@@ -60,14 +60,14 @@ it('sums multiple card balances', () => {
         name: 'Product',
         value: 'Blue Stamp',
         quantity: 1,
-        amount: 5,
+        price: 5,
         source: 'Book'
     }));
     c = c.sub('2', card => card.tag({
         name: 'Product',
         value: 'Green Stamp',
         quantity: 1,
-        amount: 10,
+        price: 10,
         source: 'Book'
     }));
     expect(c.balance).toEqual(15);

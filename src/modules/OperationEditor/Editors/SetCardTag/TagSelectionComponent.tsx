@@ -14,7 +14,7 @@ export default (props: EditorProperties<{ tagType: TagTypeRecord, tag: CardTagRe
                 : `Set ${tagType.tagName || tagType.cardTypeReferenceName}`
         }
         </DialogTitle>
-        <div style={{ margin: 4 }}>
+        <div style={{ margin: 4, overflow: 'auto' }}>
             <CardSelectorPage
                 cardType={tagType.cardTypeReferenceName}
                 onSelectCard={card => {

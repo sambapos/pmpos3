@@ -6,11 +6,11 @@ it('calculates wallet balance', () => {
 
     let cards = IMap<string, CardRecord>();
     cards = cards.set('1', new CardRecord({ id: '1' })
-        .tag({ name: 'P', value: 'Cash', quantity: 5, unit: 'TL', amount: 1, target: 'Wallet' }));
+        .tag({ name: 'P', value: 'Cash', quantity: 5, unit: 'TL', price: 1, target: 'Wallet' }));
     cards = cards.set('2', new CardRecord({ id: '2' })
-        .tag({ name: 'P', value: 'Cash', quantity: 15, unit: 'TL', amount: 1, target: 'Wallet' }));
+        .tag({ name: 'P', value: 'Cash', quantity: 15, unit: 'TL', price: 1, target: 'Wallet' }));
     cards = cards.set('3', new CardRecord({ id: '3' })
-        .tag({ name: 'P', value: 'Cash', quantity: 10, unit: 'TL', amount: 1, target: 'Wallet' }));
+        .tag({ name: 'P', value: 'Cash', quantity: 10, unit: 'TL', price: 1, target: 'Wallet' }));
 
     let tags = CardList.getTagsFrom(['wallet'], cards);
     let debit = tags.reduce((r, t) => r += t.getDebitFor('Wallet'), 0);
@@ -20,7 +20,7 @@ it('calculates wallet balance', () => {
     expect(credit).toEqual(0);
 
     cards = cards.set('4', new CardRecord({ id: '4' })
-        .tag({ name: 'P', value: 'Cash', quantity: 10, unit: 'TL', amount: 1, source: 'Wallet', target: 'Supplier' }));
+        .tag({ name: 'P', value: 'Cash', quantity: 10, unit: 'TL', price: 1, source: 'Wallet', target: 'Supplier' }));
 
     tags = CardList.getTagsFrom(['wallet'], cards);
     debit = tags.reduce((r, t) => r += t.getDebitFor('Wallet'), 0);
@@ -41,13 +41,13 @@ it('calculates wallet balance', () => {
 it('calculates inventory and profit', () => {
     let cards = IMap<string, CardRecord>();
     cards = cards.set('1', new CardRecord({ id: '1' })
-        .tag({ name: 'P', value: 'Kola', quantity: 10, amount: 5, target: 'Bar' }));
+        .tag({ name: 'P', value: 'Kola', quantity: 10, price: 5, target: 'Bar' }));
     cards = cards.set('2', new CardRecord({ id: '2' })
-        .tag({ name: 'P', value: 'Kola', quantity: 40, amount: 5, target: 'Bar' }));
+        .tag({ name: 'P', value: 'Kola', quantity: 40, price: 5, target: 'Bar' }));
     cards = cards.set('3', new CardRecord({ id: '3' })
-        .tag({ name: 'P', value: 'Kola', quantity: 2, amount: 6, source: 'Bar' }));
+        .tag({ name: 'P', value: 'Kola', quantity: 2, price: 6, source: 'Bar' }));
     cards = cards.set('4', new CardRecord({ id: '4' })
-        .tag({ name: 'P', value: 'Fanta', quantity: 10, amount: 5, target: 'Bar' }));
+        .tag({ name: 'P', value: 'Fanta', quantity: 10, price: 5, target: 'Bar' }));
 
     let tags = CardList.getTagsFrom(['bar'], cards);
     let inTotal = tags.reduce((r, t) => r += t.tag.getInQuantityFor('Kola'), 0);
@@ -75,8 +75,8 @@ it('calculates customer balance', () => {
     let invoice1 = new CardRecord({ id: '1' })
         .tag('Name', 'A0001')
         .tag('Customer', 'Emre Eren')
-        .sub('1a', card => card.tag({ name: 'P', value: 'Kola', quantity: 2, amount: 6, source: 'Bar' }))
-        .sub('1b', card => card.tag({ name: 'P', value: 'Çay', quantity: 1, amount: 4, source: 'Bar' }));
+        .sub('1a', card => card.tag({ name: 'P', value: 'Kola', quantity: 2, price: 6, source: 'Bar' }))
+        .sub('1b', card => card.tag({ name: 'P', value: 'Çay', quantity: 1, price: 4, source: 'Bar' }));
 
     cards = cards.set(invoice1.id, invoice1);
 
@@ -86,16 +86,16 @@ it('calculates customer balance', () => {
     let invoice2 = new CardRecord({ id: '2' })
         .tag('Name', 'A0002')
         .tag('Customer', 'Emre Eren')
-        .sub('2a', card => card.tag({ name: 'P', value: 'Fanta', quantity: 2, amount: 6, source: 'Bar' }))
-        .sub('2b', card => card.tag({ name: 'P', value: 'Çay', quantity: 1, amount: 4, source: 'Bar' }));
+        .sub('2a', card => card.tag({ name: 'P', value: 'Fanta', quantity: 2, price: 6, source: 'Bar' }))
+        .sub('2b', card => card.tag({ name: 'P', value: 'Çay', quantity: 1, price: 4, source: 'Bar' }));
 
     cards = cards.set(invoice2.id, invoice2);
 
     let invoice3 = new CardRecord({ id: '3' })
         .tag('Name', 'A0003')
         .tag('Customer', 'Hasan Bey')
-        .sub('3a', card => card.tag({ name: 'P', value: 'Fanta', quantity: 2, amount: 6, source: 'Bar' }))
-        .sub('3b', card => card.tag({ name: 'P', value: 'Çay', quantity: 1, amount: 4, source: 'Bar' }));
+        .sub('3a', card => card.tag({ name: 'P', value: 'Fanta', quantity: 2, price: 6, source: 'Bar' }))
+        .sub('3b', card => card.tag({ name: 'P', value: 'Çay', quantity: 1, price: 4, source: 'Bar' }));
 
     cards = cards.set(invoice3.id, invoice3);
 
@@ -112,7 +112,7 @@ it('calculates customer balance', () => {
     expect(credit).toEqual(0);
 
     invoice1 = invoice1.sub('1c', card => card.tag(
-        { name: 'O', value: 'Nakit', quantity: 16, unit: 'TL', amount: 1, target: 'Kasa' }));
+        { name: 'O', value: 'Nakit', quantity: 16, unit: 'TL', price: 1, target: 'Kasa' }));
     expect(invoice1.balance).toEqual(0);
     cards = cards.set(invoice1.id, invoice1);
 
@@ -123,7 +123,7 @@ it('calculates customer balance', () => {
     expect(credit).toEqual(16);
 
     invoice2 = invoice2.sub('2c', card => card.tag(
-        { name: 'O', value: 'Account', amount: 16, target: 'Emre Eren' }
+        { name: 'O', value: 'Account', price: 16, target: 'Emre Eren' }
     ));
     expect(invoice2.balance).toEqual(0);
     cards = cards.set(invoice2.id, invoice2);
@@ -137,7 +137,7 @@ it('calculates customer balance', () => {
     let receipt1 = new CardRecord({ id: '4' })
         .tag('Name', 'R0001')
         .sub('R1b', card => card.tag(
-            { name: 'P', value: 'Nakit', quantity: 16, amount: 1, unit: 'TL', source: 'Emre Eren', target: 'Kasa' }));
+            { name: 'P', value: 'Nakit', quantity: 16, price: 1, unit: 'TL', source: 'Emre Eren', target: 'Kasa' }));
     cards = cards.set(receipt1.id, receipt1);
     expect(receipt1.balance).toEqual(0);
 

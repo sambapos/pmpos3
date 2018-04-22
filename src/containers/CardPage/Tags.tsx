@@ -18,7 +18,7 @@ class CardTagWrapper {
     get value() { return this.tag.value; }
     get source() { return this.tag.source; }
     get target() { return this.tag.target; }
-    get amount() { return this.tag.amount; }
+    get price() { return this.tag.price; }
     get quantity() { return this.tag.quantity; }
     get balance() { return this.card.getTagTotal(this.tag); }
 }
@@ -81,8 +81,8 @@ const getDisplayFor = (
 
 const getTagItemClassName = (
     tag: CardTagRecord, tagType: TagTypeRecord | undefined, classes: Record<keyof Style, string>) => {
-    if (!tagType) { return tag.amount !== 0 || !tag.name.startsWith('_') ? classes.tagItemPrice : classes.tagItem; }
-    return !tagType.icon || tagType.icon === '_' || tag.amount > 0
+    if (!tagType) { return tag.price !== 0 || !tag.name.startsWith('_') ? classes.tagItemPrice : classes.tagItem; }
+    return !tagType.icon || tagType.icon === '_' || tag.price > 0
         ? classes.tagItemPrice
         : classes.tagItem;
 };
