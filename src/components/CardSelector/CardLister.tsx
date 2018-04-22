@@ -1,10 +1,8 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import { List } from 'immutable';
-import { Snackbar, Button, IconButton, Icon } from 'material-ui';
 import { CellMeasurerCache } from 'react-virtualized';
 import VirtualCardList from './VirtualCardList';
-import { reorder } from '../../lib/helpers';
 import DraggableCardList from './DraggableCardList';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 
@@ -14,13 +12,12 @@ interface CardListProps {
     cardListScrollTop: number;
     onClick: (c: any) => void;
     onScrollChange: (sp: number) => void;
-    onSaveSortOrder: (items: any[]) => void;
+    onSaveSortOrder: (items: CardRecord[]) => void;
 }
 
 interface CardListState {
     scrollTop: number;
     items: any[];
-    snackbarOpen: boolean;
 }
 
 export default class extends React.Component<CardListProps, CardListState> {
@@ -39,15 +36,7 @@ export default class extends React.Component<CardListProps, CardListState> {
         this.state = {
             items: this.getItems(props.cards, 0, this.itemCount),
             scrollTop: props.cardListScrollTop,
-            snackbarOpen: false
         };
-    }
-
-    handleSnackbarClose = (event, reason?) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        this.setState({ snackbarOpen: false });
     }
 
     componentWillMount() {
@@ -90,26 +79,6 @@ export default class extends React.Component<CardListProps, CardListState> {
         return result;
     }
 
-    onDragEnd(result: any) {
-        // dropped outside the list
-        if (!result.destination) {
-            return;
-        }
-
-        if (result.source.index === result.destination.index) { return; }
-
-        let items = reorder(
-            this.state.items,
-            result.source.index,
-            result.destination.index
-        );
-
-        this.setState({
-            items,
-            snackbarOpen: true
-        });
-    }
-
     handleOnClick(c: any) {
         this.props.onScrollChange(this.state.scrollTop);
         this.props.onClick(c);
@@ -119,9 +88,9 @@ export default class extends React.Component<CardListProps, CardListState> {
         if (this.props.cards.count() < this.itemCount * 2) {
             return <DraggableCardList
                 items={this.state.items}
-                onDragEnd={r => this.onDragEnd(r)}
                 template={this.props.cardType ? this.props.cardType.displayFormat : ''}
                 onClick={c => this.handleOnClick(c)}
+                onSaveSortOrder={this.props.onSaveSortOrder}
             />;
         }
 
@@ -139,37 +108,6 @@ export default class extends React.Component<CardListProps, CardListState> {
     }
 
     render() {
-        return <>
-            {this.getCardList()}
-            <Snackbar
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                }}
-                open={this.state.snackbarOpen}
-                onClose={this.handleSnackbarClose}
-                SnackbarContentProps={{
-                    'aria-describedby': 'message-id',
-                }}
-                message={<span id="message-id">Sort Order changed</span>}
-                action={[
-                    <Button key="save" color="secondary" size="small"
-                        onClick={e => {
-                            this.props.onSaveSortOrder(this.state.items);
-                            this.handleSnackbarClose(e);
-                        }}>
-                        Save
-                        </Button>,
-                    <IconButton
-                        key="close"
-                        aria-label="Close"
-                        color="inherit"
-                        onClick={this.handleSnackbarClose}
-                    >
-                        <Icon>close</Icon>
-                    </IconButton>,
-                ]}
-            />
-        </>;
+        return this.getCardList();
     }
 }

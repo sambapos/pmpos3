@@ -11,7 +11,7 @@ interface CardSelectorProps {
     sourceCardType: CardTypeRecord;
     cardType?: string;
     scrollTop?: number;
-    onSaveSortOrder?: (items: any[]) => void;
+    onSaveSortOrder?: (items: CardRecord[]) => void;
     onScrollChange?: (scrollTop: number) => void;
     onSelectCard?: (selectedCard: CardRecord, cardType: CardTypeRecord, cards: CardRecord[]) => void;
 }

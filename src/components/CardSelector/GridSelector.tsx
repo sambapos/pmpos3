@@ -15,7 +15,7 @@ interface GridSelectorProps {
     sourceCards: List<CardRecord>;
     scrollTop: number;
     onScrollChange?: (scrollTop: number) => void;
-    onSaveSortOrder?: (items: any[]) => void;
+    onSaveSortOrder?: (items: CardRecord[]) => void;
     onSelectCard?: (selectedCard: CardRecord, cardType: CardTypeRecord, cards: CardRecord[]) => void;
 }
 
