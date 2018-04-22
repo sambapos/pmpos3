@@ -166,6 +166,8 @@ class CardsPage extends React.Component<PageProps, State> {
                         sourceCardType={this.props.currentCardType}
                         cardType={this.state.tabs[this.props.tabIndex]}
                         scrollTop={this.props.cardListScrollTop}
+                        searchValue={this.props.searchValue}
+                        onSearchValueChange={sv => this.props.setSearchValue(sv)}
                         onScrollChange={sp => this.props.setCardListScrollTop(sp)}
                         onSaveSortOrder={items => this.onSaveSortOrder(items)}
                         onSelectCard={(card, cardType, cards) => this.handleCardSelection(card, cardType, cards)}
