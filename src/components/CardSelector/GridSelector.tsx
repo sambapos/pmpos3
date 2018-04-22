@@ -30,8 +30,14 @@ class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof 
         super(props);
         this.state = { searchValue: '', items: props.cards, scrollTop: 0 };
     }
+    get isRegularList(): boolean {
+        return this.props.sourceCardType.name === this.props.cardType.name;
+    }
     updateSearchValue(searchValue: string) {
-        let items = searchValue ? CardList.findCards(this.props.cardType, searchValue) : this.props.cards;
+        let items = this.props.cards;
+        if (searchValue) {
+            items = List<CardRecord>(CardList.findCards(this.props.cardType, searchValue));
+        }
         this.setState({ searchValue, items });
     }
     componentWillReceiveProps(props: GridSelectorProps) {
@@ -45,8 +51,11 @@ class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof 
             cardType={this.props.sourceCardType}
             onClick={c => {
                 let sc: any[] = [];
-                if (this.props.sourceCardType.name === this.props.cardType.name) {
+                if (this.isRegularList) {
                     sc.push(c);
+                } else {
+                    sc = this.props.sourceCards
+                        .filter(scs => scs.hasTag(this.props.cardType.reference, c.name)).toArray();
                 }
                 if (this.props.onSelectCard) {
                     this.props.onSelectCard(c, this.props.cardType, sc);
@@ -56,23 +65,6 @@ class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof 
             onScrollChange={st => this.props.onScrollChange && this.props.onScrollChange(st)}
             onSaveSortOrder={items => this.props.onSaveSortOrder && this.props.onSaveSortOrder(items)}
         />;
-        // let groupedMap = IMap<string, any[]>(_.groupBy(cards, x => x.category));
-        // return <>
-        //     <DraggableCardList
-        //         items={groupedMap}
-        //         onDragEnd={r => false}
-        //         template={this.props.cardType.displayFormat}
-        //         onClick={c => {
-        //             let sc: any[] = [];
-        //             if (this.props.sourceCardType.name === this.props.cardType.name) {
-        //                 sc.push(c);
-        //             }
-        //             if (this.props.onSelectCard) {
-        //                 this.props.onSelectCard(c, this.props.cardType, sc);
-        //             }
-        //         }}
-        //     />
-        // </>;
     }
     getButtonList() {
         return this.state.items.toArray().map(card =>
@@ -85,10 +77,7 @@ class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof 
             />);
     }
     getList() {
-        if (this.props.cardType.name === this.props.sourceCardType.name) {
-            return this.getCardList();
-        }
-        if (this.state.items !== this.props.cards) {
+        if (this.isRegularList || this.state.items !== this.props.cards) {
             return this.getCardList();
         }
         return this.getButtonList();

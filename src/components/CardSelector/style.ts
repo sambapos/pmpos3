@@ -5,6 +5,8 @@ export interface Style {
     container: any;
     button: any;
     highlightedButton: any;
+    draggableList: any;
+    sectionList: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
@@ -42,5 +44,14 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     },
     highlightedButton: {
 
+    },
+    draggableList: {
+        flex: 1,
+        overflow: 'auto',
+        backgroundColor: palette.background.paper
+    },
+    sectionList: {
+        padding: 0,
+        backgroundColor: palette.background.paper
     }
 }));

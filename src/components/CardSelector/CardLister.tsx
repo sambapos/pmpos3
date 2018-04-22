@@ -1,13 +1,11 @@
 import * as React from 'react';
-import {
-    Snackbar, Button, IconButton, Icon
-} from 'material-ui';
-import { CellMeasurerCache } from 'react-virtualized';
-import VirtualCardList from '../../components/VirtualCardList';
-import { reorder } from '../../lib/helpers';
 import * as _ from 'lodash';
 import { List, Map as IMap } from 'immutable';
-import DraggableCardList from '../../components/DraggableCardList';
+import { Snackbar, Button, IconButton, Icon } from 'material-ui';
+import { CellMeasurerCache } from 'react-virtualized';
+import VirtualCardList from './VirtualCardList';
+import { reorder } from '../../lib/helpers';
+import DraggableCardList from './DraggableCardList';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 
 interface CardListProps {
@@ -28,7 +26,7 @@ interface CardListState {
 export default class extends React.Component<CardListProps, CardListState> {
 
     private debouncedHandleScroll;
-    private itemCount = 500;
+    private itemCount = 50;
 
     cache = new CellMeasurerCache({
         defaultWidth: 100,
@@ -58,7 +56,6 @@ export default class extends React.Component<CardListProps, CardListState> {
 
     componentWillReceiveProps(nextProps: CardListProps) {
         if (nextProps.cardType.name !== this.props.cardType.name) {
-            console.log('CLEAR CACHE');
             this.cache.clearAll();
             this.setState({ scrollTop: 0 });
         }
@@ -80,11 +77,8 @@ export default class extends React.Component<CardListProps, CardListState> {
     }
 
     private loadMoreRows({ startIndex, stopIndex }: any) {
-        console.log('LMR');
-        console.time();
         let items = this.state.items.concat(this.getItems(this.props.cards, startIndex, stopIndex - startIndex + 1));
         this.setState({ items });
-        console.timeEnd();
     }
 
     getItems(cards: List<CardRecord>, startIndex: number, itemCount: number) {

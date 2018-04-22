@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as h from './helpers';
+import * as h from '../helpers';
 import { Map as IMap } from 'immutable';
 import decorate, { Style } from './style';
 import CardItem from './CardItem';

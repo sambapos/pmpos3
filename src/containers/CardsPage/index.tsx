@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import * as _ from 'lodash';
 import * as shortid from 'shortid';
 import * as CardStore from '../../store/Cards';
 import * as ClientStore from '../../store/Client';
 import * as Extender from '../../lib/Extender';
+import { List } from 'immutable';
 import { RouteComponentProps } from 'react-router';
 import {
     WithStyles, Paper, Button,
@@ -15,7 +15,6 @@ import { ApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import * as h from './helpers';
-import DraggableCardList from '../../components/DraggableCardList';
 import CardSelector from '../../components/CardSelector';
 import { CardRecord, CardTypeRecord, CardTag, CardTagRecord, ActionRecord } from 'pmpos-models';
 import { CardList } from 'pmpos-modules';
@@ -39,7 +38,6 @@ type PageProps =
 
 interface State {
     currentCardType: CardTypeRecord;
-    itemCount: number;
     searchValueText: string;
     tabs: string[];
 }
@@ -47,10 +45,8 @@ interface State {
 class CardsPage extends React.Component<PageProps, State> {
     constructor(props: PageProps) {
         super(props);
-        let filteredItems = h.getFilteredItems(props.cards, props.searchValue, props.showAllCards);
         this.state = {
             currentCardType: props.currentCardType,
-            itemCount: filteredItems.count(),
             searchValueText: props.searchValue,
             tabs: this.getTabValues(props.currentCardType),
         };
@@ -66,10 +62,8 @@ class CardsPage extends React.Component<PageProps, State> {
         if (nextProps.cards !== this.props.cards
             || nextProps.searchValue !== this.props.searchValue
             || nextProps.showAllCards !== this.props.showAllCards) {
-            let filteredItems = h.getFilteredItems(nextProps.cards, nextProps.searchValue, nextProps.showAllCards);
             this.setState({
                 searchValueText: nextProps.searchValue,
-                itemCount: filteredItems.count(),
             });
         }
     }
@@ -144,15 +138,13 @@ class CardsPage extends React.Component<PageProps, State> {
             };
             this.addNewCard([new CardTagRecord(tag)]);
         } else if (cards.length > 1) {
-            let groupedMap = IMap<string, any[]>(_.groupBy(cards, x => x.category));
             this.props.SetModalComponent(<>
                 <DialogTitle>Select {this.state.currentCardType.reference}</DialogTitle>
                 <Divider />
-                <DraggableCardList
-                    items={groupedMap}
-                    onDragEnd={r => false}
-                    template={this.state.currentCardType ? this.state.currentCardType.displayFormat : ''}
-                    onClick={c => this.displayCard(c)}
+                <CardSelector
+                    sourceCards={List<CardRecord>(cards)}
+                    sourceCardType={this.props.currentCardType}
+                    onSelectCard={c => this.displayCard(c)}
                 />
                 <DialogActions>
                     <Button onClick={() => this.props.SetModalState(false)}>Cancel</Button>

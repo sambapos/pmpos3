@@ -9,8 +9,8 @@ import { List } from 'immutable';
 interface CardSelectorProps {
     sourceCards: List<CardRecord>;
     sourceCardType: CardTypeRecord;
-    cardType: string;
-    scrollTop: number;
+    cardType?: string;
+    scrollTop?: number;
     onSaveSortOrder?: (items: any[]) => void;
     onScrollChange?: (scrollTop: number) => void;
     onSelectCard?: (selectedCard: CardRecord, cardType: CardTypeRecord, cards: CardRecord[]) => void;
@@ -18,11 +18,13 @@ interface CardSelectorProps {
 
 const CardSelector = (props: CardSelectorProps & WithStyles<keyof Style>) => {
     let cardList: List<CardRecord> = List<CardRecord>();
-    let cardType = CardList.getCardTypeByRef(props.cardType) as CardTypeRecord;
+    let cardType = props.cardType
+        ? CardList.getCardTypeByRef(props.cardType) as CardTypeRecord
+        : props.sourceCardType;
     if (!cardType) { return (<div>Card Type `${props.cardType}` not found</div>); }
     if (cardType.name === props.sourceCardType.name) {
         cardList = props.sourceCards;
-    } else {
+    } else if (props.cardType) {
         let cardCount = CardList.getCount(props.cardType);
         if (cardCount <= 100) {
             cardList = CardList.getCardsByType(cardType.id).sortBy(x => x.name);
@@ -50,7 +52,7 @@ const CardSelector = (props: CardSelectorProps & WithStyles<keyof Style>) => {
         cardType={cardType}
         sourceCardType={props.sourceCardType}
         onSelectCard={props.onSelectCard}
-        scrollTop={props.scrollTop}
+        scrollTop={props.scrollTop || 0}
         onScrollChange={props.onScrollChange}
         onSaveSortOrder={props.onSaveSortOrder}
     />;
