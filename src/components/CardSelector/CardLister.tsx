@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as _ from 'lodash';
-import { List, Map as IMap } from 'immutable';
+import { List } from 'immutable';
 import { Snackbar, Button, IconButton, Icon } from 'material-ui';
 import { CellMeasurerCache } from 'react-virtualized';
 import VirtualCardList from './VirtualCardList';
@@ -117,9 +117,8 @@ export default class extends React.Component<CardListProps, CardListState> {
 
     getCardList() {
         if (this.props.cards.count() < this.itemCount * 2) {
-            let groupedMap = IMap<string, any[]>(_.groupBy(this.state.items, x => x.category));
             return <DraggableCardList
-                items={groupedMap}
+                items={this.state.items}
                 onDragEnd={r => this.onDragEnd(r)}
                 template={this.props.cardType ? this.props.cardType.displayFormat : ''}
                 onClick={c => this.handleOnClick(c)}

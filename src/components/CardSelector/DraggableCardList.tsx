@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as h from '../helpers';
+import * as _ from 'lodash';
 import { Map as IMap } from 'immutable';
 import decorate, { Style } from './style';
 import CardItem from './CardItem';
@@ -33,61 +34,68 @@ const cardRenderer = (card: any, index: number, onClick: (c: any) => void, templ
     );
 };
 
-// const listRenderer = (cards, onDragEnd, onClick, template) => {
-//     return (<DragDropContext onDragEnd={onDragEnd}>
-//         <Droppable droppableId="droppable">
-//             {(provided, snapshot) => (
-//                 <div
-//                     ref={provided.innerRef}
-//                     style={h.getListStyle(snapshot.isDraggingOver)}
-//                 >
-//                     <List>
-//                         {cards.map((item, index) => cardRenderer(item, index, onClick, template))}
-//                     </List>
-//                     {provided.placeholder}
-//                 </div>
-//             )}
-//         </Droppable>
-//     </DragDropContext>);
-// };
-
 interface DraggableCardListProps {
-    items: IMap<string, any[]>;
+    items: any[];
     onDragEnd: (r: any) => void;
     onClick: (c: any) => void;
     template: string;
 }
 
-const draggableCardList = (props: DraggableCardListProps & WithStyles<keyof Style>) => {
-    let displayCategories = props.items.count() > 1;
-    return <List className={props.classes.draggableList} subheader={<li />}>
-        {props.items.map((values, category) => (
-            <li key={`section-${category}`}>
-                <DragDropContext onDragEnd={props.onDragEnd}>
-                    <Droppable droppableId="droppable">
-                        {(provided, snapshot) => (
-                            <div
-                                ref={provided.innerRef}
-                                style={h.getListStyle(snapshot.isDraggingOver)}
-                            >
-                                <ul className={props.classes.sectionList}>
-                                    {displayCategories && <ListSubheader color="primary">
-                                        {category || 'Uncategorized'}
-                                    </ListSubheader>}
-                                    {values.map(
-                                        (item, index) => cardRenderer(item, index, props.onClick, props.template))}
-                                </ul>
-                                {provided.placeholder}
-                            </div>
-                        )}
-                    </Droppable>
-                </DragDropContext>
-            </li>
-        )).valueSeq().toArray()}
-    </List>;
-};
+type Props = DraggableCardListProps & WithStyles<keyof Style>;
 
-export default decorate(draggableCardList);
+interface DraggableCardListState {
+    items: IMap<string, any[]>;
+}
+
+class DraggableCardList extends React.Component<Props, DraggableCardListState> {
+    constructor(props: Props) {
+        super(props);
+        this.state = { items: this.groupItems(props.items) };
+    }
+    groupItems(items: any[]): IMap<string, any[]> {
+        if (items.length > 0) {
+            let groupedItems = _.groupBy(items, x => x.category);
+            return IMap<string, any[]>(groupedItems);
+        }
+        return IMap<string, any[]>();
+    }
+    componentWillReceiveProps(nextProps: Props) {
+        if (nextProps.items !== this.props.items) {
+            this.setState({ items: this.groupItems(nextProps.items) });
+        }
+    }
+    render() {
+        let displayCategories = this.state.items.count() > 1;
+        return <List className={this.props.classes.draggableList} subheader={<li />}>
+            {this.state.items.map((values, category) => (
+                <li key={`section-${category}`}>
+                    <DragDropContext onDragEnd={this.props.onDragEnd}>
+                        <Droppable droppableId="droppable">
+                            {(provided, snapshot) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    style={h.getListStyle(snapshot.isDraggingOver)}
+                                >
+                                    <ul className={this.props.classes.sectionList}>
+                                        {displayCategories && <ListSubheader color="primary">
+                                            {category || 'Uncategorized'}
+                                        </ListSubheader>}
+                                        {values.map(
+                                            (item, index) =>
+                                                cardRenderer(item, index, this.props.onClick, this.props.template))}
+                                    </ul>
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
+                </li>
+            )).valueSeq().toArray()}
+        </List>;
+    }
+}
+
+export default decorate(DraggableCardList);
 
 // {[0, 1, 2, 3, 4].map(sectionId => (
 //     <li key={`section-${sectionId}`} className={classes.listSection}>

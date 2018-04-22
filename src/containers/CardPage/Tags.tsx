@@ -95,7 +95,7 @@ const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
             }}>
             {
                 props.card.tags.entrySeq()
-                    .filter(x => x[1].name !== 'Name')
+                    .filter(x => props.card.tags.count() === 1 || x[1].name !== 'Name')
                     .sortBy(x => CardList.getTagSortIndexByCard(props.card, x[1]))
                     .map(([key, tag]) => {
                         let tagType = CardList.tagTypes.get(tag.typeId);
