@@ -1,9 +1,9 @@
 import * as React from 'react';
-import * as h from '../helpers';
+import * as h from './helpers';
 import * as _ from 'lodash';
 import { Map as IMap } from 'immutable';
 import decorate, { Style } from './style';
-import { reorder } from '../../lib/helpers';
+import { reorder } from './../lib/helpers';
 import CardItem from './CardItem';
 import { Draggable, DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { List, ListSubheader, WithStyles, Snackbar, Button, IconButton, Icon } from 'material-ui';
@@ -35,21 +35,21 @@ const cardRenderer = (card: any, index: number, onClick: (c: any) => void, templ
     );
 };
 
-interface DraggableCardListProps {
+interface DraggableListProps {
     items: any[];
     template: string;
     onClick: (c: any) => void;
     onSaveSortOrder: (items: any[]) => void;
 }
 
-type Props = DraggableCardListProps & WithStyles<keyof Style>;
+type Props = DraggableListProps & WithStyles<keyof Style>;
 
-interface DraggableCardListState {
+interface DraggableListState {
     items: IMap<string, any[]>;
     snackbarOpen: boolean;
 }
 
-class DraggableCardList extends React.Component<Props, DraggableCardListState> {
+class DraggableList extends React.Component<Props, DraggableListState> {
     constructor(props: Props) {
         super(props);
         this.state = { items: this.groupItems(props.items), snackbarOpen: false };
@@ -155,7 +155,7 @@ class DraggableCardList extends React.Component<Props, DraggableCardListState> {
     }
 }
 
-export default decorate(DraggableCardList);
+export default decorate(DraggableList);
 
 // {[0, 1, 2, 3, 4].map(sectionId => (
 //     <li key={`section-${sectionId}`} className={classes.listSection}>

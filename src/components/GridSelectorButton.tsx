@@ -5,19 +5,21 @@ import { WithStyles } from 'material-ui/styles/withStyles';
 import decorate, { Style } from './style';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 
-interface CardSelectorButtonProps {
+interface GridSelectorButtonProps {
     card: CardRecord;
     cardType: CardTypeRecord;
     sourceCards: CardRecord[];
     onSelectCard?: (selectedCard: CardRecord, cardType: CardTypeRecord, cards: CardRecord[]) => void;
 }
 
-interface CardSelectorState {
+interface GridSelectorButtonState {
     sourceCards: CardRecord[];
 }
 
-class CardSelectorButton extends React.Component<CardSelectorButtonProps & WithStyles<keyof Style>, CardSelectorState> {
-    constructor(props: CardSelectorButtonProps & WithStyles<keyof Style>) {
+type Props = GridSelectorButtonProps & WithStyles<keyof Style>;
+
+class GridSelectorButton extends React.Component<Props, GridSelectorButtonState> {
+    constructor(props: Props) {
         super(props);
         this.state = { sourceCards: this.getCardsByTag(props.sourceCards, props.cardType, props.card) };
     }
@@ -26,7 +28,7 @@ class CardSelectorButton extends React.Component<CardSelectorButtonProps & WithS
         return sourceCards.filter(sc => sc.hasTag(cardType.reference, card.name));
     }
 
-    componentWillReceiveProps(props: CardSelectorButtonProps) {
+    componentWillReceiveProps(props: GridSelectorButtonProps) {
         if (props.sourceCards !== this.props.sourceCards) {
             this.setState({ sourceCards: this.getCardsByTag(props.sourceCards, props.cardType, props.card) });
         }
@@ -46,4 +48,4 @@ class CardSelectorButton extends React.Component<CardSelectorButtonProps & WithS
     }
 }
 
-export default decorate(CardSelectorButton);
+export default decorate(GridSelectorButton);

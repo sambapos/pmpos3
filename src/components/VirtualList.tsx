@@ -5,7 +5,7 @@ import CardItem from './CardItem';
 const itemCount = 50;
 const itemThresold = 25;
 
-const cardRenderer = (
+const rowRenderer = (
     { key, index, style, parent }: any,
     items: any[],
     cache: any,
@@ -22,23 +22,19 @@ const cardRenderer = (
         parent={parent}
         rowIndex={index}
     >
-        {({ measure }) => {
-            return (
-                <CardItem
-                    template={template}
-                    style={style}
-                    card={card}
-                    onUpdate={(c) => {
-                        if (index < items.length) { cache.clear(index, 0); }
-                    }}
-                    onClick={c => onClick(c)} />
-            );
-        }}
+        <CardItem
+            template={template}
+            style={style}
+            card={card}
+            onUpdate={(c) => {
+                if (index < items.length) { cache.clear(index, 0); }
+            }}
+            onClick={c => onClick(c)} />
     </CellMeasurer>
     );
 };
 
-interface VirtualCardListProps {
+interface VirtualListProps {
     rowCount: number;
     scrollTop: number;
     cache: any;
@@ -50,7 +46,7 @@ interface VirtualCardListProps {
     template: string;
 }
 
-export default (props: VirtualCardListProps) => {
+export default (props: VirtualListProps) => {
     return <InfiniteLoader
         isRowLoaded={(x) => props.isRowLoaded(x)}
         loadMoreRows={(x) => props.loadMoreRows(x)}
@@ -76,7 +72,7 @@ export default (props: VirtualCardListProps) => {
                         onScroll={(x) => {
                             props.debouncedHandleScroll(x.scrollTop);
                         }}
-                        rowRenderer={(x) => cardRenderer(x, props.items, props.cache, props.onClick, props.template)}
+                        rowRenderer={(x) => rowRenderer(x, props.items, props.cache, props.onClick, props.template)}
                     />
                 )}
             </AutoSizer>

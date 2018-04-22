@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import decorate, { Style } from './style';
-import GridSelector from './GridSelector';
+import CardItemSelector from './CardItemSelector';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 import { CardList } from 'pmpos-modules';
 import { List } from 'immutable';
@@ -13,7 +13,7 @@ interface CardSelectorProps {
     scrollTop?: number;
     onSaveSortOrder?: (items: CardRecord[]) => void;
     onScrollChange?: (scrollTop: number) => void;
-    onSelectCard?: (selectedCard: CardRecord, cardType: CardTypeRecord, cards: CardRecord[]) => void;
+    onSelectCard: (selectedCard: CardRecord, cardType: CardTypeRecord, cards: CardRecord[]) => void;
 }
 
 const CardSelector = (props: CardSelectorProps & WithStyles<keyof Style>) => {
@@ -47,7 +47,7 @@ const CardSelector = (props: CardSelectorProps & WithStyles<keyof Style>) => {
             }
         }
     }
-    return <GridSelector cards={cardList}
+    return <CardItemSelector cards={cardList}
         sourceCards={props.sourceCards}
         cardType={cardType}
         sourceCardType={props.sourceCardType}

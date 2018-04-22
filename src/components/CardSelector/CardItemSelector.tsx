@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { List } from 'immutable';
-import CardSelectorButton from './CardSelectorButton';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import decorate, { Style } from './style';
 import SearchEdit from '../SearchEdit';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 import { CardList } from 'pmpos-modules';
 import CardLister from './CardLister';
+import GridSelector from '../GridSelector';
 
-interface GridSelectorProps {
+interface CardItemSelectorProps {
     cards: List<CardRecord>;
     cardType: CardTypeRecord;
     sourceCardType: CardTypeRecord;
@@ -16,17 +16,17 @@ interface GridSelectorProps {
     scrollTop: number;
     onScrollChange?: (scrollTop: number) => void;
     onSaveSortOrder?: (items: CardRecord[]) => void;
-    onSelectCard?: (selectedCard: CardRecord, cardType: CardTypeRecord, cards: CardRecord[]) => void;
+    onSelectCard: (selectedCard: CardRecord, cardType: CardTypeRecord, cards: CardRecord[]) => void;
 }
 
-interface GridSelectorState {
+interface CardItemSelectorState {
     searchValue: string;
     scrollTop: number;
     items: List<CardRecord>;
 }
 
-class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof Style>, GridSelectorState> {
-    constructor(props: GridSelectorProps & WithStyles<keyof Style>) {
+class CardItemSelector extends React.Component<CardItemSelectorProps & WithStyles<keyof Style>, CardItemSelectorState> {
+    constructor(props: CardItemSelectorProps & WithStyles<keyof Style>) {
         super(props);
         this.state = { searchValue: '', items: props.cards, scrollTop: 0 };
     }
@@ -40,7 +40,7 @@ class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof 
         }
         this.setState({ searchValue, items });
     }
-    componentWillReceiveProps(props: GridSelectorProps) {
+    componentWillReceiveProps(props: CardItemSelectorProps) {
         if (props.cards !== this.state.items) {
             this.setState({ items: props.cards, searchValue: '' });
         }
@@ -67,14 +67,12 @@ class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof 
         />;
     }
     getButtonList() {
-        return this.state.items.toArray().map(card =>
-            <CardSelectorButton
-                key={card.id}
-                card={card}
-                cardType={this.props.cardType as CardTypeRecord}
-                sourceCards={this.props.sourceCards.toArray()}
-                onSelectCard={this.props.onSelectCard}
-            />);
+        return <GridSelector
+            items={this.state.items.toArray()}
+            cardType={this.props.cardType as CardTypeRecord}
+            sourceCards={this.props.sourceCards.toArray()}
+            onSelectCard={this.props.onSelectCard}
+        />;
     }
     getList() {
         if (this.isRegularList || this.state.items !== this.props.cards) {
@@ -93,4 +91,4 @@ class GridSelector extends React.Component<GridSelectorProps & WithStyles<keyof 
     }
 }
 
-export default decorate(GridSelector);
+export default decorate(CardItemSelector);

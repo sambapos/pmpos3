@@ -2,8 +2,8 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import { List } from 'immutable';
 import { CellMeasurerCache } from 'react-virtualized';
-import VirtualCardList from './VirtualCardList';
-import DraggableCardList from './DraggableCardList';
+import VirtualList from '../VirtualList';
+import DraggableList from '../DraggableList';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 
 interface CardListProps {
@@ -86,7 +86,7 @@ export default class extends React.Component<CardListProps, CardListState> {
 
     getCardList() {
         if (this.props.cards.count() < this.itemCount * 2) {
-            return <DraggableCardList
+            return <DraggableList
                 items={this.state.items}
                 template={this.props.cardType ? this.props.cardType.displayFormat : ''}
                 onClick={c => this.handleOnClick(c)}
@@ -94,7 +94,7 @@ export default class extends React.Component<CardListProps, CardListState> {
             />;
         }
 
-        return <VirtualCardList
+        return <VirtualList
             rowCount={this.props.cards.count()}
             scrollTop={this.state.scrollTop}
             cache={this.cache}
