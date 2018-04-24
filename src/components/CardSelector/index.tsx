@@ -109,6 +109,12 @@ class CardSelector extends React.Component<Props, CardSelectorState> {
                 maybeVirtual,
                 scrollTop: 0
             });
+        } else if (nextProps.sourceCards !== this.props.sourceCards) {
+            let items = getCardList(
+                this.state.cardType, nextProps.sourceCardType, nextProps.sourceCards,
+                !this.state.maybeVirtual, nextProps.searchValue
+            );
+            this.setState({ items });
         }
     }
     get isRegularList(): boolean {

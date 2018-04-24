@@ -22,10 +22,16 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
             margin: 0,
             fontSize: '1.2em',
             minHeight: 70,
-            minWidth: 150,
+            minWidth: 130,
             marginLeft: 4,
             marginBottom: 4
         },
+        [breakpoints.up('md')]: {
+            minWidth: 150,
+        },
+        [breakpoints.up('lg')]: {
+            maxWidth: 'calc(20% - 4px)',
+        }
     },
     highlightedButton: {
 

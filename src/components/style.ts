@@ -27,11 +27,12 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         flex: '1 1 auto',
         margin: 2,
         fontSize: '1.4em',
-        maxWidth: '48.5%',
-        maxHeight: '53%',
+        maxWidth: 'calc(50% - 4px)',
+        maxHeight: 'calc(50% - 4px)',
         [breakpoints.up('sm')]: {
             margin: 4,
-            minWidth: 100
+            minWidth: 100,
+            maxWidth: 'calc(25% - 4px)'
         },
     },
     highlightedButton: {
