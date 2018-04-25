@@ -81,8 +81,9 @@ export const reducer: Reducer<StateRecord> = (
     }
 };
 
-const configProtocol = (terminalId, networkName, user, dispatch) => {
+const configProtocol = (terminalId, networkName, serverName, user, dispatch) => {
     configureProtocol(
+        serverName,
         true,
         terminalId, networkName, user,
         (chat, commit, config) => {
@@ -132,12 +133,12 @@ export const actionCreators = {
                 user: getState().client.loggedInUser
             }]);
         },
-    connectProtocol: (terminalId: string, networkName: string, user: string):
+    connectProtocol: (terminalId: string, networkName: string, serverName: string, user: string):
         AppThunkAction<KnownActions> => (dispatch, getState) => {
             let currentProtocol = getState().cards.protocol;
             if (currentProtocol) {
                 return;
             }
-            configProtocol(terminalId, networkName, user, dispatch);
+            configProtocol(terminalId, networkName, serverName, user, dispatch);
         }
 };

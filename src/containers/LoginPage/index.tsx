@@ -23,10 +23,20 @@ export type PageProps =
     & DispatchType
     & RouteComponentProps<{}>;
 
-class LoginPage extends React.Component<PageProps, { networkName: string, networkDialogShown: boolean }> {
+interface State {
+    networkName: string;
+    serverName: string;
+    networkDialogShown: boolean;
+}
+
+class LoginPage extends React.Component<PageProps, State> {
     constructor(props: PageProps) {
         super(props);
-        this.state = { networkName: props.networkName, networkDialogShown: false };
+        this.state = {
+            networkName: props.networkName,
+            serverName: props.serverName,
+            networkDialogShown: false
+        };
     }
 
     getDialog() {
@@ -46,8 +56,13 @@ class LoginPage extends React.Component<PageProps, { networkName: string, networ
         return (
             <NetworkDialog
                 networkName={this.state.networkName}
-                onClick={networkName => {
-                    this.setState({ networkName, networkDialogShown: false });
+                serverName={this.state.serverName}
+                onClick={(networkName, serverName) => {
+                    this.setState({
+                        networkName: networkName,
+                        serverName: serverName,
+                        networkDialogShown: false
+                    });
                     this.props.SetModalState(false);
                 }} />
         );
@@ -76,9 +91,15 @@ class LoginPage extends React.Component<PageProps, { networkName: string, networ
                         captureKeys={!this.state.networkDialogShown}
                         onPinEntered={pin => {
                             this.props.SetLoggedInUser(pin);
-                            this.props.SetTerminalId(this.props.terminalId, this.state.networkName);
+                            this.props.SetTerminalId(
+                                this.props.terminalId,
+                                this.state.networkName,
+                                this.state.serverName);
                             this.props.connectProtocol(
-                                this.props.terminalId, this.state.networkName, pin
+                                this.props.terminalId,
+                                this.state.networkName,
+                                this.state.serverName,
+                                pin
                             );
                             if (pin && pin !== '' && this.props.location.pathname === '/login') {
                                 this.props.history.push('/');

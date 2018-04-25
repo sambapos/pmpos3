@@ -12,9 +12,7 @@ interface LoginPageProps {
     captureKeys: boolean;
 }
 
-type PageProps =
-    LoginPageProps
-    & WithStyles<keyof Style>;
+type PageProps = LoginPageProps & WithStyles<keyof Style>;
 
 class LoginControl extends React.Component<PageProps, LoginPageState> {
     state = { pin: '' };

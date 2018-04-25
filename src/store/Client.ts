@@ -7,6 +7,7 @@ export interface ClientState {
     loggedInUser: string;
     terminalId: string;
     networkName: string;
+    serverName: string;
     modalComponent: JSX.Element;
     modalOpen: boolean;
 }
@@ -25,6 +26,7 @@ interface SetTerminalIdAction {
     type: 'SET_TERMINAL_ID';
     terminalId: string;
     networkName: string;
+    serverName: string;
 }
 
 interface SetModalStateAction {
@@ -42,9 +44,10 @@ type KnownAction = ToggleDrawerAction | SetModalStateAction | SetModalComponentA
 
 export const actionCreators = {
     SetLoggedInUser: (user: string) => <SetLoggedInUserAction>{ type: 'SET_LOGGEDIN_USER', user },
-    SetTerminalId: (terminalId: string, networkName: string) => <SetTerminalIdAction>{
-        type: 'SET_TERMINAL_ID', terminalId, networkName
-    },
+    SetTerminalId: (terminalId: string, networkName: string, serverName: string) =>
+        <SetTerminalIdAction>{
+            type: 'SET_TERMINAL_ID', terminalId, networkName, serverName
+        },
     ToggleDrawer: (forceClose?: boolean) => <ToggleDrawerAction>{ type: 'TOGGLE_DRAWER', forceClose },
     SetModalState: (visible: boolean) => <SetModalStateAction>{ type: 'SET_MODAL_STATE', visible },
     SetModalComponent: (component: any) => <SetModalComponentAction>{ type: 'SET_MODAL_COMPONENT', component }
@@ -56,6 +59,7 @@ const unloadedState: ClientState = {
     loggedInUser: '',
     terminalId: '',
     networkName: '',
+    serverName: '',
     modalComponent: React.createElement('div'),
     modalOpen: false
 };
@@ -69,7 +73,13 @@ export const reducer: Reducer<ClientState> = (state: ClientState, action: KnownA
         case 'SET_TERMINAL_ID':
             localStorage.setItem('terminalId', action.terminalId);
             localStorage.setItem('networkName', action.networkName);
-            return { ...state, terminalId: action.terminalId, networkName: action.networkName };
+            localStorage.setItem('serverName', action.serverName);
+            return {
+                ...state,
+                terminalId: action.terminalId,
+                networkName: action.networkName,
+                serverName: action.serverName
+            };
         case 'SET_MODAL_STATE':
             return { ...state, modalOpen: action.visible };
         case 'SET_MODAL_COMPONENT':
