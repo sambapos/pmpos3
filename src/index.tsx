@@ -26,7 +26,8 @@ let networkName = localStorage.getItem('networkName');
 if (!networkName) {
   networkName = 'DEMO';
 }
-store.dispatch({ type: 'SET_TERMINAL_ID', terminalId, networkName });
+let serverName = localStorage.getItem('serverName');
+store.dispatch({ type: 'SET_TERMINAL_ID', terminalId, networkName, serverName });
 
 function renderApp() {
   // This code starts up the React app when it runs in a browser. It sets up the routing configuration
