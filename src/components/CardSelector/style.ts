@@ -7,7 +7,7 @@ export interface Style {
 
 export default withStyles(({ palette, spacing, breakpoints }): Style => ({
     content: {
-        flex: '1',
+        height: '100%',
         display: 'flex',
         flexFlow: 'column',
         [breakpoints.up('sm')]: {

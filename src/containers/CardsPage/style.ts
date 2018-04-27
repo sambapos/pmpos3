@@ -35,7 +35,7 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         flex: '1 1 auto'
     },
     content: {
-        height: '100%',
+        height: 0,
         display: 'flex',
         flex: '1 1 auto',
         flexFlow: 'column',
