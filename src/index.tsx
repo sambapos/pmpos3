@@ -26,7 +26,7 @@ let networkName = localStorage.getItem('networkName');
 if (!networkName) {
   networkName = 'DEMO';
 }
-let serverName = localStorage.getItem('serverName');
+let serverName = localStorage.getItem('serverName') || '';
 store.dispatch({ type: 'SET_TERMINAL_ID', terminalId, networkName, serverName });
 
 function renderApp() {
