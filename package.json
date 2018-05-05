@@ -12,7 +12,7 @@
     "material-ui": "1.0.0-beta.42",
     "moment": "^2.22.1",
     "pmpos-models": "^1.0.4",
-    "pmpos-modules": "^1.0.19",
+    "pmpos-modules": "^1.0.23",
     "react": "^16.3.2",
     "react-ace": "^5.10.0",
     "react-autosuggest": "^9.3.4",
@@ -32,7 +32,11 @@
     "rxjs": "^5.5.10",
     "shortid": "^2.2.8",
     "typeface-roboto": "0.0.45",
-    "yjs": "13.0.0-55"
+    "y-array": "^11.0.0-5",
+    "y-indexeddb": "^9.0.0-5",
+    "y-map": "^11.0.0-1",
+    "y-memory": "^9.0.0-1",
+    "yjs": "github:emreeren/yjs"
   },
   "scripts": {
     "start": "cross-env REACT_APP_VERSION=$npm_package_version react-scripts-ts start",
@@ -47,7 +51,7 @@
     "@types/enzyme-adapter-react-16": "^1.0.2",
     "@types/history": "^4.6.2",
     "@types/jest": "^21.1.10",
-    "@types/node": "^8.10.11",
+    "@types/node": "^8.10.12",
     "@types/react": "^16.3.13",
     "@types/react-dom": "^16.0.5",
     "@types/react-redux": "^5.0.19",
