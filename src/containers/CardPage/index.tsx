@@ -23,6 +23,7 @@ import { CardRecord, CardTypeRecord } from 'pmpos-models';
 import { CardOperation, CardList } from 'pmpos-modules';
 
 interface PageState {
+    disableUpdate: boolean;
     anchorEl: any;
     selectedCard: CardRecord;
     buttons: CommandButton[];
@@ -33,6 +34,7 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
     constructor(props: CardPageProps) {
         super(props);
         this.state = {
+            disableUpdate: false,
             anchorEl: undefined,
             selectedCard: props.card,
             buttons: [],
@@ -85,6 +87,9 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
     }
 
     public shouldComponentUpdate(props: CardPageProps) {
+        if (this.state.disableUpdate) {
+            return false;
+        }
         return Boolean(props.card.id);
     }
 
@@ -92,18 +97,18 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
         if (this.props.match.params.id) {
             this.props.loadCard(this.props.match.params.id);
         }
-        // if (this.props.isLoaded) {
-        //     this.setState({
-        //         selectedCard: this.props.card,
-        //     });
-        // }
     }
 
     public componentWillReceiveProps(props: CardPageProps) {
+        if (props.closeCardRequested) {
+            this.setState({ disableUpdate: false });
+            this.props.history.goBack();
+            return;
+        }
         if (props.isLoaded && props.card !== this.props.card) {
             this.setState({
                 footerButtons: this.getButtons(props.card),
-                selectedCard: props.card
+                selectedCard: props.card,
             });
         }
     }
@@ -169,8 +174,10 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
             <div className={this.props.classes.root}>
                 <CardPageTopbar {...this.props}
                     onClose={() => {
-                        this.props.commitCard();
-                        this.props.history.goBack();
+                        // this.props.commitCard();
+                        // this.props.history.goBack();
+                        this.setState({ disableUpdate: true });
+                        this.props.addPendingAction(this.props.card, 'COMMIT_CARD', { id: 1 });
                     }} />
                 <div className={this.props.classes.container}>
                     <div className={this.props.classes.cardView}>
@@ -256,6 +263,7 @@ const mapStateToProps = (state: ApplicationState) => ({
     commits: state.cards.currentCommits,
     pendingActions: state.cards.pendingActions,
     isLoaded: state.cards.isLoaded,
+    closeCardRequested: state.cards.closeCardRequested,
     failed: state.cards.failed
 });
 

@@ -9,6 +9,7 @@ import { ActionRecord, CardRecord, CommitRecord } from 'pmpos-models';
 export type CardPageProps =
     {
         isLoaded: boolean,
+        closeCardRequested: boolean,
         failed: boolean,
         pendingActions: List<ActionRecord>
         card: CardRecord,

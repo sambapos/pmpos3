@@ -25,6 +25,7 @@ export interface State {
     showAllCards: boolean;
     failed: boolean;
     tabIndex: number;
+    closeCardRequested: boolean;
 }
 
 export class StateRecord extends Record<State>({
@@ -39,7 +40,8 @@ export class StateRecord extends Record<State>({
     searchValue: '',
     showAllCards: false,
     failed: false,
-    tabIndex: 0
+    tabIndex: 0,
+    closeCardRequested: false
 }) { }
 
 type SetCommitProtocolAction = {
@@ -58,6 +60,10 @@ type CommitReceivedSuccessAction = {
 
 type CommitCardAction = {
     type: 'COMMIT_CARD'
+};
+
+type RequestCloseCardAction = {
+    type: 'REQUEST_CLOSE_CARD'
 };
 
 type AddPendingActionAction = {
@@ -115,10 +121,13 @@ type SetTabIndexAction = {
     value: number
 };
 
-type KnownActions = AddPendingActionAction | CommitCardAction | CommitReceivedAction | CommitReceivedSuccessAction
+type KnownActions = AddPendingActionAction | CommitCardAction | RequestCloseCardAction
+    | CommitReceivedAction | CommitReceivedSuccessAction
     | LoadCardAction | LoadCardRequestAction | LoadCardSuccessAction | LoadCardFailAction
     | SetCommitProtocolAction | SetCurrentCardTypeAction | SetCardListScrollTopAction |
     SetSearchValueAction | SetShowAllCardsAction | RemovePendingActionsAction | SetTabIndexAction;
+
+let counter = 0;
 
 function getEditor(card: CardRecord, action: ActionRecord, observer: any): Promise<ActionRecord> {
     return new Promise<ActionRecord>((resolve, reject) => {
@@ -131,7 +140,17 @@ function getEditor(card: CardRecord, action: ActionRecord, observer: any): Promi
                 resolve(result);
             },
             () => {
+                counter--;
                 observer.next({ type: 'SET_MODAL_STATE', visible: false });
+                observer.next({
+                    type: 'ADD_PENDING_ACTION',
+                    action: new ActionRecord({
+                        id: shortid.generate(),
+                        actionType: 'OPERATION_CANCELLED',
+                        cardId: card.id,
+                        data: { cancelledAction: action.id }
+                    })
+                });
                 reject();
             },
             action.data);
@@ -152,6 +171,7 @@ async function createObserver(actionState: ActionState, actions: ActionRecord[],
         let result = await getResult(actionState, action, observer);
         observer.next(result);
     }
+    return observer;
 }
 
 export const epic = (
@@ -168,12 +188,34 @@ export const epic = (
                 action.action.data,
                 action.action.cardId,
                 root, card);
+            counter += actions.length + 1;
             return Observable.create(observer =>
                 createObserver({ root, card, action: action.action }, actions, observer)
-                    .then(() => observer.complete())
+                    .then(x => {
+                        counter--;
+                        if (counter === -1) {
+                            finalize(observer, store);
+                        } else { observer.complete(); }
+                    })
                     .catch(() => observer.complete()));
         })
-        .mergeMap(x => x);
+        .mergeMap(x => {
+            counter--;
+            return x;
+        });
+
+function finalize(observer: any, store: { getState: Function, dispatch: Function }) {
+    counter = 0;
+    let state = store.getState().cards;
+    if (state.pendingActions.some(x => x.actionType === 'COMMIT_CARD')) {
+        observer.next({ type: 'REQUEST_CLOSE_CARD' });
+        createAndPostCommit(
+            store.getState(),
+            state.currentCard,
+            state.pendingActions);
+    }
+    observer.complete();
+}
 
 export const reducer: Reducer<StateRecord> = (
     state: StateRecord = new StateRecord(),
@@ -185,6 +227,7 @@ export const reducer: Reducer<StateRecord> = (
                 ? state
                     .set('currentCard', new CardRecord())
                     .set('isLoaded', true)
+                    .set('closeCardRequested', false)
                     .set('currentCommits', undefined)
                     .set('pendingActions', state.pendingActions.clear())
                 : state;
@@ -217,6 +260,9 @@ export const reducer: Reducer<StateRecord> = (
         case 'COMMIT_CARD': {
             return resetCurrentCard(state);
         }
+        case 'REQUEST_CLOSE_CARD': {
+            return state.set('closeCardRequested', true);
+        }
         case 'LOAD_CARD_REQUEST': {
             return resetCurrentCard(state);
         }
@@ -224,7 +270,8 @@ export const reducer: Reducer<StateRecord> = (
             let result = state
                 .set('currentCard', action.payload)
                 .set('currentCommits', CardList.getCommits(action.payload.id))
-                .set('isLoaded', true);
+                .set('isLoaded', true)
+                .set('closeCardRequested', false);
             return result;
         }
         case 'LOAD_CARD_FAIL': {
@@ -263,10 +310,15 @@ function resetCurrentCard(state: StateRecord) {
         .set('pendingActions', state.pendingActions.clear())
         .set('currentCommits', undefined)
         .set('isLoaded', false)
-        .set('failed', false);
+        .set('failed', false)
+        .set('closeCardRequested', false);
 }
 
 function createAndPostCommit(state: ApplicationState, card: CardRecord, actions: List<ActionRecord>) {
+    let finalActions = actions.filter(x => x.actionType !== 'COMMIT_CARD');
+    if (finalActions.count() === 0) {
+        return;
+    }
     let commit = {
         id: shortid.generate(),
         time: new Date().getTime(),
@@ -274,7 +326,7 @@ function createAndPostCommit(state: ApplicationState, card: CardRecord, actions:
         user: state.client.loggedInUser,
         cardId: card.id,
         state: card.toJS(),
-        actions: actions.toJS()
+        actions: finalActions.toJS()
     };
     state.cards.protocol.push([commit]);
 }
@@ -343,22 +395,21 @@ export const actionCreators = {
         AppThunkAction<KnownActions> => (dispatch, getState) => {
             createAndPostCommit(getState(), card, actions);
         },
-    commitCard: (): AppThunkAction<KnownActions> => (dispatch, getState) => {
-        const state = getState().cards;
-        RuleManager.getNextActions('COMMIT_CARD', {}, state.currentCard.id, state.currentCard, state.currentCard)
-            .then(commitActions => {
-                let pendingActions = state.pendingActions.concat(commitActions);
-                if (pendingActions.count() > 0) {
-                    let processedActions = pendingActions
-                        .map(a => cardOperations.processPendingAction(a));
-                    createAndPostCommit(getState(), state.currentCard, processedActions);
-                }
-                dispatch({
-                    type: 'COMMIT_CARD'
-                });
-            });
-    },
-
+    // commitCard: (): AppThunkAction<KnownActions> => (dispatch, getState) => {
+    //     const state = getState().cards;
+    //     RuleManager.getNextActions('COMMIT_CARD', {}, state.currentCard.id, state.currentCard, state.currentCard)
+    //         .then(commitActions => {
+    //             let pendingActions = state.pendingActions.concat(commitActions);
+    //             if (pendingActions.count() > 0) {
+    //                 let processedActions = pendingActions
+    //                     .map(a => cardOperations.processPendingAction(a));
+    //                 createAndPostCommit(getState(), state.currentCard, processedActions);
+    //             }
+    //             dispatch({
+    //                 type: 'COMMIT_CARD'
+    //             });
+    //         });
+    // },
     deleteCards: (cardTypeId: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
         let cards = CardList.getCardsByType(cardTypeId);
         let state = getState().cards;
