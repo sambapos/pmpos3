@@ -24,7 +24,3 @@ export const reducers = {
     chat: Chat.reducer,
     config: Config.reducer
 };
-
-export const epics = {
-    cards: Cards.epic
-};

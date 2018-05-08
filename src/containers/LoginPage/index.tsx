@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as Extender from '../../lib/Extender';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
 import * as ClientStore from '../../store/Client';
@@ -114,5 +113,5 @@ class LoginPage extends React.Component<PageProps, State> {
 
 export default decorate(connect(
     (state: ApplicationState) => state.client,
-    Extender.extend(ClientStore.actionCreators, ChatStore.actionCreators)
+    ClientStore.actionCreators
 )(LoginPage));

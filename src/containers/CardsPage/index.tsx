@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import * as shortid from 'shortid';
 import * as CardStore from '../../store/Cards';
 import * as ClientStore from '../../store/Client';
 import * as Extender from '../../lib/Extender';
@@ -16,8 +15,9 @@ import { Map as IMap, List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import * as h from './helpers';
 import CardSelector from '../../components/CardSelector';
-import { CardRecord, CardTypeRecord, CardTag, CardTagRecord, ActionRecord } from 'pmpos-models';
+import { CardRecord, CardTypeRecord, CardTag, CardTagRecord } from 'pmpos-models';
 import { CardList } from 'pmpos-modules';
+import { CardsManager } from 'pmpos-modules';
 
 type PageProps =
     {
@@ -88,19 +88,23 @@ class CardsPage extends React.Component<PageProps, State> {
         }
     }
 
+    // todo: BURAYA BAK
     onSaveSortOrder = (list: CardRecord[]) => {
         for (let index = 0; index < list.length; index++) {
             const item = list[index];
             if (item.index !== index) {
                 list[index] = item.set('index', index);
-                let actionData =
-                    new ActionRecord({
-                        id: shortid.generate(),
-                        cardId: item.id,
-                        actionType: 'SET_CARD_INDEX',
-                        data: { index }
-                    });
-                this.props.postCommit(item, IList<ActionRecord>([actionData]));
+                CardsManager.openCard('', item.id);
+                // let actionData =
+                //     new ActionRecord({
+                //         id: shortid.generate(),
+                //         cardId: item.id,
+                //         actionType: 'SET_CARD_INDEX',
+                //         data: { index }
+                //     });
+                CardsManager.executeAction('', item.id, 'SET_CARD_INDEX', { index })
+                    .then(() => CardsManager.closeCard('', item.id));
+                // this.props.postCommit(item, IList<ActionRecord>([actionData]));
             }
         }
     }

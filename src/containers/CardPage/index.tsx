@@ -20,7 +20,7 @@ import { CardPageProps } from './CardPageProps';
 import { Link } from 'react-router-dom';
 import CommandButtons from '../../components/CommandButtons';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
-import { CardOperation, CardList } from 'pmpos-modules';
+import { CardOperation, CardList, CardsManager } from 'pmpos-modules';
 
 interface PageState {
     disableUpdate: boolean;
@@ -167,7 +167,7 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
             );
         }
 
-        let hasPendingUpdates = this.props.pendingActions
+        let hasPendingUpdates = this.state.anchorEl && CardsManager.getPendingActions('', this.props.card.id)
             .some(a => a.relatesToCard(this.state.selectedCard.id));
 
         return (
@@ -261,7 +261,6 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
 const mapStateToProps = (state: ApplicationState) => ({
     card: state.cards.currentCard,
     commits: state.cards.currentCommits,
-    pendingActions: state.cards.pendingActions,
     isLoaded: state.cards.isLoaded,
     closeCardRequested: state.cards.closeCardRequested,
     failed: state.cards.failed

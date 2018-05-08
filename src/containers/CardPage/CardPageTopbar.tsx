@@ -4,7 +4,7 @@ import Accounts from './Accounts';
 import TopBar from '../TopBar';
 import Commits from './Commits';
 import { CardRecord } from 'pmpos-models';
-import { CardList } from 'pmpos-modules';
+import { CardList, CardsManager } from 'pmpos-modules';
 
 const getTitle = (card: CardRecord) => {
     let ct = CardList.getCardType(card.typeId);
@@ -17,7 +17,12 @@ const getTitle = (card: CardRecord) => {
 export default (props: any) => {
     return (<TopBar
         title={getTitle(props.card)}
-        menuCommand={{ icon: 'close', onClick: () => { props.history.goBack(); } }}
+        menuCommand={{
+            icon: 'close', onClick: () => {
+                CardsManager.cancelCard('', '');
+                props.history.goBack();
+            }
+        }}
         secondaryCommands={[
             {
                 icon: 'folder_open',
