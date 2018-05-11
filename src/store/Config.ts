@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import * as shortid from 'shortid';
 import { Record, Map as IMap } from 'immutable';
 import { AppThunkAction } from './appThunkAction';
-import { RuleManager, CardList } from 'pmpos-modules';
+import { RuleManager, CardList, DataBuilder } from 'pmpos-modules';
 import { CardTypeRecord, TagTypeRecord, RuleRecord } from 'pmpos-models';
 
 interface ConfigState {
@@ -368,5 +368,13 @@ export const actionCreators = {
                     }
                 })
             });
+        },
+    createDefaultConfig: ():
+        AppThunkAction<KnownActions> => (dispatch, getState) => {
+            const db = new DataBuilder();
+            db.createConfig(getState().config.protocol);
+            if (CardList.cards.count() === 0) {
+                db.createDefaultCards(getState().cards.protocol);
+            }
         }
 };

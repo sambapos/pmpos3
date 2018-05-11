@@ -1,15 +1,18 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { extend } from '../../lib/Extender';
 import { ApplicationState } from '../../store';
 import * as ClientStore from '../../store/Client';
+import * as ConfigStore from '../../store/Config';
 import { RouteComponentProps } from 'react-router';
 import TopBar from '../TopBar';
 import Typography from 'material-ui/Typography/Typography';
-import { Card } from 'material-ui';
+import { Card, Button } from 'material-ui';
 
 export type PageProps =
     ClientStore.ClientState
     & typeof ClientStore.actionCreators
+    & typeof ConfigStore.actionCreators
     & RouteComponentProps<{}>;
 
 class HomePage extends React.Component<PageProps> {
@@ -34,6 +37,7 @@ class HomePage extends React.Component<PageProps> {
                         https://github.com/emreeren/pmpos3/
                         </a>
                 </Card>
+                <Button onClick={() => this.props.createDefaultConfig()}>Create Config</Button>
             </div>
         );
     }
@@ -41,5 +45,5 @@ class HomePage extends React.Component<PageProps> {
 
 export default connect(
     (state: ApplicationState) => state.client,
-    ClientStore.actionCreators
+    extend(ClientStore.actionCreators, ConfigStore.actionCreators)
 )(HomePage);

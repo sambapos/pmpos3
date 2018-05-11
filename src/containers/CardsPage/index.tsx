@@ -13,7 +13,6 @@ import decorate, { Style } from './style';
 import { ApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';
 import TopBar from '../TopBar';
-import * as h from './helpers';
 import CardSelector from '../../components/CardSelector';
 import { CardRecord, CardTypeRecord, CardTag, CardTagRecord } from 'pmpos-models';
 import { CardList } from 'pmpos-modules';
@@ -225,7 +224,7 @@ class CardsPage extends React.Component<PageProps, State> {
                         icon: 'Create 500 Test Cards',
                         onClick: () => {
                             if (this.props.currentCardType.name === 'Customers') {
-                                h.createTestCards(this.props);
+                                this.props.createFakeCustomers();
                             } else {
                                 alert('This function can be used for `Customers`');
                             }

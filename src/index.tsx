@@ -16,7 +16,7 @@ let routes = RoutesModule.routes;
 const history = createBrowserHistory();
 const initialState = undefined; // loadState();
 const store = configureStore(history, initialState);
-localStorage.debug = 'y*,card-manager';
+localStorage.debug = 'y:connector,card-manager';
 
 let terminalId = localStorage.getItem('terminalId');
 if (!terminalId) {

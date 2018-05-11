@@ -3,8 +3,10 @@ import { DialogContent, DialogActions, Button } from 'material-ui';
 import Accounts from './Accounts';
 import TopBar from '../TopBar';
 import Commits from './Commits';
-import { CardRecord } from 'pmpos-models';
+import { CardRecord, ActionRecord, CommitRecord } from 'pmpos-models';
 import { CardList, CardsManager } from 'pmpos-modules';
+import { CardPageProps } from './CardPageProps';
+import { List } from 'immutable';
 
 const getTitle = (card: CardRecord) => {
     let ct = CardList.getCardType(card.typeId);
@@ -14,7 +16,13 @@ const getTitle = (card: CardRecord) => {
         : `${card.display}`;
 };
 
-export default (props: any) => {
+interface Props {
+    onClose: () => void;
+    pendingActions: () => List<ActionRecord>;
+    commits: () => List<CommitRecord> | undefined;
+}
+
+export default (props: CardPageProps & Props) => {
     return (<TopBar
         title={getTitle(props.card)}
         menuCommand={{
@@ -32,8 +40,8 @@ export default (props: any) => {
                             <>
                                 <DialogContent>
                                     <Commits
-                                        pendingActions={props.pendingActions}
-                                        commits={props.commits}
+                                        pendingActions={props.pendingActions()}
+                                        commits={props.commits() || List<CommitRecord>()}
                                     />
                                 </DialogContent>
                                 <DialogActions>

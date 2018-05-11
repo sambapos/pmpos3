@@ -2,13 +2,13 @@ import * as React from 'react';
 import * as moment from 'moment';
 import * as shortid from 'shortid';
 import { connect } from 'react-redux';
+import { extend } from '../../lib/Extender';
 import * as CardStore from '../../store/Cards';
 import * as ClientStore from '../../store/Client';
 import { ApplicationState } from '../../store/index';
 
 import { Typography, Menu, MenuItem, Paper, Divider } from 'material-ui';
 import decorate from './style';
-import * as Extender from '../../lib/Extender';
 import TopBar from '../TopBar';
 import OperationEditor from '../../modules/OperationEditor';
 import CardPageContent from './CardPageContent';
@@ -101,11 +101,11 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
 
     public componentWillReceiveProps(props: CardPageProps) {
         if (props.closeCardRequested) {
-            this.setState({ disableUpdate: false });
+            // this.setState({ disableUpdate: false });
             this.props.history.goBack();
             return;
         }
-        if (props.isLoaded && props.card !== this.props.card) {
+        if (props.card.id && props.card !== this.props.card) {
             this.setState({
                 footerButtons: this.getButtons(props.card),
                 selectedCard: props.card,
@@ -157,25 +157,15 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
             );
         }
 
-        if (!this.props.isLoaded || !this.props.card) {
-            return (
-                <div>
-                    <TopBar
-                        title="Loading...."
-                    />
-                </div>
-            );
-        }
-
         let hasPendingUpdates = this.state.anchorEl && CardsManager.getPendingActions('', this.props.card.id)
             .some(a => a.relatesToCard(this.state.selectedCard.id));
 
         return (
             <div className={this.props.classes.root}>
                 <CardPageTopbar {...this.props}
+                    commits={() => CardList.getCommits(this.props.card.id)}
+                    pendingActions={() => CardsManager.getPendingActions('', this.props.card.id)}
                     onClose={() => {
-                        // this.props.commitCard();
-                        // this.props.history.goBack();
                         this.setState({ disableUpdate: true });
                         this.props.addPendingAction(this.props.card, 'COMMIT_CARD', { id: 1 });
                     }} />
@@ -260,13 +250,11 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
 
 const mapStateToProps = (state: ApplicationState) => ({
     card: state.cards.currentCard,
-    commits: state.cards.currentCommits,
-    isLoaded: state.cards.isLoaded,
     closeCardRequested: state.cards.closeCardRequested,
     failed: state.cards.failed
 });
 
 export default decorate(connect(
     mapStateToProps,
-    Extender.extend(ClientStore.actionCreators, CardStore.actionCreators)
+    extend(CardStore.actionCreators, ClientStore.actionCreators)
 )(CardPage));
