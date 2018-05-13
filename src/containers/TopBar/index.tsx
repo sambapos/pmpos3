@@ -1,29 +1,28 @@
 import * as React from 'react';
 import { AppBar, Toolbar, Typography, WithStyles } from 'material-ui';
 import classNames from 'classnames';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 import * as ClientStore from '../../store/Client';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../store/index';
-import MenuButton, { MenuCommand } from './MenuButton';
+import { IApplicationState } from '../../store/index';
+import MenuButton, { IMenuCommand } from './MenuButton';
 
-interface TopBarProps {
+interface ITopBarProps {
     title: string;
-    menuCommand: MenuCommand;
-    secondaryCommands?: MenuCommand[];
+    menuCommand: IMenuCommand;
+    secondaryCommands?: IMenuCommand[];
 }
 
 type Props =
-    TopBarProps
-    & ClientStore.ClientState
+    ITopBarProps
+    & ClientStore.IClientState
     & typeof ClientStore.actionCreators
-    & WithStyles<keyof Style>;
+    & WithStyles<keyof IStyle>;
 
 class TopBar extends React.Component<Props, {}> {
-
-    render() {
-        let anchor = 'Left';
-        let menuCommand = this.props.menuCommand
+    public render() {
+        const anchor = 'Left';
+        const menuCommand = this.props.menuCommand
             ? this.props.menuCommand
             : { icon: 'menu', onClick: () => { this.props.ToggleDrawer(); } };
         return (
@@ -52,7 +51,7 @@ class TopBar extends React.Component<Props, {}> {
     }
 }
 
-export default decorate<{ title: string, menuCommand?: MenuCommand, secondaryCommands?: MenuCommand[] }>(connect(
-    (state: ApplicationState) => state.client,
+export default decorate<{ title: string, menuCommand?: IMenuCommand, secondaryCommands?: IMenuCommand[] }>(connect(
+    (state: IApplicationState) => state.client,
     ClientStore.actionCreators
 )(TopBar));

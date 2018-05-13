@@ -1,5 +1,5 @@
 import { WithStyles } from 'material-ui';
-import { Style } from './style';
+import { IStyle } from './style';
 import { RouteComponentProps } from 'react-router';
 import * as CardStore from '../../store/Cards';
 import * as ClientStore from '../../store/Client';
@@ -11,7 +11,7 @@ export type CardPageProps =
         failed: boolean,
         card: CardRecord
     }
-    & WithStyles<keyof Style>
+    & WithStyles<keyof IStyle>
     & typeof CardStore.actionCreators
     & typeof ClientStore.actionCreators
     & RouteComponentProps<{ id?: string }>;

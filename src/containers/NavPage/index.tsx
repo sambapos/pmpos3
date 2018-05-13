@@ -1,23 +1,23 @@
-import * as React from 'react';
 import classNames from 'classnames';
-import { WithStyles } from 'material-ui/styles/withStyles';
-import Drawer from 'material-ui/Drawer';
-import List from 'material-ui/List';
-import Hidden from 'material-ui/Hidden';
 import Divider from 'material-ui/Divider';
+import Drawer from 'material-ui/Drawer';
+import Hidden from 'material-ui/Hidden';
+import List from 'material-ui/List';
+import { WithStyles } from 'material-ui/styles/withStyles';
+import * as React from 'react';
 
-import NavList from './navList';
+import { Dialog, ListItem, ListItemText, Typography } from 'material-ui';
+import { Route, RouteComponentProps } from 'react-router';
 import { subRoutes } from '../../routes';
-import { RouteComponentProps, Route } from 'react-router';
-import { ListItem, ListItemText, Typography, Dialog } from 'material-ui';
-import decorate, { Style } from './style';
+import NavList from './navList';
+import decorate, { IStyle } from './style';
 
-import * as ClientStore from '../../store/Client';
-import { ApplicationState } from '../../store/index';
 import { connect } from 'react-redux';
+import * as ClientStore from '../../store/Client';
+import { IApplicationState } from '../../store/index';
 import LoginPage from '../LoginPage';
 
-interface NavPageProps {
+interface INavPageProps {
     drawerOpen: boolean;
     loggedInUser: string;
     modalOpen: boolean;
@@ -25,29 +25,29 @@ interface NavPageProps {
 }
 
 type Props =
-    NavPageProps
-    & WithStyles<keyof Style>
+    INavPageProps
+    & WithStyles<keyof IStyle>
     & typeof ClientStore.actionCreators
     & RouteComponentProps<{}>;
 
 class NavPage extends React.Component<Props> {
-    state = {
+    public state = {
         anchor: 'Left'
     };
 
-    componentWillReceiveProps(props: Props) {
+    public componentWillReceiveProps(props: Props) {
         if (this.props.modalOpen) { this.props.SetModalState(false); }
     }
 
-    handleDrawerToggle = () => {
+    public handleDrawerToggle = () => {
         this.props.ToggleDrawer();
     }
 
-    closeDrawer = () => {
+    public closeDrawer = () => {
         this.props.ToggleDrawer(true);
     }
 
-    render() {
+    public render() {
         const { classes } = this.props;
         const { anchor } = this.state;
         const drawer = (
@@ -72,7 +72,7 @@ class NavPage extends React.Component<Props> {
                 <Divider />
                 <List>
                     <ListItem
-                        button
+                        button={true}
                         onClick={() => {
                             this.props.history.push(process.env.PUBLIC_URL + '/about');
                             if (window.innerWidth < 1024) { this.handleDrawerToggle(); }
@@ -87,7 +87,7 @@ class NavPage extends React.Component<Props> {
         return (
             <div className={classes.root}>
                 <div className={classes.appFrame}>
-                    <Hidden mdUp>
+                    <Hidden mdUp={true}>
                         <Drawer
                             variant="temporary"
                             anchor="left"
@@ -100,7 +100,7 @@ class NavPage extends React.Component<Props> {
                             {drawer}
                         </Drawer>
                     </Hidden>
-                    <Hidden smDown>
+                    <Hidden smDown={true}>
                         <Drawer
                             variant="persistent"
                             open={this.props.drawerOpen}
@@ -127,8 +127,7 @@ class NavPage extends React.Component<Props> {
                 </div>
                 <Dialog
                     PaperProps={{ style: { overflow: 'unset', width: '90%', margin: 0 } }}
-                    disableBackdropClick
-                    transition={undefined}
+                    disableBackdropClick={true}
                     open={this.props.modalOpen}
                 >
                     {this.props.modalComponent}
@@ -138,11 +137,11 @@ class NavPage extends React.Component<Props> {
     }
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
+const mapStateToProps = (state: IApplicationState) => ({
     drawerOpen: state.client.drawerOpen,
     loggedInUser: state.client.loggedInUser,
-    modalOpen: state.client.modalOpen,
-    modalComponent: state.client.modalComponent
+    modalComponent: state.client.modalComponent,
+    modalOpen: state.client.modalOpen
 });
 
 export default decorate(connect(

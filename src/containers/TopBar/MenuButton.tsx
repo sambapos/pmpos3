@@ -1,37 +1,28 @@
 import * as React from 'react';
 import { IconButton, Menu, MenuItem } from 'material-ui';
 
-export interface MenuCommand {
+export interface IMenuCommand {
     icon: string;
     onClick?: () => void;
-    menuItems?: MenuCommand[];
+    menuItems?: IMenuCommand[];
 }
 
-interface MenuCommandProps {
-    command: MenuCommand;
-    menuItems?: MenuCommand[];
+interface IMenuCommandProps {
+    command: IMenuCommand;
+    menuItems?: IMenuCommand[];
 }
 
-interface MenuCommandState {
+interface IMenuCommandState {
     anchorEl: any;
 }
 
-export default class extends React.Component<MenuCommandProps, MenuCommandState> {
+export default class extends React.Component<IMenuCommandProps, IMenuCommandState> {
 
-    constructor(props: MenuCommandProps) {
+    constructor(props: IMenuCommandProps) {
         super(props);
         this.state = { anchorEl: null };
     }
-
-    handleMenu = event => {
-        this.setState({ anchorEl: event.currentTarget });
-    }
-
-    handleClose = () => {
-        this.setState({ anchorEl: null });
-    }
-
-    render() {
+    public render() {
         const open = Boolean(this.state.anchorEl);
         return (
             <div>
@@ -77,5 +68,13 @@ export default class extends React.Component<MenuCommandProps, MenuCommandState>
                 </Menu>
             </div>
         );
+    }
+
+    private handleMenu = event => {
+        this.setState({ anchorEl: event.currentTarget });
+    }
+
+    private handleClose = () => {
+        this.setState({ anchorEl: null });
     }
 }

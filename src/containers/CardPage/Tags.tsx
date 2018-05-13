@@ -1,18 +1,19 @@
 import * as React from 'react';
 import tmpl from 'blueimp-tmpl';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import { Icon } from 'material-ui';
 import { CardRecord, CardTagRecord, TagTypeRecord } from 'pmpos-models';
 import { CardList } from 'pmpos-modules';
 
 class CardTagWrapper {
+    private tag: CardTagRecord;
+    private card: CardRecord;
+
     constructor(tag: CardTagRecord, card: CardRecord) {
         this.tag = tag;
         this.card = card;
     }
-    tag: CardTagRecord;
-    card: CardRecord;
 
     get name() { return this.tag.name; }
     get value() { return this.tag.value; }
@@ -23,13 +24,13 @@ class CardTagWrapper {
     get balance() { return this.card.getTagTotal(this.tag); }
 }
 
-interface TagsProps {
+interface ITagsProps {
     card: CardRecord;
     handleCardClick: (card: CardRecord) => void;
 }
 
-const getCustomDisplay = (template: string, tag: CardTagWrapper, classes: Record<keyof Style, string>) => {
-    let content = tmpl(template, tag);
+const getCustomDisplay = (template: string, tag: CardTagWrapper, classes: Record<keyof IStyle, string>) => {
+    const content = tmpl(template, tag);
     return <div
         className={classes.tagItemContent}
         style={{ width: '100%' }}
@@ -38,7 +39,7 @@ const getCustomDisplay = (template: string, tag: CardTagWrapper, classes: Record
 };
 
 const getTagDisplay = (card: CardRecord, tag: CardTagRecord, iconClass: string) => {
-    let tt = CardList.tagTypes.get(tag.typeId);
+    const tt = CardList.tagTypes.get(tag.typeId);
     if (tt && tt.icon) {
         if (tt.icon === '_') { return tag.valueDisplay; }
         return (<span >
@@ -51,9 +52,9 @@ const getTagDisplay = (card: CardRecord, tag: CardTagRecord, iconClass: string) 
     return tag.display;
 };
 
-const getDefaultDisplay = (card: CardRecord, tag: CardTagRecord, classes: Record<keyof Style, string>) => {
-    let tagTotal = card.getTagTotal(tag);
-    let st = tag.locationDisplay;
+const getDefaultDisplay = (card: CardRecord, tag: CardTagRecord, classes: Record<keyof IStyle, string>) => {
+    const tagTotal = card.getTagTotal(tag);
+    const st = tag.locationDisplay;
     return (
         <>
             <div className={classes.tagItemContent}>
@@ -72,7 +73,7 @@ const getDefaultDisplay = (card: CardRecord, tag: CardTagRecord, classes: Record
 
 const getDisplayFor = (
     card: CardRecord, tag: CardTagRecord, tagType: TagTypeRecord | undefined,
-    classes: Record<keyof Style, string>) => {
+    classes: Record<keyof IStyle, string>) => {
     if (tagType && tagType.displayFormat) {
         return getCustomDisplay(tagType.displayFormat, new CardTagWrapper(tag, card), classes);
     }
@@ -80,14 +81,14 @@ const getDisplayFor = (
 };
 
 const getTagItemClassName = (
-    tag: CardTagRecord, tagType: TagTypeRecord | undefined, classes: Record<keyof Style, string>) => {
+    tag: CardTagRecord, tagType: TagTypeRecord | undefined, classes: Record<keyof IStyle, string>) => {
     if (!tagType) { return tag.price !== 0 || !tag.name.startsWith('_') ? classes.tagItemPrice : classes.tagItem; }
     return !tagType.icon || tagType.icon === '_' || tag.price > 0
         ? classes.tagItemPrice
         : classes.tagItem;
 };
 
-const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
+const Tags = (props: ITagsProps & WithStyles<keyof IStyle>) => {
     return (
         <div className={props.classes.tagSection}
             onClick={() => {
@@ -98,7 +99,7 @@ const Tags = (props: TagsProps & WithStyles<keyof Style>) => {
                     .filter(x => props.card.tags.count() === 1 || x[1].name !== 'Name')
                     .sortBy(x => CardList.getTagSortIndexByCard(props.card, x[1]))
                     .map(([key, tag]) => {
-                        let tagType = CardList.tagTypes.get(tag.typeId);
+                        const tagType = CardList.tagTypes.get(tag.typeId);
                         return (
                             <span
                                 key={key}

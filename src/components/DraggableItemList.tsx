@@ -4,7 +4,7 @@ import * as h from './helpers';
 import { reorder } from '../lib/helpers';
 import { Identifyable } from './Identifyable';
 import { List, ListItem, WithStyles } from 'material-ui';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 
 interface ItemListProps {
     onDragEnd: (items: Identifyable[]) => void;
@@ -23,7 +23,7 @@ const onDragEnd = (items: Identifyable[], result: any) => {
     ) as Identifyable[];
 };
 
-const DraggableItemList = (props: ItemListProps & WithStyles<keyof Style>) => {
+const DraggableItemList = (props: ItemListProps & WithStyles<keyof IStyle>) => {
     return (<DragDropContext onDragEnd={r => props.onDragEnd(onDragEnd(props.items, r))}>
         <Droppable droppableId="droppable">
             {(provided, snapshot) => (

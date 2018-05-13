@@ -1,22 +1,17 @@
 import * as React from 'react';
 import { Card, CardContent, Typography, TextField, Button, WithStyles } from 'material-ui';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 
-interface AddTaskProps {
-    addTask: (title: String) => void;
+interface IAddTaskProps {
+    addTask: (title: string) => void;
 }
 
-type Props = AddTaskProps & WithStyles<keyof Style>;
+type Props = IAddTaskProps & WithStyles<keyof IStyle>;
 
 class AddTask extends React.Component<Props, { title: string }> {
-    state = { title: '' };
+    public state = { title: '' };
 
-    addTask() {
-        this.props.addTask(this.state.title);
-        this.setState({ title: '' });
-    }
-
-    render() {
+    public render() {
         return (
             <Card className={this.props.classes.card}>
                 <CardContent>
@@ -44,6 +39,11 @@ class AddTask extends React.Component<Props, { title: string }> {
                 </CardContent>
             </Card>
         );
+    }
+
+    private addTask() {
+        this.props.addTask(this.state.title);
+        this.setState({ title: '' });
     }
 }
 

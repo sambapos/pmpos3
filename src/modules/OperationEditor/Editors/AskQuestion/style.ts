@@ -1,6 +1,6 @@
 import withStyles from 'material-ui/styles/withStyles';
 
-export interface Style {
+export interface IStyle {
     container: any;
     suggestionsContainerOpen: any;
     suggestion: any;
@@ -10,7 +10,7 @@ export interface Style {
     selectionButton: any;
 }
 
-export default withStyles(({ palette, spacing, breakpoints }): Style => ({
+export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     buttonContainer: {
         display: 'flex',
         flexWrap: 'wrap'

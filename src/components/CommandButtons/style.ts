@@ -1,12 +1,12 @@
 import withStyles from 'material-ui/styles/withStyles';
 
-export interface Style {
+export interface IStyle {
     commandButtonsContainer: any;
     button: any;
     highlightedButton: any;
 }
 
-export default withStyles(({ palette, spacing, breakpoints }): Style => ({
+export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     commandButtonsContainer: {
         flex: 'none',
         display: 'flex',

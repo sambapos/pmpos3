@@ -3,10 +3,10 @@ import { List as IList } from 'immutable';
 import { connect } from 'react-redux';
 import * as CardStore from '../store/Cards';
 import CardSelector from '../components/CardSelector';
-import { ApplicationState } from '../store';
+import { IApplicationState } from '../store';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 
-interface CardSelectorPageProps {
+interface ICardSelectorPageProps {
     cardType: string;
     cards: IList<CardRecord>;
     currentCardType: CardTypeRecord;
@@ -14,7 +14,7 @@ interface CardSelectorPageProps {
 }
 
 type CardSelectorPagePropType =
-    CardSelectorPageProps
+    ICardSelectorPageProps
     & typeof CardStore.actionCreators;
 
 const CardSelectorPage = (props: CardSelectorPagePropType) => {
@@ -27,7 +27,7 @@ const CardSelectorPage = (props: CardSelectorPagePropType) => {
     />;
 };
 
-const mapStateToProps = (state: ApplicationState) => ({
+const mapStateToProps = (state: IApplicationState) => ({
     cards: state.cards.cards,
     currentCardType: state.cards.currentCardType
 });

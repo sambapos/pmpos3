@@ -1,22 +1,22 @@
 import * as React from 'react';
 import CardPageContent from './CardPageContent';
 import { WithStyles } from 'material-ui/styles/withStyles';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 import * as _ from 'lodash';
 import { CardRecord } from 'pmpos-models';
 import { CardList } from 'pmpos-modules';
 
-interface SubCardProps {
+interface ISubCardProps {
     card: CardRecord;
     selectedCardId: string;
     onClick: (card: CardRecord, target: any) => void;
     handleCardClick: (Card: CardRecord) => void;
 }
 
-type PageProps = SubCardProps & WithStyles<keyof Style>;
+type PageProps = ISubCardProps & WithStyles<keyof IStyle>;
 
 class SubCards extends React.Component<PageProps, { tagCount: number }> {
-    subCardList: HTMLDivElement | null;
+    private subCardList: HTMLDivElement | null;
     private debouncedScrollBottom;
 
     constructor(props: PageProps) {
@@ -24,25 +24,18 @@ class SubCards extends React.Component<PageProps, { tagCount: number }> {
         this.state = { tagCount: props.card ? props.card.tags.count() : 0 };
     }
 
-    componentDidUpdate() {
+    public componentDidUpdate() {
         if (this.subCardList && this.props.card && this.state.tagCount !== this.props.card.cards.count()) {
             this.debouncedScrollBottom();
         }
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         this.debouncedScrollBottom = _.debounce(this.scroll_bottom);
         this.debouncedScrollBottom();
     }
 
-    scroll_bottom() {
-        if (this.subCardList) {
-            this.subCardList.scrollTop = this.subCardList.scrollHeight;
-            this.setState({ tagCount: this.props.card ? this.props.card.cards.count() : 0 });
-        }
-    }
-
-    render() {
+    public render() {
         if (this.props.card.cards.count() === 0) { return null; }
         return (
             <div
@@ -67,6 +60,14 @@ class SubCards extends React.Component<PageProps, { tagCount: number }> {
             </div>
         );
     }
+
+    private scroll_bottom() {
+        if (this.subCardList) {
+            this.subCardList.scrollTop = this.subCardList.scrollHeight;
+            this.setState({ tagCount: this.props.card ? this.props.card.cards.count() : 0 });
+        }
+    }
+
 }
 
 export default decorate(SubCards);

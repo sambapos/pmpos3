@@ -5,25 +5,18 @@ import { RouteComponentProps } from 'react-router';
 import { List } from 'immutable';
 import { WithStyles } from 'material-ui';
 
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 import TopBar from '../TopBar';
 import AddTask from './AddTask';
 import TaskList from './TaskList';
 
 export type TasksPageProps =
     { tasks: List<Map<any, any>> }
-    & WithStyles<keyof Style>
+    & WithStyles<keyof IStyle>
     & typeof TaskStore.actionCreators
     & RouteComponentProps<{}>;
 
 class TasksPage extends React.Component<TasksPageProps, {}> {
-
-    addTask(title: string) {
-        this.props.addTask(title);
-        this.props.setTaskEstimate(
-            this.props.tasks.count(),
-            this.props.tasks.count());
-    }
 
     public render() {
         return (
@@ -35,6 +28,13 @@ class TasksPage extends React.Component<TasksPageProps, {}> {
                 </div>
             </div>
         );
+    }
+
+    private addTask(title: string) {
+        this.props.addTask(title);
+        this.props.setTaskEstimate(
+            this.props.tasks.count(),
+            this.props.tasks.count());
     }
 }
 

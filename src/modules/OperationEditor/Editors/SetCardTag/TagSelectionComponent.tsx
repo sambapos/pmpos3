@@ -2,11 +2,11 @@ import * as React from 'react';
 import { DialogTitle, DialogActions, Button } from 'material-ui';
 import CardSelectorPage from '../../../../containers/CardSelectorPage';
 import { TagTypeRecord, CardTagRecord } from 'pmpos-models';
-import EditorProperties from '../editorProperties';
+import IEditorProperties from '../editorProperties';
 
-export default (props: EditorProperties<{ tagType: TagTypeRecord, tag: CardTagRecord }>) => {
-    let tagType = props.current ? props.current.tagType : new TagTypeRecord();
-    let tag = props.current ? props.current.tag : new CardTagRecord();
+export default (props: IEditorProperties<{ tagType: TagTypeRecord, tag: CardTagRecord }>) => {
+    const tagType = props.current ? props.current.tagType : new TagTypeRecord();
+    const tag = props.current ? props.current.tag : new CardTagRecord();
     return <>
         <DialogTitle>{
             tag.value
@@ -18,7 +18,7 @@ export default (props: EditorProperties<{ tagType: TagTypeRecord, tag: CardTagRe
             <CardSelectorPage
                 cardType={tagType.cardTypeReferenceName}
                 onSelectCard={card => {
-                    let data = {
+                    const data = {
                         ...tag.toJS(),
                         name: tagType.tagName, value: card.name, type: tagType.name
                     };

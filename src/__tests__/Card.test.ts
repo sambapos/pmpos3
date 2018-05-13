@@ -1,7 +1,7 @@
 import { CardRecord } from 'pmpos-models';
 
 it('creates card', () => {
-    let c = new CardRecord({ id: '0' });
+    const c = new CardRecord({ id: '0' });
     expect(c.id).toEqual('0');
 });
 
@@ -15,24 +15,24 @@ it('creates sub card', () => {
     let c = new CardRecord();
     c = c.sub('xyz');
     expect(c.cards.count()).toEqual(1);
-    let subCard = c.cards.get('xyz') as CardRecord;
+    const subCard = c.cards.get('xyz') as CardRecord;
     expect(subCard.id).toEqual('xyz');
 });
 
 it('tags sub card', () => {
     let c = new CardRecord();
     c = c.sub('xyz', sub => sub.tag('Name', 'Test'));
-    expect((<CardRecord>c.cards.get('xyz')).name).toEqual('Test');
+    expect((c.cards.get('xyz') as CardRecord).name).toEqual('Test');
 });
 
 it('tags sub card partially', () => {
     let c = new CardRecord();
     c = c.sub('xyz', sub => sub.tag({ name: 'Name', value: 'Test' }));
-    expect((<CardRecord>c.cards.get('xyz')).name).toEqual('Test');
+    expect((c.cards.get('xyz') as CardRecord).name).toEqual('Test');
 });
 
 it('tags source value', () => {
-    let c = new CardRecord().tag({
+    const c = new CardRecord().tag({
         name: 'Product',
         value: 'Blue Stamp',
         quantity: 1,
@@ -43,7 +43,7 @@ it('tags source value', () => {
 });
 
 it('tranfers tag value', () => {
-    let c = new CardRecord().tag({
+    const c = new CardRecord().tag({
         name: 'Product',
         value: 'Blue Stamp',
         quantity: 1,

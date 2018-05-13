@@ -1,12 +1,12 @@
 import { withStyles } from 'material-ui';
 
-export interface Style {
+export interface IStyle {
     root: any;
     content: any;
     footer: any;
 }
 
-export default withStyles(({ palette, spacing, breakpoints, mixins, transitions }): Style => ({
+export default withStyles(({ palette, spacing, breakpoints, mixins, transitions }): IStyle => ({
     root: {
         display: 'flex',
         flexFlow: 'column',

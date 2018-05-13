@@ -8,8 +8,7 @@ interface IconListItemProps {
 }
 
 class IconListItem extends React.Component<IconListItemProps, {}> {
-
-    render() {
+    public render() {
         return (
             <ListItem button onClick={() => this.props.onClick()}>
                 {this.props.icon && <i className="material-icons">{this.props.icon}</i>}

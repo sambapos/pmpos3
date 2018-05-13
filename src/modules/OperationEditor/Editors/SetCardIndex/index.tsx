@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { TextField, Button, DialogContent, DialogTitle, DialogActions } from 'material-ui';
 import { Fragment } from 'react';
-import EditorProperties from '../editorProperties';
+import IEditorProperties from '../editorProperties';
 
-export default class extends React.Component<EditorProperties<{}>, { index: string }> {
+export default class extends React.Component<IEditorProperties<{}>, { index: string }> {
     constructor(props: any) {
         super(props);
         this.state = { index: '' };
     }
-    componentDidMount() {
+    public componentDidMount() {
         if (this.props.card) {
             this.setState({ index: this.props.card.index.toString() });
         }
     }
 
-    render() {
+    public render() {
         return (
             <Fragment>
                 <DialogTitle>Set Card Index</DialogTitle>

@@ -1,6 +1,6 @@
 import withStyles from 'material-ui/styles/withStyles';
 
-export interface Style {
+export interface IStyle {
     card: any;
     content: any;
     root: any;
@@ -9,7 +9,7 @@ export interface Style {
     tabBar: any;
 }
 
-export default withStyles(({ palette, spacing, breakpoints }): Style => ({
+export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     tabBar: {
         flex: 'none',
         [breakpoints.up('sm')]: {

@@ -2,21 +2,21 @@ import * as React from 'react';
 import * as moment from 'moment';
 import { List as IList } from 'immutable';
 import { Paper } from 'material-ui';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 import { WithStyles } from 'material-ui/styles/withStyles';
 import THead from './THead';
 import { CardTagData } from 'pmpos-models';
 
-interface PageProps {
+interface IPageProps {
     searchValue: string;
     tags: IList<CardTagData>;
 }
 
-type Props = PageProps & WithStyles<keyof Style>;
+type Props = IPageProps & WithStyles<keyof IStyle>;
 
 const AccountTable = (props: Props) => {
     let balance = 0;
-    let firstTag = props.tags.first();
+    const firstTag = props.tags.first();
     if (!firstTag) {
         return null;
     }

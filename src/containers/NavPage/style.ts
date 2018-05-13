@@ -2,7 +2,7 @@ import { withStyles } from 'material-ui';
 
 const drawerWidth = 240;
 
-export interface Style {
+export interface IStyle {
     root: any;
     appFrame: any;
     drawerHeader: any;
@@ -14,7 +14,7 @@ export interface Style {
     contentShiftRight: any;
 }
 
-export default withStyles(({ palette, spacing, breakpoints, mixins, transitions }): Style => ({
+export default withStyles(({ palette, spacing, breakpoints, mixins, transitions }): IStyle => ({
     root: {
         width: '100%',
         height: '100%',

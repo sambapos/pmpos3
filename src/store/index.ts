@@ -6,8 +6,8 @@ import { List, Map } from 'immutable';
 import * as Chat from './Chat';
 
 // The top-level state object
-export interface ApplicationState {
-    client: Client.ClientState;
+export interface IApplicationState {
+    client: Client.IClientState;
     tasks: List<Map<any, any>>;
     cards: Cards.StateRecord;
     chat: Chat.StateRecord;

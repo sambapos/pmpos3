@@ -49,23 +49,23 @@ it('calculates inventory and profit', () => {
     cards = cards.set('4', new CardRecord({ id: '4' })
         .tag({ name: 'P', value: 'Fanta', quantity: 10, price: 5, target: 'Bar' }));
 
-    let tags = CardList.getTagsFrom(['bar'], cards);
-    let inTotal = tags.reduce((r, t) => r += t.tag.getInQuantityFor('Kola'), 0);
-    let outTotal = tags.reduce((r, t) => r += t.tag.getOutQuantityFor('Kola'), 0);
+    const tags = CardList.getTagsFrom(['bar'], cards);
+    const inTotal = tags.reduce((r, t) => r += t.tag.getInQuantityFor('Kola'), 0);
+    const outTotal = tags.reduce((r, t) => r += t.tag.getOutQuantityFor('Kola'), 0);
     expect(inTotal - outTotal).toEqual(48);
 
-    let creditTotal = tags.reduce((r, t) => r += t.getCreditFor('Kola'), 0);
+    const creditTotal = tags.reduce((r, t) => r += t.getCreditFor('Kola'), 0);
     expect(creditTotal).toEqual(12);
-    let debitTotal = tags.reduce((r, t) => r += t.getDebitFor('Kola'), 0);
+    const debitTotal = tags.reduce((r, t) => r += t.getDebitFor('Kola'), 0);
     expect(debitTotal).toEqual(250);
 
-    let avgC = creditTotal / outTotal;
+    const avgC = creditTotal / outTotal;
     expect(avgC).toEqual(6);
-    let avgD = debitTotal / inTotal;
+    const avgD = debitTotal / inTotal;
     expect(avgD).toEqual(5);
-    let profit = avgC - avgD;
+    const profit = avgC - avgD;
     expect(profit).toEqual(1);
-    let rate = (profit * 100) / avgD;
+    const rate = (profit * 100) / avgD;
     expect(rate).toEqual(20);
 });
 
@@ -91,7 +91,7 @@ it('calculates customer balance', () => {
 
     cards = cards.set(invoice2.id, invoice2);
 
-    let invoice3 = new CardRecord({ id: '3' })
+    const invoice3 = new CardRecord({ id: '3' })
         .tag('Name', 'A0003')
         .tag('Customer', 'Hasan Bey')
         .sub('3a', card => card.tag({ name: 'P', value: 'Fanta', quantity: 2, price: 6, source: 'Bar' }))
@@ -134,7 +134,7 @@ it('calculates customer balance', () => {
     expect(debit).toEqual(48);
     expect(credit).toEqual(32);
 
-    let receipt1 = new CardRecord({ id: '4' })
+    const receipt1 = new CardRecord({ id: '4' })
         .tag('Name', 'R0001')
         .sub('R1b', card => card.tag(
             { name: 'P', value: 'Nakit', quantity: 16, price: 1, unit: 'TL', source: 'Emre Eren', target: 'Kasa' }));

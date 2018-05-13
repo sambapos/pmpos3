@@ -4,9 +4,9 @@ import { TextField, Paper, MenuItem } from 'material-ui';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
 import { WithStyles } from 'material-ui/styles/withStyles';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 
-export interface Suggestion {
+export interface ISuggestion {
     label: string;
 }
 
@@ -30,7 +30,7 @@ function renderInput(inputProps: any) {
     );
 }
 
-function renderSuggestion(suggestion: Suggestion, { query, isHighlighted }: { query: string, isHighlighted: boolean }) {
+function renderSuggestion(suggestion: ISuggestion, { query, isHighlighted }: { query: string, isHighlighted: boolean }) {
     const matches = match(getSuggestionValue(suggestion), query);
     const parts = parse(getSuggestionValue(suggestion), matches);
 
@@ -63,25 +63,25 @@ function renderSuggestionsContainer(options: { containerProps: any, children: an
     );
 }
 
-function getSuggestionValue(suggestion: Suggestion) {
+function getSuggestionValue(suggestion: ISuggestion) {
     return suggestion.label;
 }
 
-interface SuggestProps {
-    getSuggestions: (value: string) => Suggestion[];
+interface ISuggestProps {
+    getSuggestions: (value: string) => ISuggestion[];
     handleChange: (event: any, newValue: string) => void;
     value: string;
     label: string;
 }
 
-interface SuggestState {
+interface ISuggestState {
     value: string;
-    suggestions: Suggestion[];
+    suggestions: ISuggestion[];
 }
 
-type Props = SuggestProps & WithStyles<keyof Style>;
+type Props = ISuggestProps & WithStyles<keyof IStyle>;
 
-class AutoSuggest extends React.Component<Props, SuggestState> {
+class AutoSuggest extends React.Component<Props, ISuggestState> {
 
     constructor(props: Props) {
         super(props);
@@ -91,32 +91,32 @@ class AutoSuggest extends React.Component<Props, SuggestState> {
         };
     }
 
-    handleSuggestionsFetchRequested = ({ value }) => {
+    public handleSuggestionsFetchRequested = ({ value }) => {
         this.setState({
             suggestions: this.props.getSuggestions(value),
         });
     }
 
-    handleSuggestionsClearRequested = () => {
+    public handleSuggestionsClearRequested = () => {
         this.setState({
             suggestions: [],
         });
     }
 
-    handleChange = (event, { newValue }) => {
+    public handleChange = (event, { newValue }) => {
         this.setState({
             value: newValue,
         });
         this.props.handleChange(event, newValue);
     }
 
-    componentWillReceiveProps(props: any) {
+    public componentWillReceiveProps(props: any) {
         if (props.value !== this.state.value) {
             this.setState({ value: props.value });
         }
     }
 
-    render() {
+    public render() {
         const { classes } = this.props;
 
         return (

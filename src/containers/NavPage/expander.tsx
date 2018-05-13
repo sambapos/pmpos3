@@ -1,21 +1,17 @@
 import * as React from 'react';
 import { ListItem, ListItemText, Collapse, List } from 'material-ui';
 
-interface ExpanderProps {
+interface IExpanderProps {
     mainText: string;
 }
 
-type Props = ExpanderProps;
+type Props = IExpanderProps;
 
 class Expander extends React.Component<Props, { expanded: boolean }> {
 
-    state = { expanded: false };
+    public state = { expanded: false };
 
-    handleClick = () => {
-        this.setState({ expanded: !this.state.expanded });
-    }
-
-    render() {
+    public render() {
         return (
             <div>
                 <ListItem button onClick={this.handleClick}>
@@ -31,6 +27,10 @@ class Expander extends React.Component<Props, { expanded: boolean }> {
                 </Collapse>
             </div>
         );
+    }
+
+    private handleClick = () => {
+        this.setState({ expanded: !this.state.expanded });
     }
 }
 export default Expander;

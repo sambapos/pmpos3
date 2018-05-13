@@ -1,20 +1,20 @@
 import { Reducer } from 'redux';
 import { List as IList, Map as IMap, fromJS } from 'immutable';
-import { AppThunkAction } from './appThunkAction';
+import { IAppThunkAction } from './appThunkAction';
 import * as shortid from 'shortid';
 
-type AddTaskAction = {
+interface IAddTaskAction {
     type: 'ADD_TASK',
     title: string
-};
+}
 
-type SetTaskEstimateAction = {
+interface ISetTaskEstimateAction {
     type: 'SET_TASK_ESTIMATE',
     index: number,
     estimate: number
-};
+}
 
-type TasksAction = AddTaskAction | SetTaskEstimateAction;
+type TasksAction = IAddTaskAction | ISetTaskEstimateAction;
 
 export const reducer: Reducer<IList<IMap<any, any>>> = (
     state: IList<IMap<any, any>> = IList<IMap<any, any>>(),
@@ -37,10 +37,10 @@ export const reducer: Reducer<IList<IMap<any, any>>> = (
 };
 
 export const actionCreators = {
-    addTask: (title: string): AppThunkAction<TasksAction> => (dispatch, getState) => {
+    addTask: (title: string): IAppThunkAction<TasksAction> => (dispatch, getState) => {
         dispatch({ type: 'ADD_TASK', title });
     },
-    setTaskEstimate: (index: number, estimate: number) => <SetTaskEstimateAction>{
+    setTaskEstimate: (index: number, estimate: number) => <ISetTaskEstimateAction>{
         type: 'SET_TASK_ESTIMATE', index, estimate
     },
 };

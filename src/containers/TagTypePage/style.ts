@@ -1,6 +1,6 @@
 import withStyles from 'material-ui/styles/withStyles';
 
-export interface Style {
+export interface IStyle {
     card: any;
     content: any;
     paper: any;
@@ -17,14 +17,14 @@ export interface Style {
     spacer: any;
 }
 
-export default withStyles(({ palette, spacing, breakpoints }): Style => ({
+export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     node: {
         backgroundColor: palette.background.paper,
         paddingLeft: spacing.unit,
         paddingRight: spacing.unit,
         paddingBottom: spacing.unit,
         marginBottom: spacing.unit,
-        borderColor: (<any>palette).divider,
+        borderColor: palette.divider,
         border: '1px solid',
     },
     leaf: {

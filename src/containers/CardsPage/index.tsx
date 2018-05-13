@@ -9,8 +9,8 @@ import {
     WithStyles, Paper, Button,
     AppBar, Tab, Tabs, DialogTitle, Divider, DialogActions
 } from 'material-ui';
-import decorate, { Style } from './style';
-import { ApplicationState } from '../../store/index';
+import decorate, { IStyle } from './style';
+import { IApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import CardSelector from '../../components/CardSelector';
@@ -30,18 +30,18 @@ type PageProps =
         showAllCards: boolean,
         tabIndex: number
     }
-    & WithStyles<keyof Style>
+    & WithStyles<keyof IStyle>
     & typeof CardStore.actionCreators
     & typeof ClientStore.actionCreators
     & RouteComponentProps<{}>;
 
-interface State {
+interface IState {
     currentCardType: CardTypeRecord;
     searchValueText: string;
     tabs: string[];
 }
 
-class CardsPage extends React.Component<PageProps, State> {
+class CardsPage extends React.Component<PageProps, IState> {
     constructor(props: PageProps) {
         super(props);
         this.state = {
@@ -51,7 +51,7 @@ class CardsPage extends React.Component<PageProps, State> {
         };
     }
 
-    componentWillReceiveProps(nextProps: PageProps) {
+    public componentWillReceiveProps(nextProps: PageProps) {
         if (nextProps.currentCardType.name !== this.state.currentCardType.name) {
             this.setState({
                 currentCardType: nextProps.currentCardType,
@@ -64,95 +64,6 @@ class CardsPage extends React.Component<PageProps, State> {
             this.setState({
                 searchValueText: nextProps.searchValue,
             });
-        }
-    }
-
-    handleChangeListIndex = index => {
-        this.props.setTabIndex(index);
-    }
-
-    updateSearch() {
-        this.props.setSearchValue(this.state.searchValueText);
-    }
-
-    private displayCard(c: CardRecord) {
-        this.props.history.push(
-            process.env.PUBLIC_URL + '/card/' + c.id);
-    }
-
-    private addNewCard(tags: CardTag[]) {
-        if (this.props.currentCardType.id) {
-            this.props.addCard(this.props.currentCardType, tags);
-            this.props.history.push(process.env.PUBLIC_URL + '/card');
-        }
-    }
-
-    // todo: BURAYA BAK
-    onSaveSortOrder = (list: CardRecord[]) => {
-        for (let index = 0; index < list.length; index++) {
-            const item = list[index];
-            if (item.index !== index) {
-                list[index] = item.set('index', index);
-                CardsManager.openCard('', item.id);
-                // let actionData =
-                //     new ActionRecord({
-                //         id: shortid.generate(),
-                //         cardId: item.id,
-                //         actionType: 'SET_CARD_INDEX',
-                //         data: { index }
-                //     });
-                CardsManager.executeAction('', item.id, 'SET_CARD_INDEX', { index })
-                    .then(() => CardsManager.closeCard('', item.id));
-                // this.props.postCommit(item, IList<ActionRecord>([actionData]));
-            }
-        }
-    }
-
-    private getTabValues(currentCardType: CardTypeRecord): string[] {
-        let result: string[] = [];
-        if (currentCardType.tagTypes.length < 0) { return result; }
-        result = currentCardType.tagTypes
-            .reduce(
-                (r, t) => {
-                    let tt = CardList.tagTypes.get(t);
-                    if (tt && tt.cardTypeReferenceName) {
-                        let ct = CardList.getCardTypeByRef(tt.cardTypeReferenceName);
-                        if (ct) { r.push(ct.name); }
-                    }
-                    return r;
-                },
-                result);
-        result.unshift(currentCardType.name);
-        return result;
-    }
-
-    handleCardSelection(selectedCard: CardRecord, cardType: CardTypeRecord, cards: CardRecord[]) {
-        if (cards.length === 1) {
-            this.displayCard(cards[0]);
-        } else if (cards.length === 0) {
-            let tt = this.props.currentCardType.tagTypes.find(t => {
-                let type = CardList.tagTypes.get(t);
-                return type !== undefined && type.cardTypeReferenceName === cardType.reference;
-            });
-            let tag = {
-                typeId: tt,
-                name: cardType.reference,
-                value: selectedCard.name
-            };
-            this.addNewCard([new CardTagRecord(tag)]);
-        } else if (cards.length > 1) {
-            this.props.SetModalComponent(<>
-                <DialogTitle>Select {this.state.currentCardType.reference}</DialogTitle>
-                <Divider />
-                <CardSelector
-                    sourceCards={List<CardRecord>(cards)}
-                    sourceCardType={this.props.currentCardType}
-                    onSelectCard={c => this.displayCard(c)}
-                />
-                <DialogActions>
-                    <Button onClick={() => this.props.SetModalState(false)}>Cancel</Button>
-                </DialogActions>
-            </>);
         }
     }
 
@@ -197,14 +108,103 @@ class CardsPage extends React.Component<PageProps, State> {
         );
     }
 
-    getSecondaryCommands() {
-        let result = [
+    private handleChangeListIndex = index => {
+        this.props.setTabIndex(index);
+    }
+
+    // private updateSearch() {
+    //     this.props.setSearchValue(this.state.searchValueText);
+    // }
+
+    private displayCard(c: CardRecord) {
+        this.props.history.push(
+            process.env.PUBLIC_URL + '/card/' + c.id);
+    }
+
+    private addNewCard(tags: CardTag[]) {
+        if (this.props.currentCardType.id) {
+            this.props.addCard(this.props.currentCardType, tags);
+            this.props.history.push(process.env.PUBLIC_URL + '/card');
+        }
+    }
+
+    // todo: BURAYA BAK
+    private onSaveSortOrder = (list: CardRecord[]) => {
+        for (let index = 0; index < list.length; index++) {
+            const item = list[index];
+            if (item.index !== index) {
+                list[index] = item.set('index', index);
+                CardsManager.openCard('', item.id);
+                // let actionData =
+                //     new ActionRecord({
+                //         id: shortid.generate(),
+                //         cardId: item.id,
+                //         actionType: 'SET_CARD_INDEX',
+                //         data: { index }
+                //     });
+                CardsManager.executeAction('', item.id, 'SET_CARD_INDEX', { index })
+                    .then(() => CardsManager.closeCard('', item.id));
+                // this.props.postCommit(item, IList<ActionRecord>([actionData]));
+            }
+        }
+    }
+
+    private getTabValues(currentCardType: CardTypeRecord): string[] {
+        let result: string[] = [];
+        if (currentCardType.tagTypes.length < 0) { return result; }
+        result = currentCardType.tagTypes
+            .reduce(
+                (r, t) => {
+                    const tt = CardList.tagTypes.get(t);
+                    if (tt && tt.cardTypeReferenceName) {
+                        const ct = CardList.getCardTypeByRef(tt.cardTypeReferenceName);
+                        if (ct) { r.push(ct.name); }
+                    }
+                    return r;
+                },
+                result);
+        result.unshift(currentCardType.name);
+        return result;
+    }
+
+    private handleCardSelection(selectedCard: CardRecord, cardType: CardTypeRecord, cards: CardRecord[]) {
+        if (cards.length === 1) {
+            this.displayCard(cards[0]);
+        } else if (cards.length === 0) {
+            const tt = this.props.currentCardType.tagTypes.find(t => {
+                const type = CardList.tagTypes.get(t);
+                return type !== undefined && type.cardTypeReferenceName === cardType.reference;
+            });
+            const tag = {
+                typeId: tt,
+                name: cardType.reference,
+                value: selectedCard.name
+            };
+            this.addNewCard([new CardTagRecord(tag)]);
+        } else if (cards.length > 1) {
+            this.props.SetModalComponent(<>
+                <DialogTitle>Select {this.state.currentCardType.reference}</DialogTitle>
+                <Divider />
+                <CardSelector
+                    sourceCards={List<CardRecord>(cards)}
+                    sourceCardType={this.props.currentCardType}
+                    onSelectCard={c => this.displayCard(c)}
+                />
+                <DialogActions>
+                    <Button onClick={() => this.props.SetModalState(false)}>Cancel</Button>
+                </DialogActions>
+            </>);
+        }
+    }
+
+    private getSecondaryCommands() {
+        const result = [
             {
                 icon: 'arrow_drop_down',
                 menuItems: this.props.rootCardTypes.map(ct => {
                     return {
                         icon: ct, onClick: () => {
-                            let item = this.props.cardTypes.valueSeq().find(c => c.name === ct);
+                            const item = this.props.cardTypes.valueSeq().find(c => c.name === ct);
                             if (item) { this.setState({ currentCardType: item }); }
                             this.props.setCurrentCardType(item);
                         }
@@ -249,7 +249,7 @@ class CardsPage extends React.Component<PageProps, State> {
     }
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
+const mapStateToProps = (state: IApplicationState) => ({
     cards: state.cards.cards,
     card: state.cards.currentCard,
     cardTypes: state.config.cardTypes,

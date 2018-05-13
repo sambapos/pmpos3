@@ -1,13 +1,13 @@
 import withStyles from 'material-ui/styles/withStyles';
 
-export interface Style {
+export interface IStyle {
     content: any;
     root: any;
     footer: any;
     editor: any;
 }
 
-export default withStyles(({ palette, spacing, breakpoints }): Style => ({
+export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     editor: {
         flex: 1,
         width: 'auto',

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { WithStyles } from 'material-ui/styles/withStyles';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 import SearchEdit from '../SearchEdit';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 import { CardList } from 'pmpos-modules';
@@ -8,7 +8,7 @@ import { List } from 'immutable';
 import CardLister from './CardLister';
 import GridSelector from '../GridSelector';
 
-interface CardSelectorProps {
+interface ICardSelectorProps {
     sourceCards: List<CardRecord>;
     sourceCardType: CardTypeRecord;
     searchValue?: string;
@@ -20,9 +20,9 @@ interface CardSelectorProps {
     onSelectCard: (selectedCard: CardRecord, cardType: CardTypeRecord, cards: CardRecord[]) => void;
 }
 
-type Props = CardSelectorProps & WithStyles<keyof Style>;
+type Props = ICardSelectorProps & WithStyles<keyof IStyle>;
 
-interface CardSelectorState {
+interface ICardSelectorState {
     searchValue: string;
     scrollTop: number;
     cardType: CardTypeRecord;
@@ -33,9 +33,9 @@ interface CardSelectorState {
 const extractCardsfromSourceCardTags = (sourceCards: List<CardRecord>, tagTypeId: string) => {
     return sourceCards.reduce(
         (r, c) => {
-            let tag = c.tags.find(t => t.typeId === tagTypeId);
+            const tag = c.tags.find(t => t.typeId === tagTypeId);
             if (tag) {
-                let card = CardList.cards.get(tag.cardId);
+                const card = CardList.cards.get(tag.cardId);
                 if (card) { r = r.push(card); }
             }
             return r;
@@ -45,7 +45,7 @@ const extractCardsfromSourceCardTags = (sourceCards: List<CardRecord>, tagTypeId
 
 const findTagTypeIdReferencedToCardType = (cardType: CardTypeRecord, ref: string) => {
     return cardType.tagTypes.find(x => {
-        let tt = CardList.tagTypes.get(x);
+        const tt = CardList.tagTypes.get(x);
         return tt !== undefined && tt.cardTypeReferenceName === ref;
     });
 };
@@ -57,13 +57,13 @@ const getCardList = (
         return searchValue ? List<CardRecord>(CardList.findCards(cardType, searchValue)) : sourceCards;
     } else if (cardType) {
         if (shortList) {
-            let cardList = CardList.getCardsByType(cardType.id).sortBy(x => x.name);
+            const cardList = CardList.getCardsByType(cardType.id).sortBy(x => x.name);
             return searchValue ? cardList.filter(c => c.includes(searchValue.toLowerCase())) : cardList;
         } else {
             if (searchValue) {
                 return List<CardRecord>(CardList.findCards(cardType, searchValue));
             } else {
-                let tagTypeId = findTagTypeIdReferencedToCardType(sourceCardType, cardType.reference);
+                const tagTypeId = findTagTypeIdReferencedToCardType(sourceCardType, cardType.reference);
                 if (tagTypeId) {
                     return extractCardsfromSourceCardTags(sourceCards, tagTypeId);
                 }
@@ -73,12 +73,12 @@ const getCardList = (
     return List<CardRecord>();
 };
 
-class CardSelector extends React.Component<Props, CardSelectorState> {
+class CardSelector extends React.Component<Props, ICardSelectorState> {
     constructor(props: Props) {
         super(props);
-        let cardType = this.getCardType(props.cardType);
-        let maybeVirtual = CardList.getCount(cardType.name) > 100;
-        let items = getCardList(
+        const cardType = this.getCardType(props.cardType);
+        const maybeVirtual = CardList.getCount(cardType.name) > 100;
+        const items = getCardList(
             cardType, props.sourceCardType, props.sourceCards,
             !maybeVirtual, props.searchValue
         );
@@ -90,15 +90,15 @@ class CardSelector extends React.Component<Props, CardSelectorState> {
             maybeVirtual
         };
     }
-    componentWillReceiveProps(nextProps: Props) {
+    public componentWillReceiveProps(nextProps: Props) {
         if (nextProps.cardType !== this.props.cardType && nextProps.searchValue) {
             this.updateSearchValue('');
             return;
         }
         if (nextProps.cardType !== this.props.cardType || nextProps.searchValue !== this.props.searchValue) {
-            let cardType = this.getCardType(nextProps.cardType);
-            let maybeVirtual = CardList.getCount(cardType.name) > 100;
-            let items = getCardList(
+            const cardType = this.getCardType(nextProps.cardType);
+            const maybeVirtual = CardList.getCount(cardType.name) > 100;
+            const items = getCardList(
                 cardType, nextProps.sourceCardType, nextProps.sourceCards,
                 !maybeVirtual, nextProps.searchValue
             );
@@ -110,7 +110,7 @@ class CardSelector extends React.Component<Props, CardSelectorState> {
                 scrollTop: 0
             });
         } else if (nextProps.sourceCards !== this.props.sourceCards) {
-            let items = getCardList(
+            const items = getCardList(
                 this.state.cardType, nextProps.sourceCardType, nextProps.sourceCards,
                 !this.state.maybeVirtual, nextProps.searchValue
             );
@@ -120,7 +120,7 @@ class CardSelector extends React.Component<Props, CardSelectorState> {
     get isRegularList(): boolean {
         return this.props.sourceCardType.name === this.state.cardType.name;
     }
-    updateSearchValue(searchValue: string) {
+    public updateSearchValue(searchValue: string) {
         // let items = searchValue
         //     ? List<CardRecord>(CardList.findCards(this.state.cardType, searchValue))
         //     : getCardList(this.state.cardType, this.props.sourceCardType, this.props.sourceCards);
@@ -129,14 +129,14 @@ class CardSelector extends React.Component<Props, CardSelectorState> {
             this.props.onSearchValueChange(searchValue);
         }
     }
-    getCardType(cardTypeName: string | undefined) {
-        let cardType = cardTypeName
+    public getCardType(cardTypeName: string | undefined) {
+        const cardType = cardTypeName
             ? CardList.getCardTypeByRef(cardTypeName) as CardTypeRecord
             : this.props.sourceCardType;
         return cardType;
     }
 
-    getItemList() {
+    public getItemList() {
         return <CardLister
             cards={this.state.items}
             cardType={this.props.sourceCardType}
@@ -157,7 +157,7 @@ class CardSelector extends React.Component<Props, CardSelectorState> {
             onSaveSortOrder={items => this.props.onSaveSortOrder && this.props.onSaveSortOrder(items)}
         />;
     }
-    getButtonList() {
+    public getButtonList() {
         return <GridSelector
             items={this.state.items.toArray()}
             cardType={this.state.cardType}
@@ -165,14 +165,14 @@ class CardSelector extends React.Component<Props, CardSelectorState> {
             onSelectCard={this.props.onSelectCard}
         />;
     }
-    getList() {
+    public getList() {
         if (this.isRegularList || (this.props.searchValue && this.state.maybeVirtual)) {
             return this.getItemList();
         }
         return this.getButtonList();
     }
 
-    render() {
+    public render() {
         if (!this.state.cardType) {
             return (<div>Card Type `${this.props.cardType}` not found</div>);
         }

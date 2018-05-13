@@ -6,27 +6,15 @@ import NestedListItem from './nestedListItem';
 import IconListItem from './iconListItem';
 import Divider from 'material-ui/Divider/Divider';
 
-interface NavListProps {
+interface INavListProps {
     loggedInUser: string;
     history: History.History;
     closeDrawer: () => void;
 }
 
-export default class extends React.Component<NavListProps> {
+export default class extends React.Component<INavListProps> {
 
-    nav(link: string) {
-        this.props.history.push(process.env.PUBLIC_URL + link);
-        if (this.props.closeDrawer && window.innerWidth < 1024) { this.props.closeDrawer(); }
-    }
-
-    getUser() {
-        if (this.props.loggedInUser) {
-            return ` (${this.props.loggedInUser})`;
-        }
-        return '';
-    }
-
-    render() {
+    public render() {
         return (
             <List>
                 <IconListItem
@@ -48,4 +36,17 @@ export default class extends React.Component<NavListProps> {
             </List>
         );
     }
+
+    private nav(link: string) {
+        this.props.history.push(process.env.PUBLIC_URL + link);
+        if (this.props.closeDrawer && window.innerWidth < 1024) { this.props.closeDrawer(); }
+    }
+
+    private getUser() {
+        if (this.props.loggedInUser) {
+            return ` (${this.props.loggedInUser})`;
+        }
+        return '';
+    }
+
 }

@@ -1,12 +1,12 @@
-import * as React from 'react';
-import * as h from './helpers';
-import * as _ from 'lodash';
 import { Map as IMap } from 'immutable';
-import decorate, { Style } from './style';
+import * as _ from 'lodash';
+import { Button, Icon, IconButton, List, ListSubheader, Snackbar, WithStyles } from 'material-ui';
+import * as React from 'react';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { reorder } from './../lib/helpers';
 import CardItem from './CardItem';
-import { Draggable, DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { List, ListSubheader, WithStyles, Snackbar, Button, IconButton, Icon } from 'material-ui';
+import * as h from './helpers';
+import decorate, { IStyle } from './style';
 
 const cardRenderer = (card: any, index: number, onClick: (c: any) => void, template: string) => {
     return (
@@ -35,39 +35,39 @@ const cardRenderer = (card: any, index: number, onClick: (c: any) => void, templ
     );
 };
 
-interface DraggableListProps {
+interface IDraggableListProps {
     items: any[];
     template: string;
     onClick: (c: any) => void;
     onSaveSortOrder: (items: any[]) => void;
 }
 
-type Props = DraggableListProps & WithStyles<keyof Style>;
+type Props = IDraggableListProps & WithStyles<keyof IStyle>;
 
-interface DraggableListState {
+interface IDraggableListState {
     items: IMap<string, any[]>;
     snackbarOpen: boolean;
 }
 
-class DraggableList extends React.Component<Props, DraggableListState> {
+class DraggableList extends React.Component<Props, IDraggableListState> {
     constructor(props: Props) {
         super(props);
         this.state = { items: this.groupItems(props.items), snackbarOpen: false };
     }
-    groupItems(items: any[]): IMap<string, any[]> {
+    public groupItems(items: any[]): IMap<string, any[]> {
         if (items.length > 0) {
-            let groupedItems = _.groupBy(items, x => x.category);
+            const groupedItems = _.groupBy(items, x => x.category);
             return IMap<string, any[]>(groupedItems);
         }
         return IMap<string, any[]>();
     }
-    componentWillReceiveProps(nextProps: Props) {
+    public componentWillReceiveProps(nextProps: Props) {
         if (nextProps.items !== this.props.items) {
             this.setState({ items: this.groupItems(nextProps.items) });
         }
     }
-    render() {
-        let displayCategories = this.state.items.count() > 1;
+    public render() {
+        const displayCategories = this.state.items.count() > 1;
         return <>
             <List className={this.props.classes.draggableList} subheader={<li />}>
                 {this.state.items.map((values, category) => (
@@ -97,14 +97,11 @@ class DraggableList extends React.Component<Props, DraggableListState> {
             </List>
             <Snackbar
                 anchorOrigin={{
-                    vertical: 'bottom',
                     horizontal: 'right',
+                    vertical: 'bottom',
                 }}
                 open={this.state.snackbarOpen}
                 onClose={this.handleSnackbarClose}
-                SnackbarContentProps={{
-                    'aria-describedby': 'message-id',
-                }}
                 message={<span id="message-id">Sort Order changed</span>}
                 action={[
                     <Button key="save" color="secondary" size="small"
@@ -128,13 +125,13 @@ class DraggableList extends React.Component<Props, DraggableListState> {
             />
         </>;
     }
-    handleSnackbarClose = (event, reason?) => {
+    public handleSnackbarClose = (event, reason?) => {
         if (reason === 'clickaway') {
             return;
         }
         this.setState({ snackbarOpen: false });
     }
-    onDragEnd(category: string, result: any) {
+    public onDragEnd(category: string, result: any) {
         // dropped outside the list
         if (!result.destination) {
             return;
@@ -142,7 +139,7 @@ class DraggableList extends React.Component<Props, DraggableListState> {
 
         if (result.source.index === result.destination.index) { return; }
 
-        let items = reorder(
+        const items = reorder(
             this.state.items.get(category) as any[],
             result.source.index,
             result.destination.index

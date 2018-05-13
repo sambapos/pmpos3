@@ -14,7 +14,7 @@ const rowRenderer = (
 ) => {
 
     if (index >= items.length) { return 'NA'; }
-    var card = items[index];
+    const card = items[index];
     return (<CellMeasurer
         cache={cache}
         columnIndex={0}
@@ -34,7 +34,7 @@ const rowRenderer = (
     );
 };
 
-interface VirtualListProps {
+interface IVirtualListProps {
     rowCount: number;
     scrollTop: number;
     cache: any;
@@ -46,7 +46,7 @@ interface VirtualListProps {
     template: string;
 }
 
-export default (props: VirtualListProps) => {
+export default (props: IVirtualListProps) => {
     return <InfiniteLoader
         isRowLoaded={(x) => props.isRowLoaded(x)}
         loadMoreRows={(x) => props.loadMoreRows(x)}

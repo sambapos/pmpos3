@@ -4,16 +4,16 @@ import { MenuItem, Divider } from 'material-ui';
 import { CardRecord, TagTypeRecord, CardTypeRecord } from 'pmpos-models';
 import { CardList, CardOperation, cardOperations } from 'pmpos-modules';
 
-interface TagMenuItemsProps {
+interface ITagMenuItemsProps {
     selectedCard: CardRecord;
     handleOperation: (operation?: CardOperation, currentData?: any) => void;
     handleMenuClose: () => void;
 }
 
-export default (props: CardPageProps & TagMenuItemsProps) => {
+export default (props: CardPageProps & ITagMenuItemsProps) => {
 
-    let cardTags = props.selectedCard.tags.valueSeq();
-    let cardType = CardList.getCardType(props.selectedCard.typeId);
+    const cardTags = props.selectedCard.tags.valueSeq();
+    const cardType = CardList.getCardType(props.selectedCard.typeId);
     let unselectedTagTypes: TagTypeRecord[] = [];
     let subCardTypes: CardTypeRecord[] = [];
 

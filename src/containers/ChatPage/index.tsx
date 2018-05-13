@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../store';
+import { IApplicationState } from '../../store';
 import { WithStyles, List as MList, ListItem, Input, IconButton, Typography } from 'material-ui';
 import { RouteComponentProps } from 'react-router';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 import TopBar from '../TopBar';
 import Paper from 'material-ui/Paper/Paper';
 import Divider from 'material-ui/Divider/Divider';
@@ -12,7 +12,7 @@ import * as moment from 'moment';
 
 export type PageProps =
     { chat: ChatStore.StateRecord, loggedInUser: string }
-    & WithStyles<keyof Style>
+    & WithStyles<keyof IStyle>
     & typeof ChatStore.actionCreators
     & RouteComponentProps<{}>;
 
@@ -25,17 +25,11 @@ class ChatPage extends React.Component<PageProps, {
         this.state = { message: '', enabled: false };
     }
 
-    componentDidUpdate() {
-        var objDiv = document.getElementById('chatDiv');
+    public componentDidUpdate() {
+        const objDiv = document.getElementById('chatDiv');
         if (objDiv) {
             objDiv.scrollTop = objDiv.scrollHeight;
         }
-    }
-
-    sort(a: ChatStore.Message, b: ChatStore.Message) {
-        return a.lamport !== b.lamport
-            ? a.lamport - b.lamport
-            : a.time - b.time;
     }
 
     public render() {
@@ -87,13 +81,19 @@ class ChatPage extends React.Component<PageProps, {
         );
     }
 
-    addMessage() {
+    private sort(a: ChatStore.IMessage, b: ChatStore.IMessage) {
+        return a.lamport !== b.lamport
+            ? a.lamport - b.lamport
+            : a.time - b.time;
+    }
+
+    private addMessage() {
         this.props.addMessage(this.state.message);
         this.setState({ message: '' });
     }
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
+const mapStateToProps = (state: IApplicationState) => ({
     chat: state.chat,
     loggedInUser: state.client.loggedInUser
 });

@@ -1,11 +1,11 @@
 import { Reducer } from 'redux';
 import * as shortid from 'shortid';
 import { Record, Map as IMap } from 'immutable';
-import { AppThunkAction } from './appThunkAction';
+import { IAppThunkAction } from './appThunkAction';
 import { RuleManager, CardList, DataBuilder } from 'pmpos-modules';
 import { CardTypeRecord, TagTypeRecord, RuleRecord } from 'pmpos-models';
 
-interface ConfigState {
+interface IConfigState {
     protocol: any;
     currentCardType: CardTypeRecord;
     currentTagType: TagTypeRecord;
@@ -17,7 +17,7 @@ interface ConfigState {
     rules: IMap<string, RuleRecord>;
 }
 
-export class ConfigStateRecord extends Record<ConfigState>({
+export class ConfigStateRecord extends Record<IConfigState>({
     protocol: undefined,
     isLoading: false,
     currentCardType: new CardTypeRecord(),
@@ -29,107 +29,107 @@ export class ConfigStateRecord extends Record<ConfigState>({
     rules: IMap<string, RuleRecord>()
 }) { }
 
-type SetConfigProtocolAction = {
+interface ISetConfigProtocolAction {
     type: 'SET_CONFIG_PROTOCOL',
     protocol: any
-};
+}
 
-type ConfigReceivedAction = {
+interface IConfigReceivedAction {
     type: 'CONFIG_RECEIVED',
     payload: Map<string, any>;
-};
+}
 
-type AddRuleAction = {
+interface IAddRuleAction {
     type: 'ADD_RULE'
-};
+}
 
-type ResetRuleAction = {
+interface IResetRuleAction {
     type: 'RESET_RULE'
-};
+}
 
-type LoadRuleAction = {
+interface ILoadRuleAction {
     type: 'LOAD_RULE'
-    id: String
+    id: string
     payload: Promise<RuleRecord>
-};
+}
 
-type LoadRuleRequestAction = {
+interface ILoadRuleRequestAction {
     type: 'LOAD_RULE_REQUEST'
-};
+}
 
-type LoadRuleSuccessAction = {
+interface ILoadRuleSuccessAction {
     type: 'LOAD_RULE_SUCCESS'
     payload: RuleRecord
-};
+}
 
-type LoadRuleFailAction = {
+interface ILoadRuleFailAction {
     type: 'LOAD_RULE_FAIL'
-};
+}
 
-type AddCardTypeAction = {
+interface IAddCardTypeAction {
     type: 'ADD_CARD_TYPE'
-};
+}
 
-type ResetCardTypeAction = {
+interface IResetCardTypeAction {
     type: 'RESET_CARD_TYPE'
-};
+}
 
-type LoadCardTypeAction = {
+interface ILoadCardTypeAction {
     type: 'LOAD_CARD_TYPE'
-    id: String
+    id: string
     payload: Promise<CardTypeRecord>
-};
+}
 
-type LoadCardTypeRequestAction = {
+interface ILoadCardTypeRequestAction {
     type: 'LOAD_CARD_TYPE_REQUEST'
-};
+}
 
-type LoadCardTypeSuccessAction = {
+interface ILoadCardTypeSuccessAction {
     type: 'LOAD_CARD_TYPE_SUCCESS'
     payload: CardTypeRecord
-};
+}
 
-type LoadCardTypeFailAction = {
+interface ILoadCardTypeFailAction {
     type: 'LOAD_CARD_TYPE_FAIL'
-};
+}
 
 /// ---
-type AddTagTypeAction = {
+interface IAddTagTypeAction {
     type: 'ADD_TAG_TYPE'
-};
+}
 
-type ResetTagTypeAction = {
+interface IResetTagTypeAction {
     type: 'RESET_TAG_TYPE'
-};
+}
 
-type LoadTagTypeAction = {
+interface ILoadTagTypeAction {
     type: 'LOAD_TAG_TYPE'
-    id: String
+    id: string
     payload: Promise<TagTypeRecord>
-};
+}
 
-type LoadTagTypeRequestAction = {
+interface ILoadTagTypeRequestAction {
     type: 'LOAD_TAG_TYPE_REQUEST'
-};
+}
 
-type LoadTagTypeSuccessAction = {
+interface ILoadTagTypeSuccessAction {
     type: 'LOAD_TAG_TYPE_SUCCESS'
     payload: TagTypeRecord
-};
+}
 
-type LoadTagTypeFailAction = {
+interface ILoadTagTypeFailAction {
     type: 'LOAD_TAG_TYPE_FAIL'
-};
+}
 
-type KnownActions = SetConfigProtocolAction | ConfigReceivedAction | ResetCardTypeAction
-    | LoadCardTypeAction | LoadCardTypeFailAction | LoadCardTypeRequestAction
-    | LoadCardTypeSuccessAction | AddCardTypeAction
+type KnownActions = ISetConfigProtocolAction | IConfigReceivedAction | IResetCardTypeAction
+    | ILoadCardTypeAction | ILoadCardTypeFailAction | ILoadCardTypeRequestAction
+    | ILoadCardTypeSuccessAction | IAddCardTypeAction
 
-    | ResetRuleAction | LoadRuleAction | LoadRuleFailAction | LoadRuleRequestAction
-    | LoadRuleSuccessAction | AddRuleAction
+    | IResetRuleAction | ILoadRuleAction | ILoadRuleFailAction | ILoadRuleRequestAction
+    | ILoadRuleSuccessAction | IAddRuleAction
 
-    | ResetTagTypeAction | LoadTagTypeAction | LoadTagTypeFailAction | LoadTagTypeRequestAction
-    | LoadTagTypeSuccessAction | AddTagTypeAction;
+    | IResetTagTypeAction | ILoadTagTypeAction | ILoadTagTypeFailAction | ILoadTagTypeRequestAction
+    | ILoadTagTypeSuccessAction | IAddTagTypeAction;
 
 export const reducer: Reducer<ConfigStateRecord> = (
     state: ConfigStateRecord = new ConfigStateRecord(),
@@ -145,19 +145,19 @@ export const reducer: Reducer<ConfigStateRecord> = (
             let tagTypeMap = IMap<string, TagTypeRecord>();
 
             if (action.payload.has('cardTypes')) {
-                let cardTypes = action.payload.get('cardTypes');
+                const cardTypes = action.payload.get('cardTypes');
                 cardTypeMap = Object.keys(cardTypes)
                     .reduce((x, y) => x.set(y, new CardTypeRecord(cardTypes[y])), IMap<string, CardTypeRecord>());
                 CardList.setCardTypes(cardTypeMap);
             }
             if (action.payload.has('tagTypes')) {
-                let tagTypes = action.payload.get('tagTypes');
+                const tagTypes = action.payload.get('tagTypes');
                 tagTypeMap = Object.keys(tagTypes).
                     reduce((x, y) => x.set(y, new TagTypeRecord(tagTypes[y])), IMap<string, TagTypeRecord>());
                 CardList.setTagTypes(tagTypeMap);
             }
             if (action.payload.has('rules')) {
-                let rules = action.payload.get('rules');
+                const rules = action.payload.get('rules');
                 ruleMap = Object.keys(rules)
                     .reduce((x, y) => x.set(y, new RuleRecord(rules[y])), IMap<string, RuleRecord>());
                 RuleManager.setRules(ruleMap);
@@ -258,79 +258,79 @@ export const reducer: Reducer<ConfigStateRecord> = (
 };
 
 export const actionCreators = {
-    deleteCardType: (id: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
-        let result = getState().config.cardTypes.delete(id);
+    deleteCardType: (id: string): IAppThunkAction<KnownActions> => (dispatch, getState) => {
+        const result = getState().config.cardTypes.delete(id);
         getState().config.protocol.set('cardTypes', result.toJS());
         dispatch({
             type: 'RESET_CARD_TYPE'
         });
     },
-    deleteRule: (id: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
-        let result = getState().config.rules.delete(id);
+    deleteRule: (id: string): IAppThunkAction<KnownActions> => (dispatch, getState) => {
+        const result = getState().config.rules.delete(id);
         getState().config.protocol.set('rules', result.toJS());
         dispatch({
             type: 'RESET_RULE'
         });
     },
-    deleteTagType: (id: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
-        let result = getState().config.tagTypes.delete(id);
+    deleteTagType: (id: string): IAppThunkAction<KnownActions> => (dispatch, getState) => {
+        const result = getState().config.tagTypes.delete(id);
         getState().config.protocol.set('tagTypes', result.toJS());
         dispatch({
             type: 'RESET_TAG_TYPE'
         });
     },
-    saveCardType: (cardType: CardTypeRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
+    saveCardType: (cardType: CardTypeRecord): IAppThunkAction<KnownActions> => (dispatch, getState) => {
         if (!cardType.name) { return; }
-        let cardTypes = getState().config.cardTypes;
-        let result = cardTypes.set(cardType.id, cardType);
+        const cardTypes = getState().config.cardTypes;
+        const result = cardTypes.set(cardType.id, cardType);
         getState().config.protocol.set('cardTypes', result.toJS());
         dispatch({
             type: 'RESET_CARD_TYPE'
         });
     },
-    saveRule: (rule: RuleRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
+    saveRule: (rule: RuleRecord): IAppThunkAction<KnownActions> => (dispatch, getState) => {
         if (!rule.name) { return; }
-        let rules = getState().config.rules;
-        let result = rules.set(rule.id, rule);
+        const rules = getState().config.rules;
+        const result = rules.set(rule.id, rule);
         getState().config.protocol.set('rules', result.toJS());
         dispatch({
             type: 'RESET_RULE'
         });
     },
-    saveTagType: (tagType: TagTypeRecord): AppThunkAction<KnownActions> => (dispatch, getState) => {
+    saveTagType: (tagType: TagTypeRecord): IAppThunkAction<KnownActions> => (dispatch, getState) => {
         if (!tagType.name) { return; }
-        let tagTypes = getState().config.tagTypes;
-        let result = tagTypes.set(tagType.id, tagType);
+        const tagTypes = getState().config.tagTypes;
+        const result = tagTypes.set(tagType.id, tagType);
         getState().config.protocol.set('tagTypes', result.toJS());
         dispatch({
             type: 'RESET_TAG_TYPE'
         });
     },
     addCardType: ():
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({
                 type: 'ADD_CARD_TYPE'
             });
         },
     addRule: ():
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({
                 type: 'ADD_RULE'
             });
         },
     addTagType: ():
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({
                 type: 'ADD_TAG_TYPE'
             });
         },
     loadCardType: (id: string):
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({
                 type: 'LOAD_CARD_TYPE',
                 id,
                 payload: new Promise<CardTypeRecord>((resolve, reject) => {
-                    let cardType = getState().config.cardTypes.get(id);
+                    const cardType = getState().config.cardTypes.get(id);
                     if (!cardType) {
                         reject(`${id} not found`);
                     } else {
@@ -340,12 +340,12 @@ export const actionCreators = {
             });
         },
     loadRule: (id: string):
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({
                 type: 'LOAD_RULE',
                 id,
                 payload: new Promise<RuleRecord>((resolve, reject) => {
-                    let rule = getState().config.rules.get(id);
+                    const rule = getState().config.rules.get(id);
                     if (!rule) {
                         reject(`${id} not found`);
                     } else {
@@ -355,12 +355,12 @@ export const actionCreators = {
             });
         },
     loadTagType: (id: string):
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({
                 type: 'LOAD_TAG_TYPE',
                 id,
                 payload: new Promise<TagTypeRecord>((resolve, reject) => {
-                    let tagType = getState().config.tagTypes.get(id);
+                    const tagType = getState().config.tagTypes.get(id);
                     if (!tagType) {
                         reject(`${id} not found`);
                     } else {
@@ -370,7 +370,7 @@ export const actionCreators = {
             });
         },
     createDefaultConfig: ():
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
             const db = new DataBuilder();
             db.createConfig(getState().config.protocol);
             if (CardList.cards.count() === 0) {

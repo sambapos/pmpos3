@@ -1,10 +1,10 @@
 import { Reducer } from 'redux';
 import * as React from 'react';
-import { AppThunkAction } from './appThunkAction';
+import { IAppThunkAction } from './appThunkAction';
 import { configureProtocol } from 'pmpos-modules';
 import { CardsManager } from 'pmpos-modules';
 
-export interface ClientState {
+export interface IClientState {
     languageName: string;
     drawerOpen: boolean;
     loggedInUser: string;
@@ -15,35 +15,35 @@ export interface ClientState {
     modalOpen: boolean;
 }
 
-interface ToggleDrawerAction {
+interface IToggleDrawerAction {
     type: 'TOGGLE_DRAWER';
     forceClose: boolean;
 }
 
-interface SetLoggedInUserAction {
+interface ISetLoggedInUserAction {
     type: 'SET_LOGGEDIN_USER';
     user: string;
 }
 
-interface SetTerminalIdAction {
+interface ISetTerminalIdAction {
     type: 'SET_TERMINAL_ID';
     terminalId: string;
     networkName: string;
     serverName: string;
 }
 
-interface SetModalStateAction {
+interface ISetModalStateAction {
     type: 'SET_MODAL_STATE';
     visible: boolean;
 }
 
-interface SetModalComponentAction {
+interface ISetModalComponentAction {
     type: 'SET_MODAL_COMPONENT';
     component: any;
 }
 
-type KnownActions = ToggleDrawerAction | SetModalStateAction | SetModalComponentAction
-    | SetLoggedInUserAction | SetTerminalIdAction;
+type KnownActions = IToggleDrawerAction | ISetModalStateAction | ISetModalComponentAction
+    | ISetLoggedInUserAction | ISetTerminalIdAction;
 
 const configProtocol = (terminalId, networkName, serverName, user, dispatch) => {
     configureProtocol(
@@ -86,17 +86,17 @@ const configProtocol = (terminalId, networkName, serverName, user, dispatch) => 
 };
 
 export const actionCreators = {
-    SetLoggedInUser: (user: string) => <SetLoggedInUserAction>{ type: 'SET_LOGGEDIN_USER', user },
+    SetLoggedInUser: (user: string) => <ISetLoggedInUserAction>{ type: 'SET_LOGGEDIN_USER', user },
     SetTerminalId: (terminalId: string, networkName: string, serverName: string) =>
-        <SetTerminalIdAction>{
+        <ISetTerminalIdAction>{
             type: 'SET_TERMINAL_ID', terminalId, networkName, serverName
         },
-    ToggleDrawer: (forceClose?: boolean) => <ToggleDrawerAction>{ type: 'TOGGLE_DRAWER', forceClose },
-    SetModalState: (visible: boolean) => <SetModalStateAction>{ type: 'SET_MODAL_STATE', visible },
-    SetModalComponent: (component: any) => <SetModalComponentAction>{ type: 'SET_MODAL_COMPONENT', component },
+    ToggleDrawer: (forceClose?: boolean) => <IToggleDrawerAction>{ type: 'TOGGLE_DRAWER', forceClose },
+    SetModalState: (visible: boolean) => <ISetModalStateAction>{ type: 'SET_MODAL_STATE', visible },
+    SetModalComponent: (component: any) => <ISetModalComponentAction>{ type: 'SET_MODAL_COMPONENT', component },
     connectProtocol: (terminalId: string, networkName: string, serverName: string, user: string):
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
-            let currentProtocol = getState().cards.protocol;
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
+            const currentProtocol = getState().cards.protocol;
             if (!currentProtocol) {
                 configProtocol(terminalId, networkName, serverName, user, dispatch);
             }
@@ -104,7 +104,7 @@ export const actionCreators = {
         }
 };
 
-const unloadedState: ClientState = {
+const unloadedState: IClientState = {
     languageName: 'aa',
     drawerOpen: false,
     loggedInUser: '',
@@ -115,7 +115,7 @@ const unloadedState: ClientState = {
     modalOpen: false
 };
 
-export const reducer: Reducer<ClientState> = (state: ClientState, action: KnownActions) => {
+export const reducer: Reducer<IClientState> = (state: IClientState, action: KnownActions) => {
     switch (action.type) {
         case 'TOGGLE_DRAWER':
             return { ...state, drawerOpen: !action.forceClose && !state.drawerOpen };

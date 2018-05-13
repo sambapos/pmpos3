@@ -3,28 +3,28 @@ import { CardRecord } from 'pmpos-models';
 import { Map as IMap } from 'immutable';
 
 export default class OperationEditorRegistry {
-    _registry: IMap<string, any>;
+    private registry: IMap<string, any>;
 
     constructor() {
-        this._registry = IMap<string, any>();
+        this.registry = IMap<string, any>();
     }
 
-    registerEditor(actionType: string, editor: any) {
-        this._registry = this._registry.set(actionType, editor);
+    public registerEditor(actionType: string, editor: any) {
+        this.registry = this.registry.set(actionType, editor);
     }
 
-    hasEditor(actionType: string) {
-        return this._registry.has(actionType);
+    public hasEditor(actionType: string) {
+        return this.registry.has(actionType);
     }
 
-    getEditor(
+    public getEditor(
         actionType: string,
         card: CardRecord,
         success: (actionType: string, data: any) => void,
         cancel: () => void,
         current?: any): JSX.Element | undefined {
         if (this.hasEditor(actionType)) {
-            let editor = this._registry.get(actionType);
+            const editor = this.registry.get(actionType);
             if (editor) {
                 return React.createElement(editor, { card, success, cancel, actionName: actionType, current });
             }

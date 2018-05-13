@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { WithStyles, Card, Typography } from 'material-ui';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 import { Map as IMap, List } from 'immutable';
 import { CardRecord, CardTagRecord } from 'pmpos-models';
 
 type AccountProps =
     { card: CardRecord }
-    & WithStyles<keyof Style>;
+    & WithStyles<keyof IStyle>;
 
 const reduceCardTags = (card: CardRecord, list: IMap<CardRecord, List<CardTagRecord>>) => {
-    let result = list.set(card, card.tags.valueSeq().toList());
+    const result = list.set(card, card.tags.valueSeq().toList());
     return card.cards.reduce((r, c) => reduceCardTags(c, result), result);
 };
 

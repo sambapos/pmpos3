@@ -1,24 +1,24 @@
 import * as React from 'react';
 import { DialogTitle, DialogContent, TextField, DialogActions, Button } from 'material-ui';
 
-interface Props {
+interface IProps {
     networkName: string;
     serverName: string;
     onClick: (networkName: string, serverName: string) => void;
 }
 
-interface State {
+interface IState {
     networkName: string;
     serverName: string;
 }
 
-export default class NetworkDialog extends React.Component<Props, State> {
-    constructor(props: Props) {
+export default class NetworkDialog extends React.Component<IProps, IState> {
+    constructor(props: IProps) {
         super(props);
         this.state = { networkName: props.networkName, serverName: props.serverName };
     }
 
-    render() {
+    public render() {
         return (
             <div>
                 <DialogTitle>Select Network</DialogTitle>

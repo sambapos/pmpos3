@@ -5,8 +5,8 @@ import SelectCard from './Editors/SelectCard';
 import SetCardIndex from './Editors/SetCardIndex';
 import SetCardTag from './Editors/SetCardTag';
 
-var registry = (function () {
-    let r = new Registry();
+const registry = (() => {
+    const r = new Registry();
     r.registerEditor('EXECUTE_COMMAND', ExecuteCommand);
     r.registerEditor('ASK_QUESTION', AskQuestion);
     r.registerEditor('SELECT_CARD', SelectCard);

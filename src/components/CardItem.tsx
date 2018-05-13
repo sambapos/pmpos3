@@ -5,7 +5,7 @@ import { CardRecord, CardTagRecord } from 'pmpos-models';
 import { CardList, RuleManager } from 'pmpos-modules';
 
 const getTagDisplay = (card: CardRecord, tag: CardTagRecord) => {
-    let tt = CardList.tagTypes.get(tag.typeId);
+    const tt = CardList.tagTypes.get(tag.typeId);
     if (tt && tt.icon) {
         if (tt.icon === '_') { return tag.valueDisplay; }
         return (<span style={{ display: 'inline-block' }}>
@@ -45,7 +45,7 @@ const getDefaultContent = (card: CardRecord) => {
 };
 
 const getTemplatedContentFromRule = async (card: CardRecord, template?: string) => {
-    let content = await RuleManager.getContent('GET_CONTENT', template, card, card);
+    const content = await RuleManager.getContent('GET_CONTENT', template, card, card);
     return <div
         style={{ width: '100%' }}
         dangerouslySetInnerHTML={{ __html: content.filter(x => x).join('\n') }}
@@ -53,7 +53,7 @@ const getTemplatedContentFromRule = async (card: CardRecord, template?: string) 
 };
 
 const getTemplatedContent = (card: CardRecord, template: string) => {
-    let content = tmpl(template, card);
+    const content = tmpl(template, card);
     return <div
         style={{ width: '100%' }}
         dangerouslySetInnerHTML={{ __html: content }}
@@ -79,7 +79,7 @@ const getStaticContent = (card: CardRecord, template?: string) => {
     return getNullContent();
 };
 
-interface CardItemProps {
+interface ICardItemProps {
     card: CardRecord;
     onClick: (card: any) => void;
     onUpdate?: (card: any) => void;
@@ -87,13 +87,13 @@ interface CardItemProps {
     template?: string;
 }
 
-export default class extends React.Component<CardItemProps, { content: JSX.Element }>  {
-    constructor(props: CardItemProps) {
+export default class extends React.Component<ICardItemProps, { content: JSX.Element }>  {
+    constructor(props: ICardItemProps) {
         super(props);
         this.state = { content: getStaticContent(props.card, props.template) };
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         if (!isStaticContent(this.props.template)) {
             getTemplatedContentFromRule(this.props.card, this.props.template)
                 .then(x => {
@@ -105,7 +105,7 @@ export default class extends React.Component<CardItemProps, { content: JSX.Eleme
         }
     }
 
-    componentWillReceiveProps(nextProps: CardItemProps) {
+    public componentWillReceiveProps(nextProps: ICardItemProps) {
         if (nextProps.card !== this.props.card || nextProps.template !== this.props.template) {
             if (!isStaticContent(nextProps.template)) {
                 getTemplatedContentFromRule(nextProps.card, nextProps.template)
@@ -124,7 +124,7 @@ export default class extends React.Component<CardItemProps, { content: JSX.Eleme
         }
     }
 
-    render() {
+    public render() {
         return (
             <ListItem button divider={this.props.template ? false : true}
                 component="div"

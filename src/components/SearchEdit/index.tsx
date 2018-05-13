@@ -2,35 +2,35 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import { FormControl, InputLabel, Input, InputAdornment, IconButton, Icon } from 'material-ui';
 import { WithStyles } from 'material-ui/styles/withStyles';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 
-interface SearchEditProps {
+interface ISearchEditProps {
     value: string;
     debounce?: number;
     onChange: (value: string) => void;
 }
 
-interface SearchEditState {
+interface ISearchEditState {
     value: string;
 }
 
-class SearchEdit extends React.Component<SearchEditProps & WithStyles<keyof Style>, SearchEditState> {
+class SearchEdit extends React.Component<ISearchEditProps & WithStyles<keyof IStyle>, ISearchEditState> {
     private debouncedChange;
     private input;
 
-    constructor(props: SearchEditProps & WithStyles<keyof Style>) {
+    constructor(props: ISearchEditProps & WithStyles<keyof IStyle>) {
         super(props);
         this.state = { value: props.value };
     }
-    componentWillMount() {
+    public componentWillMount() {
         this.debouncedChange = _.debounce(this.props.onChange, this.props.debounce || 200);
     }
-    componentWillReceiveProps(nextProps: SearchEditProps) {
+    public componentWillReceiveProps(nextProps: ISearchEditProps) {
         if (nextProps.value !== this.props.value) {
             this.setState({ value: nextProps.value });
         }
     }
-    render() {
+    public render() {
         return <div className={this.props.classes.containter}>
             <FormControl className={this.props.classes.editor}>
                 <InputLabel>Search</InputLabel>

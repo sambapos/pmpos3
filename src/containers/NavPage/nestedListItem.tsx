@@ -13,16 +13,16 @@ const decorate = withStyles(({ palette, spacing }) => ({
     },
 }));
 
-interface NestedListItemProps {
+interface INestedListItemProps {
     label: string;
     onClick: () => void;
 }
 
-type Props = NestedListItemProps & WithStyles<'root' | 'nested'>;
+type Props = INestedListItemProps & WithStyles<'root' | 'nested'>;
 
 class NestedListItem extends React.Component<Props, {}> {
 
-    render() {
+    public render() {
         return (
             <ListItem
                 className={this.props.classes.nested}
@@ -34,4 +34,4 @@ class NestedListItem extends React.Component<Props, {}> {
         );
     }
 }
-export default decorate<NestedListItemProps>(NestedListItem);
+export default decorate<INestedListItemProps>(NestedListItem);

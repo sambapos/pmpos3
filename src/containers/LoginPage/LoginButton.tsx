@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { Button, WithStyles } from 'material-ui';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 
-interface LoginButtonProps {
+interface ILoginButtonProps {
     value: string;
     icon?: string;
     onClick: (value: string) => void;
 }
 
-type Props = LoginButtonProps & WithStyles<keyof Style>;
+type Props = ILoginButtonProps & WithStyles<keyof IStyle>;
 
 const LoginButton = (props: Props) => {
     return (

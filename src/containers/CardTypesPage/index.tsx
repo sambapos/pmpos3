@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import * as ConfigStore from '../../store/Config';
 import { RouteComponentProps } from 'react-router';
 import { WithStyles, List, ListItem, Paper } from 'material-ui';
-import decorate, { Style } from './style';
-import { ApplicationState } from '../../store/index';
+import decorate, { IStyle } from './style';
+import { IApplicationState } from '../../store/index';
 import { Map as IMap } from 'immutable';
 import TopBar from '../TopBar';
 import Divider from 'material-ui/Divider/Divider';
@@ -13,14 +13,33 @@ import { CardTypeRecord } from 'pmpos-models';
 
 type PageProps =
     { cardTypes: IMap<string, CardTypeRecord> }
-    & WithStyles<keyof Style>
+    & WithStyles<keyof IStyle>
     & typeof ConfigStore.actionCreators
     & RouteComponentProps<{}>;
 
 class CardTypesPage extends React.Component<PageProps, {}> {
 
-    getSecondaryCommands() {
-        let result = [
+    public render() {
+        return (
+            <div className={this.props.classes.root}>
+                <TopBar
+                    title="Card Types"
+                    secondaryCommands={this.getSecondaryCommands()}
+                />
+
+                <Paper className={this.props.classes.content}>
+                    <List>
+                        {this.renderCards(this.props.cardTypes.valueSeq()
+                            .sort((x, y) => x.name > y.name ? 1 : -1)
+                            .toArray())}
+                    </List>
+                </Paper>
+            </div>
+        );
+    }
+
+    private getSecondaryCommands() {
+        const result = [
             {
                 icon: 'add', onClick: () => {
                     this.props.history.push(process.env.PUBLIC_URL + '/cardType');
@@ -31,7 +50,7 @@ class CardTypesPage extends React.Component<PageProps, {}> {
         return result;
     }
 
-    renderCards(cardTypes: CardTypeRecord[]) {
+    private renderCards(cardTypes: CardTypeRecord[]) {
         return cardTypes.map(cardType => {
             return cardType && (
                 <div key={cardType.id}>
@@ -53,28 +72,9 @@ class CardTypesPage extends React.Component<PageProps, {}> {
             );
         });
     }
-
-    public render() {
-        return (
-            <div className={this.props.classes.root}>
-                <TopBar
-                    title="Card Types"
-                    secondaryCommands={this.getSecondaryCommands()}
-                />
-
-                <Paper className={this.props.classes.content}>
-                    <List>
-                        {this.renderCards(this.props.cardTypes.valueSeq()
-                            .sort((x, y) => x.name > y.name ? 1 : -1)
-                            .toArray())}
-                    </List>
-                </Paper>
-            </div>
-        );
-    }
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
+const mapStateToProps = (state: IApplicationState) => ({
     cardTypes: state.config.cardTypes,
 });
 

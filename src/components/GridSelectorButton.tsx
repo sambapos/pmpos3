@@ -2,39 +2,35 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { Button } from 'material-ui';
 import { WithStyles } from 'material-ui/styles/withStyles';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 
-interface GridSelectorButtonProps {
+interface IGridSelectorButtonProps {
     card: CardRecord;
     cardType: CardTypeRecord;
     sourceCards: CardRecord[];
     onSelectCard?: (selectedCard: CardRecord, cardType: CardTypeRecord, cards: CardRecord[]) => void;
 }
 
-interface GridSelectorButtonState {
+interface IGridSelectorButtonState {
     sourceCards: CardRecord[];
 }
 
-type Props = GridSelectorButtonProps & WithStyles<keyof Style>;
+type Props = IGridSelectorButtonProps & WithStyles<keyof IStyle>;
 
-class GridSelectorButton extends React.Component<Props, GridSelectorButtonState> {
+class GridSelectorButton extends React.Component<Props, IGridSelectorButtonState> {
     constructor(props: Props) {
         super(props);
         this.state = { sourceCards: this.getCardsByTag(props.sourceCards, props.cardType, props.card) };
     }
 
-    getCardsByTag = (sourceCards: CardRecord[], cardType: CardTypeRecord, card: CardRecord) => {
-        return sourceCards.filter(sc => sc.hasTag(cardType.reference, card.name));
-    }
-
-    componentWillReceiveProps(props: GridSelectorButtonProps) {
+    public componentWillReceiveProps(props: IGridSelectorButtonProps) {
         if (props.sourceCards !== this.props.sourceCards) {
             this.setState({ sourceCards: this.getCardsByTag(props.sourceCards, props.cardType, props.card) });
         }
     }
 
-    render() {
+    public render() {
         return <Button variant="raised"
             color={this.state.sourceCards.length > 0 ? 'primary' : 'default'}
             className={classNames(this.props.classes.button, {
@@ -45,6 +41,10 @@ class GridSelectorButton extends React.Component<Props, GridSelectorButtonState>
         >
             {this.props.card.name}
         </Button>;
+    }
+
+    private getCardsByTag = (sourceCards: CardRecord[], cardType: CardTypeRecord, card: CardRecord) => {
+        return sourceCards.filter(sc => sc.hasTag(cardType.reference, card.name));
     }
 }
 

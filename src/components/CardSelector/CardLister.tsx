@@ -6,7 +6,7 @@ import VirtualList from '../VirtualList';
 import DraggableList from '../DraggableList';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 
-interface CardListProps {
+interface ICardListProps {
     cards: List<CardRecord>;
     cardType: CardTypeRecord;
     cardListScrollTop: number;
@@ -15,23 +15,23 @@ interface CardListProps {
     onSaveSortOrder: (items: CardRecord[]) => void;
 }
 
-interface CardListState {
+interface ICardListState {
     scrollTop: number;
     items: any[];
 }
 
-export default class extends React.Component<CardListProps, CardListState> {
+export default class extends React.Component<ICardListProps, ICardListState> {
 
     private debouncedHandleScroll;
     private itemCount = 100;
 
-    cache = new CellMeasurerCache({
+    private cache = new CellMeasurerCache({
         defaultWidth: 100,
         defaultHeight: 999999,
         fixedWidth: true
     });
 
-    constructor(props: CardListProps) {
+    constructor(props: ICardListProps) {
         super(props);
         this.state = {
             items: this.getItems(props.cards, 0, this.itemCount),
@@ -39,11 +39,11 @@ export default class extends React.Component<CardListProps, CardListState> {
         };
     }
 
-    componentWillMount() {
+    public componentWillMount() {
         this.debouncedHandleScroll = _.debounce(this.handle_scroll, 100);
     }
 
-    componentWillReceiveProps(nextProps: CardListProps) {
+    public componentWillReceiveProps(nextProps: ICardListProps) {
         if (nextProps.cardType.name !== this.props.cardType.name) {
             this.cache.clearAll();
             this.setState({ scrollTop: 0 });
@@ -57,7 +57,11 @@ export default class extends React.Component<CardListProps, CardListState> {
         }
     }
 
-    handle_scroll(scrollTop: number) {
+    public render() {
+        return this.getCardList();
+    }
+
+    private handle_scroll(scrollTop: number) {
         this.setState({ scrollTop });
     }
 
@@ -66,12 +70,12 @@ export default class extends React.Component<CardListProps, CardListState> {
     }
 
     private loadMoreRows({ startIndex, stopIndex }: any) {
-        let items = this.state.items.concat(this.getItems(this.props.cards, startIndex, stopIndex - startIndex + 1));
+        const items = this.state.items.concat(this.getItems(this.props.cards, startIndex, stopIndex - startIndex + 1));
         this.setState({ items });
     }
 
-    getItems(cards: List<CardRecord>, startIndex: number, itemCount: number) {
-        let result = cards
+    private getItems(cards: List<CardRecord>, startIndex: number, itemCount: number) {
+        const result = cards
             .skip(startIndex)
             .take(itemCount)
             .sort((x, y) => x.index - y.index)
@@ -79,12 +83,12 @@ export default class extends React.Component<CardListProps, CardListState> {
         return result;
     }
 
-    handleOnClick(c: any) {
+    private handleOnClick(c: any) {
         this.props.onScrollChange(this.state.scrollTop);
         this.props.onClick(c);
     }
 
-    getCardList() {
+    private getCardList() {
         if (this.props.cards.count() < this.itemCount) {
             return <DraggableList
                 items={this.state.items}
@@ -105,9 +109,5 @@ export default class extends React.Component<CardListProps, CardListState> {
             items={this.state.items}
             template={this.props.cardType ? this.props.cardType.displayFormat : ''}
         />;
-    }
-
-    render() {
-        return this.getCardList();
     }
 }

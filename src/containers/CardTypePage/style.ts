@@ -1,6 +1,6 @@
 import withStyles from 'material-ui/styles/withStyles';
 
-export interface Style {
+export interface IStyle {
     content: any;
     paper: any;
     root: any;
@@ -10,7 +10,7 @@ export interface Style {
     fixedRow: any;
 }
 
-export default withStyles(({ palette, spacing, breakpoints }): Style => ({
+export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     root: {
         display: 'flex',
         flexFlow: 'column',

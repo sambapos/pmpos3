@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { extend } from '../../lib/Extender';
-import { ApplicationState } from '../../store';
+import { IApplicationState } from '../../store';
 import * as ClientStore from '../../store/Client';
 import * as ConfigStore from '../../store/Config';
 import { RouteComponentProps } from 'react-router';
@@ -10,7 +10,7 @@ import Typography from 'material-ui/Typography/Typography';
 import { Card, Button } from 'material-ui';
 
 export type PageProps =
-    ClientStore.ClientState
+    ClientStore.IClientState
     & typeof ClientStore.actionCreators
     & typeof ConfigStore.actionCreators
     & RouteComponentProps<{}>;
@@ -44,6 +44,6 @@ class HomePage extends React.Component<PageProps> {
 }
 
 export default connect(
-    (state: ApplicationState) => state.client,
+    (state: IApplicationState) => state.client,
     extend(ClientStore.actionCreators, ConfigStore.actionCreators)
 )(HomePage);

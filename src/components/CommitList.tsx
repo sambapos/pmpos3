@@ -3,11 +3,11 @@ import { List } from 'immutable';
 import CommitItem from './CommitItem';
 import { CommitRecord } from 'pmpos-models';
 
-interface CommitListProps {
+interface ICommitListProps {
     commits: List<CommitRecord>;
 }
 
-export default (props: CommitListProps) => {
+export default (props: ICommitListProps) => {
     return (
         <div>
             {props.commits.map(commit => <CommitItem commit={commit} key={commit.id} />)}

@@ -2,9 +2,9 @@ import * as React from 'react';
 import { DialogTitle } from 'material-ui';
 import TagEditor from './TagEditor';
 import { TagTypeRecord, CardTagRecord } from 'pmpos-models';
-import EditorProperties from '../editorProperties';
+import IEditorProperties from '../editorProperties';
 
-export default (props: EditorProperties<{ tagType: TagTypeRecord, tag: CardTagRecord }>) => {
+export default (props: IEditorProperties<{ tagType: TagTypeRecord, tag: CardTagRecord }>) => {
     return <>
         <DialogTitle>{
             `Set ${props.current && props.current.tagType.id

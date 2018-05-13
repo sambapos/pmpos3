@@ -5,8 +5,8 @@ import * as ClientStore from '../../store/Client';
 import { RouteComponentProps } from 'react-router';
 import { CardActions, Typography, WithStyles, TextField, Paper, Button } from 'material-ui';
 import * as Extender from '../../lib/Extender';
-import decorate, { Style } from './style';
-import { ApplicationState } from '../../store/index';
+import decorate, { IStyle } from './style';
+import { IApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
 import DraggableItemList from '../../components/DraggableItemList';
 import ItemSelectionDialog from '../../components/ItemSelectionDialog';
@@ -18,12 +18,12 @@ type PageProps =
         isLoading: boolean
         cardType: CardTypeRecord
     }
-    & WithStyles<keyof Style>
+    & WithStyles<keyof IStyle>
     & typeof ConfigStore.actionCreators
     & typeof ClientStore.actionCreators
     & RouteComponentProps<{ id?: string }>;
 
-interface PageState {
+interface IPageState {
     name: string;
     reference: string;
     displayFormat: string;
@@ -32,7 +32,7 @@ interface PageState {
     subCardTypes: string[];
 }
 
-export class CardTypePage extends React.Component<PageProps, PageState> {
+export class CardTypePage extends React.Component<PageProps, IPageState> {
     constructor(props: PageProps) {
         super(props);
         this.state = {
@@ -69,77 +69,6 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
                 subCardTypes: this.props.cardType.subCardTypes
             });
         }
-    }
-
-    getTitle() {
-        return this.props.cardType.name ? `Card Type (${this.props.cardType.name})` : 'New Card Type';
-    }
-
-    showTagSelectionDialog() {
-        let component = (
-            <ItemSelectionDialog
-                selectedItems={this.state.tagTypes}
-                sourceItems={CardList.tagTypes.valueSeq().toArray()}
-                onSubmit={tagTypes => {
-                    this.setState({ tagTypes });
-                    this.props.SetModalState(false);
-                }}
-            />);
-        this.props.SetModalComponent(component);
-    }
-
-    showCardSelectionDialog() {
-        let component = (
-            <ItemSelectionDialog
-                selectedItems={this.state.subCardTypes}
-                sourceItems={CardList.cardTypes.valueSeq().toArray()}
-                onSubmit={subCardTypes => {
-                    this.setState({ subCardTypes });
-                    this.props.SetModalState(false);
-                }}
-            />);
-        this.props.SetModalComponent(component);
-    }
-
-    getTagTypeList() {
-        if (this.state.tagTypes.length === 0) {
-            return (
-                <Typography className={this.props.classes.subHeader}>
-                    No tag types selected for {this.props.cardType.name} card type.
-                    Click Select Tag Types button to select tag types.
-                 </Typography>);
-        }
-        let list = this.state.tagTypes
-            .filter(tt => CardList.tagTypes.has(tt))
-            .map(tt => CardList.tagTypes.get(tt) as TagTypeRecord);
-        return (<DraggableItemList
-            onDragEnd={items => this.setState({ tagTypes: items.map(i => i.id) })}
-            items={list}
-            onClick={id => {
-                if (id) {
-                    this.props.history.push(
-                        process.env.PUBLIC_URL + '/tagType');
-                    this.props.loadTagType(id);
-                }
-            }}
-        />);
-    }
-
-    getSubCardTypeList() {
-        if (this.state.subCardTypes.length === 0) {
-            return (
-                <Typography className={this.props.classes.subHeader}>
-                    No sub card types selected for {this.props.cardType.name} card type.
-                    Click Select Card Types button to select card types.
-                 </Typography>);
-        }
-        let list = this.state.subCardTypes
-            .filter(tt => CardList.cardTypes.has(tt))
-            .map(tt => CardList.cardTypes.get(tt) as CardTypeRecord);
-        return (<DraggableItemList
-            onDragEnd={items => this.setState({ subCardTypes: items.map(i => i.id) })}
-            items={list}
-        />);
     }
 
     public render() {
@@ -247,9 +176,80 @@ export class CardTypePage extends React.Component<PageProps, PageState> {
             </div>
         );
     }
+
+    private getTitle() {
+        return this.props.cardType.name ? `Card Type (${this.props.cardType.name})` : 'New Card Type';
+    }
+
+    private showTagSelectionDialog() {
+        const component = (
+            <ItemSelectionDialog
+                selectedItems={this.state.tagTypes}
+                sourceItems={CardList.tagTypes.valueSeq().toArray()}
+                onSubmit={tagTypes => {
+                    this.setState({ tagTypes });
+                    this.props.SetModalState(false);
+                }}
+            />);
+        this.props.SetModalComponent(component);
+    }
+
+    private showCardSelectionDialog() {
+        const component = (
+            <ItemSelectionDialog
+                selectedItems={this.state.subCardTypes}
+                sourceItems={CardList.cardTypes.valueSeq().toArray()}
+                onSubmit={subCardTypes => {
+                    this.setState({ subCardTypes });
+                    this.props.SetModalState(false);
+                }}
+            />);
+        this.props.SetModalComponent(component);
+    }
+
+    private getTagTypeList() {
+        if (this.state.tagTypes.length === 0) {
+            return (
+                <Typography className={this.props.classes.subHeader}>
+                    No tag types selected for {this.props.cardType.name} card type.
+                    Click Select Tag Types button to select tag types.
+                 </Typography>);
+        }
+        const list = this.state.tagTypes
+            .filter(tt => CardList.tagTypes.has(tt))
+            .map(tt => CardList.tagTypes.get(tt) as TagTypeRecord);
+        return (<DraggableItemList
+            onDragEnd={items => this.setState({ tagTypes: items.map(i => i.id) })}
+            items={list}
+            onClick={id => {
+                if (id) {
+                    this.props.history.push(
+                        process.env.PUBLIC_URL + '/tagType');
+                    this.props.loadTagType(id);
+                }
+            }}
+        />);
+    }
+
+    private getSubCardTypeList() {
+        if (this.state.subCardTypes.length === 0) {
+            return (
+                <Typography className={this.props.classes.subHeader}>
+                    No sub card types selected for {this.props.cardType.name} card type.
+                    Click Select Card Types button to select card types.
+                 </Typography>);
+        }
+        const list = this.state.subCardTypes
+            .filter(tt => CardList.cardTypes.has(tt))
+            .map(tt => CardList.cardTypes.get(tt) as CardTypeRecord);
+        return (<DraggableItemList
+            onDragEnd={items => this.setState({ subCardTypes: items.map(i => i.id) })}
+            items={list}
+        />);
+    }
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
+const mapStateToProps = (state: IApplicationState) => ({
     cardType: state.config.currentCardType,
     isLoading: state.config.isLoading
 });

@@ -1,6 +1,6 @@
 import withStyles from 'material-ui/styles/withStyles';
 
-export interface Style {
+export interface IStyle {
     container: any;
     suggestionsContainerOpen: any;
     suggestion: any;
@@ -8,7 +8,7 @@ export interface Style {
     textField: any;
 }
 
-export default withStyles(({ palette, spacing, breakpoints }): Style => ({
+export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     container: {
         flexGrow: 1,
         position: 'relative'

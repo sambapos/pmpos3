@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import * as ConfigStore from '../../store/Config';
 import { RouteComponentProps } from 'react-router';
 import { WithStyles, TextField, Paper } from 'material-ui';
-import decorate, { Style } from './style';
-import { ApplicationState } from '../../store/index';
+import decorate, { IStyle } from './style';
+import { IApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
 import InputCheckBox from './InputCheckBox';
 import { TagTypeRecord } from 'pmpos-models';
@@ -14,11 +14,11 @@ type PageProps =
         isLoading: boolean
         tagType: TagTypeRecord
     }
-    & WithStyles<keyof Style>
+    & WithStyles<keyof IStyle>
     & typeof ConfigStore.actionCreators
     & RouteComponentProps<{ id?: string }>;
 
-interface PageState {
+interface IPageState {
     name: string;
     tagName: string;
     cardTypeReferenceName: string;
@@ -42,7 +42,7 @@ interface PageState {
     defaultTarget: string;
 }
 
-export class TagTypePage extends React.Component<PageProps, PageState> {
+export class TagTypePage extends React.Component<PageProps, IPageState> {
     constructor(props: PageProps) {
         super(props);
         this.state = {
@@ -132,10 +132,6 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
                 defaultTarget: this.props.tagType.defaultTarget
             });
         }
-    }
-
-    getTitle() {
-        return this.props.tagType.name ? `Tag Type (${this.props.tagType.name})` : 'New Tag Type';
     }
 
     public render() {
@@ -309,9 +305,13 @@ export class TagTypePage extends React.Component<PageProps, PageState> {
             </div>
         );
     }
+
+    private getTitle() {
+        return this.props.tagType.name ? `Tag Type (${this.props.tagType.name})` : 'New Tag Type';
+    }
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
+const mapStateToProps = (state: IApplicationState) => ({
     tagType: state.config.currentTagType,
     isLoading: state.config.isLoading
 });

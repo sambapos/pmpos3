@@ -2,7 +2,7 @@ import { withStyles } from 'material-ui';
 
 const drawerWidth = 240;
 
-export interface Style {
+export interface IStyle {
     appBar: any;
     appBarShift: any;
     appBarShiftLeft: any;
@@ -11,7 +11,7 @@ export interface Style {
     flex: any;
 }
 
-export default withStyles(({ palette, spacing, breakpoints, mixins, transitions }): Style => ({
+export default withStyles(({ palette, spacing, breakpoints, mixins, transitions }): IStyle => ({
     appBar: {
         position: 'absolute' as 'absolute',
         transition: transitions.create(['margin', 'width'], {

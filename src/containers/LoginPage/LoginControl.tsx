@@ -1,58 +1,36 @@
 import * as React from 'react';
 import { TextField, WithStyles } from 'material-ui';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 import LoginButton from './LoginButton';
 
-interface LoginPageState {
+interface ILoginPageState {
     pin: string;
 }
 
-interface LoginPageProps {
+interface ILoginPageProps {
     onPinEntered: (pin: string) => void;
     captureKeys: boolean;
 }
 
-type PageProps = LoginPageProps & WithStyles<keyof Style>;
+type PageProps = ILoginPageProps & WithStyles<keyof IStyle>;
 
-class LoginControl extends React.Component<PageProps, LoginPageState> {
-    state = { pin: '' };
+class LoginControl extends React.Component<PageProps, ILoginPageState> {
+    public state = { pin: '' };
 
     constructor(props: PageProps) {
         super(props);
         this.handleKeyDown = this.handleKeyDown.bind(this);
     }
 
-    handleClick(value: string) {
-        this.setState({ pin: this.state.pin + value });
-    }
-
-    handleSubmit() {
-        let pin = this.state.pin;
-        this.setState({ pin: '' });
-        this.props.onPinEntered(pin);
-    }
-
-    handleKeyDown = (event) => {
-        if (!this.props.captureKeys) {
-            return;
-        }
-        if ('1234567890'.indexOf(event.key) !== -1) {
-            this.handleClick(event.key);
-            event.preventDefault();
-        } else if (event.key === 'Enter') {
-            this.handleSubmit();
-        }
-    }
-
-    componentDidMount() {
+    public componentDidMount() {
         document.addEventListener('keydown', this.handleKeyDown, false);
     }
 
-    componentWillUnmount() {
+    public componentWillUnmount() {
         document.removeEventListener('keydown', this.handleKeyDown, false);
     }
 
-    render() {
+    public render() {
 
         return (
             <div className={this.props.classes.loginControl} >
@@ -89,6 +67,28 @@ class LoginControl extends React.Component<PageProps, LoginPageState> {
                 </div>
             </div>
         );
+    }
+
+    private handleClick(value: string) {
+        this.setState({ pin: this.state.pin + value });
+    }
+
+    private handleSubmit() {
+        const pin = this.state.pin;
+        this.setState({ pin: '' });
+        this.props.onPinEntered(pin);
+    }
+
+    private handleKeyDown = (event) => {
+        if (!this.props.captureKeys) {
+            return;
+        }
+        if ('1234567890'.indexOf(event.key) !== -1) {
+            this.handleClick(event.key);
+            event.preventDefault();
+        } else if (event.key === 'Enter') {
+            this.handleSubmit();
+        }
     }
 }
 

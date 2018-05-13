@@ -1,7 +1,7 @@
 import { withStyles } from 'material-ui';
 import { red, green } from 'material-ui/colors';
 
-export interface Style {
+export interface IStyle {
     root: any;
     content: any;
     pinEdit: any;
@@ -13,7 +13,7 @@ export interface Style {
     greenButton: any;
 }
 
-export default withStyles(({ palette, spacing, breakpoints, mixins, transitions }): Style => ({
+export default withStyles(({ palette, spacing, breakpoints, mixins, transitions }): IStyle => ({
     root: {
         display: 'flex',
         flexFlow: 'column',

@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import * as ConfigStore from '../../store/Config';
 import { RouteComponentProps } from 'react-router';
 import { WithStyles, TextField, Paper } from 'material-ui';
-import decorate, { Style } from './style';
-import { ApplicationState } from '../../store/index';
+import decorate, { IStyle } from './style';
+import { IApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
 import AceEditor from 'react-ace';
 
@@ -19,7 +19,7 @@ type PageProps =
         isLoading: boolean
         rule: RuleRecord
     }
-    & WithStyles<keyof Style>
+    & WithStyles<keyof IStyle>
     & typeof ConfigStore.actionCreators
     & RouteComponentProps<{ id?: string }>;
 
@@ -39,10 +39,6 @@ export class RulePage extends React.Component<PageProps, { rule: RuleRecord }> {
         if (!this.props.isLoading && this.props.rule) {
             this.setState({ rule: this.props.rule });
         }
-    }
-
-    getTitle() {
-        return this.props.rule.name ? `Rule (${this.props.rule.name})` : 'New Rule';
     }
 
     public render() {
@@ -121,9 +117,13 @@ export class RulePage extends React.Component<PageProps, { rule: RuleRecord }> {
             </div>
         );
     }
+
+    private getTitle() {
+        return this.props.rule.name ? `Rule (${this.props.rule.name})` : 'New Rule';
+    }
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
+const mapStateToProps = (state: IApplicationState) => ({
     rule: state.config.currentRule,
     isLoading: state.config.isLoading
 });

@@ -2,10 +2,10 @@ import * as React from 'react';
 import { Button } from 'material-ui';
 import { DialogActions, DialogTitle } from 'material-ui';
 import CardSelectorPage from '../../../../containers/CardSelectorPage';
-import EditorProperties from '../editorProperties';
+import IEditorProperties from '../editorProperties';
 import { RuleManager } from 'pmpos-modules';
 
-type Props = EditorProperties<{ type: string, selected: string }>;
+type Props = IEditorProperties<{ type: string, selected: string }>;
 
 export default (props: Props) => {
     if (!props.current) {

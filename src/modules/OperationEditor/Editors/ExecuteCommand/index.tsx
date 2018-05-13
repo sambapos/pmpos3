@@ -4,17 +4,17 @@ import * as shortid from 'shortid';
 import DialogContent from 'material-ui/Dialog/DialogContent';
 import DialogActions from 'material-ui/Dialog/DialogActions';
 import DialogTitle from 'material-ui/Dialog/DialogTitle';
-import EditorProperties from '../editorProperties';
+import IEditorProperties from '../editorProperties';
 
-interface EditorState {
+interface IEditorState {
     name: string;
     parameters: string;
 }
 
-export default class ExecuteCommand extends React.Component<EditorProperties<{}>, EditorState> {
-    state = { name: '', parameters: '' };
+export default class ExecuteCommand extends React.Component<IEditorProperties<{}>, IEditorState> {
+    public state = { name: '', parameters: '' };
 
-    render() {
+    public render() {
         return (
             <div>
                 <DialogTitle>Execute Command</DialogTitle>
@@ -42,7 +42,7 @@ export default class ExecuteCommand extends React.Component<EditorProperties<{}>
                                     parameters: this.state.parameters.split(',')
                                         .reduce(
                                             (r, p) => {
-                                                let parts = p.split(',');
+                                                const parts = p.split(',');
                                                 r[parts[0]] = parts[1];
                                                 return r;
                                             },

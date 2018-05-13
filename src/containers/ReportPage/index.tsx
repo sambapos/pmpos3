@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { WithStyles, ListItem, Typography } from 'material-ui';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 import { List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import TextField from 'material-ui/TextField/TextField';
@@ -13,7 +13,7 @@ import { CardTagData, CardTypeRecord } from 'pmpos-models';
 import { CardList } from 'pmpos-modules';
 
 type PageProps =
-    WithStyles<keyof Style>
+    WithStyles<keyof IStyle>
     & RouteComponentProps<{}>;
 
 class ReportPage extends React.Component<PageProps, {
@@ -31,42 +31,6 @@ class ReportPage extends React.Component<PageProps, {
         };
     }
 
-    loadCards(searchValue: string[]): IList<CardTagData> {
-        return CardList.getTags(searchValue);
-    }
-
-    getTables() {
-        return (
-            <div>
-                <LocationTable
-                    tags={this.state.tags}
-                    searchValue={this.state.search}
-                />
-                <AccountTable
-                    tags={this.state.tags}
-                    searchValue={this.state.search}
-                />
-                <InventoryTable
-                    tags={this.state.tags}
-                    searchValue={this.state.search}
-                />
-            </div>
-        );
-    }
-
-    getCardType(value: string): CardTypeRecord | undefined {
-        return CardList.getCardTypes().find(x => x.name.toLowerCase() === value.toLowerCase());
-    }
-
-    getContent() {
-        let ct = this.getCardType(this.state.search);
-        if (ct) {
-            let cardNames = CardList.getCardsByType(ct.id).map(x => x.name);
-            let tags = CardList.getTags(cardNames.toArray());
-            return (<BalanceTable tags={tags} />);
-        }
-        return this.getTables();
-    }
 
     public render() {
         return (
@@ -84,7 +48,7 @@ class ReportPage extends React.Component<PageProps, {
                         })}
                         onKeyDown={e => {
                             if (e.key === 'Enter') {
-                                let parts = this.state.edit.split(',');
+                                const parts = this.state.edit.split(',');
                                 this.setState({
                                     search: parts[0],
                                     tags: this.loadCards(parts)
@@ -110,6 +74,43 @@ class ReportPage extends React.Component<PageProps, {
                 </div>
             </div>
         );
+    }
+
+    private loadCards(searchValue: string[]): IList<CardTagData> {
+        return CardList.getTags(searchValue);
+    }
+
+    private getTables() {
+        return (
+            <div>
+                <LocationTable
+                    tags={this.state.tags}
+                    searchValue={this.state.search}
+                />
+                <AccountTable
+                    tags={this.state.tags}
+                    searchValue={this.state.search}
+                />
+                <InventoryTable
+                    tags={this.state.tags}
+                    searchValue={this.state.search}
+                />
+            </div>
+        );
+    }
+
+    private getCardType(value: string): CardTypeRecord | undefined {
+        return CardList.getCardTypes().find(x => x.name.toLowerCase() === value.toLowerCase());
+    }
+
+    private getContent() {
+        const ct = this.getCardType(this.state.search);
+        if (ct) {
+            const cardNames = CardList.getCardsByType(ct.id).map(x => x.name);
+            const tags = CardList.getTags(cardNames.toArray());
+            return (<BalanceTable tags={tags} />);
+        }
+        return this.getTables();
     }
 }
 

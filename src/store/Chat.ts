@@ -1,34 +1,27 @@
 import { Reducer } from 'redux';
 import { List as IList, Record } from 'immutable';
-import { AppThunkAction } from './appThunkAction';
+import { IAppThunkAction } from './appThunkAction';
 import * as shortid from 'shortid';
 
-type SetChatProtocolAction = {
+interface ISetChatProtocolAction {
     type: 'SET_CHAT_PROTOCOL'
     protocol: any
-};
+}
 
-type IncLamportAction = {
+interface IIncLamportAction {
     type: 'INC_LAMPORT'
-};
+}
 
-// type ConnectProtocolAction = {
-//     type: 'CONNECT_PROTOCOL'
-//     terminalId: string
-//     user: string
-//     payload: Promise<any>
-// };
-
-type AddMessageAction = {
+interface IAddMessageAction {
     type: 'ADD_MESSAGE'
     id: string
     user: string
     message: string
     time: number,
     lamport: number
-};
+}
 
-export interface Message {
+export interface IMessage {
     id: string;
     message: string;
     user: string;
@@ -36,21 +29,21 @@ export interface Message {
     lamport: number;
 }
 
-interface State {
+interface IState {
     protocol: any;
-    messages: IList<Message>;
+    messages: IList<IMessage>;
     connected: boolean;
     lamport: number;
 }
 
-export class StateRecord extends Record<State>({
+export class StateRecord extends Record<IState>({
     protocol: undefined,
-    messages: IList<Message>(),
+    messages: IList<IMessage>(),
     connected: false,
     lamport: 1
 }) { }
 
-type KnownActions = SetChatProtocolAction | AddMessageAction | IncLamportAction;
+type KnownActions = ISetChatProtocolAction | IAddMessageAction | IIncLamportAction;
 // | ConnectProtocolAction;
 
 export const reducer: Reducer<StateRecord> = (
@@ -82,13 +75,13 @@ export const reducer: Reducer<StateRecord> = (
 
 export const actionCreators = {
     addMessage: (message: string):
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({ type: 'INC_LAMPORT' });
             getState().chat.protocol.push([{
                 id: shortid.generate(),
                 time: new Date().getTime(),
                 lamport: getState().chat.lamport,
-                message: message,
+                message,
                 user: getState().client.loggedInUser
             }]);
         }

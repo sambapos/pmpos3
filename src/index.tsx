@@ -1,15 +1,14 @@
-import './index.css';
-import 'typeface-roboto';
-import 'rxjs';
+import { createBrowserHistory } from 'history';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import registerServiceWorker from './registerServiceWorker';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
-import { createBrowserHistory } from 'history';
-import configureStore from './configureStore';
-import * as RoutesModule from './routes';
 import * as shortid from 'shortid';
+import 'typeface-roboto';
+import configureStore from './configureStore';
+import './index.css';
+import registerServiceWorker from './registerServiceWorker';
+import * as RoutesModule from './routes';
 
 let routes = RoutesModule.routes;
 
@@ -26,7 +25,7 @@ let networkName = localStorage.getItem('networkName');
 if (!networkName) {
   networkName = 'DEMO';
 }
-let serverName = localStorage.getItem('serverName') || '';
+const serverName = localStorage.getItem('serverName') || '';
 store.dispatch({ type: 'SET_TERMINAL_ID', terminalId, networkName, serverName });
 
 function renderApp() {

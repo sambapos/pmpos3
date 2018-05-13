@@ -9,20 +9,20 @@ import { CardPageProps } from './CardPageProps';
 import { List } from 'immutable';
 
 const getTitle = (card: CardRecord) => {
-    let ct = CardList.getCardType(card.typeId);
-    let cap = ct ? ct.reference : `Card`;
+    const ct = CardList.getCardType(card.typeId);
+    const cap = ct ? ct.reference : `Card`;
     return !card.name
         ? `New ${cap}`
         : `${card.display}`;
 };
 
-interface Props {
+interface ITopBarProps {
     onClose: () => void;
     pendingActions: () => List<ActionRecord>;
     commits: () => List<CommitRecord> | undefined;
 }
 
-export default (props: CardPageProps & Props) => {
+export default (props: CardPageProps & ITopBarProps) => {
     return (<TopBar
         title={getTitle(props.card)}
         menuCommand={{

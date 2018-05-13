@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { WithStyles, Paper, Table, TableHead, TableRow, TableCell, TableBody } from 'material-ui';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 import { List } from 'immutable';
 
-interface TaskListProps {
+interface ITaskListProps {
     tasks: List<Map<any, any>>;
 }
 
-type Props = TaskListProps & WithStyles<keyof Style>;
+type Props = ITaskListProps & WithStyles<keyof IStyle>;
 
 const TaskList = (props: Props) => {
     return (

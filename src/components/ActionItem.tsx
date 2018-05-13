@@ -3,11 +3,11 @@ import Typography from 'material-ui/Typography/Typography';
 import * as React from 'react';
 import { ActionRecord } from 'pmpos-models';
 
-interface ActionItemProps {
+interface IActionItemProps {
     action: ActionRecord;
 }
 
-export default (props: ActionItemProps) => {
+export default (props: IActionItemProps) => {
     return (
         <div>
             <Divider />

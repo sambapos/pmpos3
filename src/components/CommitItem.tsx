@@ -5,11 +5,11 @@ import Typography from 'material-ui/Typography/Typography';
 import ActionList from './ActionList';
 import { CommitRecord } from 'pmpos-models';
 
-interface CommitItemProps {
+interface ICommitItemProps {
     commit: CommitRecord;
 }
 
-export default (props: CommitItemProps) => {
+export default (props: ICommitItemProps) => {
     return (
         <Card style={{ padding: '8px', marginBottom: '8px' }}>
             <Typography>id:{props.commit.id}</Typography>

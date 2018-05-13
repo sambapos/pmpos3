@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../store';
+import { IApplicationState } from '../../store';
 import * as ClientStore from '../../store/Client';
 import * as ChatStore from '../../store/Chat';
 import { WithStyles } from 'material-ui';
 import { RouteComponentProps } from 'react-router';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 import TopBar from '../TopBar';
 import Typography from 'material-ui/Typography/Typography';
 import LoginControl from './LoginControl';
@@ -17,18 +17,18 @@ import NetworkDialog from './NetworkDialog';
 type DispatchType = typeof ClientStore.actionCreators & typeof ChatStore.actionCreators;
 
 export type PageProps =
-    ClientStore.ClientState
-    & WithStyles<keyof Style>
+    ClientStore.IClientState
+    & WithStyles<keyof IStyle>
     & DispatchType
     & RouteComponentProps<{}>;
 
-interface State {
+interface IState {
     networkName: string;
     serverName: string;
     networkDialogShown: boolean;
 }
 
-class LoginPage extends React.Component<PageProps, State> {
+class LoginPage extends React.Component<PageProps, IState> {
     constructor(props: PageProps) {
         super(props);
         this.state = {
@@ -38,37 +38,8 @@ class LoginPage extends React.Component<PageProps, State> {
         };
     }
 
-    getDialog() {
-        if (this.props.loggedInUser) {
-            return (
-                <DialogContent>
-                    <div>Please Reload to change the Network</div>
-                    <DialogActions>
-                        <Button onClick={e => {
-                            this.setState({ networkDialogShown: false });
-                            this.props.SetModalState(false);
-                        }}>Close</Button>
-                    </DialogActions>
-                </DialogContent>
-            );
-        }
-        return (
-            <NetworkDialog
-                networkName={this.state.networkName}
-                serverName={this.state.serverName}
-                onClick={(networkName, serverName) => {
-                    this.setState({
-                        networkName: networkName,
-                        serverName: serverName,
-                        networkDialogShown: false
-                    });
-                    this.props.SetModalState(false);
-                }} />
-        );
-    }
-
     public render() {
-        let { loggedInUser } = this.props;
+        const { loggedInUser } = this.props;
         return (
             <div className={this.props.classes.root}>
                 <TopBar
@@ -109,9 +80,38 @@ class LoginPage extends React.Component<PageProps, State> {
             </div>
         );
     }
+
+    private getDialog() {
+        if (this.props.loggedInUser) {
+            return (
+                <DialogContent>
+                    <div>Please Reload to change the Network</div>
+                    <DialogActions>
+                        <Button onClick={e => {
+                            this.setState({ networkDialogShown: false });
+                            this.props.SetModalState(false);
+                        }}>Close</Button>
+                    </DialogActions>
+                </DialogContent>
+            );
+        }
+        return (
+            <NetworkDialog
+                networkName={this.state.networkName}
+                serverName={this.state.serverName}
+                onClick={(networkName, serverName) => {
+                    this.setState({
+                        networkName,
+                        serverName,
+                        networkDialogShown: false
+                    });
+                    this.props.SetModalState(false);
+                }} />
+        );
+    }
 }
 
 export default decorate(connect(
-    (state: ApplicationState) => state.client,
+    (state: IApplicationState) => state.client,
     ClientStore.actionCreators
 )(LoginPage));

@@ -1,11 +1,11 @@
 import { Reducer } from 'redux';
-import { AppThunkAction } from './appThunkAction';
+import { IAppThunkAction } from './appThunkAction';
 import { CardList, cardOperations, CardsManager, DataBuilder } from 'pmpos-modules';
 import { List, Record } from 'immutable';
 import { CardRecord, CardTypeRecord, ActionRecord, Commit, CardTag } from 'pmpos-models';
 import OperationEditor from '../modules/OperationEditor';
 
-export interface State {
+export interface IState {
     cards: List<CardRecord>;
     currentCard: CardRecord;
     currentCardType: CardTypeRecord;
@@ -18,7 +18,7 @@ export interface State {
     closeCardRequested: boolean;
 }
 
-export class StateRecord extends Record<State>({
+export class StateRecord extends Record<IState>({
     currentCard: new CardRecord(),
     currentCardType: new CardTypeRecord(),
     cards: List<CardRecord>(),
@@ -31,62 +31,62 @@ export class StateRecord extends Record<State>({
     closeCardRequested: false
 }) { }
 
-type SetCommitProtocolAction = {
+interface ISetCommitProtocolAction {
     type: 'SET_COMMIT_PROTOCOL'
     protocol: any
-};
+}
 
-type CommitReceivedAction = {
+interface ICommitReceivedAction {
     type: 'COMMIT_RECEIVED'
     values: Commit[]
-};
+}
 
-type CommitReceivedSuccessAction = {
+interface ICommitReceivedSuccessAction {
     type: 'COMMIT_RECEIVED_SUCCESS'
 };
 
-type CommitCardAction = {
+interface ICommitCardAction {
     type: 'COMMIT_CARD'
-};
+}
 
-type RequestCloseCardAction = {
+interface IRequestCloseCardAction {
     type: 'REQUEST_CLOSE_CARD'
-};
+}
 
-type SetCurrentCardTypeAction = {
+interface ISetCurrentCardTypeAction {
     type: 'SET_CURRENT_CARD_TYPE'
     cardType: CardTypeRecord
-};
+}
 
-type SetCardListScrollTopAction = {
+interface ISetCardListScrollTopAction {
     type: 'SET_CARD_LIST_SCROLL_TOP'
     value: number
-};
+}
 
-type SetSearchValueAction = {
+interface ISetSearchValueAction {
     type: 'SET_SEARCH_VALUE',
     value: string
-};
+}
 
-type SetShowAllCardsAction = {
+interface ISetShowAllCardsAction {
     type: 'SET_SHOW_ALL_CARDS',
     value: boolean
-};
+}
 
-type SetTabIndexAction = {
+interface ISetTabIndexAction {
     type: 'SET_TAB_INDEX',
     value: number
-};
+}
 
-type SetCurrentCard = {
+interface ISetCurrentCard {
     type: 'SET_CURRENT_CARD',
     card: CardRecord
-};
+}
 
-type KnownActions = CommitCardAction | RequestCloseCardAction
-    | CommitReceivedAction | CommitReceivedSuccessAction | SetCurrentCard
-    | SetCommitProtocolAction | SetCurrentCardTypeAction | SetCardListScrollTopAction |
-    SetSearchValueAction | SetShowAllCardsAction | SetTabIndexAction;
+type KnownActions = ICommitCardAction | IRequestCloseCardAction
+    | ICommitReceivedAction | ICommitReceivedSuccessAction | ISetCurrentCard
+    | ISetCommitProtocolAction | ISetCurrentCardTypeAction | ISetCardListScrollTopAction |
+    ISetSearchValueAction | ISetShowAllCardsAction | ISetTabIndexAction;
 
 export const reducer: Reducer<StateRecord> = (
     state: StateRecord = new StateRecord(),
@@ -148,7 +148,7 @@ function resetCurrentCard(state: StateRecord) {
 
 export const actionCreators = {
     addCard: (cardType: CardTypeRecord, tags: CardTag[])
-        : AppThunkAction<KnownActions> => (dispatch, getState) => {
+        : IAppThunkAction<KnownActions> => (dispatch, getState) => {
             CardsManager.createCard('', cardType.reference, tags)
                 .then(card =>
                     dispatch({
@@ -158,17 +158,17 @@ export const actionCreators = {
                 );
         },
     addPendingAction: (card: CardRecord | undefined, actionType: string, data: any):
-        AppThunkAction<any> => (dispatch, getState) => {
-            let c = card || getState().cards.currentCard;
+        IAppThunkAction<any> => (dispatch, getState) => {
+            const c = card || getState().cards.currentCard;
             const handleCanEdit = actionRecord => cardOperations.canEdit(actionRecord);
             const handleEdit = (action) => {
                 return new Promise<ActionRecord>((resolve, reject) => {
-                    let editor = OperationEditor.getEditor(
+                    const editor = OperationEditor.getEditor(
                         action.actionType,
                         c,
                         (at, d) => {
                             dispatch({ type: 'SET_MODAL_STATE', visible: false });
-                            let result = action.set('data', d);
+                            const result = action.set('data', d);
                             resolve(result);
                         },
                         () => {
@@ -193,34 +193,34 @@ export const actionCreators = {
                 );
         },
     removePendingActions: (cardId: string):
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
-            let card = CardsManager.removePendingActions('', '', cardId);
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
+            const card = CardsManager.removePendingActions('', '', cardId);
             dispatch({
                 type: 'SET_CURRENT_CARD',
                 card
             });
         },
-    deleteCards: (cardTypeId: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
-        let cards = CardList.getCardsByType(cardTypeId);
-        let state = getState().cards;
+    deleteCards: (cardTypeId: string): IAppThunkAction<KnownActions> => (dispatch, getState) => {
+        const cards = CardList.getCardsByType(cardTypeId);
+        const state = getState().cards;
         for (let index = state.protocol.length - 1; index >= 0; index--) {
             const element = state.protocol.get(index);
-            let card = cards.find(c => c.id === element.cardId);
+            const card = cards.find(c => c.id === element.cardId);
             if (card) {
                 state.protocol.delete(index);
                 CardList.cards = CardList.cards.remove(card.id);
             }
         }
     },
-    loadCard: (id: string): AppThunkAction<KnownActions> => (dispatch, getState) => {
-        let card = CardsManager.openCard('', id);
+    loadCard: (id: string): IAppThunkAction<KnownActions> => (dispatch, getState) => {
+        const card = CardsManager.openCard('', id);
         dispatch({
             type: 'SET_CURRENT_CARD',
             card
         });
     },
     setCurrentCardType: (cardType: CardTypeRecord | undefined):
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
             if (cardType) {
                 dispatch({
                     type: 'SET_CURRENT_CARD_TYPE',
@@ -229,28 +229,28 @@ export const actionCreators = {
             }
         },
     setCardListScrollTop: (value: number):
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({ type: 'SET_CARD_LIST_SCROLL_TOP', value });
         },
     setSearchValue: (value: string):
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({ type: 'SET_SEARCH_VALUE', value });
         },
     setShowAllCards: (value: boolean):
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({ type: 'SET_SHOW_ALL_CARDS', value });
         },
     setTabIndex: (value: number):
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
             dispatch({ type: 'SET_TAB_INDEX', value });
         },
     createFakeCustomers: ():
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
             const db = new DataBuilder();
             db.createFakeCustomers(getState().cards.protocol);
         },
     createFakeProducts: ():
-        AppThunkAction<KnownActions> => (dispatch, getState) => {
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
             const db = new DataBuilder();
             db.createFakeProducts(getState().cards.protocol);
         }

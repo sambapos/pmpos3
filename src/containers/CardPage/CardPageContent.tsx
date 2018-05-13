@@ -3,10 +3,10 @@ import Tags from './Tags';
 import SubCards from './SubCards';
 import classNames from 'classnames';
 import { WithStyles, Icon } from 'material-ui';
-import decorate, { Style } from './style';
+import decorate, { IStyle } from './style';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 
-interface CardContentProps {
+interface ICardContentProps {
     card: CardRecord;
     cardType: CardTypeRecord | undefined;
     selectedCardId: string;
@@ -14,10 +14,10 @@ interface CardContentProps {
     handleCardClick: (card: CardRecord) => void;
 }
 
-type PageProps = CardContentProps & WithStyles<keyof Style>;
+type PageProps = ICardContentProps & WithStyles<keyof IStyle>;
 
 const CardPageContent = (props: PageProps) => {
-    let drawIcon = props.card.id === props.selectedCardId;
+    const drawIcon = props.card.id === props.selectedCardId;
     return (
         <div
             className={props.card.cards.count() > 0 ? props.classes.node : props.classes.leaf} >

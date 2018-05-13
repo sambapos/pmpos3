@@ -5,69 +5,36 @@ import { TextField, DialogContent, DialogActions, Button } from 'material-ui';
 import { CardTagRecord, TagTypeRecord } from 'pmpos-models';
 import { CardList } from 'pmpos-modules';
 
-interface TagEditorProps {
+interface ITagEditorProps {
     tag: CardTagRecord;
     tagType: TagTypeRecord;
     onSubmit: (data: any) => void;
 }
 
-interface TagEditorState {
+interface ITagEditorState {
     name: string; value: string; quantity: string; unit: string;
     price: string; func: string;
     source: string; target: string; typeId: string;
 }
 
-export default class TagEditor extends React.Component<TagEditorProps, TagEditorState> {
+export default class TagEditor extends React.Component<ITagEditorProps, ITagEditorState> {
 
-    constructor(props: TagEditorProps) {
+    constructor(props: ITagEditorProps) {
         super(props);
         this.state = this.getState(props);
     }
 
-    getState = (props: TagEditorProps): TagEditorState => {
-        let { tagType, tag } = props;
-        return {
-            typeId: tagType.id,
-            name: tag.name || tagType.tagName || tagType.cardTypeReferenceName,
-            value: tag.value || tagType.defaultValue,
-            quantity: String(tag.quantity !== 0 ? tag.quantity : tagType.defaultQuantity),
-            unit: tag.unit || tagType.defaultUnit,
-            price: String(tag.price !== 0 ? tag.price : tagType.defaultPrice),
-            func: tag.func || tagType.defaultFunction,
-            source: tag.source || tagType.defaultSource,
-            target: tag.target || tagType.defaultTarget
-        };
-    }
-
-    handleTagValueChange(value: string) {
-        this.setState({ value });
-        if (this.props.tagType.cardTypeReferenceName) {
-            let card = CardList.getCardByName(this.props.tagType.cardTypeReferenceName, value);
-            if (card) {
-                if (Number(this.state.price) === 0) {
-                    this.setState({ price: String(card.getTag('Price', '')) });
-                }
-                if (!this.state.source) {
-                    this.setState({ source: String(card.getTag('Source', '')) });
-                }
-                if (!this.state.target) {
-                    this.setState({ target: String(card.getTag('Target', '')) });
-                }
-            }
-        }
-    }
-
-    render() {
-        let canEditName = Boolean(
+    public render() {
+        const canEditName = Boolean(
             !this.props.tag.name && !this.props.tagType.id
         );
-        let canEditValue = !this.props.tagType.id || this.props.tagType.showValue;
-        let canEditQuantity = !this.props.tagType.id || this.props.tagType.showQuantity;
-        let canEditUnit = !this.props.tagType.id || this.props.tagType.showUnit;
-        let canEditPrice = !this.props.tagType.id || this.props.tagType.showPrice;
-        let canEditSource = !this.props.tagType.id || this.props.tagType.showSource;
-        let canEditTarget = !this.props.tagType.id || this.props.tagType.showTarget;
-        let canEditFunction = !this.props.tagType.id || this.props.tagType.showFunction;
+        const canEditValue = !this.props.tagType.id || this.props.tagType.showValue;
+        const canEditQuantity = !this.props.tagType.id || this.props.tagType.showQuantity;
+        const canEditUnit = !this.props.tagType.id || this.props.tagType.showUnit;
+        const canEditPrice = !this.props.tagType.id || this.props.tagType.showPrice;
+        const canEditSource = !this.props.tagType.id || this.props.tagType.showSource;
+        const canEditTarget = !this.props.tagType.id || this.props.tagType.showTarget;
+        const canEditFunction = !this.props.tagType.id || this.props.tagType.showFunction;
 
         return (<>
             <DialogContent>
@@ -150,5 +117,38 @@ export default class TagEditor extends React.Component<TagEditorProps, TagEditor
                 </Button>
             </DialogActions>
         </>);
+    }
+
+    private getState = (props: ITagEditorProps): ITagEditorState => {
+        const { tagType, tag } = props;
+        return {
+            typeId: tagType.id,
+            name: tag.name || tagType.tagName || tagType.cardTypeReferenceName,
+            value: tag.value || tagType.defaultValue,
+            quantity: String(tag.quantity !== 0 ? tag.quantity : tagType.defaultQuantity),
+            unit: tag.unit || tagType.defaultUnit,
+            price: String(tag.price !== 0 ? tag.price : tagType.defaultPrice),
+            func: tag.func || tagType.defaultFunction,
+            source: tag.source || tagType.defaultSource,
+            target: tag.target || tagType.defaultTarget
+        };
+    }
+
+    private handleTagValueChange(value: string) {
+        this.setState({ value });
+        if (this.props.tagType.cardTypeReferenceName) {
+            const card = CardList.getCardByName(this.props.tagType.cardTypeReferenceName, value);
+            if (card) {
+                if (Number(this.state.price) === 0) {
+                    this.setState({ price: String(card.getTag('Price', '')) });
+                }
+                if (!this.state.source) {
+                    this.setState({ source: String(card.getTag('Source', '')) });
+                }
+                if (!this.state.target) {
+                    this.setState({ target: String(card.getTag('Target', '')) });
+                }
+            }
+        }
     }
 }

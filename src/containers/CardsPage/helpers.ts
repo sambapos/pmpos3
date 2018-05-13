@@ -23,10 +23,9 @@ export function getFilteredItems(items: List<CardRecord>, searchValue: string, s
 }
 
 export function getItems(cards: List<CardRecord>, startIndex: number, itemCount: number) {
-    let result = cards
+    return cards
         .skip(startIndex)
         .take(itemCount)
         .sort((x, y) => x.index - y.index)
         .toArray();
-    return result;
 }

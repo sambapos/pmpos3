@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Typography, ListItem } from 'material-ui';
 import { CardRecord } from 'pmpos-models';
 
-interface Props {
+interface ICardBalanceProps {
     card: CardRecord;
 }
 
-export default (props: Props) => {
+export default (props: ICardBalanceProps) => {
     return props.card.balanceDisplay
         ? (
             <ListItem>

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { extend } from '../../lib/Extender';
 import * as CardStore from '../../store/Cards';
 import * as ClientStore from '../../store/Client';
-import { ApplicationState } from '../../store/index';
+import { IApplicationState } from '../../store/index';
 
 import { Typography, Menu, MenuItem, Paper, Divider } from 'material-ui';
 import decorate from './style';
@@ -22,7 +22,7 @@ import CommandButtons from '../../components/CommandButtons';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 import { CardOperation, CardList, CardsManager } from 'pmpos-modules';
 
-interface PageState {
+interface IPageState {
     disableUpdate: boolean;
     anchorEl: any;
     selectedCard: CardRecord;
@@ -30,7 +30,7 @@ interface PageState {
     footerButtons: CommandButton[];
 }
 
-export class CardPage extends React.Component<CardPageProps, PageState> {
+export class CardPage extends React.Component<CardPageProps, IPageState> {
     constructor(props: CardPageProps) {
         super(props);
         this.state = {
@@ -42,49 +42,9 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
         };
     }
 
-    handleModalClose = () => {
-        this.props.SetModalState(false);
-    }
-
-    handleMenuClick = event => {
-        this.setState({ anchorEl: event.currentTarget });
-    }
-
-    handleMenuClose = () => {
-        this.setState({ anchorEl: undefined });
-    }
-
-    handleCardMutation = (card: CardRecord, actionType: string, data: any) => {
-        this.props.addPendingAction(card, actionType, data);
-        this.handleModalClose();
-    }
-
-    handleOperation(card: CardRecord, operation?: CardOperation, currentData?: any) {
-        if (!operation) { return; }
-        if (OperationEditor.hasEditor(operation.type)) {
-            let component = OperationEditor.getEditor(
-                operation.type,
-                card,
-                (at, data) => this.handleCardMutation(card, at, data),
-                () => { this.handleModalClose(); },
-                currentData);
-            if (component) {
-                this.props.SetModalComponent(component);
-            }
-        } else {
-            let data = currentData || {};
-            data.id = shortid.generate();
-            data.time = new Date().getTime();
-            this.handleCardMutation(card, operation.type, data);
-        }
-    }
-
-    handleButtonClick(card: CardRecord, button: CommandButton) {
-        this.handleCardMutation(card, 'EXECUTE_COMMAND', {
-            name: button.command,
-            params: button.parameters
-        });
-    }
+    // private handleMenuClick = event => {
+    //     this.setState({ anchorEl: event.currentTarget });
+    // }
 
     public shouldComponentUpdate(props: CardPageProps) {
         if (this.state.disableUpdate) {
@@ -113,38 +73,6 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
         }
     }
 
-    getButtonsForCommand(command: string): CommandButton[] {
-        if (!command.includes('=')) {
-            let parts = command.split(':');
-            let ct = CardList.getCardTypes().find(c => c.name === parts[1]);
-            if (ct) {
-                let cards = CardList.getCardsByType(ct.id);
-                return cards.sortBy(x => x.index).map(c =>
-                    new CommandButton(`${c.name}=${parts[0]}:${
-                        c.tags.reduce((r, t) => r + (r ? ',' : '') + `${t.name}=${t.value}`, '')
-                        }`)).toArray();
-            }
-        }
-        return [new CommandButton(command)];
-    }
-
-    reduceButtons(ct: CardTypeRecord) {
-        return ct.commands.filter(c => c).reduce(
-            (r, c) => r.concat(this.getButtonsForCommand(c)),
-            new Array<CommandButton>());
-    }
-
-    getButtons(card: CardRecord): CommandButton[] {
-        let ct = CardList.getCardTypes().get(card.typeId);
-        return ct
-            ? this.reduceButtons(ct)
-            : [];
-    }
-
-    getSelectedCard(card: CardRecord): CardRecord {
-        return card !== this.state.selectedCard ? card : this.props.card;
-    }
-
     public render() {
         if (this.props.failed) {
             return (
@@ -157,7 +85,7 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
             );
         }
 
-        let hasPendingUpdates = this.state.anchorEl && CardsManager.getPendingActions('', this.props.card.id)
+        const hasPendingUpdates = this.state.anchorEl && CardsManager.getPendingActions('', this.props.card.id)
             .some(a => a.relatesToCard(this.state.selectedCard.id));
 
         return (
@@ -246,9 +174,82 @@ export class CardPage extends React.Component<CardPageProps, PageState> {
             </div>
         );
     }
+
+    private handleMenuClose = () => {
+        this.setState({ anchorEl: undefined });
+    }
+
+    private handleCardMutation = (card: CardRecord, actionType: string, data: any) => {
+        this.props.addPendingAction(card, actionType, data);
+        this.handleModalClose();
+    }
+
+    private handleOperation(card: CardRecord, operation?: CardOperation, currentData?: any) {
+        if (!operation) { return; }
+        if (OperationEditor.hasEditor(operation.type)) {
+            const component = OperationEditor.getEditor(
+                operation.type,
+                card,
+                (at, data) => this.handleCardMutation(card, at, data),
+                () => { this.handleModalClose(); },
+                currentData);
+            if (component) {
+                this.props.SetModalComponent(component);
+            }
+        } else {
+            const data = currentData || {};
+            data.id = shortid.generate();
+            data.time = new Date().getTime();
+            this.handleCardMutation(card, operation.type, data);
+        }
+    }
+
+    private handleButtonClick(card: CardRecord, button: CommandButton) {
+        this.handleCardMutation(card, 'EXECUTE_COMMAND', {
+            name: button.command,
+            params: button.parameters
+        });
+    }
+
+
+    private getButtonsForCommand(command: string): CommandButton[] {
+        if (!command.includes('=')) {
+            const parts = command.split(':');
+            const ct = CardList.getCardTypes().find(c => c.name === parts[1]);
+            if (ct) {
+                const cards = CardList.getCardsByType(ct.id);
+                return cards.sortBy(x => x.index).map(c =>
+                    new CommandButton(`${c.name}=${parts[0]}:${
+                        c.tags.reduce((r, t) => r + (r ? ',' : '') + `${t.name}=${t.value}`, '')
+                        }`)).toArray();
+            }
+        }
+        return [new CommandButton(command)];
+    }
+
+    private reduceButtons(ct: CardTypeRecord) {
+        return ct.commands.filter(c => c).reduce(
+            (r, c) => r.concat(this.getButtonsForCommand(c)),
+            new Array<CommandButton>());
+    }
+
+    private getButtons(card: CardRecord): CommandButton[] {
+        const ct = CardList.getCardTypes().get(card.typeId);
+        return ct
+            ? this.reduceButtons(ct)
+            : [];
+    }
+
+    private getSelectedCard(card: CardRecord): CardRecord {
+        return card !== this.state.selectedCard ? card : this.props.card;
+    }
+
+    private handleModalClose = () => {
+        this.props.SetModalState(false);
+    }
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
+const mapStateToProps = (state: IApplicationState) => ({
     card: state.cards.currentCard,
     closeCardRequested: state.cards.closeCardRequested,
     failed: state.cards.failed

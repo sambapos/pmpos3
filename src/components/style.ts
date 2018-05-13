@@ -1,6 +1,6 @@
 import withStyles from 'material-ui/styles/withStyles';
 
-export interface Style {
+export interface IStyle {
     list: any;
     draggableList: any;
     sectionList: any;
@@ -8,7 +8,7 @@ export interface Style {
     highlightedButton: any;
 }
 
-export default withStyles(({ palette, spacing, breakpoints }): Style => ({
+export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     list: {
         flex: 1,
         overflow: 'auto',

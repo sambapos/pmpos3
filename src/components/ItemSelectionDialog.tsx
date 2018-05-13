@@ -17,24 +17,13 @@ export default class extends React.Component<ItemSelectionProps,
         this.state = { selectedItems: IList<string>(props.selectedItems) };
     }
 
-    handleToggleSelectTagType(id: string) {
-        let items = this.state.selectedItems;
-        let checked = items.indexOf(id) !== -1;
-        if (!checked) {
-            items = items.push(id);
-        } else {
-            items = items.splice(items.indexOf(id), 1);
-        }
-        this.setState({ selectedItems: items });
-    }
-
-    render() {
+    public render() {
         return (<>
             <DialogTitle>Select Tag Types</DialogTitle>
             <DialogContent>
                 <List>
                     {this.props.sourceItems.sort((x, y) => x.name > y.name ? 1 : 0).map(tt => {
-                        let checked = this.state.selectedItems.indexOf(tt.id) !== -1;
+                        const checked = this.state.selectedItems.indexOf(tt.id) !== -1;
                         return <ListItem
                             key={tt.id + '.'}
                             disableGutters
@@ -60,4 +49,16 @@ export default class extends React.Component<ItemSelectionProps,
             </DialogActions>
         </>);
     }
+
+    private handleToggleSelectTagType(id: string) {
+        let items = this.state.selectedItems;
+        const checked = items.indexOf(id) !== -1;
+        if (!checked) {
+            items = items.push(id);
+        } else {
+            items = items.splice(items.indexOf(id), 1);
+        }
+        this.setState({ selectedItems: items });
+    }
+
 }
