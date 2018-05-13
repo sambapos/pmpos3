@@ -89,7 +89,7 @@ export default class extends React.Component<ICardListProps, ICardListState> {
     }
 
     private getCardList() {
-        if (this.props.cards.count() < this.itemCount) {
+        if (this.props.cards.count() <= this.itemCount) {
             return <DraggableList
                 items={this.state.items}
                 template={this.props.cardType ? this.props.cardType.displayFormat : ''}

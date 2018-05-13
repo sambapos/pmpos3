@@ -35,7 +35,7 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
         const canEditSource = !this.props.tagType.id || this.props.tagType.showSource;
         const canEditTarget = !this.props.tagType.id || this.props.tagType.showTarget;
         const canEditFunction = !this.props.tagType.id || this.props.tagType.showFunction;
-
+        console.log('CEV', canEditValue);
         return (<>
             <DialogContent>
                 {canEditName && <TextField

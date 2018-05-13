@@ -15,6 +15,17 @@
         "object-literal-sort-keys": false,
         "ordered-imports": false,
         "jsx-boolean-value": false,
-        "no-angle-bracket-type-assertion": false
+        "no-angle-bracket-type-assertion": false,
+        "no-console": {
+            "severity": "warning",
+            "options": [
+                "debug",
+                "info",
+                "log",
+                "time",
+                "timeEnd",
+                "trace"
+            ]
+        }
     }
 }

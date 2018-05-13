@@ -184,7 +184,7 @@ export const actionCreators = {
             };
 
             CardsManager.executeAction(
-                '', c.id, actionType, data, handleCanEdit, handleEdit, handleClose)
+                '', getState().cards.currentCard.id, c.id, actionType, data, handleCanEdit, handleEdit, handleClose)
                 .then(result =>
                     dispatch({
                         type: 'SET_CURRENT_CARD',

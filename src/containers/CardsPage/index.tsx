@@ -142,7 +142,7 @@ class CardsPage extends React.Component<PageProps, IState> {
                 //         actionType: 'SET_CARD_INDEX',
                 //         data: { index }
                 //     });
-                CardsManager.executeAction('', item.id, 'SET_CARD_INDEX', { index })
+                CardsManager.executeAction('', item.id, item.id, 'SET_CARD_INDEX', { index })
                     .then(() => CardsManager.closeCard('', item.id));
                 // this.props.postCommit(item, IList<ActionRecord>([actionData]));
             }

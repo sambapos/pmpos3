@@ -31,6 +31,7 @@ interface ICardSelectorState {
 }
 
 const extractCardsfromSourceCardTags = (sourceCards: List<CardRecord>, tagTypeId: string) => {
+    console.log('source', sourceCards);
     return sourceCards.reduce(
         (r, c) => {
             const tag = c.tags.find(t => t.typeId === tagTypeId);
@@ -127,6 +128,13 @@ class CardSelector extends React.Component<Props, ICardSelectorState> {
         this.setState({ searchValue });
         if (this.props.onSearchValueChange) {
             this.props.onSearchValueChange(searchValue);
+        } else {
+            const items = getCardList(
+                this.state.cardType, this.props.sourceCardType, this.props.sourceCards,
+                !this.state.maybeVirtual, searchValue
+            );
+            this.setState({ items });
+            console.log('search value', searchValue);
         }
     }
     public getCardType(cardTypeName: string | undefined) {
@@ -166,7 +174,7 @@ class CardSelector extends React.Component<Props, ICardSelectorState> {
         />;
     }
     public getList() {
-        if (this.isRegularList || (this.props.searchValue && this.state.maybeVirtual)) {
+        if (this.isRegularList || (this.state.searchValue && this.state.maybeVirtual)) {
             return this.getItemList();
         }
         return this.getButtonList();
@@ -177,8 +185,8 @@ class CardSelector extends React.Component<Props, ICardSelectorState> {
             return (<div>Card Type `${this.props.cardType}` not found</div>);
         }
         return <div className={this.props.classes.content}>
-            {this.props.onSearchValueChange && <SearchEdit value={this.state.searchValue}
-                onChange={value => this.updateSearchValue(value)} />}
+            <SearchEdit value={this.state.searchValue}
+                onChange={value => this.updateSearchValue(value)} />
             <div className={this.props.classes.container}>
                 {this.getList()}
             </div>
