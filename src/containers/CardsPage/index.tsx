@@ -225,8 +225,10 @@ class CardsPage extends React.Component<PageProps, State> {
                         onClick: () => {
                             if (this.props.currentCardType.name === 'Customers') {
                                 this.props.createFakeCustomers();
+                            } else if (this.props.currentCardType.name === 'Products') {
+                                this.props.createFakeProducts();
                             } else {
-                                alert('This function can be used for `Customers`');
+                                alert('This function can be used for `Customers` or `Products`');
                             }
                         }
                     },

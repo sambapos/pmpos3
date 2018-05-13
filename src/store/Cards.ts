@@ -248,5 +248,10 @@ export const actionCreators = {
         AppThunkAction<KnownActions> => (dispatch, getState) => {
             const db = new DataBuilder();
             db.createFakeCustomers(getState().cards.protocol);
+        },
+    createFakeProducts: ():
+        AppThunkAction<KnownActions> => (dispatch, getState) => {
+            const db = new DataBuilder();
+            db.createFakeProducts(getState().cards.protocol);
         }
 };

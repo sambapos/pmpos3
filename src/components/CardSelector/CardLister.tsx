@@ -23,7 +23,7 @@ interface CardListState {
 export default class extends React.Component<CardListProps, CardListState> {
 
     private debouncedHandleScroll;
-    private itemCount = 50;
+    private itemCount = 100;
 
     cache = new CellMeasurerCache({
         defaultWidth: 100,
@@ -85,7 +85,7 @@ export default class extends React.Component<CardListProps, CardListState> {
     }
 
     getCardList() {
-        if (this.props.cards.count() < this.itemCount * 2) {
+        if (this.props.cards.count() < this.itemCount) {
             return <DraggableList
                 items={this.state.items}
                 template={this.props.cardType ? this.props.cardType.displayFormat : ''}

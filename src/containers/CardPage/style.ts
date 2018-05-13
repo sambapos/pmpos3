@@ -150,6 +150,9 @@ export default withStyles(({ palette, spacing, breakpoints }): Style => ({
         // [breakpoints.up('xs')]: {
         //     flex: 1
         // },
+        [breakpoints.down('xs')]: {
+            maxHeight: '40%'
+        },
         [breakpoints.up('sm')]: {
             flex: 1,
         },
