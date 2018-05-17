@@ -31,7 +31,6 @@ interface ICardSelectorState {
 }
 
 const extractCardsfromSourceCardTags = (sourceCards: List<CardRecord>, tagTypeId: string) => {
-    console.log('source', sourceCards);
     return sourceCards.reduce(
         (r, c) => {
             const tag = c.tags.find(t => t.typeId === tagTypeId);
@@ -122,9 +121,6 @@ class CardSelector extends React.Component<Props, ICardSelectorState> {
         return this.props.sourceCardType.name === this.state.cardType.name;
     }
     public updateSearchValue(searchValue: string) {
-        // let items = searchValue
-        //     ? List<CardRecord>(CardList.findCards(this.state.cardType, searchValue))
-        //     : getCardList(this.state.cardType, this.props.sourceCardType, this.props.sourceCards);
         this.setState({ searchValue });
         if (this.props.onSearchValueChange) {
             this.props.onSearchValueChange(searchValue);
@@ -134,7 +130,6 @@ class CardSelector extends React.Component<Props, ICardSelectorState> {
                 !this.state.maybeVirtual, searchValue
             );
             this.setState({ items });
-            console.log('search value', searchValue);
         }
     }
     public getCardType(cardTypeName: string | undefined) {
