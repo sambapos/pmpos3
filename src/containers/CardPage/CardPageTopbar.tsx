@@ -4,12 +4,12 @@ import Accounts from './Accounts';
 import TopBar from '../TopBar';
 import Commits from './Commits';
 import { CardRecord, ActionRecord, CommitRecord } from 'pmpos-models';
-import { CardList, CardsManager } from 'pmpos-modules';
+import { CardManager, TerminalManager } from 'pmpos-modules';
 import { CardPageProps } from './CardPageProps';
 import { List } from 'immutable';
 
 const getTitle = (card: CardRecord) => {
-    const ct = CardList.getCardType(card.typeId);
+    const ct = CardManager.getCardType(card.typeId);
     const cap = ct ? ct.reference : `Card`;
     return !card.name
         ? `New ${cap}`
@@ -27,7 +27,7 @@ export default (props: CardPageProps & ITopBarProps) => {
         title={getTitle(props.card)}
         menuCommand={{
             icon: 'close', onClick: () => {
-                CardsManager.cancelCard('', '');
+                TerminalManager.cancelCard('', '');
                 props.history.goBack();
             }
         }}

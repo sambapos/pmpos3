@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import * as shortid from 'shortid';
 import { Record, Map as IMap } from 'immutable';
 import { IAppThunkAction } from './appThunkAction';
-import { RuleManager, CardList, DataBuilder } from 'pmpos-modules';
+import { RuleManager, CardManager, DataBuilder } from 'pmpos-modules';
 import { CardTypeRecord, TagTypeRecord, RuleRecord } from 'pmpos-models';
 
 interface IConfigState {
@@ -148,13 +148,13 @@ export const reducer: Reducer<ConfigStateRecord> = (
                 const cardTypes = action.payload.get('cardTypes');
                 cardTypeMap = Object.keys(cardTypes)
                     .reduce((x, y) => x.set(y, new CardTypeRecord(cardTypes[y])), IMap<string, CardTypeRecord>());
-                CardList.setCardTypes(cardTypeMap);
+                CardManager.setCardTypes(cardTypeMap);
             }
             if (action.payload.has('tagTypes')) {
                 const tagTypes = action.payload.get('tagTypes');
                 tagTypeMap = Object.keys(tagTypes).
                     reduce((x, y) => x.set(y, new TagTypeRecord(tagTypes[y])), IMap<string, TagTypeRecord>());
-                CardList.setTagTypes(tagTypeMap);
+                CardManager.setTagTypes(tagTypeMap);
             }
             if (action.payload.has('rules')) {
                 const rules = action.payload.get('rules');
@@ -164,7 +164,7 @@ export const reducer: Reducer<ConfigStateRecord> = (
             }
             return state
                 .set('cardTypes', cardTypeMap)
-                .set('rootCardTypes', CardList.getRootCardTypes())
+                .set('rootCardTypes', CardManager.getRootCardTypes())
                 .set('tagTypes', tagTypeMap)
                 .set('rules', ruleMap);
         }
@@ -187,7 +187,7 @@ export const reducer: Reducer<ConfigStateRecord> = (
             return state
                 .set('isLoading', false)
                 .set('currentCardType', new CardTypeRecord())
-                .set('rootCardTypes', CardList.getRootCardTypes());
+                .set('rootCardTypes', CardManager.getRootCardTypes());
         }
         case 'ADD_CARD_TYPE': {
             return state
@@ -373,8 +373,8 @@ export const actionCreators = {
         IAppThunkAction<KnownActions> => (dispatch, getState) => {
             const db = new DataBuilder();
             db.createConfig(getState().config.protocol);
-            if (CardList.cards.count() === 0) {
-                db.createDefaultCards(getState().cards.protocol);
+            if (CardManager.cards.count() === 0) {
+                CardManager.postCommits(db.getDefaultCardCommits());
             }
         }
 };

@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import * as React from 'react';
 import { IAppThunkAction } from './appThunkAction';
 import { configureProtocol } from 'pmpos-modules';
-import { CardsManager } from 'pmpos-modules';
+import { TerminalManager } from 'pmpos-modules';
 
 export interface IClientState {
     languageName: string;
@@ -50,30 +50,12 @@ const configProtocol = (terminalId, networkName, serverName, user, dispatch) => 
         serverName,
         true,
         terminalId, networkName, user,
-        (chat, commit, config) => {
+        (config) => {
             dispatch({
                 type: 'SET_CONFIG_PROTOCOL',
                 protocol: config
             });
-            dispatch({
-                type: 'SET_COMMIT_PROTOCOL',
-                protocol: commit
-            });
-            dispatch({
-                type: 'SET_CHAT_PROTOCOL',
-                protocol: chat
-            });
         },
-        messages =>
-            messages.forEach(value =>
-                dispatch({
-                    type: 'ADD_MESSAGE',
-                    time: value.time,
-                    message: value.message,
-                    user: value.user,
-                    id: value.id,
-                    lamport: value.lamport
-                })),
         config => dispatch({
             type: 'CONFIG_RECEIVED',
             payload: config
@@ -96,11 +78,11 @@ export const actionCreators = {
     SetModalComponent: (component: any) => <ISetModalComponentAction>{ type: 'SET_MODAL_COMPONENT', component },
     connectProtocol: (terminalId: string, networkName: string, serverName: string, user: string):
         IAppThunkAction<KnownActions> => (dispatch, getState) => {
-            const currentProtocol = getState().cards.protocol;
+            const currentProtocol = getState().config.protocol;
             if (!currentProtocol) {
                 configProtocol(terminalId, networkName, serverName, user, dispatch);
             }
-            CardsManager.enableTerminal(terminalId, user);
+            TerminalManager.enableTerminal(terminalId, user);
         }
 };
 

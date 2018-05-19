@@ -2,10 +2,10 @@ import * as React from 'react';
 import { ListItem, ListItemText, Icon } from 'material-ui';
 import tmpl from 'blueimp-tmpl';
 import { CardRecord, CardTagRecord } from 'pmpos-models';
-import { CardList, RuleManager } from 'pmpos-modules';
+import { CardManager, RuleManager } from 'pmpos-modules';
 
 const getTagDisplay = (card: CardRecord, tag: CardTagRecord) => {
-    const tt = CardList.tagTypes.get(tag.typeId);
+    const tt = CardManager.tagTypes.get(tag.typeId);
     if (tt && tt.icon) {
         if (tt.icon === '_') { return tag.valueDisplay; }
         return (<span style={{ display: 'inline-block' }}>
@@ -27,7 +27,7 @@ const getDefaultContent = (card: CardRecord) => {
             <ListItemText
                 primary={<div style={{ fontWeight: 400, fontSize: '1.1em' }}>{card.display}</div>}
                 secondary={card.tags.valueSeq()
-                    .sortBy(tag => CardList.getTagSortIndexByCard(card, tag))
+                    .sortBy(tag => CardManager.getTagSortIndexByCard(card, tag))
                     .filter(tag => tag.name !== 'Name')
                     .map(tag => (
                         <span

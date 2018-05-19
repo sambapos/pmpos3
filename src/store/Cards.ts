@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 import { IAppThunkAction } from './appThunkAction';
-import { CardList, cardOperations, CardsManager, DataBuilder } from 'pmpos-modules';
+import { CardManager, cardOperations, TerminalManager, DataBuilder } from 'pmpos-modules';
 import { List, Record } from 'immutable';
 import { CardRecord, CardTypeRecord, ActionRecord, Commit, CardTag } from 'pmpos-models';
 import OperationEditor from '../modules/OperationEditor';
@@ -9,7 +9,6 @@ export interface IState {
     cards: List<CardRecord>;
     currentCard: CardRecord;
     currentCardType: CardTypeRecord;
-    protocol: any;
     cardListScrollTop: number;
     searchValue: string;
     showAllCards: boolean;
@@ -22,7 +21,6 @@ export class StateRecord extends Record<IState>({
     currentCard: new CardRecord(),
     currentCardType: new CardTypeRecord(),
     cards: List<CardRecord>(),
-    protocol: undefined,
     cardListScrollTop: 0,
     searchValue: '',
     showAllCards: false,
@@ -93,15 +91,12 @@ export const reducer: Reducer<StateRecord> = (
     action: KnownActions
 ) => {
     switch (action.type) {
-        case 'SET_COMMIT_PROTOCOL': {
-            return state.set('protocol', action.protocol);
-        }
         case 'COMMIT_RECEIVED': {
-            CardList.addCommits(action.values);
-            return state.set('cards', CardList.getCardsByType(state.currentCardType.id));
+            CardManager.addCommits(action.values);
+            return state.set('cards', CardManager.getCardsByType(state.currentCardType.id));
         }
         case 'COMMIT_RECEIVED_SUCCESS': {
-            return state.set('cards', CardList.getCardsByType(state.currentCardType.id));
+            return state.set('cards', CardManager.getCardsByType(state.currentCardType.id));
         }
         case 'COMMIT_CARD': {
             return resetCurrentCard(state);
@@ -111,7 +106,7 @@ export const reducer: Reducer<StateRecord> = (
         }
         case 'SET_CURRENT_CARD_TYPE': {
             return state
-                .set('cards', CardList.getCardsByType(action.cardType.id))
+                .set('cards', CardManager.getCardsByType(action.cardType.id))
                 .set('currentCardType', action.cardType)
                 .set('tabIndex', 0);
         }
@@ -149,7 +144,7 @@ function resetCurrentCard(state: StateRecord) {
 export const actionCreators = {
     addCard: (cardType: CardTypeRecord, tags: CardTag[])
         : IAppThunkAction<KnownActions> => (dispatch, getState) => {
-            CardsManager.createCard('', cardType.reference, tags)
+            TerminalManager.createCard('', cardType.reference, tags)
                 .then(card =>
                     dispatch({
                         type: 'SET_CURRENT_CARD',
@@ -183,7 +178,7 @@ export const actionCreators = {
                 dispatch({ type: 'REQUEST_CLOSE_CARD' });
             };
 
-            CardsManager.executeAction(
+            TerminalManager.executeAction(
                 '', getState().cards.currentCard.id, c.id, actionType, data, handleCanEdit, handleEdit, handleClose)
                 .then(result =>
                     dispatch({
@@ -194,26 +189,17 @@ export const actionCreators = {
         },
     removePendingActions: (cardId: string):
         IAppThunkAction<KnownActions> => (dispatch, getState) => {
-            const card = CardsManager.removePendingActions('', '', cardId);
+            const card = TerminalManager.removePendingActions('', '', cardId);
             dispatch({
                 type: 'SET_CURRENT_CARD',
                 card
             });
         },
     deleteCards: (cardTypeId: string): IAppThunkAction<KnownActions> => (dispatch, getState) => {
-        const cards = CardList.getCardsByType(cardTypeId);
-        const state = getState().cards;
-        for (let index = state.protocol.length - 1; index >= 0; index--) {
-            const element = state.protocol.get(index);
-            const card = cards.find(c => c.id === element.cardId);
-            if (card) {
-                state.protocol.delete(index);
-                CardList.cards = CardList.cards.remove(card.id);
-            }
-        }
+        CardManager.deleteCards(cardTypeId);
     },
     loadCard: (id: string): IAppThunkAction<KnownActions> => (dispatch, getState) => {
-        const card = CardsManager.openCard('', id);
+        const card = TerminalManager.openCard('', id);
         dispatch({
             type: 'SET_CURRENT_CARD',
             card
@@ -247,11 +233,11 @@ export const actionCreators = {
     createFakeCustomers: ():
         IAppThunkAction<KnownActions> => (dispatch, getState) => {
             const db = new DataBuilder();
-            db.createFakeCustomers(getState().cards.protocol);
+            CardManager.postCommits(db.getFakeCustomerCommits());
         },
     createFakeProducts: ():
         IAppThunkAction<KnownActions> => (dispatch, getState) => {
             const db = new DataBuilder();
-            db.createFakeProducts(getState().cards.protocol);
+            CardManager.postCommits(db.getFakeProductCommits());
         }
 };

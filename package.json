@@ -12,7 +12,7 @@
     "material-ui": "^1.0.0-beta.47",
     "moment": "^2.22.1",
     "pmpos-models": "^1.0.4",
-    "pmpos-modules": "^1.0.34",
+    "pmpos-modules": "^1.0.35",
     "react": "^16.3.2",
     "react-ace": "^5.10.0",
     "react-autosuggest": "^9.3.4",
@@ -24,7 +24,7 @@
     "react-router-redux": "^5.0.0-alpha.9",
     "react-scripts-ts": "^2.16.0",
     "react-swipeable-views": "^0.12.13",
-    "react-virtualized": "^9.18.5",
+    "react-virtualized": "^9.19.0",
     "redux": "^3.7.2",
     "redux-raven-middleware": "^1.2.0",
     "redux-thunk": "^2.2.0",
@@ -34,7 +34,7 @@
     "y-indexeddb": "^9.0.0-5",
     "y-map": "^11.0.0-1",
     "y-memory": "^9.0.0-1",
-    "yjs": "13.0.0-55"
+    "yjs": "^13.0.0-61"
   },
   "scripts": {
     "start": "cross-env REACT_APP_VERSION=$npm_package_version react-scripts-ts start",
@@ -49,7 +49,7 @@
     "@types/enzyme-adapter-react-16": "^1.0.2",
     "@types/history": "^4.6.2",
     "@types/jest": "^21.1.10",
-    "@types/node": "^8.10.14",
+    "@types/node": "^8.10.16",
     "@types/react": "^16.3.14",
     "@types/react-dom": "^16.0.5",
     "@types/react-redux": "^5.0.20",

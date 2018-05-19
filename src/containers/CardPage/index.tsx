@@ -20,7 +20,7 @@ import { CardPageProps } from './CardPageProps';
 import { Link } from 'react-router-dom';
 import CommandButtons from '../../components/CommandButtons';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
-import { CardOperation, CardList, CardsManager } from 'pmpos-modules';
+import { CardOperation, CardManager, TerminalManager } from 'pmpos-modules';
 
 interface IPageState {
     disableUpdate: boolean;
@@ -85,14 +85,14 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
             );
         }
 
-        const hasPendingUpdates = this.state.anchorEl && CardsManager.getPendingActions('', this.props.card.id)
+        const hasPendingUpdates = this.state.anchorEl && TerminalManager.getPendingActions('', this.props.card.id)
             .some(a => a.relatesToCard(this.state.selectedCard.id));
 
         return (
             <div className={this.props.classes.root}>
                 <CardPageTopbar {...this.props}
-                    commits={() => CardList.getCommits(this.props.card.id)}
-                    pendingActions={() => CardsManager.getPendingActions('', this.props.card.id)}
+                    commits={() => CardManager.getCommits(this.props.card.id)}
+                    pendingActions={() => TerminalManager.getPendingActions('', this.props.card.id)}
                     onClose={() => {
                         this.setState({ disableUpdate: true });
                         this.props.addPendingAction(this.props.card, 'COMMIT_CARD', { id: 1 });
@@ -107,7 +107,7 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
                             </div>
                             <CardPageContent
                                 card={this.props.card}
-                                cardType={CardList.getCardType(this.props.card.typeId)}
+                                cardType={CardManager.getCardType(this.props.card.typeId)}
                                 selectedCardId={this.state.selectedCard ? this.state.selectedCard.id : ''}
                                 onClick={(card, target) => this.setState({
                                     selectedCard: card,
@@ -215,9 +215,9 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
     private getButtonsForCommand(command: string): CommandButton[] {
         if (!command.includes('=')) {
             const parts = command.split(':');
-            const ct = CardList.getCardTypes().find(c => c.name === parts[1]);
+            const ct = CardManager.getCardTypes().find(c => c.name === parts[1]);
             if (ct) {
-                const cards = CardList.getCardsByType(ct.id);
+                const cards = CardManager.getCardsByType(ct.id);
                 return cards.sortBy(x => x.index).map(c =>
                     new CommandButton(`${c.name}=${parts[0]}:${
                         c.tags.reduce((r, t) => r + (r ? ',' : '') + `${t.name}=${t.value}`, '')
@@ -234,7 +234,7 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
     }
 
     private getButtons(card: CardRecord): CommandButton[] {
-        const ct = CardList.getCardTypes().get(card.typeId);
+        const ct = CardManager.getCardTypes().get(card.typeId);
         return ct
             ? this.reduceButtons(ct)
             : [];

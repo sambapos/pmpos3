@@ -10,7 +10,7 @@ import AccountTable from './AccountTable';
 import LocationTable from './LocationTable';
 import BalanceTable from './BalanceTable';
 import { CardTagData, CardTypeRecord } from 'pmpos-models';
-import { CardList } from 'pmpos-modules';
+import { CardManager } from 'pmpos-modules';
 
 type PageProps =
     WithStyles<keyof IStyle>
@@ -77,7 +77,7 @@ class ReportPage extends React.Component<PageProps, {
     }
 
     private loadCards(searchValue: string[]): IList<CardTagData> {
-        return CardList.getTags(searchValue);
+        return CardManager.getTags(searchValue);
     }
 
     private getTables() {
@@ -100,14 +100,14 @@ class ReportPage extends React.Component<PageProps, {
     }
 
     private getCardType(value: string): CardTypeRecord | undefined {
-        return CardList.getCardTypes().find(x => x.name.toLowerCase() === value.toLowerCase());
+        return CardManager.getCardTypes().find(x => x.name.toLowerCase() === value.toLowerCase());
     }
 
     private getContent() {
         const ct = this.getCardType(this.state.search);
         if (ct) {
-            const cardNames = CardList.getCardsByType(ct.id).map(x => x.name);
-            const tags = CardList.getTags(cardNames.toArray());
+            const cardNames = CardManager.getCardsByType(ct.id).map(x => x.name);
+            const tags = CardManager.getTags(cardNames.toArray());
             return (<BalanceTable tags={tags} />);
         }
         return this.getTables();

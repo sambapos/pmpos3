@@ -27,7 +27,6 @@ export default class extends React.Component<INavListProps> {
                 <IconListItem mainText="POS" icon="grid_on" onClick={() => this.nav('/')} />
                 <IconListItem mainText="Cards" icon="description" onClick={() => this.nav('/cards')} />
                 <IconListItem mainText="Report" icon="toc" onClick={() => this.nav('/report')} />
-                <IconListItem mainText="Chat" icon="chat" onClick={() => this.nav('/chat')} />
                 <Expander mainText="Management" >
                     <NestedListItem label="Card Types" onClick={() => this.nav('/cardTypes')} />
                     <NestedListItem label="Tag Types" onClick={() => this.nav('/tagTypes')} />

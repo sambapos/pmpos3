@@ -2,7 +2,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IApplicationState } from '../../store';
 import * as ClientStore from '../../store/Client';
-import * as ChatStore from '../../store/Chat';
 import { WithStyles } from 'material-ui';
 import { RouteComponentProps } from 'react-router';
 import decorate, { IStyle } from './style';
@@ -14,7 +13,7 @@ import DialogActions from 'material-ui/Dialog/DialogActions';
 import Button from 'material-ui/Button/Button';
 import NetworkDialog from './NetworkDialog';
 
-type DispatchType = typeof ClientStore.actionCreators & typeof ChatStore.actionCreators;
+type DispatchType = typeof ClientStore.actionCreators;
 
 export type PageProps =
     ClientStore.IClientState

@@ -15,8 +15,8 @@ import { Map as IMap, List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import CardSelector from '../../components/CardSelector';
 import { CardRecord, CardTypeRecord, CardTag, CardTagRecord } from 'pmpos-models';
-import { CardList } from 'pmpos-modules';
-import { CardsManager } from 'pmpos-modules';
+import { CardManager } from 'pmpos-modules';
+import { TerminalManager } from 'pmpos-modules';
 
 type PageProps =
     {
@@ -134,7 +134,7 @@ class CardsPage extends React.Component<PageProps, IState> {
             const item = list[index];
             if (item.index !== index) {
                 list[index] = item.set('index', index);
-                CardsManager.openCard('', item.id);
+                TerminalManager.openCard('', item.id);
                 // let actionData =
                 //     new ActionRecord({
                 //         id: shortid.generate(),
@@ -142,8 +142,8 @@ class CardsPage extends React.Component<PageProps, IState> {
                 //         actionType: 'SET_CARD_INDEX',
                 //         data: { index }
                 //     });
-                CardsManager.executeAction('', item.id, item.id, 'SET_CARD_INDEX', { index })
-                    .then(() => CardsManager.closeCard('', item.id));
+                TerminalManager.executeAction('', item.id, item.id, 'SET_CARD_INDEX', { index })
+                    .then(() => TerminalManager.closeCard('', item.id));
                 // this.props.postCommit(item, IList<ActionRecord>([actionData]));
             }
         }
@@ -155,9 +155,9 @@ class CardsPage extends React.Component<PageProps, IState> {
         result = currentCardType.tagTypes
             .reduce(
                 (r, t) => {
-                    const tt = CardList.tagTypes.get(t);
+                    const tt = CardManager.tagTypes.get(t);
                     if (tt && tt.cardTypeReferenceName) {
-                        const ct = CardList.getCardTypeByRef(tt.cardTypeReferenceName);
+                        const ct = CardManager.getCardTypeByRef(tt.cardTypeReferenceName);
                         if (ct) { r.push(ct.name); }
                     }
                     return r;
@@ -172,7 +172,7 @@ class CardsPage extends React.Component<PageProps, IState> {
             this.displayCard(cards[0]);
         } else if (cards.length === 0) {
             const tt = this.props.currentCardType.tagTypes.find(t => {
-                const type = CardList.tagTypes.get(t);
+                const type = CardManager.tagTypes.get(t);
                 return type !== undefined && type.cardTypeReferenceName === cardType.reference;
             });
             const tag = {

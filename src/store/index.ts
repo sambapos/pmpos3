@@ -1,16 +1,11 @@
 import * as Client from './Client';
-import * as Tasks from './Tasks';
 import * as Cards from './Cards';
 import * as Config from './Config';
-import { List, Map } from 'immutable';
-import * as Chat from './Chat';
 
 // The top-level state object
 export interface IApplicationState {
     client: Client.IClientState;
-    tasks: List<Map<any, any>>;
     cards: Cards.StateRecord;
-    chat: Chat.StateRecord;
     config: Config.ConfigStateRecord;
 }
 
@@ -19,8 +14,6 @@ export interface IApplicationState {
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
     client: Client.reducer,
-    tasks: Tasks.reducer,
     cards: Cards.reducer,
-    chat: Chat.reducer,
     config: Config.reducer
 };

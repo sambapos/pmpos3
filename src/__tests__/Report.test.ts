@@ -1,6 +1,6 @@
 import { CardRecord } from 'pmpos-models';
 import { Map as IMap } from 'immutable';
-import { CardList } from 'pmpos-modules';
+import { CardManager } from 'pmpos-modules';
 
 it('calculates wallet balance', () => {
 
@@ -12,7 +12,7 @@ it('calculates wallet balance', () => {
     cards = cards.set('3', new CardRecord({ id: '3' })
         .tag({ name: 'P', value: 'Cash', quantity: 10, unit: 'TL', price: 1, target: 'Wallet' }));
 
-    let tags = CardList.getTagsFrom(['wallet'], cards);
+    let tags = CardManager.getTagsFrom(['wallet'], cards);
     let debit = tags.reduce((r, t) => r += t.getDebitFor('Wallet'), 0);
     let credit = tags.reduce((r, t) => r += t.getCreditFor('Wallet'), 0);
 
@@ -22,14 +22,14 @@ it('calculates wallet balance', () => {
     cards = cards.set('4', new CardRecord({ id: '4' })
         .tag({ name: 'P', value: 'Cash', quantity: 10, unit: 'TL', price: 1, source: 'Wallet', target: 'Supplier' }));
 
-    tags = CardList.getTagsFrom(['wallet'], cards);
+    tags = CardManager.getTagsFrom(['wallet'], cards);
     debit = tags.reduce((r, t) => r += t.getDebitFor('Wallet'), 0);
     credit = tags.reduce((r, t) => r += t.getCreditFor('Wallet'), 0);
 
     expect(debit).toEqual(30);
     expect(credit).toEqual(10);
 
-    tags = CardList.getTagsFrom(['supplier'], cards);
+    tags = CardManager.getTagsFrom(['supplier'], cards);
     debit = tags.reduce((r, t) => r += t.getDebitFor('supplier'), 0);
     credit = tags.reduce((r, t) => r += t.getCreditFor('supplier'), 0);
 
@@ -49,7 +49,7 @@ it('calculates inventory and profit', () => {
     cards = cards.set('4', new CardRecord({ id: '4' })
         .tag({ name: 'P', value: 'Fanta', quantity: 10, price: 5, target: 'Bar' }));
 
-    const tags = CardList.getTagsFrom(['bar'], cards);
+    const tags = CardManager.getTagsFrom(['bar'], cards);
     const inTotal = tags.reduce((r, t) => r += t.tag.getInQuantityFor('Kola'), 0);
     const outTotal = tags.reduce((r, t) => r += t.tag.getOutQuantityFor('Kola'), 0);
     expect(inTotal - outTotal).toEqual(48);
@@ -103,7 +103,7 @@ it('calculates customer balance', () => {
     expect(invoice2.getTag('Customer', '')).toEqual('Emre Eren');
 
     expect(cards.count()).toEqual(3);
-    let tags = CardList.getTagsFrom(['Emre Eren'], cards);
+    let tags = CardManager.getTagsFrom(['Emre Eren'], cards);
     expect(tags.count()).toEqual(2);
 
     let debit = tags.reduce((r, t) => r += t.getDebitFor('Emre Eren'), 0);
@@ -116,7 +116,7 @@ it('calculates customer balance', () => {
     expect(invoice1.balance).toEqual(0);
     cards = cards.set(invoice1.id, invoice1);
 
-    tags = CardList.getTagsFrom(['Emre Eren'], cards);
+    tags = CardManager.getTagsFrom(['Emre Eren'], cards);
     debit = tags.reduce((r, t) => r += t.getDebitFor('Emre Eren'), 0);
     credit = tags.reduce((r, t) => r += t.getCreditFor('Emre Eren'), 0);
     expect(debit).toEqual(32);
@@ -128,7 +128,7 @@ it('calculates customer balance', () => {
     expect(invoice2.balance).toEqual(0);
     cards = cards.set(invoice2.id, invoice2);
 
-    tags = CardList.getTagsFrom(['Emre Eren'], cards);
+    tags = CardManager.getTagsFrom(['Emre Eren'], cards);
     debit = tags.reduce((r, t) => r += t.getDebitFor('Emre Eren'), 0);
     credit = tags.reduce((r, t) => r += t.getCreditFor('Emre Eren'), 0);
     expect(debit).toEqual(48);
@@ -141,7 +141,7 @@ it('calculates customer balance', () => {
     cards = cards.set(receipt1.id, receipt1);
     expect(receipt1.balance).toEqual(0);
 
-    tags = CardList.getTagsFrom(['Emre Eren'], cards);
+    tags = CardManager.getTagsFrom(['Emre Eren'], cards);
     expect(tags.count()).toEqual(4);
 
     debit = tags.reduce((r, t) => r += t.getDebitFor('Emre Eren'), 0);
@@ -149,7 +149,7 @@ it('calculates customer balance', () => {
     expect(debit).toEqual(48);
     expect(credit).toEqual(48);
 
-    tags = CardList.getTagsFrom(['Kasa'], cards);
+    tags = CardManager.getTagsFrom(['Kasa'], cards);
     debit = tags.reduce((r, t) => r += t.getDebitFor('Kasa'), 0);
     expect(debit).toEqual(32);
 

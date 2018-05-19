@@ -3,7 +3,7 @@ import { WithStyles } from 'material-ui/styles/withStyles';
 import decorate, { IStyle } from './style';
 import SearchEdit from '../SearchEdit';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
-import { CardList } from 'pmpos-modules';
+import { CardManager } from 'pmpos-modules';
 import { List } from 'immutable';
 import CardLister from './CardLister';
 import GridSelector from '../GridSelector';
@@ -35,7 +35,7 @@ const extractCardsfromSourceCardTags = (sourceCards: List<CardRecord>, tagTypeId
         (r, c) => {
             const tag = c.tags.find(t => t.typeId === tagTypeId);
             if (tag) {
-                const card = CardList.cards.get(tag.cardId);
+                const card = CardManager.cards.get(tag.cardId);
                 if (card) { r = r.push(card); }
             }
             return r;
@@ -45,7 +45,7 @@ const extractCardsfromSourceCardTags = (sourceCards: List<CardRecord>, tagTypeId
 
 const findTagTypeIdReferencedToCardType = (cardType: CardTypeRecord, ref: string) => {
     return cardType.tagTypes.find(x => {
-        const tt = CardList.tagTypes.get(x);
+        const tt = CardManager.tagTypes.get(x);
         return tt !== undefined && tt.cardTypeReferenceName === ref;
     });
 };
@@ -54,14 +54,14 @@ const getCardList = (
     cardType: CardTypeRecord, sourceCardType: CardTypeRecord,
     sourceCards: List<CardRecord>, shortList: boolean, searchValue: string | undefined): List<CardRecord> => {
     if (cardType && cardType.name === sourceCardType.name) {
-        return searchValue ? List<CardRecord>(CardList.findCards(cardType, searchValue)) : sourceCards;
+        return searchValue ? List<CardRecord>(CardManager.findCards(cardType, searchValue)) : sourceCards;
     } else if (cardType) {
         if (shortList) {
-            const cardList = CardList.getCardsByType(cardType.id).sortBy(x => x.name);
+            const cardList = CardManager.getCardsByType(cardType.id).sortBy(x => x.name);
             return searchValue ? cardList.filter(c => c.includes(searchValue.toLowerCase())) : cardList;
         } else {
             if (searchValue) {
-                return List<CardRecord>(CardList.findCards(cardType, searchValue));
+                return List<CardRecord>(CardManager.findCards(cardType, searchValue));
             } else {
                 const tagTypeId = findTagTypeIdReferencedToCardType(sourceCardType, cardType.reference);
                 if (tagTypeId) {
@@ -77,7 +77,7 @@ class CardSelector extends React.Component<Props, ICardSelectorState> {
     constructor(props: Props) {
         super(props);
         const cardType = this.getCardType(props.cardType);
-        const maybeVirtual = CardList.getCount(cardType.name) > 100;
+        const maybeVirtual = CardManager.getCount(cardType.name) > 100;
         const items = getCardList(
             cardType, props.sourceCardType, props.sourceCards,
             !maybeVirtual, props.searchValue
@@ -97,7 +97,7 @@ class CardSelector extends React.Component<Props, ICardSelectorState> {
         }
         if (nextProps.cardType !== this.props.cardType || nextProps.searchValue !== this.props.searchValue) {
             const cardType = this.getCardType(nextProps.cardType);
-            const maybeVirtual = CardList.getCount(cardType.name) > 100;
+            const maybeVirtual = CardManager.getCount(cardType.name) > 100;
             const items = getCardList(
                 cardType, nextProps.sourceCardType, nextProps.sourceCards,
                 !maybeVirtual, nextProps.searchValue
@@ -134,7 +134,7 @@ class CardSelector extends React.Component<Props, ICardSelectorState> {
     }
     public getCardType(cardTypeName: string | undefined) {
         const cardType = cardTypeName
-            ? CardList.getCardTypeByRef(cardTypeName) as CardTypeRecord
+            ? CardManager.getCardTypeByRef(cardTypeName) as CardTypeRecord
             : this.props.sourceCardType;
         return cardType;
     }

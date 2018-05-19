@@ -3,7 +3,7 @@ import * as shortid from 'shortid';
 import AutoSuggest from '../../../../components/AutoSuggest';
 import { TextField, DialogContent, DialogActions, Button } from 'material-ui';
 import { CardTagRecord, TagTypeRecord } from 'pmpos-models';
-import { CardList } from 'pmpos-modules';
+import { CardManager } from 'pmpos-modules';
 
 interface ITagEditorProps {
     tag: CardTagRecord;
@@ -50,7 +50,7 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
                         : 'Tag Value'}
                     value={this.state.value}
                     getSuggestions={value =>
-                        CardList.getCardSuggestions(this.props.tagType.cardTypeReferenceName, value)}
+                        CardManager.getCardSuggestions(this.props.tagType.cardTypeReferenceName, value)}
                     handleChange={(e, value) => this.handleTagValueChange(value)}
                 />}
                 {canEditQuantity && <TextField
@@ -83,7 +83,7 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
                     label={this.props.tagType.sourceCardTypeReferenceName || 'Source'}
                     value={this.state.source}
                     getSuggestions={
-                        value => CardList.getCardSuggestions(this.props.tagType.sourceCardTypeReferenceName, value)
+                        value => CardManager.getCardSuggestions(this.props.tagType.sourceCardTypeReferenceName, value)
                     }
                     handleChange={(e, source) => this.setState({ source })}
                 />}
@@ -91,7 +91,7 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
                     label={this.props.tagType.targetCardTypeReferenceName || 'Target'}
                     value={this.state.target}
                     getSuggestions={
-                        value => CardList.getCardSuggestions(this.props.tagType.targetCardTypeReferenceName, value)
+                        value => CardManager.getCardSuggestions(this.props.tagType.targetCardTypeReferenceName, value)
                     }
                     handleChange={(e, target) => this.setState({ target })}
                 />}
@@ -136,7 +136,7 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
     private handleTagValueChange(value: string) {
         this.setState({ value });
         if (this.props.tagType.cardTypeReferenceName) {
-            const card = CardList.getCardByName(this.props.tagType.cardTypeReferenceName, value);
+            const card = CardManager.getCardByName(this.props.tagType.cardTypeReferenceName, value);
             if (card) {
                 if (Number(this.state.price) === 0) {
                     this.setState({ price: String(card.getTag('Price', '')) });
