@@ -27,6 +27,7 @@ interface IPageState {
     name: string;
     reference: string;
     displayFormat: string;
+    network: string;
     commands: string;
     tagTypes: string[];
     subCardTypes: string[];
@@ -38,6 +39,7 @@ export class CardTypePage extends React.Component<PageProps, IPageState> {
         this.state = {
             name: '',
             reference: '',
+            network: '',
             commands: '',
             displayFormat: '',
             tagTypes: [],
@@ -50,6 +52,7 @@ export class CardTypePage extends React.Component<PageProps, IPageState> {
             this.setState({
                 name: props.cardType.name,
                 reference: props.cardType.reference,
+                network: props.cardType.network,
                 displayFormat: props.cardType.displayFormat,
                 commands: props.cardType.commands.join('\n'),
                 tagTypes: props.cardType.tagTypes,
@@ -63,6 +66,7 @@ export class CardTypePage extends React.Component<PageProps, IPageState> {
             this.setState({
                 name: this.props.cardType.name,
                 reference: this.props.cardType.reference,
+                network: this.props.cardType.network,
                 displayFormat: this.props.cardType.displayFormat,
                 commands: this.props.cardType.commands.join('\n'),
                 tagTypes: this.props.cardType.tagTypes,
@@ -95,6 +99,7 @@ export class CardTypePage extends React.Component<PageProps, IPageState> {
                                     id: this.props.cardType.id,
                                     name: this.state.name,
                                     reference: this.state.reference,
+                                    network: this.state.network,
                                     displayFormat: this.state.displayFormat,
                                     commands: this.state.commands.split('\n'),
                                     tagTypes: this.state.tagTypes,
@@ -131,7 +136,13 @@ export class CardTypePage extends React.Component<PageProps, IPageState> {
                                 displayFormat: e.target.value
                             })}
                         />
-
+                        <TextField
+                            label="Network"
+                            value={this.state.network}
+                            onChange={(e) => this.setState({
+                                network: e.target.value
+                            })}
+                        />
                         <TextField
                             inputProps={{ className: this.props.classes.fixedEdit }}
                             multiline

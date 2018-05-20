@@ -130,7 +130,6 @@ export const reducer: Reducer<ConfigStateRecord> = (
 ): ConfigStateRecord => {
     switch (action.type) {
         case 'CONFIG_RECEIVED': {
-            ConfigManager.updateConfig(action.payload);
             return state
                 .set('cardTypes', ConfigManager.getCardTypes())
                 .set('rootCardTypes', ConfigManager.getRootCardTypes())

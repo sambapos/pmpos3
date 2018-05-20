@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import * as React from 'react';
 import { IAppThunkAction } from './appThunkAction';
-import { configureProtocol, ConfigManager } from 'pmpos-modules';
+import { ProtocolManager, ConfigManager } from 'pmpos-modules';
 import { TerminalManager } from 'pmpos-modules';
 
 export interface IClientState {
@@ -46,7 +46,7 @@ type KnownActions = IToggleDrawerAction | ISetModalStateAction | ISetModalCompon
     | ISetLoggedInUserAction | ISetTerminalIdAction;
 
 const configProtocol = (terminalId, networkName, serverName, user, dispatch) => {
-    configureProtocol(
+    ProtocolManager.connect(
         serverName,
         true,
         terminalId, networkName, user,

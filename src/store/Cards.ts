@@ -142,8 +142,8 @@ function resetCurrentCard(state: StateRecord) {
 }
 
 export const actionCreators = {
-    addCard: (cardType: CardTypeRecord, tags: CardTag[])
-        : IAppThunkAction<KnownActions> => (dispatch, getState) => {
+    addCard: (cardType: CardTypeRecord, tags: CardTag[]):
+        IAppThunkAction<KnownActions> => (dispatch, getState) => {
             TerminalManager.createCard('', cardType.reference, tags)
                 .then(card =>
                     dispatch({
