@@ -4,12 +4,12 @@ import Accounts from './Accounts';
 import TopBar from '../TopBar';
 import Commits from './Commits';
 import { CardRecord, ActionRecord, CommitRecord } from 'pmpos-models';
-import { CardManager, TerminalManager } from 'pmpos-modules';
+import { ConfigManager, TerminalManager } from 'pmpos-modules';
 import { CardPageProps } from './CardPageProps';
 import { List } from 'immutable';
 
 const getTitle = (card: CardRecord) => {
-    const ct = CardManager.getCardType(card.typeId);
+    const ct = ConfigManager.getCardType(card.typeId);
     const cap = ct ? ct.reference : `Card`;
     return !card.name
         ? `New ${cap}`

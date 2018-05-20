@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CardPageProps } from './CardPageProps';
 import { MenuItem, Divider } from 'material-ui';
 import { CardRecord, TagTypeRecord, CardTypeRecord } from 'pmpos-models';
-import { CardManager, CardOperation, cardOperations } from 'pmpos-modules';
+import { ConfigManager, CardOperation, cardOperations } from 'pmpos-modules';
 
 interface ITagMenuItemsProps {
     selectedCard: CardRecord;
@@ -13,15 +13,15 @@ interface ITagMenuItemsProps {
 export default (props: CardPageProps & ITagMenuItemsProps) => {
 
     const cardTags = props.selectedCard.tags.valueSeq();
-    const cardType = CardManager.getCardType(props.selectedCard.typeId);
+    const cardType = ConfigManager.getCardType(props.selectedCard.typeId);
     let unselectedTagTypes: TagTypeRecord[] = [];
     let subCardTypes: CardTypeRecord[] = [];
 
     if (cardType) {
         unselectedTagTypes = cardType.tagTypes
             .filter(x => !cardTags.find(y => y.typeId === x))
-            .map(x => CardManager.tagTypes.get(x) as TagTypeRecord);
-        subCardTypes = cardType.subCardTypes.map(x => CardManager.cardTypes.get(x) as CardTypeRecord);
+            .map(x => ConfigManager.tagTypes.get(x) as TagTypeRecord);
+        subCardTypes = cardType.subCardTypes.map(x => ConfigManager.cardTypes.get(x) as CardTypeRecord);
     }
 
     return (<>
@@ -60,7 +60,7 @@ export default (props: CardPageProps & ITagMenuItemsProps) => {
                     onClick={() => {
                         props.handleOperation(
                             cardOperations.get('SET_CARD_TAG'),
-                            { tagType: CardManager.tagTypes.find(x => x.id === tag.typeId), tag }
+                            { tagType: ConfigManager.tagTypes.find(x => x.id === tag.typeId), tag }
                         );
                         props.handleMenuClose();
                     }}

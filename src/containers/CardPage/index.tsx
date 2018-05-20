@@ -20,7 +20,7 @@ import { CardPageProps } from './CardPageProps';
 import { Link } from 'react-router-dom';
 import CommandButtons from '../../components/CommandButtons';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
-import { CardOperation, CardManager, TerminalManager } from 'pmpos-modules';
+import { CardOperation, CardManager, TerminalManager, ConfigManager } from 'pmpos-modules';
 
 interface IPageState {
     disableUpdate: boolean;
@@ -107,7 +107,7 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
                             </div>
                             <CardPageContent
                                 card={this.props.card}
-                                cardType={CardManager.getCardType(this.props.card.typeId)}
+                                cardType={ConfigManager.getCardType(this.props.card.typeId)}
                                 selectedCardId={this.state.selectedCard ? this.state.selectedCard.id : ''}
                                 onClick={(card, target) => this.setState({
                                     selectedCard: card,
@@ -215,7 +215,7 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
     private getButtonsForCommand(command: string): CommandButton[] {
         if (!command.includes('=')) {
             const parts = command.split(':');
-            const ct = CardManager.getCardTypes().find(c => c.name === parts[1]);
+            const ct = ConfigManager.getCardTypes().find(c => c.name === parts[1]);
             if (ct) {
                 const cards = CardManager.getCardsByType(ct.id);
                 return cards.sortBy(x => x.index).map(c =>
@@ -234,7 +234,7 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
     }
 
     private getButtons(card: CardRecord): CommandButton[] {
-        const ct = CardManager.getCardTypes().get(card.typeId);
+        const ct = ConfigManager.getCardTypes().get(card.typeId);
         return ct
             ? this.reduceButtons(ct)
             : [];

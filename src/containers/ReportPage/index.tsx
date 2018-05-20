@@ -10,7 +10,7 @@ import AccountTable from './AccountTable';
 import LocationTable from './LocationTable';
 import BalanceTable from './BalanceTable';
 import { CardTagData, CardTypeRecord } from 'pmpos-models';
-import { CardManager } from 'pmpos-modules';
+import { CardManager, ConfigManager } from 'pmpos-modules';
 
 type PageProps =
     WithStyles<keyof IStyle>
@@ -100,7 +100,7 @@ class ReportPage extends React.Component<PageProps, {
     }
 
     private getCardType(value: string): CardTypeRecord | undefined {
-        return CardManager.getCardTypes().find(x => x.name.toLowerCase() === value.toLowerCase());
+        return ConfigManager.getCardTypes().find(x => x.name.toLowerCase() === value.toLowerCase());
     }
 
     private getContent() {

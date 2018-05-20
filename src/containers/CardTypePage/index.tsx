@@ -11,7 +11,7 @@ import TopBar from '../TopBar';
 import DraggableItemList from '../../components/DraggableItemList';
 import ItemSelectionDialog from '../../components/ItemSelectionDialog';
 import { CardTypeRecord, TagTypeRecord } from 'pmpos-models';
-import { CardManager } from 'pmpos-modules';
+import { ConfigManager } from 'pmpos-modules';
 
 type PageProps =
     {
@@ -185,7 +185,7 @@ export class CardTypePage extends React.Component<PageProps, IPageState> {
         const component = (
             <ItemSelectionDialog
                 selectedItems={this.state.tagTypes}
-                sourceItems={CardManager.tagTypes.valueSeq().toArray()}
+                sourceItems={ConfigManager.tagTypes.valueSeq().toArray()}
                 onSubmit={tagTypes => {
                     this.setState({ tagTypes });
                     this.props.SetModalState(false);
@@ -198,7 +198,7 @@ export class CardTypePage extends React.Component<PageProps, IPageState> {
         const component = (
             <ItemSelectionDialog
                 selectedItems={this.state.subCardTypes}
-                sourceItems={CardManager.cardTypes.valueSeq().toArray()}
+                sourceItems={ConfigManager.cardTypes.valueSeq().toArray()}
                 onSubmit={subCardTypes => {
                     this.setState({ subCardTypes });
                     this.props.SetModalState(false);
@@ -216,8 +216,8 @@ export class CardTypePage extends React.Component<PageProps, IPageState> {
                  </Typography>);
         }
         const list = this.state.tagTypes
-            .filter(tt => CardManager.tagTypes.has(tt))
-            .map(tt => CardManager.tagTypes.get(tt) as TagTypeRecord);
+            .filter(tt => ConfigManager.tagTypes.has(tt))
+            .map(tt => ConfigManager.tagTypes.get(tt) as TagTypeRecord);
         return (<DraggableItemList
             onDragEnd={items => this.setState({ tagTypes: items.map(i => i.id) })}
             items={list}
@@ -240,8 +240,8 @@ export class CardTypePage extends React.Component<PageProps, IPageState> {
                  </Typography>);
         }
         const list = this.state.subCardTypes
-            .filter(tt => CardManager.cardTypes.has(tt))
-            .map(tt => CardManager.cardTypes.get(tt) as CardTypeRecord);
+            .filter(tt => ConfigManager.cardTypes.has(tt))
+            .map(tt => ConfigManager.cardTypes.get(tt) as CardTypeRecord);
         return (<DraggableItemList
             onDragEnd={items => this.setState({ subCardTypes: items.map(i => i.id) })}
             items={list}

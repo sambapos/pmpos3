@@ -15,7 +15,7 @@ import { Map as IMap, List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import CardSelector from '../../components/CardSelector';
 import { CardRecord, CardTypeRecord, CardTag, CardTagRecord } from 'pmpos-models';
-import { CardManager } from 'pmpos-modules';
+import { ConfigManager } from 'pmpos-modules';
 import { TerminalManager } from 'pmpos-modules';
 
 type PageProps =
@@ -155,9 +155,9 @@ class CardsPage extends React.Component<PageProps, IState> {
         result = currentCardType.tagTypes
             .reduce(
                 (r, t) => {
-                    const tt = CardManager.tagTypes.get(t);
+                    const tt = ConfigManager.tagTypes.get(t);
                     if (tt && tt.cardTypeReferenceName) {
-                        const ct = CardManager.getCardTypeByRef(tt.cardTypeReferenceName);
+                        const ct = ConfigManager.getCardTypeByRef(tt.cardTypeReferenceName);
                         if (ct) { r.push(ct.name); }
                     }
                     return r;
@@ -172,7 +172,7 @@ class CardsPage extends React.Component<PageProps, IState> {
             this.displayCard(cards[0]);
         } else if (cards.length === 0) {
             const tt = this.props.currentCardType.tagTypes.find(t => {
-                const type = CardManager.tagTypes.get(t);
+                const type = ConfigManager.tagTypes.get(t);
                 return type !== undefined && type.cardTypeReferenceName === cardType.reference;
             });
             const tag = {

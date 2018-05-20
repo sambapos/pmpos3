@@ -3,7 +3,7 @@ import { WithStyles } from 'material-ui/styles/withStyles';
 import decorate, { IStyle } from './style';
 import SearchEdit from '../SearchEdit';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
-import { CardManager } from 'pmpos-modules';
+import { CardManager, ConfigManager } from 'pmpos-modules';
 import { List } from 'immutable';
 import CardLister from './CardLister';
 import GridSelector from '../GridSelector';
@@ -45,7 +45,7 @@ const extractCardsfromSourceCardTags = (sourceCards: List<CardRecord>, tagTypeId
 
 const findTagTypeIdReferencedToCardType = (cardType: CardTypeRecord, ref: string) => {
     return cardType.tagTypes.find(x => {
-        const tt = CardManager.tagTypes.get(x);
+        const tt = ConfigManager.tagTypes.get(x);
         return tt !== undefined && tt.cardTypeReferenceName === ref;
     });
 };
@@ -134,7 +134,7 @@ class CardSelector extends React.Component<Props, ICardSelectorState> {
     }
     public getCardType(cardTypeName: string | undefined) {
         const cardType = cardTypeName
-            ? CardManager.getCardTypeByRef(cardTypeName) as CardTypeRecord
+            ? ConfigManager.getCardTypeByRef(cardTypeName) as CardTypeRecord
             : this.props.sourceCardType;
         return cardType;
     }

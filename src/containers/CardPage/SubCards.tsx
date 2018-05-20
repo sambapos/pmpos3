@@ -4,7 +4,7 @@ import { WithStyles } from 'material-ui/styles/withStyles';
 import decorate, { IStyle } from './style';
 import * as _ from 'lodash';
 import { CardRecord } from 'pmpos-models';
-import { CardManager } from 'pmpos-modules';
+import { ConfigManager } from 'pmpos-modules';
 
 interface ISubCardProps {
     card: CardRecord;
@@ -50,7 +50,7 @@ class SubCards extends React.Component<PageProps, { tagCount: number }> {
                             <CardPageContent
                                 key={card.id}
                                 card={card}
-                                cardType={CardManager.getCardType(card.typeId)}
+                                cardType={ConfigManager.getCardType(card.typeId)}
                                 selectedCardId={this.props.selectedCardId}
                                 onClick={this.props.onClick}
                                 handleCardClick={this.props.handleCardClick}

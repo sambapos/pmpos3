@@ -2,10 +2,10 @@ import * as React from 'react';
 import { ListItem, ListItemText, Icon } from 'material-ui';
 import tmpl from 'blueimp-tmpl';
 import { CardRecord, CardTagRecord } from 'pmpos-models';
-import { CardManager, RuleManager } from 'pmpos-modules';
+import { ConfigManager, CardManager, RuleManager } from 'pmpos-modules';
 
 const getTagDisplay = (card: CardRecord, tag: CardTagRecord) => {
-    const tt = CardManager.tagTypes.get(tag.typeId);
+    const tt = ConfigManager.tagTypes.get(tag.typeId);
     if (tt && tt.icon) {
         if (tt.icon === '_') { return tag.valueDisplay; }
         return (<span style={{ display: 'inline-block' }}>
