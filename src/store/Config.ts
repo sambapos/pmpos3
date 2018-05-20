@@ -2,11 +2,10 @@ import { Reducer } from 'redux';
 import * as shortid from 'shortid';
 import { Record, Map as IMap } from 'immutable';
 import { IAppThunkAction } from './appThunkAction';
-import { RuleManager, CardManager, ConfigManager, DataBuilder } from 'pmpos-modules';
+import { CardManager, ConfigManager, DataBuilder } from 'pmpos-modules';
 import { CardTypeRecord, TagTypeRecord, RuleRecord } from 'pmpos-models';
 
 interface IConfigState {
-    protocol: any;
     currentCardType: CardTypeRecord;
     currentTagType: TagTypeRecord;
     currentRule: RuleRecord;
@@ -18,7 +17,6 @@ interface IConfigState {
 }
 
 export class ConfigStateRecord extends Record<IConfigState>({
-    protocol: undefined,
     isLoading: false,
     currentCardType: new CardTypeRecord(),
     currentRule: new RuleRecord(),
@@ -28,11 +26,6 @@ export class ConfigStateRecord extends Record<IConfigState>({
     tagTypes: IMap<string, TagTypeRecord>(),
     rules: IMap<string, RuleRecord>()
 }) { }
-
-interface ISetConfigProtocolAction {
-    type: 'SET_CONFIG_PROTOCOL',
-    protocol: any
-}
 
 interface IConfigReceivedAction {
     type: 'CONFIG_RECEIVED',
@@ -121,7 +114,7 @@ interface ILoadTagTypeFailAction {
     type: 'LOAD_TAG_TYPE_FAIL'
 }
 
-type KnownActions = ISetConfigProtocolAction | IConfigReceivedAction | IResetCardTypeAction
+type KnownActions = IConfigReceivedAction | IResetCardTypeAction
     | ILoadCardTypeAction | ILoadCardTypeFailAction | ILoadCardTypeRequestAction
     | ILoadCardTypeSuccessAction | IAddCardTypeAction
 
@@ -136,37 +129,13 @@ export const reducer: Reducer<ConfigStateRecord> = (
     action: KnownActions
 ): ConfigStateRecord => {
     switch (action.type) {
-        case 'SET_CONFIG_PROTOCOL': {
-            return state.set('protocol', action.protocol);
-        }
         case 'CONFIG_RECEIVED': {
-            let cardTypeMap = IMap<string, CardTypeRecord>();
-            let ruleMap = IMap<string, RuleRecord>();
-            let tagTypeMap = IMap<string, TagTypeRecord>();
-
-            if (action.payload.has('cardTypes')) {
-                const cardTypes = action.payload.get('cardTypes');
-                cardTypeMap = Object.keys(cardTypes)
-                    .reduce((x, y) => x.set(y, new CardTypeRecord(cardTypes[y])), IMap<string, CardTypeRecord>());
-                ConfigManager.setCardTypes(cardTypeMap);
-            }
-            if (action.payload.has('tagTypes')) {
-                const tagTypes = action.payload.get('tagTypes');
-                tagTypeMap = Object.keys(tagTypes).
-                    reduce((x, y) => x.set(y, new TagTypeRecord(tagTypes[y])), IMap<string, TagTypeRecord>());
-                ConfigManager.setTagTypes(tagTypeMap);
-            }
-            if (action.payload.has('rules')) {
-                const rules = action.payload.get('rules');
-                ruleMap = Object.keys(rules)
-                    .reduce((x, y) => x.set(y, new RuleRecord(rules[y])), IMap<string, RuleRecord>());
-                RuleManager.setRules(ruleMap);
-            }
+            ConfigManager.updateConfig(action.payload);
             return state
-                .set('cardTypes', cardTypeMap)
+                .set('cardTypes', ConfigManager.cardTypes)
                 .set('rootCardTypes', ConfigManager.getRootCardTypes())
-                .set('tagTypes', tagTypeMap)
-                .set('rules', ruleMap);
+                .set('tagTypes', ConfigManager.tagTypes)
+                .set('rules', ConfigManager.rules);
         }
         case 'LOAD_CARD_TYPE_REQUEST': {
             return state
@@ -260,21 +229,21 @@ export const reducer: Reducer<ConfigStateRecord> = (
 export const actionCreators = {
     deleteCardType: (id: string): IAppThunkAction<KnownActions> => (dispatch, getState) => {
         const result = getState().config.cardTypes.delete(id);
-        getState().config.protocol.set('cardTypes', result.toJS());
+        ConfigManager.saveCardTypes(result);
         dispatch({
             type: 'RESET_CARD_TYPE'
         });
     },
     deleteRule: (id: string): IAppThunkAction<KnownActions> => (dispatch, getState) => {
         const result = getState().config.rules.delete(id);
-        getState().config.protocol.set('rules', result.toJS());
+        ConfigManager.saveRules(result);
         dispatch({
             type: 'RESET_RULE'
         });
     },
     deleteTagType: (id: string): IAppThunkAction<KnownActions> => (dispatch, getState) => {
         const result = getState().config.tagTypes.delete(id);
-        getState().config.protocol.set('tagTypes', result.toJS());
+        ConfigManager.saveTagTypes(result);
         dispatch({
             type: 'RESET_TAG_TYPE'
         });
@@ -283,7 +252,7 @@ export const actionCreators = {
         if (!cardType.name) { return; }
         const cardTypes = getState().config.cardTypes;
         const result = cardTypes.set(cardType.id, cardType);
-        getState().config.protocol.set('cardTypes', result.toJS());
+        ConfigManager.saveCardTypes(result);
         dispatch({
             type: 'RESET_CARD_TYPE'
         });
@@ -292,7 +261,7 @@ export const actionCreators = {
         if (!rule.name) { return; }
         const rules = getState().config.rules;
         const result = rules.set(rule.id, rule);
-        getState().config.protocol.set('rules', result.toJS());
+        ConfigManager.saveRules(result);
         dispatch({
             type: 'RESET_RULE'
         });
@@ -301,7 +270,7 @@ export const actionCreators = {
         if (!tagType.name) { return; }
         const tagTypes = getState().config.tagTypes;
         const result = tagTypes.set(tagType.id, tagType);
-        getState().config.protocol.set('tagTypes', result.toJS());
+        ConfigManager.saveTagTypes(result);
         dispatch({
             type: 'RESET_TAG_TYPE'
         });
@@ -372,7 +341,10 @@ export const actionCreators = {
     createDefaultConfig: ():
         IAppThunkAction<KnownActions> => (dispatch, getState) => {
             const db = new DataBuilder();
-            db.createConfig(getState().config.protocol);
+            const config = db.createConfig();
+            ConfigManager.saveCardTypes(config.get('cardTypes') as IMap<string, any>);
+            ConfigManager.saveTagTypes(config.get('tagTypes') as IMap<string, any>);
+            ConfigManager.saveRules(config.get('rules') as IMap<string, any>);
             if (CardManager.cards.count() === 0) {
                 CardManager.postCommits(db.getDefaultCardCommits());
             }

@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import * as React from 'react';
 import { IAppThunkAction } from './appThunkAction';
-import { configureProtocol } from 'pmpos-modules';
+import { configureProtocol, ConfigManager } from 'pmpos-modules';
 import { TerminalManager } from 'pmpos-modules';
 
 export interface IClientState {
@@ -50,12 +50,6 @@ const configProtocol = (terminalId, networkName, serverName, user, dispatch) => 
         serverName,
         true,
         terminalId, networkName, user,
-        (config) => {
-            dispatch({
-                type: 'SET_CONFIG_PROTOCOL',
-                protocol: config
-            });
-        },
         config => dispatch({
             type: 'CONFIG_RECEIVED',
             payload: config
@@ -78,8 +72,7 @@ export const actionCreators = {
     SetModalComponent: (component: any) => <ISetModalComponentAction>{ type: 'SET_MODAL_COMPONENT', component },
     connectProtocol: (terminalId: string, networkName: string, serverName: string, user: string):
         IAppThunkAction<KnownActions> => (dispatch, getState) => {
-            const currentProtocol = getState().config.protocol;
-            if (!currentProtocol) {
+            if (!ConfigManager.protocolIntegrated) {
                 configProtocol(terminalId, networkName, serverName, user, dispatch);
             }
             TerminalManager.enableTerminal(terminalId, user);
