@@ -50,7 +50,7 @@ class SubCards extends React.Component<PageProps, { tagCount: number }> {
                             <CardPageContent
                                 key={card.id}
                                 card={card}
-                                cardType={ConfigManager.getCardType(card.typeId)}
+                                cardType={ConfigManager.getCardTypeById(card.typeId)}
                                 selectedCardId={this.props.selectedCardId}
                                 onClick={this.props.onClick}
                                 handleCardClick={this.props.handleCardClick}

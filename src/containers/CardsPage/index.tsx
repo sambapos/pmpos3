@@ -154,8 +154,8 @@ class CardsPage extends React.Component<PageProps, IState> {
         if (currentCardType.tagTypes.length < 0) { return result; }
         result = currentCardType.tagTypes
             .reduce(
-                (r, t) => {
-                    const tt = ConfigManager.tagTypes.get(t);
+                (r, tagTypeId) => {
+                    const tt = ConfigManager.getTagTypeById(tagTypeId);
                     if (tt && tt.cardTypeReferenceName) {
                         const ct = ConfigManager.getCardTypeByRef(tt.cardTypeReferenceName);
                         if (ct) { r.push(ct.name); }
@@ -171,8 +171,8 @@ class CardsPage extends React.Component<PageProps, IState> {
         if (cards.length === 1) {
             this.displayCard(cards[0]);
         } else if (cards.length === 0) {
-            const tt = this.props.currentCardType.tagTypes.find(t => {
-                const type = ConfigManager.tagTypes.get(t);
+            const tt = this.props.currentCardType.tagTypes.find(tagTypeId => {
+                const type = ConfigManager.getTagTypeById(tagTypeId);
                 return type !== undefined && type.cardTypeReferenceName === cardType.reference;
             });
             const tag = {

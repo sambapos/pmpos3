@@ -9,7 +9,7 @@ import { CardPageProps } from './CardPageProps';
 import { List } from 'immutable';
 
 const getTitle = (card: CardRecord) => {
-    const ct = ConfigManager.getCardType(card.typeId);
+    const ct = ConfigManager.getCardTypeById(card.typeId);
     const cap = ct ? ct.reference : `Card`;
     return !card.name
         ? `New ${cap}`

@@ -107,7 +107,7 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
                             </div>
                             <CardPageContent
                                 card={this.props.card}
-                                cardType={ConfigManager.getCardType(this.props.card.typeId)}
+                                cardType={ConfigManager.getCardTypeById(this.props.card.typeId)}
                                 selectedCardId={this.state.selectedCard ? this.state.selectedCard.id : ''}
                                 onClick={(card, target) => this.setState({
                                     selectedCard: card,

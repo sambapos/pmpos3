@@ -39,7 +39,7 @@ const getCustomDisplay = (template: string, tag: CardTagWrapper, classes: Record
 };
 
 const getTagDisplay = (card: CardRecord, tag: CardTagRecord, iconClass: string) => {
-    const tt = ConfigManager.tagTypes.get(tag.typeId);
+    const tt = ConfigManager.getTagTypeById(tag.typeId);
     if (tt && tt.icon) {
         if (tt.icon === '_') { return tag.valueDisplay; }
         return (<span >
@@ -99,7 +99,7 @@ const Tags = (props: ITagsProps & WithStyles<keyof IStyle>) => {
                     .filter(x => props.card.tags.count() === 1 || x[1].name !== 'Name')
                     .sortBy(x => CardManager.getTagSortIndexByCard(props.card, x[1]))
                     .map(([key, tag]) => {
-                        const tagType = ConfigManager.tagTypes.get(tag.typeId);
+                        const tagType = ConfigManager.getTagTypeById(tag.typeId);
                         return (
                             <span
                                 key={key}

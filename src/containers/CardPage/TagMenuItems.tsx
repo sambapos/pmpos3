@@ -13,15 +13,15 @@ interface ITagMenuItemsProps {
 export default (props: CardPageProps & ITagMenuItemsProps) => {
 
     const cardTags = props.selectedCard.tags.valueSeq();
-    const cardType = ConfigManager.getCardType(props.selectedCard.typeId);
+    const cardType = ConfigManager.getCardTypeById(props.selectedCard.typeId);
     let unselectedTagTypes: TagTypeRecord[] = [];
     let subCardTypes: CardTypeRecord[] = [];
 
     if (cardType) {
         unselectedTagTypes = cardType.tagTypes
-            .filter(x => !cardTags.find(y => y.typeId === x))
-            .map(x => ConfigManager.tagTypes.get(x) as TagTypeRecord);
-        subCardTypes = cardType.subCardTypes.map(x => ConfigManager.cardTypes.get(x) as CardTypeRecord);
+            .filter(tagTypeId => !cardTags.find(y => y.typeId === tagTypeId))
+            .map(tagTypeId => ConfigManager.getTagTypeById(tagTypeId) as TagTypeRecord);
+        subCardTypes = cardType.subCardTypes.map(cardTypeId => ConfigManager.getCardTypeById(cardTypeId) as CardTypeRecord);
     }
 
     return (<>
@@ -60,7 +60,7 @@ export default (props: CardPageProps & ITagMenuItemsProps) => {
                     onClick={() => {
                         props.handleOperation(
                             cardOperations.get('SET_CARD_TAG'),
-                            { tagType: ConfigManager.tagTypes.find(x => x.id === tag.typeId), tag }
+                            { tagType: ConfigManager.findTagType(tagType => tagType.id === tag.typeId), tag }
                         );
                         props.handleMenuClose();
                     }}

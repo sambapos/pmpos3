@@ -5,7 +5,7 @@ import { CardRecord, CardTagRecord } from 'pmpos-models';
 import { ConfigManager, CardManager, RuleManager } from 'pmpos-modules';
 
 const getTagDisplay = (card: CardRecord, tag: CardTagRecord) => {
-    const tt = ConfigManager.tagTypes.get(tag.typeId);
+    const tt = ConfigManager.getTagTypeById(tag.typeId);
     if (tt && tt.icon) {
         if (tt.icon === '_') { return tag.valueDisplay; }
         return (<span style={{ display: 'inline-block' }}>

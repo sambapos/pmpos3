@@ -132,10 +132,10 @@ export const reducer: Reducer<ConfigStateRecord> = (
         case 'CONFIG_RECEIVED': {
             ConfigManager.updateConfig(action.payload);
             return state
-                .set('cardTypes', ConfigManager.cardTypes)
+                .set('cardTypes', ConfigManager.getCardTypes())
                 .set('rootCardTypes', ConfigManager.getRootCardTypes())
-                .set('tagTypes', ConfigManager.tagTypes)
-                .set('rules', ConfigManager.rules);
+                .set('tagTypes', ConfigManager.getTagTypes())
+                .set('rules', ConfigManager.getRules());
         }
         case 'LOAD_CARD_TYPE_REQUEST': {
             return state
@@ -345,7 +345,7 @@ export const actionCreators = {
             ConfigManager.saveCardTypes(config.get('cardTypes') as IMap<string, any>);
             ConfigManager.saveTagTypes(config.get('tagTypes') as IMap<string, any>);
             ConfigManager.saveRules(config.get('rules') as IMap<string, any>);
-            if (CardManager.cards.count() === 0) {
+            if (CardManager.getCards().count() === 0) {
                 CardManager.postCommits(db.getDefaultCardCommits());
             }
         }

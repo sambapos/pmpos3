@@ -23,7 +23,7 @@ export default (props: Props) => {
                 cardType={props.current.type}
                 onSelectCard={card => {
                     if (props.current) {
-                        RuleManager.state.set(props.current.type, card.name);
+                        RuleManager.setState(props.current.type, card.name);
                     }
                     props.success(props.actionName, props.current);
                 }}

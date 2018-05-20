@@ -35,7 +35,7 @@ const extractCardsfromSourceCardTags = (sourceCards: List<CardRecord>, tagTypeId
         (r, c) => {
             const tag = c.tags.find(t => t.typeId === tagTypeId);
             if (tag) {
-                const card = CardManager.cards.get(tag.cardId);
+                const card = CardManager.getCardById(tag.cardId);
                 if (card) { r = r.push(card); }
             }
             return r;
@@ -44,9 +44,9 @@ const extractCardsfromSourceCardTags = (sourceCards: List<CardRecord>, tagTypeId
 };
 
 const findTagTypeIdReferencedToCardType = (cardType: CardTypeRecord, ref: string) => {
-    return cardType.tagTypes.find(x => {
-        const tt = ConfigManager.tagTypes.get(x);
-        return tt !== undefined && tt.cardTypeReferenceName === ref;
+    return cardType.tagTypes.find(tagTypeId => {
+        const tagType = ConfigManager.getTagTypeById(tagTypeId);
+        return tagType !== undefined && tagType.cardTypeReferenceName === ref;
     });
 };
 
