@@ -81,7 +81,7 @@ class DraggableList extends React.Component<Props, IDraggableListState> {
                                     >
                                         <ul className={this.props.classes.sectionList}>
                                             {displayCategories && <ListSubheader color="primary">
-                                                {category || 'Uncategorized'}
+                                                {category || 'Other'}
                                             </ListSubheader>}
                                             {values.map(
                                                 (item, index) =>

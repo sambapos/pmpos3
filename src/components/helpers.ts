@@ -1,6 +1,5 @@
 export const getListStyle = isDraggingOver => ({
-    background: isDraggingOver ? 'lightblue' : '',
-    overflow: 'auto' as 'auto'
+    background: isDraggingOver ? 'lightblue' : ''
 });
 
 export const getItemStyle = (isDragging, draggableStyle) => ({

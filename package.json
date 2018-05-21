@@ -1,6 +1,6 @@
 {
   "name": "pmpos3",
-  "version": "3.0.43",
+  "version": "3.0.44",
   "private": true,
   "dependencies": {
     "autosuggest-highlight": "^3.1.1",
@@ -12,7 +12,7 @@
     "material-ui": "^1.0.0-beta.47",
     "moment": "^2.22.1",
     "pmpos-models": "^1.0.5",
-    "pmpos-modules": "^1.0.36",
+    "pmpos-modules": "^1.0.37",
     "react": "^16.3.2",
     "react-ace": "^5.10.0",
     "react-autosuggest": "^9.3.4",
