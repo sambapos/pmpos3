@@ -24,6 +24,7 @@ export type PageProps =
 interface IState {
     networkName: string;
     serverName: string;
+    branchName: string;
     networkDialogShown: boolean;
 }
 
@@ -33,6 +34,7 @@ class LoginPage extends React.Component<PageProps, IState> {
         this.state = {
             networkName: props.networkName,
             serverName: props.serverName,
+            branchName: props.branchName,
             networkDialogShown: false
         };
     }
@@ -63,11 +65,13 @@ class LoginPage extends React.Component<PageProps, IState> {
                             this.props.SetTerminalId(
                                 this.props.terminalId,
                                 this.state.networkName,
-                                this.state.serverName);
+                                this.state.serverName,
+                                this.state.branchName);
                             this.props.connectProtocol(
                                 this.props.terminalId,
                                 this.state.networkName,
                                 this.state.serverName,
+                                this.state.branchName,
                                 pin
                             );
                             if (pin && pin !== '' && this.props.location.pathname === '/login') {
@@ -98,10 +102,12 @@ class LoginPage extends React.Component<PageProps, IState> {
             <NetworkDialog
                 networkName={this.state.networkName}
                 serverName={this.state.serverName}
-                onClick={(networkName, serverName) => {
+                branchName={this.state.branchName}
+                onClick={(networkName, serverName, branchName) => {
                     this.setState({
                         networkName,
                         serverName,
+                        branchName,
                         networkDialogShown: false
                     });
                     this.props.SetModalState(false);

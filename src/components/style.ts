@@ -29,6 +29,8 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         fontSize: '1.4em',
         maxWidth: 'calc(50% - 4px)',
         maxHeight: 'calc(50% - 4px)',
+        boxShadow: 'none',
+        border: '1px solid #ccc',
         [breakpoints.up('sm')]: {
             margin: 4,
             minWidth: 100,

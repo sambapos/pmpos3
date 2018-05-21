@@ -11,6 +11,7 @@ export interface IClientState {
     terminalId: string;
     networkName: string;
     serverName: string;
+    branchName: string;
     modalComponent: JSX.Element;
     modalOpen: boolean;
 }
@@ -30,6 +31,7 @@ interface ISetTerminalIdAction {
     terminalId: string;
     networkName: string;
     serverName: string;
+    branchName: string;
 }
 
 interface ISetModalStateAction {
@@ -45,11 +47,11 @@ interface ISetModalComponentAction {
 type KnownActions = IToggleDrawerAction | ISetModalStateAction | ISetModalComponentAction
     | ISetLoggedInUserAction | ISetTerminalIdAction;
 
-const configProtocol = (terminalId, networkName, serverName, user, dispatch) => {
+const configProtocol = (terminalId, networkName, serverName, branchName, user, dispatch) => {
     ProtocolManager.connect(
         serverName,
         true,
-        terminalId, networkName, user,
+        terminalId, networkName, branchName, user,
         config => dispatch({
             type: 'CONFIG_RECEIVED',
             payload: config
@@ -63,17 +65,17 @@ const configProtocol = (terminalId, networkName, serverName, user, dispatch) => 
 
 export const actionCreators = {
     SetLoggedInUser: (user: string) => <ISetLoggedInUserAction>{ type: 'SET_LOGGEDIN_USER', user },
-    SetTerminalId: (terminalId: string, networkName: string, serverName: string) =>
+    SetTerminalId: (terminalId: string, networkName: string, serverName: string, branchName: string) =>
         <ISetTerminalIdAction>{
-            type: 'SET_TERMINAL_ID', terminalId, networkName, serverName
+            type: 'SET_TERMINAL_ID', terminalId, networkName, serverName, branchName
         },
     ToggleDrawer: (forceClose?: boolean) => <IToggleDrawerAction>{ type: 'TOGGLE_DRAWER', forceClose },
     SetModalState: (visible: boolean) => <ISetModalStateAction>{ type: 'SET_MODAL_STATE', visible },
     SetModalComponent: (component: any) => <ISetModalComponentAction>{ type: 'SET_MODAL_COMPONENT', component },
-    connectProtocol: (terminalId: string, networkName: string, serverName: string, user: string):
+    connectProtocol: (terminalId: string, networkName: string, serverName: string, branchName: string, user: string, ):
         IAppThunkAction<KnownActions> => (dispatch, getState) => {
             if (!ConfigManager.protocolIntegrated) {
-                configProtocol(terminalId, networkName, serverName, user, dispatch);
+                configProtocol(terminalId, networkName, serverName, branchName, user, dispatch);
             }
             TerminalManager.enableTerminal(terminalId, user);
         }
@@ -86,6 +88,7 @@ const unloadedState: IClientState = {
     terminalId: '',
     networkName: '',
     serverName: '',
+    branchName: '',
     modalComponent: React.createElement('div'),
     modalOpen: false
 };
@@ -100,11 +103,13 @@ export const reducer: Reducer<IClientState> = (state: IClientState, action: Know
             localStorage.setItem('terminalId', action.terminalId);
             localStorage.setItem('networkName', action.networkName);
             localStorage.setItem('serverName', action.serverName);
+            localStorage.setItem('branchName', action.branchName);
             return {
                 ...state,
                 terminalId: action.terminalId,
                 networkName: action.networkName,
-                serverName: action.serverName
+                serverName: action.serverName,
+                branchName: action.branchName
             };
         case 'SET_MODAL_STATE':
             return { ...state, modalOpen: action.visible };

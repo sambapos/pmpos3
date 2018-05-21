@@ -1,6 +1,6 @@
 {
   "name": "pmpos3",
-  "version": "3.0.41",
+  "version": "3.0.43",
   "private": true,
   "dependencies": {
     "autosuggest-highlight": "^3.1.1",
@@ -11,8 +11,8 @@
     "immutable": "^4.0.0-rc.9",
     "material-ui": "^1.0.0-beta.47",
     "moment": "^2.22.1",
-    "pmpos-models": "^1.0.4",
-    "pmpos-modules": "^1.0.35",
+    "pmpos-models": "^1.0.5",
+    "pmpos-modules": "^1.0.36",
     "react": "^16.3.2",
     "react-ace": "^5.10.0",
     "react-autosuggest": "^9.3.4",
@@ -49,7 +49,7 @@
     "@types/enzyme-adapter-react-16": "^1.0.2",
     "@types/history": "^4.6.2",
     "@types/jest": "^21.1.10",
-    "@types/node": "^8.10.16",
+    "@types/node": "^8.10.17",
     "@types/react": "^16.3.14",
     "@types/react-dom": "^16.0.5",
     "@types/react-redux": "^5.0.20",
@@ -65,7 +65,7 @@
     "gh-pages": "^1.1.0",
     "react-addons-test-utils": "^15.6.2",
     "react-test-renderer": "^16.3.2",
-    "tslint-config-prettier": "^1.12.0",
+    "tslint-config-prettier": "^1.13.0",
     "typescript": "^2.8.3"
   },
   "homepage": "https://emreeren.github.io/pmpos3"
