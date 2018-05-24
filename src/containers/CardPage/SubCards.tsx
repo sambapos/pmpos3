@@ -3,8 +3,7 @@ import CardPageContent from './CardPageContent';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import decorate, { IStyle } from './style';
 import * as _ from 'lodash';
-import { CardRecord } from 'pmpos-models';
-import { ConfigManager, TerminalManager } from 'pmpos-modules';
+import { ConfigManager, TerminalManager, CardRecord } from 'pmpos-core';
 
 interface ISubCardProps {
     card: CardRecord;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import GridSelectorButton from './GridSelectorButton';
-import { CardTypeRecord, CardRecord } from 'pmpos-models';
+import { CardTypeRecord, CardRecord } from 'pmpos-core';
 
 interface IGridSelectorProps {
     items: CardRecord[];

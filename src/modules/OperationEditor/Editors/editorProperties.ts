@@ -1,4 +1,4 @@
-import { CardRecord } from 'pmpos-models';
+import { CardRecord } from 'pmpos-core';
 
 export default interface IEditorProperties<TData> {
     card: CardRecord;

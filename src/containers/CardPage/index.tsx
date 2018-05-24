@@ -19,8 +19,7 @@ import TagMenuItems from './TagMenuItems';
 import { CardPageProps } from './CardPageProps';
 import { Link } from 'react-router-dom';
 import CommandButtons from '../../components/CommandButtons';
-import { CardRecord, CardTypeRecord } from 'pmpos-models';
-import { CardOperation, CardManager, TerminalManager, ConfigManager } from 'pmpos-modules';
+import { CardRecord, CardTypeRecord, CardOperation, CardManager, TerminalManager, ConfigManager } from 'pmpos-core';
 import { vibrate } from '../../lib/helpers';
 
 interface IPageState {

@@ -2,8 +2,7 @@ import * as React from 'react';
 import * as shortid from 'shortid';
 import AutoSuggest from '../../../../components/AutoSuggest';
 import { TextField, DialogContent, DialogActions, Button } from '@material-ui/core';
-import { CardTagRecord, TagTypeRecord } from 'pmpos-models';
-import { CardManager } from 'pmpos-modules';
+import { CardTagRecord, TagTypeRecord, CardManager } from 'pmpos-core';
 
 interface ITagEditorProps {
     tag: CardTagRecord;

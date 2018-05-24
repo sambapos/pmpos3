@@ -5,7 +5,7 @@ import { Paper } from '@material-ui/core';
 import decorate, { IStyle } from './style';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import THead from './THead';
-import { CardTagData } from 'pmpos-models';
+import { CardTagData } from 'pmpos-core';
 
 interface IPageProps {
     searchValue: string;

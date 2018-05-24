@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import * as CardStore from '../store/Cards';
 import CardSelector from '../components/CardSelector';
 import { IApplicationState } from '../store';
-import { CardRecord, CardTypeRecord } from 'pmpos-models';
+import { CardRecord, CardTypeRecord } from 'pmpos-core';
 
 interface ICardSelectorPageProps {
     cardType: string;

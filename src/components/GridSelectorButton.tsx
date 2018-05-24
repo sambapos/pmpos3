@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { Button } from '@material-ui/core';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import decorate, { IStyle } from './style';
-import { CardRecord, CardTypeRecord } from 'pmpos-models';
+import { CardRecord, CardTypeRecord } from 'pmpos-core';
 import { vibrate } from '../lib/helpers';
 
 interface IGridSelectorButtonProps {

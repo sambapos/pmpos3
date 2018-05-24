@@ -1,8 +1,7 @@
 import { Reducer } from 'redux';
 import * as React from 'react';
 import { IAppThunkAction } from './appThunkAction';
-import { ProtocolManager, ConfigManager } from 'pmpos-modules';
-import { TerminalManager } from 'pmpos-modules';
+import { ProtocolManager, ConfigManager, TerminalManager } from 'pmpos-core';
 
 export interface IClientState {
     languageName: string;

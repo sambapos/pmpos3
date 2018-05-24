@@ -1,5 +1,5 @@
 import { List } from 'immutable';
-import { CardRecord } from 'pmpos-models';
+import { CardRecord } from 'pmpos-core';
 
 export const getListStyle = isDraggingOver => ({
     background: isDraggingOver ? 'lightblue' : ''

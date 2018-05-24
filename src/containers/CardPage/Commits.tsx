@@ -4,7 +4,7 @@ import { WithStyles, Card, Typography } from '@material-ui/core';
 import decorate, { IStyle } from './style';
 import ActionList from '../../components/ActionList';
 import CommitList from '../../components/CommitList';
-import { CommitRecord, ActionRecord } from 'pmpos-models';
+import { CommitRecord, ActionRecord } from 'pmpos-core';
 
 type CommitProps =
     {

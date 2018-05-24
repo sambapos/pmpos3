@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TagEditorComponent from './TagEditorComponent';
 import TagSelectionComponent from './TagSelectionComponent';
-import { TagTypeRecord, CardTagRecord } from 'pmpos-models';
+import { TagTypeRecord, CardTagRecord } from 'pmpos-core';
 import IEditorProperties from '../editorProperties';
 
 export default (props: IEditorProperties<{ tagType: TagTypeRecord, tag: CardTagRecord }>) => {

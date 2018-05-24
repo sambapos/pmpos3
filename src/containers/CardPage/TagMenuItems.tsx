@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { CardPageProps } from './CardPageProps';
 import { MenuItem, Divider } from '@material-ui/core';
-import { CardRecord, TagTypeRecord, CardTypeRecord } from 'pmpos-models';
-import { ConfigManager, CardOperation, cardOperations } from 'pmpos-modules';
+import { CardRecord, TagTypeRecord, CardTypeRecord, ConfigManager, CardOperation, cardOperations } from 'pmpos-core';
 
 interface ITagMenuItemsProps {
     selectedCard: CardRecord;

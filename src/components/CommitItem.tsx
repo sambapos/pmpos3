@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Card, Typography } from '@material-ui/core';
 import * as moment from 'moment';
 import ActionList from './ActionList';
-import { CommitRecord } from 'pmpos-models';
+import { CommitRecord } from 'pmpos-core';
 
 interface ICommitItemProps {
     commit: CommitRecord;

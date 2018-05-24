@@ -1,6 +1,5 @@
-import { CardRecord } from 'pmpos-models';
+import { CardRecord, CardManager } from 'pmpos-core';
 import { Map as IMap } from 'immutable';
-import { CardManager } from 'pmpos-modules';
 
 it('calculates wallet balance', () => {
 

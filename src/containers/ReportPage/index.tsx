@@ -8,8 +8,7 @@ import InventoryTable from './InventoryTable';
 import AccountTable from './AccountTable';
 import LocationTable from './LocationTable';
 import BalanceTable from './BalanceTable';
-import { CardTagData, CardTypeRecord } from 'pmpos-models';
-import { CardManager, ConfigManager } from 'pmpos-modules';
+import { CardTagData, CardTypeRecord, CardManager, ConfigManager } from 'pmpos-core';
 
 type PageProps =
     WithStyles<keyof IStyle>

@@ -7,7 +7,7 @@ import decorate, { IStyle } from './style';
 import { IApplicationState } from '../../store/index';
 import { Map as IMap } from 'immutable';
 import TopBar from '../TopBar';
-import { TagTypeRecord } from 'pmpos-models';
+import { TagTypeRecord } from 'pmpos-core';
 
 type PageProps =
     { tagTypes: IMap<string, TagTypeRecord> }

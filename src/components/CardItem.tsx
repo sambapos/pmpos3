@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { ListItem, ListItemText, Icon } from '@material-ui/core';
 import tmpl from 'blueimp-tmpl';
-import { CardRecord, CardTagRecord } from 'pmpos-models';
-import { ConfigManager, CardManager, RuleManager } from 'pmpos-modules';
+import { CardRecord, CardTagRecord, ConfigManager, CardManager, RuleManager } from 'pmpos-core';
 
 const getTagDisplay = (card: CardRecord, tag: CardTagRecord) => {
     const tt = ConfigManager.getTagTypeById(tag.typeId);

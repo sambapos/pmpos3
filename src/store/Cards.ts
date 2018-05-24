@@ -1,8 +1,10 @@
 import { Reducer } from 'redux';
 import { IAppThunkAction } from './appThunkAction';
-import { CardManager, cardOperations, TerminalManager, DataBuilder } from 'pmpos-modules';
+import {
+    CardManager, cardOperations, TerminalManager, DataBuilder,
+    CardRecord, CardTypeRecord, ActionRecord, ICommit, ICardTag
+} from 'pmpos-core';
 import { List, Record } from 'immutable';
-import { CardRecord, CardTypeRecord, ActionRecord, Commit, CardTag } from 'pmpos-models';
 import OperationEditor from '../modules/OperationEditor';
 
 export interface IState {
@@ -36,7 +38,7 @@ interface ISetCommitProtocolAction {
 
 interface ICommitReceivedAction {
     type: 'COMMIT_RECEIVED'
-    values: Commit[]
+    values: ICommit[]
 }
 
 interface ICommitReceivedSuccessAction {
@@ -142,7 +144,7 @@ function resetCurrentCard(state: StateRecord) {
 }
 
 export const actionCreators = {
-    addCard: (cardType: CardTypeRecord, tags: CardTag[]):
+    addCard: (cardType: CardTypeRecord, tags: ICardTag[]):
         IAppThunkAction<KnownActions> => (dispatch, getState) => {
             TerminalManager.createCard('', cardType.reference, tags)
                 .then(card =>

@@ -10,8 +10,7 @@ import { IApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
 import DraggableItemList from '../../components/DraggableItemList';
 import ItemSelectionDialog from '../../components/ItemSelectionDialog';
-import { CardTypeRecord, TagTypeRecord } from 'pmpos-models';
-import { ConfigManager } from 'pmpos-modules';
+import { CardTypeRecord, TagTypeRecord, ConfigManager } from 'pmpos-core';
 
 type PageProps =
     {

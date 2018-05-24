@@ -14,9 +14,7 @@ import { IApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import CardSelector from '../../components/CardSelector';
-import { CardRecord, CardTypeRecord, CardTag, CardTagRecord } from 'pmpos-models';
-import { ConfigManager } from 'pmpos-modules';
-import { TerminalManager } from 'pmpos-modules';
+import { CardRecord, CardTypeRecord, ICardTag, CardTagRecord, ConfigManager, TerminalManager } from 'pmpos-core';
 
 type PageProps =
     {
@@ -121,7 +119,7 @@ class CardsPage extends React.Component<PageProps, IState> {
             process.env.PUBLIC_URL + '/card/' + c.id);
     }
 
-    private addNewCard(tags: CardTag[]) {
+    private addNewCard(tags: ICardTag[]) {
         if (this.props.currentCardType.id) {
             this.props.addCard(this.props.currentCardType, tags);
             this.props.history.push(process.env.PUBLIC_URL + '/card');

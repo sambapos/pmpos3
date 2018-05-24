@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CardRecord } from 'pmpos-models';
+import { CardRecord } from 'pmpos-core';
 import { Map as IMap } from 'immutable';
 
 export default class OperationEditorRegistry {

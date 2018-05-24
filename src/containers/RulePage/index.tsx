@@ -12,7 +12,7 @@ import 'brace/mode/drools';
 import 'brace/theme/github';
 import 'brace/ext/language_tools';
 import 'brace/snippets/drools';
-import { RuleRecord } from 'pmpos-models';
+import { RuleRecord } from 'pmpos-core';
 
 type PageProps =
     {

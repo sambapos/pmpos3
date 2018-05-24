@@ -4,7 +4,7 @@ import decorate, { IStyle } from './style';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import { Map as IMap } from 'immutable';
 import IEditorProperties from '../editorProperties';
-import { RuleManager } from 'pmpos-modules';
+import { RuleManager } from 'pmpos-core';
 
 interface IState {
     question: string;
