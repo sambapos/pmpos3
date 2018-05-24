@@ -2,13 +2,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as ConfigStore from '../../store/Config';
 import { RouteComponentProps } from 'react-router';
-import { WithStyles, List, ListItem, Paper } from 'material-ui';
+import { WithStyles, List, ListItem, Paper, Divider, ListItemText } from '@material-ui/core';
 import decorate, { IStyle } from './style';
 import { IApplicationState } from '../../store/index';
 import { Map as IMap } from 'immutable';
 import TopBar from '../TopBar';
-import Divider from 'material-ui/Divider/Divider';
-import ListItemText from 'material-ui/List/ListItemText';
 import { CardTypeRecord } from 'pmpos-models';
 
 type PageProps =

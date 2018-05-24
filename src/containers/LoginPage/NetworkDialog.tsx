@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DialogTitle, DialogContent, TextField, DialogActions, Button } from 'material-ui';
+import { DialogTitle, DialogContent, TextField, DialogActions, Button } from '@material-ui/core';
 
 interface IProps {
     networkName: string;

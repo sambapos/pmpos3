@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DialogTitle } from 'material-ui';
+import { DialogTitle } from '@material-ui/core';
 import TagEditor from './TagEditor';
 import { TagTypeRecord, CardTagRecord } from 'pmpos-models';
 import IEditorProperties from '../editorProperties';

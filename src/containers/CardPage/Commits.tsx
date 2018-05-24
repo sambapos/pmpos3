@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { List } from 'immutable';
-import { WithStyles, Card, Typography } from 'material-ui';
+import { WithStyles, Card, Typography } from '@material-ui/core';
 import decorate, { IStyle } from './style';
 import ActionList from '../../components/ActionList';
 import CommitList from '../../components/CommitList';

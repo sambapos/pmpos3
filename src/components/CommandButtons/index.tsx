@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, WithStyles } from 'material-ui';
+import { Button, WithStyles } from '@material-ui/core';
 import { CommandButton } from '../CommandButton';
 import decorate, { IStyle } from './style';
 import { CardRecord } from 'pmpos-models';
@@ -14,7 +14,7 @@ const CommandButtons = (props: ICommandButtonsProps & WithStyles<keyof IStyle>) 
     return <div className={props.classes.commandButtonsContainer}>
         {props.buttons.map(button => (
             <Button size="large" variant="raised" className={props.classes.button}
-                color="primary"
+                color={button.color as any}
                 key={`cmd_${button.caption}_${props.card.id}`}
                 onClick={e => {
                     props.handleButtonClick(props.card, button);

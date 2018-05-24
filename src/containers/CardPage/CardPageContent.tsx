@@ -2,7 +2,7 @@ import * as React from 'react';
 import Tags from './Tags';
 import SubCards from './SubCards';
 import classNames from 'classnames';
-import { WithStyles, Icon } from 'material-ui';
+import { WithStyles, Icon } from '@material-ui/core';
 import decorate, { IStyle } from './style';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 
@@ -10,6 +10,7 @@ interface ICardContentProps {
     card: CardRecord;
     cardType: CardTypeRecord | undefined;
     selectedCardId: string;
+    hasPendingActions: boolean;
     onClick: (card: CardRecord, target: any) => void;
     handleCardClick: (card: CardRecord) => void;
 }
@@ -24,7 +25,8 @@ const CardPageContent = (props: PageProps) => {
             <div
                 className={classNames(
                     props.classes.cardLine, {
-                        [props.classes.selectedCardLine]: props.selectedCardId === props.card.id
+                        [props.classes.selectedCardLine]: props.selectedCardId === props.card.id,
+                        [props.classes.pendingCardLine]: props.hasPendingActions
                     }
                 )}>
                 {drawIcon && <Icon

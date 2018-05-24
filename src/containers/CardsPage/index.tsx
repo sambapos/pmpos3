@@ -8,7 +8,7 @@ import { RouteComponentProps } from 'react-router';
 import {
     WithStyles, Paper, Button,
     AppBar, Tab, Tabs, DialogTitle, Divider, DialogActions
-} from 'material-ui';
+} from '@material-ui/core';
 import decorate, { IStyle } from './style';
 import { IApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';

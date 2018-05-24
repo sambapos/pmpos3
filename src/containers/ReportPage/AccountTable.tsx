@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as moment from 'moment';
 import { List as IList } from 'immutable';
-import { Paper } from 'material-ui';
+import { Paper } from '@material-ui/core';
 import decorate, { IStyle } from './style';
-import { WithStyles } from 'material-ui/styles/withStyles';
+import { WithStyles } from '@material-ui/core/styles/withStyles';
 import THead from './THead';
 import { CardTagData } from 'pmpos-models';
 

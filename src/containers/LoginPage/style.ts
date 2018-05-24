@@ -1,5 +1,5 @@
-import { withStyles } from 'material-ui';
-import { red, green } from 'material-ui/colors';
+import { withStyles } from '@material-ui/core';
+import { red, green } from '@material-ui/core/colors';
 
 export interface IStyle {
     root: any;

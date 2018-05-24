@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { Button } from 'material-ui';
-import { WithStyles } from 'material-ui/styles/withStyles';
+import { Button } from '@material-ui/core';
+import { WithStyles } from '@material-ui/core/styles/withStyles';
 import decorate, { IStyle } from './style';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 
@@ -36,8 +36,12 @@ class GridSelectorButton extends React.Component<Props, IGridSelectorButtonState
             className={classNames(this.props.classes.button, {
                 [this.props.classes.highlightedButton]: this.state.sourceCards.length > 0
             })}
-            onClick={() => this.props.onSelectCard
-                && this.props.onSelectCard(this.props.card, this.props.cardType, this.state.sourceCards)}
+            onClick={() => {
+                if (this.props.onSelectCard) {
+                    navigator.vibrate([10]);
+                    this.props.onSelectCard(this.props.card, this.props.cardType, this.state.sourceCards)
+                }
+            }}
         >
             {this.props.card.name}
         </Button>;

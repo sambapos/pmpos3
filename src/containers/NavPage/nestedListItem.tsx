@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ListItem, ListItemText, WithStyles } from 'material-ui';
-import withStyles from 'material-ui/styles/withStyles';
+import { ListItem, ListItemText, WithStyles } from '@material-ui/core';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 const decorate = withStyles(({ palette, spacing }) => ({
     root: {

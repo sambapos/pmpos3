@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { List as IList } from 'immutable';
-import { DialogTitle, DialogContent, List, ListItem, Checkbox, DialogActions, Button, ListItemText } from 'material-ui';
+import { DialogTitle, DialogContent, List, ListItem, Checkbox, DialogActions, Button, ListItemText } from '@material-ui/core';
 import { Identifyable } from './Identifyable';
 
 interface ItemSelectionProps {

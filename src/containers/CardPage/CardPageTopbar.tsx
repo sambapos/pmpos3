@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DialogContent, DialogActions, Button } from 'material-ui';
+import { DialogContent, DialogActions, Button } from '@material-ui/core';
 import Accounts from './Accounts';
 import TopBar from '../TopBar';
 import Commits from './Commits';
@@ -27,6 +27,7 @@ export default (props: CardPageProps & ITopBarProps) => {
         title={getTitle(props.card)}
         menuCommand={{
             icon: 'close', onClick: () => {
+                navigator.vibrate(10);
                 TerminalManager.cancelCard('', '');
                 props.history.goBack();
             }
@@ -70,7 +71,10 @@ export default (props: CardPageProps & ITopBarProps) => {
             },
             {
                 icon: 'check', onClick: () => {
-                    if (props.onClose) { props.onClose(); }
+                    if (props.onClose) {
+                        navigator.vibrate([10, 50, 10, 50, 10]);
+                        props.onClose();
+                    }
                 }
             }
         ]}

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IApplicationState } from '../../store';
 import * as ClientStore from '../../store/Client';
-import { WithStyles } from 'material-ui';
+import { WithStyles } from '@material-ui/core';
 import { RouteComponentProps } from 'react-router';
 import decorate, { IStyle } from './style';
 import TopBar from '../TopBar';

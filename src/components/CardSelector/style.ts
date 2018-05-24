@@ -1,4 +1,4 @@
-import withStyles from 'material-ui/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 export interface IStyle {
     content: any;

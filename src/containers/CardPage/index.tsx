@@ -7,7 +7,7 @@ import * as CardStore from '../../store/Cards';
 import * as ClientStore from '../../store/Client';
 import { IApplicationState } from '../../store/index';
 
-import { Typography, Menu, MenuItem, Paper, Divider } from 'material-ui';
+import { Typography, Menu, MenuItem, Paper, Divider } from '@material-ui/core';
 import decorate from './style';
 import TopBar from '../TopBar';
 import OperationEditor from '../../modules/OperationEditor';
@@ -28,6 +28,7 @@ interface IPageState {
     selectedCard: CardRecord;
     buttons: CommandButton[];
     footerButtons: CommandButton[];
+    selectedCategory: string;
 }
 
 export class CardPage extends React.Component<CardPageProps, IPageState> {
@@ -38,7 +39,8 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
             anchorEl: undefined,
             selectedCard: props.card,
             buttons: [],
-            footerButtons: this.getButtons(props.card)
+            footerButtons: this.getButtons(props.card, ''),
+            selectedCategory: ''
         };
     }
 
@@ -67,7 +69,7 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
         }
         if (props.card.id && props.card !== this.props.card) {
             this.setState({
-                footerButtons: this.getButtons(props.card),
+                footerButtons: this.getButtons(props.card, this.state.selectedCategory),
                 selectedCard: props.card,
             });
         }
@@ -106,12 +108,13 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
                                 <Typography>{this.props.card.isClosed && 'CLOSED!'}</Typography>
                             </div>
                             <CardPageContent
+                                hasPendingActions={false}
                                 card={this.props.card}
                                 cardType={ConfigManager.getCardTypeById(this.props.card.typeId)}
                                 selectedCardId={this.state.selectedCard ? this.state.selectedCard.id : ''}
                                 onClick={(card, target) => this.setState({
                                     selectedCard: card,
-                                    buttons: this.getButtons(card),
+                                    buttons: this.getButtons(card, this.state.selectedCategory),
                                     anchorEl: target
                                 })}
                                 handleCardClick={(card: CardRecord) => {
@@ -205,6 +208,15 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
     }
 
     private handleButtonClick(card: CardRecord, button: CommandButton) {
+        navigator.vibrate(10);
+        if (button.command === '$SwitchCategory') {
+            const category = button.caption.startsWith('<') ? '' : button.caption;
+            this.setState({
+                selectedCategory: category,
+                footerButtons: this.getButtons(this.props.card, category),
+            });
+            return;
+        }
         this.handleCardMutation(card, 'EXECUTE_COMMAND', {
             name: button.command,
             params: button.parameters
@@ -212,31 +224,56 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
     }
 
 
-    private getButtonsForCommand(command: string): CommandButton[] {
+    private getButtonsForCommand(command: string, selectedCategory: string): CommandButton[] {
         if (!command.includes('=')) {
             const parts = command.split(':');
-            const ct = ConfigManager.getCardTypes().find(c => c.name === parts[1]);
+            let cardTypeName = parts[1];
+            let groupByName = '';
+            if (cardTypeName.includes(',')) {
+                const p = cardTypeName.split(',');
+                cardTypeName = p[0];
+                groupByName = p[1];
+            }
+            const ct = ConfigManager.getCardTypes().find(c => c.name === cardTypeName);
             if (ct) {
-                const cards = CardManager.getCardsByType(ct.id);
-                return cards.sortBy(x => x.index).map(c =>
-                    new CommandButton(`${c.name}=${parts[0]}:${
-                        c.tags.reduce((r, t) => r + (r ? ',' : '') + `${t.name}=${t.value}`, '')
-                        }`)).toArray();
+                const result: CommandButton[] = [];
+                const sourceCards = CardManager.getCardsByType(ct.id);
+                let productCategories = ['<' + selectedCategory];
+                if (!selectedCategory) {
+                    productCategories = sourceCards.reduce((r, card) => {
+                        const categoryName = card.getTag(groupByName, '') as string;
+                        if (categoryName && r.indexOf(categoryName) === -1) {
+                            r.push(categoryName);
+                        }
+                        return r;
+                    }, Array<string>());
+                }
+                const categoryButtons = productCategories.map(c => new CommandButton(c + '=$SwitchCategory', 'secondary'));
+                result.push(...categoryButtons);
+                const productButtons = sourceCards
+                    .filter(card => !groupByName || card.getTag(groupByName, '') === selectedCategory || card.getTag(groupByName, '') === '')
+                    .sortBy(x => x.index).map(c =>
+                        new CommandButton(`${c.name}=${parts[0]}:${
+                            c.tags.reduce((r, t) => r + (r ? ',' : '') + `${t.name}=${t.value}`, '')
+                            }`)).toArray();
+                result.push(...productButtons);
+                return result;
             }
         }
-        return [new CommandButton(command)];
+        if (!selectedCategory) { return [new CommandButton(command)]; }
+        return [];
     }
 
-    private reduceButtons(ct: CardTypeRecord) {
+    private reduceButtons(ct: CardTypeRecord, selectedCategory: string) {
         return ct.commands.filter(c => c).reduce(
-            (r, c) => r.concat(this.getButtonsForCommand(c)),
+            (r, c) => r.concat(this.getButtonsForCommand(c, selectedCategory)),
             new Array<CommandButton>());
     }
 
-    private getButtons(card: CardRecord): CommandButton[] {
+    private getButtons(card: CardRecord, selectedCategory: string): CommandButton[] {
         const ct = ConfigManager.getCardTypes().get(card.typeId);
         return ct
-            ? this.reduceButtons(ct)
+            ? this.reduceButtons(ct, selectedCategory)
             : [];
     }
 

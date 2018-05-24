@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import { WithStyles, ListItem, Typography } from 'material-ui';
+import { WithStyles, ListItem, Typography, TextField } from '@material-ui/core';
 import decorate, { IStyle } from './style';
 import { List as IList } from 'immutable';
 import TopBar from '../TopBar';
-import TextField from 'material-ui/TextField/TextField';
 import InventoryTable from './InventoryTable';
 import AccountTable from './AccountTable';
 import LocationTable from './LocationTable';

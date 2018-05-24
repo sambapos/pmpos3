@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, WithStyles } from 'material-ui';
+import { Button, WithStyles } from '@material-ui/core';
 import decorate, { IStyle } from './style';
 
 interface ILoginButtonProps {
@@ -17,7 +17,10 @@ const LoginButton = (props: Props) => {
             component="div"
             variant="raised"
             color="primary"
-            onClick={(e) => props.onClick(props.value)}
+            onClick={(e) => {
+                navigator.vibrate(10);
+                props.onClick(props.value)
+            }}
         >{!props.icon ? props.value : <i className="material-icons">{props.icon}</i>}
         </Button>
     );

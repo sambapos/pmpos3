@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CardPageProps } from './CardPageProps';
-import { MenuItem, Divider } from 'material-ui';
+import { MenuItem, Divider } from '@material-ui/core';
 import { CardRecord, TagTypeRecord, CardTypeRecord } from 'pmpos-models';
 import { ConfigManager, CardOperation, cardOperations } from 'pmpos-modules';
 

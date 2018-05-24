@@ -3,10 +3,12 @@ export class CommandButton {
     public command: string;
     public caption: string;
     public parameters: any;
+    public color: string;
 
-    constructor(payload: string) {
+    constructor(payload: string, color: string = 'primary') {
         this.command = payload;
         this.caption = payload;
+        this.color = color;
         if (payload.includes(':')) {
             const parts = payload.split(':');
             payload = parts[0];

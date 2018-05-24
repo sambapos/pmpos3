@@ -1,4 +1,4 @@
-import { WithStyles } from 'material-ui';
+import { WithStyles } from '@material-ui/core';
 import { IStyle } from './style';
 import { RouteComponentProps } from 'react-router';
 import * as CardStore from '../../store/Cards';

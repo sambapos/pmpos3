@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as ConfigStore from '../../store/Config';
 import { RouteComponentProps } from 'react-router';
-import { WithStyles, TextField, Paper } from 'material-ui';
+import { WithStyles, TextField, Paper } from '@material-ui/core';
 import decorate, { IStyle } from './style';
 import { IApplicationState } from '../../store/index';
 import TopBar from '../TopBar';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextField, Button, DialogContent, DialogTitle, DialogActions } from 'material-ui';
+import { TextField, Button, DialogContent, DialogTitle, DialogActions } from '@material-ui/core';
 import { Fragment } from 'react';
 import IEditorProperties from '../editorProperties';
 

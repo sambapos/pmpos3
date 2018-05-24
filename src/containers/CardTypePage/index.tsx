@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as ConfigStore from '../../store/Config';
 import * as ClientStore from '../../store/Client';
 import { RouteComponentProps } from 'react-router';
-import { CardActions, Typography, WithStyles, TextField, Paper, Button } from 'material-ui';
+import { CardActions, Typography, WithStyles, TextField, Paper, Button } from '@material-ui/core';
 import * as Extender from '../../lib/Extender';
 import decorate, { IStyle } from './style';
 import { IApplicationState } from '../../store/index';

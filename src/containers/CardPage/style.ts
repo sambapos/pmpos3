@@ -1,4 +1,4 @@
-import withStyles from 'material-ui/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 export interface IStyle {
     card: any;
@@ -17,6 +17,7 @@ export interface IStyle {
     tagItemContent: any;
     tagBalance: any;
     selectedCardLine: any;
+    pendingCardLine: any;
     cardLine: any;
     cardLineIcon: any;
     node: any;
@@ -28,9 +29,6 @@ export interface IStyle {
 
 export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     node: {
-        // marginLeft: spacing.unit,
-        // paddingBottom: spacing.unit,
-        // marginBottom: spacing.unit,
         borderColor: palette.divider,
         backgroundColor: palette.background.default,
         display: 'flex',
@@ -48,16 +46,13 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         height: '1px'
     },
     tagSection: {
-        // display: 'inline-flex',
         flex: 1,
-        // flexFlow: 'column',
         paddingBottom: spacing.unit / 2,
         paddingTop: spacing.unit,
     },
     tagItem: {
         display: 'inline-flex',
         backgroundColor: palette.divider,
-        // width: '100%',
         borderRadius: 4,
         padding: spacing.unit / 2,
         marginRight: spacing.unit / 2,
@@ -87,17 +82,13 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         display: 'flex',
         flexWrap: 'wrap',
         borderBottom: '1px solid ' + palette.divider,
-        // '&:hover': {
-        //     background: palette.grey['100']
-        // }
-
-        // borderLeft: '1px solid ' + palette.text.divider,
-        // borderRight: '1px solid ' + palette.text.divider,
     },
     selectedCardLine: {
         backgroundColor: palette.grey['200']
-        // borderLeft: '1px solid ' + palette.text.divider,
-        // borderRight: '1px solid ' + palette.text.divider,
+    },
+    pendingCardLine: {
+        fontWeight: 'bold',
+        color: 'darkslategray'
     },
     cardLineIcon: {
         marginTop: spacing.unit,
@@ -147,9 +138,6 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     commandButtons: {
         flex: 'none',
         overflow: 'auto',
-        // [breakpoints.up('xs')]: {
-        //     flex: 1
-        // },
         [breakpoints.down('xs')]: {
             maxHeight: '40%'
         },

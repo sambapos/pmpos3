@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ListItem, ListItemText, Icon } from 'material-ui';
+import { ListItem, ListItemText, Icon } from '@material-ui/core';
 import tmpl from 'blueimp-tmpl';
 import { CardRecord, CardTagRecord } from 'pmpos-models';
 import { ConfigManager, CardManager, RuleManager } from 'pmpos-modules';

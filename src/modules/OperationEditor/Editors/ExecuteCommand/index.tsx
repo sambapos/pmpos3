@@ -1,9 +1,6 @@
 import * as React from 'react';
-import { TextField, Button } from 'material-ui';
+import { TextField, Button, DialogContent, DialogActions, DialogTitle } from '@material-ui/core';
 import * as shortid from 'shortid';
-import DialogContent from 'material-ui/Dialog/DialogContent';
-import DialogActions from 'material-ui/Dialog/DialogActions';
-import DialogTitle from 'material-ui/Dialog/DialogTitle';
 import IEditorProperties from '../editorProperties';
 
 interface IEditorState {

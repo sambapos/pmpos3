@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ListItem, ListItemText, Collapse, List } from 'material-ui';
+import { ListItem, ListItemText, Collapse, List } from '@material-ui/core';
 
 interface IExpanderProps {
     mainText: string;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { WithStyles } from 'material-ui/styles/withStyles';
+import { WithStyles } from '@material-ui/core/styles/withStyles';
 import decorate, { IStyle } from './style';
 import SearchEdit from '../SearchEdit';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';

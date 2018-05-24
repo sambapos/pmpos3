@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextField, WithStyles } from 'material-ui';
+import { TextField, WithStyles } from '@material-ui/core';
 import decorate, { IStyle } from './style';
 import LoginButton from './LoginButton';
 

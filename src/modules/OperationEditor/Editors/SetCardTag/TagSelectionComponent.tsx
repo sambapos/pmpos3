@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DialogTitle, DialogActions, Button } from 'material-ui';
+import { DialogTitle, DialogActions, Button } from '@material-ui/core';
 import CardSelectorPage from '../../../../containers/CardSelectorPage';
 import { TagTypeRecord, CardTagRecord } from 'pmpos-models';
 import IEditorProperties from '../editorProperties';

@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Card } from 'material-ui';
+import { Card, Typography } from '@material-ui/core';
 import * as moment from 'moment';
-import Typography from 'material-ui/Typography/Typography';
 import ActionList from './ActionList';
 import { CommitRecord } from 'pmpos-models';
 

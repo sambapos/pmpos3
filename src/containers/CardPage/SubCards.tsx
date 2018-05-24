@@ -1,10 +1,10 @@
 import * as React from 'react';
 import CardPageContent from './CardPageContent';
-import { WithStyles } from 'material-ui/styles/withStyles';
+import { WithStyles } from '@material-ui/core/styles/withStyles';
 import decorate, { IStyle } from './style';
 import * as _ from 'lodash';
 import { CardRecord } from 'pmpos-models';
-import { ConfigManager } from 'pmpos-modules';
+import { ConfigManager, TerminalManager } from 'pmpos-modules';
 
 interface ISubCardProps {
     card: CardRecord;
@@ -50,6 +50,7 @@ class SubCards extends React.Component<PageProps, { tagCount: number }> {
                             <CardPageContent
                                 key={card.id}
                                 card={card}
+                                hasPendingActions={TerminalManager.hasPendingActions('', this.props.card.id, card.id)}
                                 cardType={ConfigManager.getCardTypeById(card.typeId)}
                                 selectedCardId={this.props.selectedCardId}
                                 onClick={this.props.onClick}

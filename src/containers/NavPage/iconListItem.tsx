@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ListItem, ListItemText } from 'material-ui';
+import { ListItem, ListItemText } from '@material-ui/core';
 
 interface IconListItemProps {
     mainText: string;

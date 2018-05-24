@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, ListItem } from 'material-ui';
+import { Typography, ListItem } from '@material-ui/core';
 import { CardRecord } from 'pmpos-models';
 
 interface ICardBalanceProps {

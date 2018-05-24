@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InputAdornment, IconButton, Icon, FormControl, InputLabel, Input } from 'material-ui';
+import { InputAdornment, IconButton, Icon, FormControl, InputLabel, Input } from '@material-ui/core';
 
 interface InputProps {
     className?: string;

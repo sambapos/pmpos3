@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IconButton, Menu, MenuItem } from 'material-ui';
+import { IconButton, Menu, MenuItem } from '@material-ui/core';
 
 export interface IMenuCommand {
     icon: string;

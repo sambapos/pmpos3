@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
-import { FormControl, InputLabel, Input, InputAdornment, IconButton, Icon } from 'material-ui';
-import { WithStyles } from 'material-ui/styles/withStyles';
+import { FormControl, InputLabel, Input, InputAdornment, IconButton, Icon } from '@material-ui/core';
+import { WithStyles } from '@material-ui/core/styles/withStyles';
 import decorate, { IStyle } from './style';
 
 interface ISearchEditProps {

@@ -1,10 +1,9 @@
 import * as React from 'react';
 import * as History from 'history';
-import List from 'material-ui/List';
 import Expander from './expander';
 import NestedListItem from './nestedListItem';
 import IconListItem from './iconListItem';
-import Divider from 'material-ui/Divider/Divider';
+import { List, Divider } from '@material-ui/core';
 
 interface INavListProps {
     loggedInUser: string;

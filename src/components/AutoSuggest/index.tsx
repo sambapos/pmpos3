@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as Autosuggest from 'react-autosuggest';
-import { TextField, Paper, MenuItem } from 'material-ui';
+import { TextField, Paper, MenuItem } from '@material-ui/core';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
-import { WithStyles } from 'material-ui/styles/withStyles';
+import { WithStyles } from '@material-ui/core/styles/withStyles';
 import decorate, { IStyle } from './style';
 
 export interface ISuggestion {

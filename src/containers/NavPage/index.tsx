@@ -1,12 +1,8 @@
 import classNames from 'classnames';
-import Divider from 'material-ui/Divider';
-import Drawer from 'material-ui/Drawer';
-import Hidden from 'material-ui/Hidden';
-import List from 'material-ui/List';
-import { WithStyles } from 'material-ui/styles/withStyles';
+import { WithStyles } from '@material-ui/core/styles/withStyles';
 import * as React from 'react';
 
-import { Dialog, ListItem, ListItemText, Typography } from 'material-ui';
+import { Dialog, ListItem, ListItemText, Typography, List, Hidden, Drawer, Divider } from '@material-ui/core';
 import { Route, RouteComponentProps } from 'react-router';
 import { subRoutes } from '../../routes';
 import NavList from './navList';

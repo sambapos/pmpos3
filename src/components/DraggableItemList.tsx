@@ -3,7 +3,7 @@ import { Draggable, DragDropContext, Droppable } from 'react-beautiful-dnd';
 import * as h from './helpers';
 import { reorder } from '../lib/helpers';
 import { Identifyable } from './Identifyable';
-import { List, ListItem, WithStyles } from 'material-ui';
+import { List, ListItem, WithStyles } from '@material-ui/core';
 import decorate, { IStyle } from './style';
 
 interface ItemListProps {

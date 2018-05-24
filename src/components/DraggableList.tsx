@@ -1,6 +1,6 @@
 import { Map as IMap } from 'immutable';
 import * as _ from 'lodash';
-import { Button, Icon, IconButton, List, ListSubheader, Snackbar, WithStyles } from 'material-ui';
+import { Button, Icon, IconButton, List, ListSubheader, Snackbar, WithStyles } from '@material-ui/core';
 import * as React from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { reorder } from './../lib/helpers';

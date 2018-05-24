@@ -1,11 +1,7 @@
 import * as React from 'react';
-import { TextField, Button } from 'material-ui';
-import DialogContent from 'material-ui/Dialog/DialogContent';
-import DialogActions from 'material-ui/Dialog/DialogActions';
-import DialogTitle from 'material-ui/Dialog/DialogTitle';
-import Typography from 'material-ui/Typography/Typography';
+import { TextField, Button, DialogContent, DialogActions, DialogTitle, Typography } from '@material-ui/core';
 import decorate, { IStyle } from './style';
-import { WithStyles } from 'material-ui/styles/withStyles';
+import { WithStyles } from '@material-ui/core/styles/withStyles';
 import { Map as IMap } from 'immutable';
 import IEditorProperties from '../editorProperties';
 import { RuleManager } from 'pmpos-modules';

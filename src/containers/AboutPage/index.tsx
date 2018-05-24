@@ -6,8 +6,7 @@ import * as ClientStore from '../../store/Client';
 import * as ConfigStore from '../../store/Config';
 import { RouteComponentProps } from 'react-router';
 import TopBar from '../TopBar';
-import Typography from 'material-ui/Typography/Typography';
-import { Card, Button } from 'material-ui';
+import { Card, Button, Typography } from '@material-ui/core';
 
 export type PageProps =
     ClientStore.IClientState
