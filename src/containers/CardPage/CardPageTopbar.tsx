@@ -7,6 +7,7 @@ import { CardRecord, ActionRecord, CommitRecord } from 'pmpos-models';
 import { ConfigManager, TerminalManager } from 'pmpos-modules';
 import { CardPageProps } from './CardPageProps';
 import { List } from 'immutable';
+import { vibrate } from '../../lib/helpers';
 
 const getTitle = (card: CardRecord) => {
     const ct = ConfigManager.getCardTypeById(card.typeId);
@@ -27,7 +28,7 @@ export default (props: CardPageProps & ITopBarProps) => {
         title={getTitle(props.card)}
         menuCommand={{
             icon: 'close', onClick: () => {
-                navigator.vibrate(10);
+                vibrate(10);
                 TerminalManager.cancelCard('', '');
                 props.history.goBack();
             }
@@ -72,7 +73,7 @@ export default (props: CardPageProps & ITopBarProps) => {
             {
                 icon: 'check', onClick: () => {
                     if (props.onClose) {
-                        navigator.vibrate([10, 50, 10, 50, 10]);
+                        vibrate([10, 50, 10, 50, 10]);
                         props.onClose();
                     }
                 }

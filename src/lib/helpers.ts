@@ -4,3 +4,9 @@ export const reorder = (list: any[], startIndex: number, endIndex: number) => {
     result.splice(endIndex, 0, removed);
     return result;
 };
+
+export const vibrate = (pattern: number | number[]) => {
+    if (navigator.vibrate) {
+        navigator.vibrate(pattern);
+    }
+}

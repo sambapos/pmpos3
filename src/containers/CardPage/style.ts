@@ -131,6 +131,7 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         flex: '1',
         width: '100%',
         alignSelf: 'center',
+        overflow: 'hidden',
         [breakpoints.up('sm')]: {
             flexFlow: 'row'
         },

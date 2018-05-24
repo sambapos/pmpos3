@@ -13,7 +13,7 @@
     "lodash": "^4.17.10",
     "moment": "^2.22.1",
     "pmpos-models": "^1.0.5",
-    "pmpos-modules": "^1.0.38",
+    "pmpos-modules": "^1.0.39",
     "react": "^16.4.0",
     "react-ace": "^5.10.0",
     "react-autosuggest": "^9.3.4",

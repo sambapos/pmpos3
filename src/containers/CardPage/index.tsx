@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 import CommandButtons from '../../components/CommandButtons';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
 import { CardOperation, CardManager, TerminalManager, ConfigManager } from 'pmpos-modules';
+import { vibrate } from '../../lib/helpers';
 
 interface IPageState {
     disableUpdate: boolean;
@@ -208,7 +209,7 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
     }
 
     private handleButtonClick(card: CardRecord, button: CommandButton) {
-        navigator.vibrate(10);
+        vibrate(10);
         if (button.command === '$SwitchCategory') {
             const category = button.caption.startsWith('<') ? '' : button.caption;
             this.setState({

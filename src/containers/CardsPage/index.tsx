@@ -221,7 +221,7 @@ class CardsPage extends React.Component<PageProps, IState> {
                         }
                     },
                     {
-                        icon: 'Create 500 Test Cards',
+                        icon: 'Create Test Cards',
                         onClick: () => {
                             if (this.props.currentCardType.name === 'Customers') {
                                 this.props.createFakeCustomers();

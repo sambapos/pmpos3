@@ -4,6 +4,7 @@ import { Button } from '@material-ui/core';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import decorate, { IStyle } from './style';
 import { CardRecord, CardTypeRecord } from 'pmpos-models';
+import { vibrate } from '../lib/helpers';
 
 interface IGridSelectorButtonProps {
     card: CardRecord;
@@ -38,7 +39,7 @@ class GridSelectorButton extends React.Component<Props, IGridSelectorButtonState
             })}
             onClick={() => {
                 if (this.props.onSelectCard) {
-                    navigator.vibrate([10]);
+                    vibrate([10]);
                     this.props.onSelectCard(this.props.card, this.props.cardType, this.state.sourceCards)
                 }
             }}
