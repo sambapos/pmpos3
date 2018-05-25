@@ -25,7 +25,7 @@ interface IPageState {
     showValue: boolean;
     showQuantity: boolean;
     showUnit: boolean;
-    showPrice: boolean;
+    showAmount: boolean;
     showSource: boolean;
     showTarget: boolean;
     showFunction: boolean;
@@ -37,7 +37,7 @@ interface IPageState {
     defaultFunction: string;
     defaultQuantity: string;
     defaultUnit: string;
-    defaultPrice: string;
+    defaultAmount: string;
     defaultSource: string;
     defaultTarget: string;
 }
@@ -52,7 +52,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
             showValue: true,
             showQuantity: true,
             showUnit: true,
-            showPrice: true,
+            showAmount: true,
             showSource: true,
             showTarget: true,
             showFunction: false,
@@ -64,7 +64,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
             defaultFunction: '',
             defaultQuantity: '',
             defaultUnit: '',
-            defaultPrice: '',
+            defaultAmount: '',
             defaultSource: '',
             defaultTarget: ''
         };
@@ -79,7 +79,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                 showValue: props.tagType.showValue,
                 showQuantity: props.tagType.showQuantity,
                 showUnit: props.tagType.showUnit,
-                showPrice: props.tagType.showPrice,
+                showAmount: props.tagType.showAmount,
                 showSource: props.tagType.showSource,
                 showTarget: props.tagType.showTarget,
                 showFunction: props.tagType.showFunction,
@@ -93,8 +93,8 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                     ? String(props.tagType.defaultQuantity)
                     : '',
                 defaultUnit: props.tagType.defaultUnit,
-                defaultPrice: props.tagType.defaultPrice !== 0
-                    ? String(props.tagType.defaultPrice)
+                defaultAmount: props.tagType.defaultAmount !== 0
+                    ? String(props.tagType.defaultAmount)
                     : '',
                 defaultSource: props.tagType.defaultSource,
                 defaultTarget: props.tagType.defaultTarget
@@ -111,7 +111,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                 showValue: this.props.tagType.showValue,
                 showQuantity: this.props.tagType.showQuantity,
                 showUnit: this.props.tagType.showUnit,
-                showPrice: this.props.tagType.showPrice,
+                showAmount: this.props.tagType.showAmount,
                 showSource: this.props.tagType.showSource,
                 showTarget: this.props.tagType.showTarget,
                 showFunction: this.props.tagType.showFunction,
@@ -125,8 +125,8 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                     ? String(this.props.tagType.defaultQuantity)
                     : '',
                 defaultUnit: this.props.tagType.defaultUnit,
-                defaultPrice: this.props.tagType.defaultPrice !== 0
-                    ? String(this.props.tagType.defaultPrice)
+                defaultAmount: this.props.tagType.defaultAmount !== 0
+                    ? String(this.props.tagType.defaultAmount)
                     : '',
                 defaultSource: this.props.tagType.defaultSource,
                 defaultTarget: this.props.tagType.defaultTarget
@@ -162,7 +162,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                                     showValue: this.state.showValue,
                                     showQuantity: this.state.showQuantity,
                                     showUnit: this.state.showUnit,
-                                    showPrice: this.state.showPrice,
+                                    showAmount: this.state.showAmount,
                                     showSource: this.state.showSource,
                                     showTarget: this.state.showTarget,
                                     showFunction: this.state.showFunction,
@@ -174,7 +174,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                                     defaultFunction: this.state.defaultFunction,
                                     defaultQuantity: Number(this.state.defaultQuantity),
                                     defaultUnit: this.state.defaultUnit,
-                                    defaultPrice: Number(this.state.defaultPrice),
+                                    defaultAmount: Number(this.state.defaultAmount),
                                     defaultSource: this.state.defaultSource,
                                     defaultTarget: this.state.defaultTarget
                                 }));
@@ -235,12 +235,12 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                         />
                     </div>
                     <InputCheckBox
-                        label="Default Price"
+                        label="Default Amount"
                         type="number"
-                        value={this.state.defaultPrice}
-                        onChange={e => this.setState({ defaultPrice: e.target.value })}
-                        onCheckboxClick={() => this.setState({ showPrice: !this.state.showPrice })}
-                        isChecked={this.state.showPrice}
+                        value={this.state.defaultAmount}
+                        onChange={e => this.setState({ defaultAmount: e.target.value })}
+                        onCheckboxClick={() => this.setState({ showAmount: !this.state.showAmount })}
+                        isChecked={this.state.showAmount}
                     />
                     <InputCheckBox
                         label="Default Function"

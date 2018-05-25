@@ -12,7 +12,7 @@ export interface IStyle {
     footer: any;
     tagSection: any;
     tagItem: any;
-    tagItemPrice: any;
+    tagItemAmount: any;
     tagLocation: any;
     tagItemContent: any;
     tagBalance: any;
@@ -58,7 +58,7 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         marginRight: spacing.unit / 2,
         marginBottom: spacing.unit / 2
     },
-    tagItemPrice: {
+    tagItemAmount: {
         display: 'inline-flex',
         width: '100%',
         paddingBottom: spacing.unit / 2

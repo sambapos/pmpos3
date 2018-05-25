@@ -12,7 +12,7 @@ interface ITagEditorProps {
 
 interface ITagEditorState {
     name: string; value: string; quantity: string; unit: string;
-    price: string; func: string;
+    amount: string; func: string;
     source: string; target: string; typeId: string;
 }
 
@@ -30,7 +30,7 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
         const canEditValue = !this.props.tagType.id || this.props.tagType.showValue;
         const canEditQuantity = !this.props.tagType.id || this.props.tagType.showQuantity;
         const canEditUnit = !this.props.tagType.id || this.props.tagType.showUnit;
-        const canEditPrice = !this.props.tagType.id || this.props.tagType.showPrice;
+        const canEditAmount = !this.props.tagType.id || this.props.tagType.showAmount;
         const canEditSource = !this.props.tagType.id || this.props.tagType.showSource;
         const canEditTarget = !this.props.tagType.id || this.props.tagType.showTarget;
         const canEditFunction = !this.props.tagType.id || this.props.tagType.showFunction;
@@ -65,12 +65,12 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
                     value={this.state.unit}
                     onChange={e => this.setState({ unit: e.target.value })}
                 />}
-                {canEditPrice && <TextField
+                {canEditAmount && <TextField
                     fullWidth
-                    label="Price"
+                    label="Amount"
                     type="number"
-                    value={this.state.price}
-                    onChange={e => this.setState({ price: e.target.value })}
+                    value={this.state.amount}
+                    onChange={e => this.setState({ amount: e.target.value })}
                 />}
                 {canEditFunction && <TextField
                     fullWidth
@@ -104,7 +104,7 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
                         value: this.state.value,
                         quantity: Number(this.state.quantity),
                         unit: this.state.unit,
-                        price: Number(this.state.price),
+                        amount: Number(this.state.amount),
                         func: this.state.func,
                         source: this.state.source,
                         target: this.state.target,
@@ -125,7 +125,7 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
             value: tag.value || tagType.defaultValue,
             quantity: String(tag.quantity !== 0 ? tag.quantity : tagType.defaultQuantity),
             unit: tag.unit || tagType.defaultUnit,
-            price: String(tag.price !== 0 ? tag.price : tagType.defaultPrice),
+            amount: String(tag.amount !== 0 ? tag.amount : tagType.defaultAmount),
             func: tag.func || tagType.defaultFunction,
             source: tag.source || tagType.defaultSource,
             target: tag.target || tagType.defaultTarget
@@ -137,8 +137,8 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
         if (this.props.tagType.cardTypeReferenceName) {
             const card = CardManager.getCardByName(this.props.tagType.cardTypeReferenceName, value);
             if (card) {
-                if (Number(this.state.price) === 0) {
-                    this.setState({ price: String(card.getTag('Price', '')) });
+                if (Number(this.state.amount) === 0) {
+                    this.setState({ amount: String(card.getTag('Amount', '')) });
                 }
                 if (!this.state.source) {
                     this.setState({ source: String(card.getTag('Source', '')) });

@@ -1,5 +1,5 @@
 export class CommandButton {
-    // Add Pizza=AddProduct:Product=Pizza,Price=10
+    // Add Pizza=AddProduct:Product=Pizza,Amount=10
     public command: string;
     public caption: string;
     public parameters: any;
