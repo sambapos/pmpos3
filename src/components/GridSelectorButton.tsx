@@ -10,6 +10,7 @@ interface IGridSelectorButtonProps {
     card: CardRecord;
     cardType: CardTypeRecord;
     sourceCards: CardRecord[];
+    smallButton?: boolean;
     onSelectCard?: (selectedCard: CardRecord, cardType: CardTypeRecord, cards: CardRecord[]) => void;
 }
 
@@ -35,7 +36,9 @@ class GridSelectorButton extends React.Component<Props, IGridSelectorButtonState
         return <Button variant="raised"
             color={this.state.sourceCards.length > 0 ? 'primary' : 'default'}
             className={classNames(this.props.classes.button, {
-                [this.props.classes.highlightedButton]: this.state.sourceCards.length > 0
+                [this.props.classes.highlightedButton]: this.state.sourceCards.length > 0,
+                [this.props.classes.bigButton]: !this.props.smallButton,
+                [this.props.classes.smallButton]: this.props.smallButton
             })}
             onClick={() => {
                 if (this.props.onSelectCard) {

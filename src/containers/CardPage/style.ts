@@ -42,8 +42,8 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     },
     subCards: {
         overflow: 'auto',
-        flex: '1 1 auto',
-        height: '1px'
+        flex: '1 1 auto'
+        // height: '1px'
     },
     tagSection: {
         flex: 1,
@@ -81,6 +81,7 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         flex: 'none',
         display: 'flex',
         flexWrap: 'wrap',
+        minHeight: 40,
         borderBottom: '1px solid ' + palette.divider,
     },
     selectedCardLine: {

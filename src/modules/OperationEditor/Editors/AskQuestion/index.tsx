@@ -83,6 +83,20 @@ class Component extends React.Component<Props, IState> {
         this.setState({ parameterState: this.state.parameterState.set(key, value) });
     }
 
+    private getKey(item: string) {
+        if (item.includes('=')) {
+            return item.split('=')[0];
+        }
+        return item;
+    }
+
+    private getValue(item: string) {
+        if (item.includes('=')) {
+            return item.split('=')[1];
+        }
+        return item;
+    }
+
     private getParamEditor(key: string, value: any) {
         if (Array.isArray(value)) {
             return (
@@ -91,13 +105,13 @@ class Component extends React.Component<Props, IState> {
                     <div className={this.props.classes.buttonContainer}>
                         {(Array(...value).map(item => (
                             <Button
-                                color={this.state.parameterState.get(key) === item ? 'secondary' : 'default'}
+                                color={this.state.parameterState.get(key) === this.getValue(item) ? 'secondary' : 'default'}
                                 key={item} variant="raised" className={this.props.classes.selectionButton}
                                 onClick={e => this.setState({
-                                    parameterState: this.state.parameterState.set(key, item)
+                                    parameterState: this.state.parameterState.set(key, this.getValue(item))
                                 })}
                             >
-                                {item}
+                                {this.getKey(item)}
                             </Button>
                         )))}
                     </div>

@@ -6,7 +6,7 @@ import * as ClientStore from '../../store/Client';
 import * as ConfigStore from '../../store/Config';
 import { RouteComponentProps } from 'react-router';
 import TopBar from '../TopBar';
-import { Card, Button, Typography } from '@material-ui/core';
+import { Card, Typography } from '@material-ui/core';
 
 export type PageProps =
     ClientStore.IClientState
@@ -36,7 +36,6 @@ class HomePage extends React.Component<PageProps> {
                         https://github.com/emreeren/pmpos3/
                         </a>
                 </Card>
-                <Button onClick={() => this.props.createDefaultConfig()}>Create Config</Button>
             </div>
         );
     }

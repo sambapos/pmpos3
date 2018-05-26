@@ -125,10 +125,11 @@ class NavPage extends React.Component<Props> {
                     PaperProps={{ style: { overflow: 'unset', width: '90%', margin: 0 } }}
                     disableBackdropClick={true}
                     open={this.props.modalOpen}
+                    transitionDuration={{ exit: 0 }}
                 >
                     {this.props.modalComponent}
                 </Dialog>
-            </div>
+            </div >
         );
     }
 }

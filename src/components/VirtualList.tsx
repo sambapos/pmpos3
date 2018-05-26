@@ -38,44 +38,55 @@ interface IVirtualListProps {
     rowCount: number;
     scrollTop: number;
     cache: any;
-    isRowLoaded: (x: any) => void;
-    loadMoreRows: (x: any) => void;
+    isRowLoaded: (x: any) => boolean;
+    loadMoreRows: (x: any) => Promise<any>;
     onClick: (c: any) => void;
     debouncedHandleScroll: (x: number) => void;
     items: any[];
     template: string;
 }
 
-export default (props: IVirtualListProps) => {
-    return <InfiniteLoader
-        isRowLoaded={(x) => props.isRowLoaded(x)}
-        loadMoreRows={(x) => props.loadMoreRows(x)}
-        rowCount={props.rowCount}
-        minimumBatchSize={itemCount}
-        threshold={itemThresold}
-    >
-        {({ onRowsRendered, registerChild }) => (
-            <AutoSizer onResize={() => {
-                props.cache.clearAll();
-            }}>
-                {({ height, width }) => (
-                    <List
-                        onRowsRendered={onRowsRendered}
-                        deferredMeasurementCache={props.cache}
-                        ref={registerChild}
-                        rowCount={props.rowCount}
-                        rowHeight={props.cache.rowHeight}
-                        width={width}
-                        height={height}
-                        scrollToIndex={props.scrollTop === 0 ? 0 : -1}
-                        scrollTop={props.scrollTop}
-                        onScroll={(x) => {
-                            props.debouncedHandleScroll(x.scrollTop);
-                        }}
-                        rowRenderer={(x) => rowRenderer(x, props.items, props.cache, props.onClick, props.template)}
-                    />
-                )}
-            </AutoSizer>
-        )}
-    </InfiniteLoader>;
-};
+export default class VirtualList extends React.Component<IVirtualListProps> {
+    private list: any;
+
+    public componentDidMount() {
+        if (this.list) { this.list.scrollToPosition(this.props.scrollTop); }
+    }
+
+    public render() {
+        return <InfiniteLoader
+            isRowLoaded={(x) => this.props.isRowLoaded(x)}
+            loadMoreRows={(x) => this.props.loadMoreRows(x)}
+            rowCount={this.props.rowCount}
+            minimumBatchSize={itemCount}
+            threshold={itemThresold}
+        >
+            {({ onRowsRendered, registerChild }) => (
+                <AutoSizer onResize={() => {
+                    this.props.cache.clearAll();
+                }}>
+                    {({ height, width }) => (
+                        <List
+                            onRowsRendered={onRowsRendered}
+                            deferredMeasurementCache={this.props.cache}
+                            ref={list => {
+                                this.list = list;
+                                registerChild(list)
+                            }}
+                            rowCount={this.props.rowCount}
+                            rowHeight={this.props.cache.rowHeight}
+                            width={width}
+                            height={height}
+                            scrollToIndex={this.props.scrollTop === 0 ? 0 : -1}
+                            onScroll={(x) => {
+                                this.props.debouncedHandleScroll(x.scrollTop);
+                            }}
+                            rowRenderer={(x) => rowRenderer(x, this.props.items, this.props.cache,
+                                this.props.onClick, this.props.template)}
+                        />
+                    )}
+                </AutoSizer>
+            )}
+        </InfiniteLoader >;
+    }
+}

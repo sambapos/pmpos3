@@ -110,6 +110,7 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
                             <CardPageContent
                                 hasPendingActions={false}
                                 card={this.props.card}
+                                parentCard={undefined}
                                 cardType={ConfigManager.getCardTypeById(this.props.card.typeId)}
                                 selectedCardId={this.state.selectedCard ? this.state.selectedCard.id : ''}
                                 onClick={(card, target) => this.setState({

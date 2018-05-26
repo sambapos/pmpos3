@@ -49,6 +49,7 @@ class SubCards extends React.Component<PageProps, { tagCount: number }> {
                             <CardPageContent
                                 key={card.id}
                                 card={card}
+                                parentCard={this.props.card}
                                 hasPendingActions={TerminalManager.hasPendingActions('', this.props.card.id, card.id)}
                                 cardType={ConfigManager.getCardTypeById(card.typeId)}
                                 selectedCardId={this.props.selectedCardId}

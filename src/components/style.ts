@@ -5,6 +5,8 @@ export interface IStyle {
     draggableList: any;
     sectionList: any;
     button: any;
+    bigButton: any;
+    smallButton: any;
     highlightedButton: any;
 }
 
@@ -23,10 +25,15 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         padding: 0,
         backgroundColor: palette.background.paper
     },
+    bigButton: {
+        fontSize: '1.4em',
+    },
+    smallButton: {
+        fontSize: '1em',
+    },
     button: {
         flex: '1 1 auto',
         margin: 2,
-        fontSize: '1.4em',
         maxWidth: 'calc(50% - 4px)',
         maxHeight: 'calc(50% - 4px)',
         boxShadow: 'none',
@@ -34,7 +41,7 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         [breakpoints.up('sm')]: {
             margin: 4,
             minWidth: 100,
-            maxWidth: 'calc(25% - 4px)'
+            maxWidth: 'calc(25% - 8px)'
         },
     },
     highlightedButton: {

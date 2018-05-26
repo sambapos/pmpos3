@@ -1,6 +1,6 @@
 {
   "name": "pmpos3",
-  "version": "3.0.55",
+  "version": "3.0.58",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^1.0.0",
@@ -12,7 +12,7 @@
     "immutable": "^4.0.0-rc.9",
     "lodash": "^4.17.10",
     "moment": "^2.22.1",
-    "pmpos-core": "^1.0.5",
+    "pmpos-core": "^1.0.7",
     "react": "^16.4.0",
     "react-ace": "^5.10.0",
     "react-autosuggest": "^9.3.4",
@@ -56,6 +56,7 @@
     "@types/react-router-dom": "^4.2.6",
     "@types/react-router-redux": "^5.0.14",
     "@types/react-test-renderer": "^16.0.1",
+    "@types/react-virtualized": "^9.18.3",
     "@types/shortid": "0.0.29",
     "@types/webpack": "^3.8.12",
     "@types/webpack-env": "^1.13.6",

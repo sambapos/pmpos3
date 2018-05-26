@@ -25,6 +25,7 @@ class CardTagWrapper {
 
 interface ITagsProps {
     card: CardRecord;
+    parentCard: CardRecord | undefined;
     handleCardClick: (card: CardRecord) => void;
 }
 
@@ -48,8 +49,12 @@ const getTagDisplay = (card: CardRecord, tag: CardTagRecord, iconClass: string) 
             <span>{tag.valueDisplay}</span>
         </span>);
     }
-    return tag.display;
+    return tag.name !== 'Name' ? tag.display : tag.valueDisplay;
 };
+
+const getPriceDisplay = (tag: CardTagRecord) => {
+    return tag.amount !== 0 ? (tag.amount * Math.max(1, tag.quantity)).toFixed(2) : '';
+}
 
 const getDefaultDisplay = (card: CardRecord, tag: CardTagRecord, classes: Record<keyof IStyle, string>) => {
     const tagTotal = card.getTagTotal(tag);
@@ -65,7 +70,7 @@ const getDefaultDisplay = (card: CardRecord, tag: CardTagRecord, classes: Record
                 </div>}
             </div>
             <div className={classes.tagBalance}>
-                {tagTotal !== 0 ? Math.abs(tagTotal).toFixed(2) : ''}
+                {tagTotal !== 0 ? Math.abs(tagTotal).toFixed(2) : getPriceDisplay(tag)}
             </div>
         </>);
 };
@@ -95,7 +100,7 @@ const Tags = (props: ITagsProps & WithStyles<keyof IStyle>) => {
             }}>
             {
                 props.card.tags.entrySeq()
-                    .filter(x => props.card.tags.count() === 1 || x[1].name !== 'Name')
+                    .filter(x => props.parentCard || props.card.tags.count() === 1 || x[1].name !== 'Name')
                     .sortBy(x => CardManager.getTagSortIndexByCard(props.card, x[1]))
                     .map(([key, tag]) => {
                         const tagType = ConfigManager.getTagTypeById(tag.typeId);

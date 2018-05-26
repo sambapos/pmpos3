@@ -65,13 +65,15 @@ export default class extends React.Component<ICardListProps, ICardListState> {
         this.setState({ scrollTop });
     }
 
-    private isRowLoaded({ index }: any) {
+    private isRowLoaded({ index }: any): boolean {
         return !!this.state.items[index];
     }
 
     private loadMoreRows({ startIndex, stopIndex }: any) {
-        const items = this.state.items.concat(this.getItems(this.props.cards, startIndex, stopIndex - startIndex + 1));
-        this.setState({ items });
+        return new Promise(() => {
+            const items = this.state.items.concat(this.getItems(this.props.cards, startIndex, stopIndex - startIndex + 1));
+            this.setState({ items });
+        })
     }
 
     private getItems(cards: List<CardRecord>, startIndex: number, itemCount: number) {

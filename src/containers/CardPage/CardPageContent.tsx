@@ -8,6 +8,7 @@ import { CardRecord, CardTypeRecord } from 'pmpos-core';
 
 interface ICardContentProps {
     card: CardRecord;
+    parentCard: CardRecord | undefined;
     cardType: CardTypeRecord | undefined;
     selectedCardId: string;
     hasPendingActions: boolean;
@@ -36,7 +37,7 @@ const CardPageContent = (props: PageProps) => {
                 >
                     more_vert
                 </Icon>}
-                <Tags card={props.card} handleCardClick={props.handleCardClick} />
+                <Tags card={props.card} parentCard={props.parentCard} handleCardClick={props.handleCardClick} />
             </div>
             <SubCards
                 card={props.card}
