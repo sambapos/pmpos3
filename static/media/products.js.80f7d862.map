@@ -1,1 +1,0 @@
-{"version":3,"file":"products.js","sourceRoot":"","sources":["../../../src/DataBuilder/CardTypes/products.ts"],"names":[],"mappings":";;AAAA,yCAA8C;AAE9C,MAAM,IAAI,GAAG;IACT,EAAE,EAAE,WAAW;IACf,IAAI,EAAE,UAAU;IAChB,SAAS,EAAE,SAAS;CACvB,CAAC;AAEF,cAAc;AACd,gBAAgB;AAChB,qBAAqB;AACrB,yBAAyB;AACzB,sBAAsB;AACtB,sBAAsB;AACtB,0BAA0B;AAE1B,kBAAe,IAAI,uBAAc,CAAC,IAAI,CAAC,CAAC"}
