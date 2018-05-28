@@ -81,7 +81,7 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         flex: 'none',
         display: 'flex',
         flexWrap: 'wrap',
-        minHeight: 40,
+        minHeight: 30,
         borderBottom: '1px solid ' + palette.divider,
     },
     selectedCardLine: {

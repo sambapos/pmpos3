@@ -53,9 +53,9 @@ class Component extends React.Component<Props, IState> {
 
     public render() {
         return (
-            <div>
+            <>
                 <DialogTitle>{this.state.question}</DialogTitle>
-                <DialogContent style={{ display: 'flex', flexFlow: 'column' }}>
+                <DialogContent style={{ display: 'flex', flexFlow: 'column', overflow: 'auto' }}>
                     {Object.keys(this.state.parameters)
                         .map(key => this.getParamEditor(key, this.state.parameters[key]))}
                 </DialogContent>
@@ -75,7 +75,7 @@ class Component extends React.Component<Props, IState> {
                         Submit
                     </Button>
                 </DialogActions>
-            </div>
+            </>
         );
     }
 
@@ -105,6 +105,7 @@ class Component extends React.Component<Props, IState> {
                     <div className={this.props.classes.buttonContainer}>
                         {(Array(...value).map(item => (
                             <Button
+                                size="small"
                                 color={this.state.parameterState.get(key) === this.getValue(item) ? 'secondary' : 'default'}
                                 key={item} variant="raised" className={this.props.classes.selectionButton}
                                 onClick={e => this.setState({

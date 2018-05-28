@@ -182,12 +182,12 @@ export const actionCreators = {
 
             TerminalManager.executeAction(
                 '', getState().cards.currentCard.id, c.id, actionType, data, handleCanEdit, handleEdit, handleClose)
-                .then(result =>
+                .then(result => {
                     dispatch({
                         type: 'SET_CURRENT_CARD',
                         card: result
                     })
-                );
+                });
         },
     removePendingActions: (cardId: string):
         IAppThunkAction<KnownActions> => (dispatch, getState) => {

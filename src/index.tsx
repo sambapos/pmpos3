@@ -7,6 +7,7 @@ import * as shortid from 'shortid';
 import 'typeface-roboto';
 import configureStore from './configureStore';
 import './index.css';
+import './material-icons.css'
 import registerServiceWorker from './registerServiceWorker';
 import * as RoutesModule from './routes';
 

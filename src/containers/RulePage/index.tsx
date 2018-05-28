@@ -7,6 +7,7 @@ import decorate, { IStyle } from './style';
 import { IApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
 import AceEditor from 'react-ace';
+import * as beautify from 'js-beautify';
 
 import 'brace/mode/drools';
 import 'brace/theme/github';
@@ -56,7 +57,7 @@ export class RulePage extends React.Component<PageProps, { rule: RuleRecord }> {
                                     rule: new RuleRecord({
                                         id: this.state.rule.id,
                                         name: this.state.rule.name,
-                                        content: JSON.stringify(JSON.parse(this.state.rule.content), null, 2)
+                                        content: beautify.js(this.state.rule.content)
                                     })
                                 });
                             }
