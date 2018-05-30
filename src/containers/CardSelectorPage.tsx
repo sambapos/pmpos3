@@ -11,6 +11,7 @@ interface ICardSelectorPageProps {
     cards: IList<CardRecord>;
     currentCardType: CardTypeRecord;
     smallButtons?: boolean;
+    highlight?: string;
     onSelectCard: (card: CardRecord) => void;
 }
 
@@ -24,6 +25,7 @@ const CardSelectorPage = (props: CardSelectorPagePropType) => {
         sourceCardType={props.currentCardType}
         cardType={props.cardType}
         smallButtons={props.smallButtons}
+        highlight={props.highlight}
         onSelectCard={c => props.onSelectCard(c)}
         scrollTop={0}
     />;

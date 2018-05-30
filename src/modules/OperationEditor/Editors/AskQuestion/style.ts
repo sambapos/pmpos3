@@ -18,6 +18,7 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     selectionButton: {
         flexGrow: 1,
         minWidth: '22%',
+        textTransform: 'unset',
         margin: spacing.unit / 2
     },
     container: {

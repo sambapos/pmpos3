@@ -17,8 +17,9 @@ export default (props: Props) => {
                 : `Set ${props.current.type}`
         }
         </DialogTitle>
-        <div style={{ margin: 4, overflow: 'auto' }}>
+        <div style={{ margin: 4, overflow: 'auto', flex: 1 }}>
             <CardSelectorPage
+                highlight={props.current ? props.current.selected : ''}
                 cardType={props.current.type}
                 onSelectCard={card => {
                     if (props.current) {

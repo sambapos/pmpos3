@@ -14,7 +14,7 @@ export default (props: IEditorProperties<{ tagType: TagTypeRecord, tag: CardTagR
                 : `Set ${tagType.tagName || tagType.cardTypeReferenceName}`
         }
         </DialogTitle>
-        <div style={{ margin: 4, overflow: 'auto' }}>
+        <div style={{ margin: 4, overflow: 'auto', flex: 1 }}>
             <CardSelectorPage
                 cardType={tagType.cardTypeReferenceName}
                 onSelectCard={card => {

@@ -11,7 +11,7 @@ interface ITagEditorProps {
 }
 
 interface ITagEditorState {
-    name: string; value: string; quantity: string; unit: string;
+    name: string; category: string; value: string; quantity: string; unit: string;
     amount: string; func: string;
     source: string; target: string; typeId: string;
 }
@@ -27,6 +27,7 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
         const canEditName = Boolean(
             !this.props.tag.name && !this.props.tagType.id
         );
+        const canEditCategory = !this.props.tagType.id || this.props.tagType.showCategory;
         const canEditValue = !this.props.tagType.id || this.props.tagType.showValue;
         const canEditQuantity = !this.props.tagType.id || this.props.tagType.showQuantity;
         const canEditUnit = !this.props.tagType.id || this.props.tagType.showUnit;
@@ -51,6 +52,12 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
                     getSuggestions={value =>
                         CardManager.getCardSuggestions(this.props.tagType.cardTypeReferenceName, value)}
                     handleChange={(e, value) => this.handleTagValueChange(value)}
+                />}
+                {canEditCategory && <TextField
+                    fullWidth
+                    label="Tag Category"
+                    value={this.state.category}
+                    onChange={e => this.setState({ category: e.target.value })}
                 />}
                 {canEditQuantity && <TextField
                     fullWidth
@@ -101,6 +108,7 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
                     onClick={(e) => this.props.onSubmit({
                         id: shortid.generate(),
                         name: this.state.name || `_${shortid.generate()}`,
+                        category: this.state.category,
                         value: this.state.value,
                         quantity: Number(this.state.quantity),
                         unit: this.state.unit,
@@ -122,6 +130,7 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
         return {
             typeId: tagType.id,
             name: tag.name || tagType.tagName || tagType.cardTypeReferenceName,
+            category: tag.category || tagType.defaultCategory,
             value: tag.value || tagType.defaultValue,
             quantity: String(tag.quantity !== 0 ? tag.quantity : tagType.defaultQuantity),
             unit: tag.unit || tagType.defaultUnit,
@@ -138,7 +147,9 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
             const card = CardManager.getCardByName(this.props.tagType.cardTypeReferenceName, value);
             if (card) {
                 if (Number(this.state.amount) === 0) {
-                    this.setState({ amount: String(card.getTag('Amount', '')) });
+                    let price = card.getTag('Amount', '');
+                    if (!price) { price = card.getTag('Price', '') }
+                    this.setState({ amount: String(price) });
                 }
                 if (!this.state.source) {
                     this.setState({ source: String(card.getTag('Source', '')) });

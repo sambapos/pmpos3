@@ -14,6 +14,7 @@ interface ICardSelectorProps {
     cardType?: string;
     scrollTop?: number;
     smallButtons?: boolean;
+    highlight?: string;
     onSearchValueChange?: (searchValue: string) => void;
     onSaveSortOrder?: (items: CardRecord[]) => void;
     onScrollChange?: (scrollTop: number) => void;
@@ -163,6 +164,7 @@ class CardSelector extends React.Component<Props, ICardSelectorState> {
     public getButtonList() {
         return <GridSelector
             smallButtons={this.props.smallButtons}
+            highlight={this.props.highlight}
             items={this.state.items.toArray()}
             cardType={this.state.cardType}
             sourceCards={this.props.sourceCards.toArray()}

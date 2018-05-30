@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import * as React from 'react';
 
-import { Dialog, ListItem, ListItemText, Typography, List, Hidden, Drawer, Divider } from '@material-ui/core';
+import { ListItem, ListItemText, Typography, List, Hidden, Drawer, Divider } from '@material-ui/core';
 import { Route, RouteComponentProps } from 'react-router';
 import { subRoutes } from '../../routes';
 import NavList from './navList';
@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import * as ClientStore from '../../store/Client';
 import { IApplicationState } from '../../store/index';
 import LoginPage from '../LoginPage';
+import AppDialog from './AppDialog';
 
 interface INavPageProps {
     drawerOpen: boolean;
@@ -121,14 +122,10 @@ class NavPage extends React.Component<Props> {
                         }
                     </main>
                 </div>
-                <Dialog
-                    PaperProps={{ style: { overflow: 'unset', width: '90%', margin: 0 } }}
-                    disableBackdropClick={true}
-                    open={this.props.modalOpen}
-                    transitionDuration={{ exit: 0 }}
-                >
-                    {this.props.modalComponent}
-                </Dialog>
+                <AppDialog
+                    modalOpen={this.props.modalOpen}
+                    modalComponent={this.props.modalComponent}
+                />
             </div >
         );
     }

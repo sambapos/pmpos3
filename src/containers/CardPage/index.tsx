@@ -226,7 +226,7 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
 
 
     private getButtonsForCommand(command: string, selectedCategory: string): CommandButton[] {
-        if (!command.includes('=')) {
+        if (!command.includes('=') && command.includes(':')) {
             const parts = command.split(':');
             let cardTypeName = parts[1];
             let groupByName = '';
