@@ -4,10 +4,11 @@ import decorate, { IStyle } from './style';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import { Map as IMap } from 'immutable';
 import IEditorProperties from '../editorProperties';
-import { RuleManager } from 'pmpos-core';
+import { RuleManager, CardRecord } from 'pmpos-core';
 import { vibrate } from '../../../../lib/helpers';
 import SectionComponent from './SectionComponent';
 import { IValueSelection } from "./IValueSelection";
+import extract from './CardExtractor';
 
 interface IState {
     question: string;
@@ -30,11 +31,14 @@ class Component extends React.Component<Props, IState> {
 
     public componentWillReceiveProps(props: Props) {
         const current = props.current;
+        let question = '';
         if (current) {
+            question = current.question;
             let parameterState = this.state.parameterState;
-            Object.keys(current.parameters).forEach(key => {
+            const parameters = this.getParameters(current.parameters);
+            Object.keys(parameters).forEach(key => {
                 if (current) {
-                    const value = current.parameters[key];
+                    const value = parameters[key];
                     if (this.isArray(value)) {
                         parameterState = parameterState.set(key, '');
                     } else if (this.isObject(value)) {
@@ -44,19 +48,19 @@ class Component extends React.Component<Props, IState> {
                     }
                 }
             });
-            this.setState({ parameterState });
+            this.setState({ parameterState, parameters, question });
         }
     }
 
-    public componentDidMount() {
-        if (this.props.current) {
-            this.setState({
-                question: this.props.current.question,
-                // "parameters":{"Name":"","Age":["1","2","3"]},"Vegetables":{values:['a','b']}
-                parameters: this.props.current.parameters as {}
-            });
-        }
-    }
+    // public componentDidMount() {
+    //     if (this.props.current) {
+    //         this.setState({
+    //             question: this.props.current.question,
+    //             // "parameters":{"Name":"","Age":["1","2","3"]},"Vegetables":{values:['a','b']}
+    //             parameters: this.props.current.parameters as {}
+    //         });
+    //     }
+    // }
 
     public render() {
         return (
@@ -71,14 +75,12 @@ class Component extends React.Component<Props, IState> {
                     <Button
                         onClick={(e) => {
                             vibrate([10]);
-                            if (this.props.current) {
-                                Object
-                                    .keys(this.props.current.parameters)
-                                    .map(key => {
-                                        const value = this.state.parameterState.get(key);
-                                        RuleManager.setState(key, value);
-                                    });
-                            }
+                            const keys = Object.keys(this.state.parameters);
+                            RuleManager.setState('lastKeys', keys);
+                            keys.map(key => {
+                                const value = this.state.parameterState.get(key);
+                                RuleManager.setState(key, value);
+                            });
                             this.props.success(this.props.actionName, this.props.current);
                         }}
                     >
@@ -91,6 +93,13 @@ class Component extends React.Component<Props, IState> {
 
     private setTextValue(key: string, value: any) {
         this.setState({ parameterState: this.state.parameterState.set(key, value) });
+    }
+
+    private getParameters(parameters: {}): {} {
+        if (parameters instanceof CardRecord) {
+            return extract(parameters);
+        }
+        return parameters;
     }
 
     private isArray(value: any) {
@@ -110,7 +119,7 @@ class Component extends React.Component<Props, IState> {
                     values={value}
                     onChange={(name: string, values: IValueSelection[]) =>
                         this.setState({
-                            parameterState: this.state.parameterState.set(name, values[0] ? values[0].value : '')
+                            parameterState: this.state.parameterState.set(name, values)
                         })
                     }
                 />
@@ -127,7 +136,7 @@ class Component extends React.Component<Props, IState> {
                     min={value.min}
                     onChange={(name: string, values: IValueSelection[]) =>
                         this.setState({
-                            parameterState: this.state.parameterState.set(name, values[0] ? values[0].value : '')
+                            parameterState: this.state.parameterState.set(name, values)
                         })
                     }
                 />

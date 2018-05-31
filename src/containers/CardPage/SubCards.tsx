@@ -41,9 +41,7 @@ class SubCards extends React.Component<PageProps, { tagCount: number }> {
                 className={this.props.classes.subCards}
                 ref={(el) => { this.subCardList = el; }}
             >
-                {this.props.card.cards
-                    .valueSeq()
-                    .sort((a, b) => a.time - b.time)
+                {this.props.card.allCardsSorted
                     .map(card => {
                         return (
                             <CardPageContent

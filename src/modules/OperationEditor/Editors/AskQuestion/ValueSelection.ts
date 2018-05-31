@@ -1,4 +1,5 @@
 import { IValueSelection } from "./IValueSelection";
+import { CardTagRecord, CardRecord } from "pmpos-core";
 
 export class ValueSelection implements IValueSelection {
     public value: string;
@@ -7,19 +8,29 @@ export class ValueSelection implements IValueSelection {
     public max: number;
     public quantity: number;
     constructor(value: any) {
-        if (value.value) {
+        if (value instanceof CardTagRecord) {
+            this.value = value.value;
+            this.amount = value.amount;
+            this.quantity = Math.max(value.quantity, 1);
+        } else if (value instanceof CardRecord) {
+            this.value = value.name;
+            this.caption = String(value.getTag('Caption', ''));
+            this.amount = Number(value.getTag('Amount', '') || value.getTag('Price', '')) || 0;
+            this.max = Number(value.getTag('Max', 0));
+            this.quantity = Math.max(Number(value.getTag('Quantity', 1)), 1);
+        } else if (value.value) {
             this.value = value.value;
             this.caption = value.caption;
             this.amount = value.amount || 0;
             this.max = value.max || 0;
             this.quantity = Math.max(value.quantity || 1, 1);
-        } else {
+        } else if (typeof value === 'string') {
             this.value = value;
             this.caption = value;
             this.amount = 0;
             this.max = 0;
             this.quantity = 1;
-            if (value.includes('=')) {
+            if (value && value.includes('=')) {
                 const parts = value.split('=');
                 this.value = parts[1];
                 this.caption = parts[0];
