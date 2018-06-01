@@ -6,12 +6,11 @@ import { Map as IMap } from 'immutable';
 import IEditorProperties from '../editorProperties';
 import { RuleManager, CardRecord } from 'pmpos-core';
 import { vibrate } from '../../../../lib/helpers';
-import SectionComponent from './SectionComponent';
-import { IValueSelection } from "./IValueSelection";
-import extract from './CardExtractor';
+import SectionComponent from '../SectionComponent';
+import { ValueSelection } from "../SectionComponent/ValueSelection";
+import extract from '../CardExtractor';
 
 interface IState {
-    question: string;
     parameters: {};
     parameterState: IMap<string, any>;
 }
@@ -19,53 +18,29 @@ interface IState {
 type Props = IEditorProperties<{ question: string, parameters: object }> & WithStyles<keyof IStyle>;
 
 class Component extends React.Component<Props, IState> {
-
-    constructor(props: any) {
+    constructor(props: Props) {
         super(props);
-        this.state = {
-            question: '',
-            parameters: {},
-            parameterState: IMap<string, any>()
-        };
-    }
-
-    public componentWillReceiveProps(props: Props) {
-        const current = props.current;
-        let question = '';
-        if (current) {
-            question = current.question;
-            let parameterState = this.state.parameterState;
-            const parameters = this.getParameters(current.parameters);
-            Object.keys(parameters).forEach(key => {
-                if (current) {
-                    const value = parameters[key];
-                    if (this.isArray(value)) {
-                        parameterState = parameterState.set(key, '');
-                    } else if (this.isObject(value)) {
-                        parameterState = parameterState.set(key, value.selected)
-                    } else {
-                        parameterState = parameterState.set(key, value);
-                    }
+        const parameters = props.current ? this.getParameters(props.current.parameters) : {};
+        let parameterState = IMap<string, any>();
+        Object.keys(parameters).forEach(key => {
+            if (props.current) {
+                const value = parameters[key];
+                if (this.isArray(value)) {
+                    parameterState = parameterState.set(key, '');
+                } else if (this.isObject(value)) {
+                    parameterState = parameterState.set(key, value.selected)
+                } else {
+                    parameterState = parameterState.set(key, value);
                 }
-            });
-            this.setState({ parameterState, parameters, question });
-        }
+            }
+        });
+        this.state = { parameters, parameterState };
     }
-
-    // public componentDidMount() {
-    //     if (this.props.current) {
-    //         this.setState({
-    //             question: this.props.current.question,
-    //             // "parameters":{"Name":"","Age":["1","2","3"]},"Vegetables":{values:['a','b']}
-    //             parameters: this.props.current.parameters as {}
-    //         });
-    //     }
-    // }
 
     public render() {
         return (
             <>
-                <DialogTitle>{this.state.question}</DialogTitle>
+                <DialogTitle>{this.props.current && this.props.current.question}</DialogTitle>
                 <DialogContent style={{ display: 'flex', flexFlow: 'column', overflow: 'auto' }}>
                     {Object.keys(this.state.parameters)
                         .map(key => this.getParamEditor(key, this.state.parameters[key]))}
@@ -75,12 +50,11 @@ class Component extends React.Component<Props, IState> {
                     <Button
                         onClick={(e) => {
                             vibrate([10]);
-                            const keys = Object.keys(this.state.parameters);
-                            RuleManager.setState('lastKeys', keys);
-                            keys.map(key => {
-                                const value = this.state.parameterState.get(key);
-                                RuleManager.setState(key, value);
-                            });
+                            let selected: Map<string, any> = new Map<string, any>();
+                            for (const key of Object.keys(this.state.parameters)) {
+                                selected = selected.set(key, this.state.parameterState.get(key));
+                            }
+                            RuleManager.setState('selectedValues', selected);
                             this.props.success(this.props.actionName, this.props.current);
                         }}
                     >
@@ -117,7 +91,7 @@ class Component extends React.Component<Props, IState> {
                     key={key}
                     name={key}
                     values={value}
-                    onChange={(name: string, values: IValueSelection[]) =>
+                    onChange={(name: string, values: ValueSelection[]) =>
                         this.setState({
                             parameterState: this.state.parameterState.set(name, values)
                         })
@@ -134,7 +108,7 @@ class Component extends React.Component<Props, IState> {
                     values={value.values}
                     max={value.max}
                     min={value.min}
-                    onChange={(name: string, values: IValueSelection[]) =>
+                    onChange={(name: string, values: ValueSelection[]) =>
                         this.setState({
                             parameterState: this.state.parameterState.set(name, values)
                         })

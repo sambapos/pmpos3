@@ -2,12 +2,12 @@ import * as React from "react";
 import { Button } from "@material-ui/core";
 import decorate, { IStyle } from './style';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
-import { IValueSelection } from "./IValueSelection";
+import { ValueSelection } from "./ValueSelection";
 
 export interface IStateButtonProps {
-    value: IValueSelection;
-    isSelected: (value: IValueSelection) => boolean;
-    onClick: (value: IValueSelection) => void;
+    value: ValueSelection;
+    isSelected: (value: ValueSelection) => boolean;
+    onClick: (value: ValueSelection) => void;
 }
 
 class StateButton extends React.Component<IStateButtonProps & WithStyles<keyof IStyle>> {

@@ -1,6 +1,6 @@
 {
   "name": "pmpos3",
-  "version": "3.0.61",
+  "version": "3.0.63",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^1.1.0",
@@ -12,8 +12,8 @@
     "immutable": "^4.0.0-rc.9",
     "js-beautify": "^1.7.5",
     "lodash": "^4.17.10",
-    "moment": "^2.22.1",
-    "pmpos-core": "^1.0.8",
+    "moment": "^2.22.2",
+    "pmpos-core": "^1.0.11",
     "react": "^16.4.0",
     "react-ace": "^5.10.0",
     "react-autosuggest": "^9.3.4",
@@ -28,7 +28,7 @@
     "react-virtualized": "^9.19.1",
     "redux": "^3.7.2",
     "redux-raven-middleware": "^1.2.0",
-    "redux-thunk": "^2.2.0",
+    "redux-thunk": "^2.3.0",
     "shortid": "^2.2.8",
     "typeface-roboto": "0.0.45",
     "y-array": "^11.0.0-5",
@@ -50,12 +50,12 @@
     "@types/enzyme-adapter-react-16": "^1.0.2",
     "@types/history": "^4.6.2",
     "@types/jest": "^21.1.10",
-    "@types/node": "^8.10.17",
-    "@types/react": "^16.3.14",
+    "@types/node": "^8.10.18",
+    "@types/react": "^16.3.16",
     "@types/react-dom": "^16.0.5",
     "@types/react-redux": "^5.0.20",
-    "@types/react-router-dom": "^4.2.6",
-    "@types/react-router-redux": "^5.0.14",
+    "@types/react-router-dom": "^4.2.7",
+    "@types/react-router-redux": "^5.0.15",
     "@types/react-test-renderer": "^16.0.1",
     "@types/react-virtualized": "^9.18.3",
     "@types/shortid": "0.0.29",
@@ -64,11 +64,11 @@
     "cross-env": "^5.1.6",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
-    "gh-pages": "^1.1.0",
+    "gh-pages": "^1.2.0",
     "react-addons-test-utils": "^15.6.2",
     "react-test-renderer": "^16.4.0",
     "tslint-config-prettier": "^1.13.0",
-    "typescript": "^2.8.3"
+    "typescript": "^2.9.1"
   },
   "homepage": "https://emreeren.github.io/pmpos3"
 }

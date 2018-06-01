@@ -1,6 +1,6 @@
 import { CardRecord, CardTagRecord, ConfigManager, CardManager } from "pmpos-core";
-import { ValueSelection } from "./ValueSelection";
-import { ISection } from "./ISection";
+import { ValueSelection } from "./SectionComponent/ValueSelection";
+import { ISection } from "./SectionComponent/ISection";
 
 
 export default function extract(card: CardRecord): {} {

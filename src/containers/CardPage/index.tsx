@@ -6,7 +6,6 @@ import { extend } from '../../lib/Extender';
 import * as CardStore from '../../store/Cards';
 import * as ClientStore from '../../store/Client';
 import { IApplicationState } from '../../store/index';
-
 import { Typography, Menu, MenuItem, Paper, Divider } from '@material-ui/core';
 import decorate from './style';
 import TopBar from '../TopBar';
@@ -44,10 +43,6 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
         };
     }
 
-    // private handleMenuClick = event => {
-    //     this.setState({ anchorEl: event.currentTarget });
-    // }
-
     public shouldComponentUpdate(props: CardPageProps) {
         if (this.state.disableUpdate) {
             return false;
@@ -63,7 +58,6 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
 
     public componentWillReceiveProps(props: CardPageProps) {
         if (props.closeCardRequested) {
-            // this.setState({ disableUpdate: false });
             this.props.history.goBack();
             return;
         }
@@ -115,11 +109,16 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
                                 selectedCardId={this.state.selectedCard ? this.state.selectedCard.id : ''}
                                 onClick={(card, target) => this.setState({
                                     selectedCard: card,
+                                    footerButtons: this.getButtons(card, this.state.selectedCategory),
                                     buttons: this.getButtons(card, this.state.selectedCategory),
                                     anchorEl: target
                                 })}
                                 handleCardClick={(card: CardRecord) => {
-                                    this.setState({ selectedCard: this.getSelectedCard(card) });
+                                    const selectedCard = this.getSelectedCard(card);
+                                    this.setState({
+                                        selectedCard,
+                                        footerButtons: this.getButtons(selectedCard, this.state.selectedCategory)
+                                    });
                                 }}
                             />
                         </Paper >
@@ -131,7 +130,7 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
                     <div className={this.props.classes.commandButtons}>
                         <CommandButtons
                             handleButtonClick={(card, button) => this.handleButtonClick(card, button)}
-                            card={this.props.card}
+                            card={this.state.selectedCard}
                             buttons={this.state.footerButtons}
                         />
                     </div>

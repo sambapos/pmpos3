@@ -3,7 +3,6 @@ import { Typography } from "@material-ui/core";
 import decorate, { IStyle } from './style';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import StateButton from "./StateButton";
-import { IValueSelection } from "./IValueSelection";
 import { ValueSelection } from "./ValueSelection";
 
 export interface ISectionComponentProps {
@@ -12,12 +11,12 @@ export interface ISectionComponentProps {
     selected?: string | string[],
     max?: number;
     min?: number;
-    onChange: (name: string, values: IValueSelection[]) => void;
+    onChange: (name: string, values: ValueSelection[]) => void;
 }
 
 interface ISectionComponentState {
-    values: IValueSelection[];
-    selectedValues: IValueSelection[];
+    values: ValueSelection[];
+    selectedValues: ValueSelection[];
     helpText: string;
 }
 
@@ -43,9 +42,9 @@ class SectionComponent extends React.Component<ISectionComponentProps & WithStyl
                         <StateButton
                             key={this.props.name + '_' + stateValue.value}
                             value={stateValue}
-                            isSelected={(value: IValueSelection) => this.isSelected(value)}
+                            isSelected={(value: ValueSelection) => this.isSelected(value)}
                             onClick={
-                                (value: IValueSelection) => {
+                                (value: ValueSelection) => {
                                     let values = this.state.selectedValues;
                                     let helpText = '';
                                     if (this.isSelected(value)) {
@@ -77,19 +76,19 @@ class SectionComponent extends React.Component<ISectionComponentProps & WithStyl
         );
     }
 
-    private isSelected(value: IValueSelection) {
+    private isSelected(value: ValueSelection) {
         return this.state.selectedValues.some(s => s.value === value.value);
     }
 
-    private getSelectionArray(values: IValueSelection[], stateValues: string[]): IValueSelection[] {
-        return values.filter(value => stateValues.some(sv => value.value === sv));
+    private getSelectionArrayFromString(values: ValueSelection[], stateValues: string[]): ValueSelection[] {
+        return values.filter(value => stateValues.some(sv => value.value === sv || value.ref === sv));
     }
 
-    private getSelectedValues(values: IValueSelection[], selection: string | string[] | undefined): IValueSelection[] {
+    private getSelectedValues(values: ValueSelection[], selection: string | string[] | undefined): ValueSelection[] {
         if (Array.isArray(selection)) {
-            return this.getSelectionArray(values, selection);
+            return this.getSelectionArrayFromString(values, selection);
         } else if (selection) {
-            return this.getSelectionArray(values, [selection])
+            return this.getSelectionArrayFromString(values, [selection])
         }
         return [];
     }
