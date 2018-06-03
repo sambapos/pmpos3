@@ -7,6 +7,8 @@ export class ValueSelection {
     public max: number;
     public quantity: number;
     public ref: string;
+    public tagName: string;
+    public obj: object;
     constructor(value: any) {
         if (value instanceof CardTagRecord) {
             this.value = value.value;

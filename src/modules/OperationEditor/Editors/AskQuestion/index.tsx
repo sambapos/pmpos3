@@ -8,14 +8,14 @@ import { RuleManager, CardRecord } from 'pmpos-core';
 import { vibrate } from '../../../../lib/helpers';
 import SectionComponent from '../SectionComponent';
 import { ValueSelection } from "../SectionComponent/ValueSelection";
-import extract from '../CardExtractor';
+import { extract } from '../CardExtractor';
 
 interface IState {
     parameters: {};
     parameterState: IMap<string, any>;
 }
 
-type Props = IEditorProperties<{ question: string, parameters: object }> & WithStyles<keyof IStyle>;
+type Props = IEditorProperties<{ question: string, parameters: object, selectedValues: object }> & WithStyles<keyof IStyle>;
 
 class Component extends React.Component<Props, IState> {
     constructor(props: Props) {
@@ -23,15 +23,13 @@ class Component extends React.Component<Props, IState> {
         const parameters = props.current ? this.getParameters(props.current.parameters) : {};
         let parameterState = IMap<string, any>();
         Object.keys(parameters).forEach(key => {
-            if (props.current) {
-                const value = parameters[key];
-                if (this.isArray(value)) {
-                    parameterState = parameterState.set(key, '');
-                } else if (this.isObject(value)) {
-                    parameterState = parameterState.set(key, value.selected)
-                } else {
-                    parameterState = parameterState.set(key, value);
-                }
+            const value = parameters[key];
+            if (this.isArray(value)) {
+                parameterState = parameterState.set(key, '');
+            } else if (this.isObject(value)) {
+                parameterState = parameterState.set(key, value.selected)
+            } else {
+                parameterState = parameterState.set(key, value);
             }
         });
         this.state = { parameters, parameterState };
@@ -50,11 +48,14 @@ class Component extends React.Component<Props, IState> {
                     <Button
                         onClick={(e) => {
                             vibrate([10]);
-                            let selected: Map<string, any> = new Map<string, any>();
+                            const selected: any = {}
                             for (const key of Object.keys(this.state.parameters)) {
-                                selected = selected.set(key, this.state.parameterState.get(key));
+                                selected[key] = this.state.parameterState.get(key);
                             }
                             RuleManager.setState('selectedValues', selected);
+                            if (this.props.current) {
+                                this.props.current.selectedValues = selected;
+                            }
                             this.props.success(this.props.actionName, this.props.current);
                         }}
                     >

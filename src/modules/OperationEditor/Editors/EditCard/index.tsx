@@ -1,23 +1,32 @@
 import * as React from 'react';
 import { Button, DialogContent, DialogActions, DialogTitle } from '@material-ui/core';
 import IEditorProperties from '../editorProperties';
-import { CardRecord, CardManager, ConfigManager } from 'pmpos-core';
-import extract from '../CardExtractor';
+import { CardRecord, CardManager, ConfigManager, RuleManager } from 'pmpos-core';
+import { extractSections } from '../CardExtractor';
 import SectionComponent from '../SectionComponent';
+import { ValueSelection } from '../SectionComponent/ValueSelection';
+import { Sections } from '../SectionComponent/Sections';
+import { SelectedValues } from '../SectionComponent/SelectedValues';
+import { Section } from '../SectionComponent/Section';
 
 type IProps = IEditorProperties<{}>;
 
-export default class EditCard extends React.Component<IProps> {
+interface IState {
+    selectedValues: SelectedValues;
+}
+
+export default class EditCard extends React.Component<IProps, IState> {
     private baseCard: CardRecord | undefined;
-    private baseParameters;
+    private baseSections = new Sections()
 
     constructor(props: IProps) {
         super(props);
         this.baseCard = this.getBaseCard(props.card);
         if (this.baseCard) {
-            this.baseParameters = extract(this.baseCard);
-            this.baseParameters = this.setSelectedItems(this.baseParameters, props.card);
+            this.baseSections = extractSections(this.baseCard);
+            this.baseSections = this.setSelectedItems(this.baseSections, props.card);
         }
+        this.state = { selectedValues: new SelectedValues(this.baseSections) }
     }
 
     public render() {
@@ -37,7 +46,11 @@ export default class EditCard extends React.Component<IProps> {
                     {/* <Button onClick={() => this.props.cancel()}>Cancel</Button> */}
                     <Button
                         onClick={(e) => {
-                            this.props.success(this.props.actionName, {});
+                            const newValues = this.getNewValues(this.baseSections, this.state.selectedValues);
+                            const deletedValues = this.getDeletedValues(this.baseSections, this.state.selectedValues);
+                            RuleManager.setState('newValues', newValues);
+                            RuleManager.setState('deletedValues', deletedValues);
+                            this.props.success(this.props.actionName, { newValues, deletedValues });
                         }}
                     >
                         Submit
@@ -47,18 +60,45 @@ export default class EditCard extends React.Component<IProps> {
         );
     }
 
-    private getSection(key: string, section: any) {
+    private getNewValues(baseSections: Sections, selectedValues: SelectedValues) {
+        return baseSections.getNewValues(selectedValues);
+    }
+
+    private getDeletedValues(sections: Sections, selectedValues: SelectedValues) {
+        return sections.getDeletedValues(selectedValues);
+        // let resultMap = new Map<string, ValueSelection[]>();
+        // const originalSelection = new SelectedValues(baseSections);
+        // for (const [key, values] of originalSelection.entries) {
+        //     const result = new Array<ValueSelection>();
+        //     const selectedValues = selectedMap.get(key);
+        //     if (selectedValues) {
+        //         for (const value of values) {
+        //             if (selectedValues.every(o => o.ref !== value.ref)) {
+        //                 result.push(value);
+        //             }
+        //         }
+        //     }
+        //     if (result.length > 0) { resultMap = resultMap.set(key, result); }
+        // }
+        // console.log('deleted', resultMap);
+        // return resultMap;
+    }
+
+    private getSectionComponent(section: Section) {
         return <SectionComponent
-            name={key}
+            key={'Section_' + section.key}
+            name={section.key}
             values={section.values}
             selected={section.selected}
-            onChange={x => x}
+            min={section.min}
+            max={section.max}
+            onChange={(name: string, values: ValueSelection[]) =>
+                this.setState({ selectedValues: this.state.selectedValues.set(name, values) })}
         />
     }
 
     private getSections() {
-        const keys = Object.keys(this.baseParameters);
-        return keys.map(key => this.getSection(key, this.baseParameters[key]))
+        return this.baseSections.sections.map(section => this.getSectionComponent(section))
     }
 
     private getBaseCard(card: CardRecord): CardRecord | undefined {
@@ -76,13 +116,10 @@ export default class EditCard extends React.Component<IProps> {
         return refCard;
     }
 
-    private setSelectedItems(baseParameters: any, card: CardRecord) {
+    private setSelectedItems(baseParameters: Sections, card: CardRecord): Sections {
         for (const tag of card.allTags) {
             if (tag.ref) {
-                let items = baseParameters[tag.category].selected;
-                if (!items) { items = [] }
-                items.push(tag.ref);
-                baseParameters[tag.category].selected = items;
+                baseParameters.addSelectedTag(tag);
             }
         }
         return baseParameters;
