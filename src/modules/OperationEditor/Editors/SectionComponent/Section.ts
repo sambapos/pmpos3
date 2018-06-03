@@ -23,10 +23,12 @@ export class Section {
     }
 
     public addSelectedTag(tag: CardTagRecord) {
-        this.selected.push(new SelectedValue(tag.value, tag.name, tag.ref));
+        this.selected.push(new SelectedValue(tag.value, tag.name, tag.ref, tag.quantity, tag.amount));
         const val = this.values.find(x => x.ref === tag.ref);
         if (val) {
             val.tagName = tag.name;
+            val.quantity = tag.quantity;
+            val.amount = tag.amount;
         }
     }
 }

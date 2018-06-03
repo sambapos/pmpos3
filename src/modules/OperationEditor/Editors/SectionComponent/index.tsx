@@ -25,14 +25,13 @@ class SectionComponent extends React.Component<ISectionComponentProps & WithStyl
 
     constructor(props: ISectionComponentProps & WithStyles<keyof IStyle>) {
         super(props);
-        console.log('props', this.props);
         const values = this.props.values.map(value => value instanceof ValueSelection ? value : new ValueSelection(value));
         const selectedValues = this.getSelectedValues(values, this.props.selected);
         this.state = { selectedValues, values, helpText: '' }
     }
 
     public render() {
-        const max = Math.max(1, this.props.max || 1);
+        const max = this.props.max || 0;
         const min = this.props.min || 0;
         const total = this.state.selectedValues.reduce((r, v) => r += (v.quantity || 0), 0);
 
@@ -51,18 +50,18 @@ class SectionComponent extends React.Component<ISectionComponentProps & WithStyl
                                     let helpText = '';
                                     if (this.isSelected(value)) {
                                         if (value.max && value.max > 1) {
-                                            if (total < max) {
+                                            if ((max === 0 && value.max > value.quantity) || total < max) {
                                                 value.quantity++;
-                                            } else if (total === max) {
+                                            } else if (total === max || (max === 0 && value.max === value.quantity)) {
                                                 value.quantity = 1;
                                             }
                                         }
                                         if (value.quantity < 2) { values = values.filter(x => x.value !== value.value); }
                                     } else if (max === 1) {
                                         values = [value]
-                                    } else if (total < max) {
+                                    } else if (max === 0 || total < max) {
                                         values.push(value);
-                                    } else if (total === max) {
+                                    } else if (max > 0 && total === max) {
                                         helpText = `You can select max ${max} values.`;
                                     }
                                     this.setState({ selectedValues: values, helpText });

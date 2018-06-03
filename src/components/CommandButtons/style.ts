@@ -19,7 +19,7 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         flex: 1,
         margin: 2,
         [breakpoints.up('sm')]: {
-            margin: 0,
+            margin: 4,
             fontSize: '1.2em',
             minHeight: 70,
             minWidth: 130,
@@ -30,7 +30,7 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
             minWidth: 150,
         },
         [breakpoints.up('lg')]: {
-            maxWidth: 'calc(20% - 4px)',
+            maxWidth: 'calc(20% - 8px)',
         }
     },
     highlightedButton: {
