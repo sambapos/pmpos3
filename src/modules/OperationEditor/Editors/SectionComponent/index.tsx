@@ -4,12 +4,11 @@ import decorate, { IStyle } from './style';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import StateButton from "./StateButton";
 import { ValueSelection } from "./ValueSelection";
-import { SelectedValue } from "./SelectedValue";
 
 export interface ISectionComponentProps {
     name: string;
     values: any[];
-    selected?: string | string[] | SelectedValue[],
+    selected?: string | string[],
     max?: number;
     min?: number;
     onChange: (name: string, values: ValueSelection[]) => void;
@@ -51,6 +50,7 @@ class SectionComponent extends React.Component<ISectionComponentProps & WithStyl
                                     if (this.isSelected(value)) {
                                         if (value.max && value.max > 1) {
                                             if ((max === 0 && value.max > value.quantity) || total < max) {
+                                                if (value.quantity === 0) { value.quantity = 1; }
                                                 value.quantity++;
                                             } else if (total === max || (max === 0 && value.max === value.quantity)) {
                                                 value.quantity = 1;
@@ -85,14 +85,11 @@ class SectionComponent extends React.Component<ISectionComponentProps & WithStyl
         return values.filter(value => selectedValues.some((sv: any) => this.isSelectedItem(value, sv)));
     }
 
-    private isSelectedItem(value: ValueSelection, item: string | SelectedValue) {
-        if (item instanceof SelectedValue) {
-            return item.ref === value.ref;
-        }
-        return value.value === item;
+    private isSelectedItem(value: ValueSelection, item: string) {
+        return value.value === item || value.ref === item;
     }
 
-    private getSelectedValues(values: ValueSelection[], selection: string | string[] | SelectedValue[] | undefined): ValueSelection[] {
+    private getSelectedValues(values: ValueSelection[], selection: string | string[] | undefined): ValueSelection[] {
         if (selection) {
             if (Array.isArray(selection)) {
                 return this.getSelectionArray(values, selection);

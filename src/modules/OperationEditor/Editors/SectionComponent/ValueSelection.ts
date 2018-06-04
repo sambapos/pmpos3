@@ -8,7 +8,6 @@ export class ValueSelection {
     public quantity: number;
     public ref: string;
     public tagName: string;
-    public obj: object;
     constructor(value: any) {
         if (value instanceof CardTagRecord) {
             this.value = value.value;
@@ -29,6 +28,7 @@ export class ValueSelection {
             this.max = value.max || 0;
             this.quantity = Math.max(value.quantity || 1, 1);
             this.ref = value.ref;
+            this.tagName = value.tagName;
         } else if (typeof value === 'string') {
             this.value = value;
             this.caption = value;

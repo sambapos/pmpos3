@@ -30,7 +30,7 @@ function extractSection(card: CardRecord): Section | undefined {
         return extractSectionFromTag(card, refTag);
     }
     const values = card.allTags.filter(t => t.name !== 'Name').map(t => new ValueSelection(t));
-    return new Section(card.name, [], values, 0, 0);
+    return new Section(card.name, [], values, 1, 1);
 };
 
 function getReferenceTag(card: CardRecord) {

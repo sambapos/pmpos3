@@ -34,11 +34,13 @@ export default class EditCard extends React.Component<IProps, IState> {
             <>
                 <DialogTitle>Edit Card</DialogTitle>
                 <DialogContent>
-                    {this.props.card.id}
+                    {/* {this.props.card.id}
                     <hr />
                     {this.props.card.allTags.map(v => (<div>{v.name},{v.valueDisplay},{v.cardId}</div>))}
                     <hr />
                     {this.baseCard && this.baseCard.name}
+                    <hr /> */}
+                    {this.baseCard && this.baseCard.display}
                     <hr />
                     {this.getSections()}
                 </DialogContent>

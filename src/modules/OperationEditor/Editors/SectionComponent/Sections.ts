@@ -43,7 +43,8 @@ export class Sections {
             if (section) {
                 const originalValues = section.getSelectedValues();
                 for (const finalValue of finalValues) {
-                    if (originalValues.every(o => o.ref !== finalValue.ref)) {
+                    const ov = originalValues.find(o => o.ref === finalValue.ref);
+                    if (!ov || ov.quantity !== finalValue.quantity) {
                         result.push(finalValue);
                     }
                 }
