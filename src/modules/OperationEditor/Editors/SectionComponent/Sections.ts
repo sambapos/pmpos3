@@ -51,7 +51,6 @@ export class Sections {
             }
             if (result.length > 0) { resultMap = resultMap.set(key, result); }
         }
-        console.log('new', resultMap);
         return resultMap;
     }
 
@@ -81,7 +80,6 @@ export class Sections {
         //     }
         //     if (result.length > 0) { resultMap = resultMap.set(key, result); }
         // }
-        console.log('deleted', resultMap);
         return resultMap;
     }
 

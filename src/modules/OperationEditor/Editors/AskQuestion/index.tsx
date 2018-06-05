@@ -100,7 +100,7 @@ class Component extends React.Component<Props, IState> {
                 />
             );
         }
-        if (this.isObject(value)) {
+        if (this.isObject(value) && value.values.length > 0) {
             return (
                 <SectionComponent
                     key={key}
@@ -117,6 +117,16 @@ class Component extends React.Component<Props, IState> {
                 />
             );
         }
+        if (this.isObject(value) && value.values.length === 0) {
+            return <TextField
+                style={{ margin: 4 }} label={key} key={key}
+                multiline
+                rows={value.lines || 3}
+                value={this.getTextValue(key)}
+                onFocus={e => e.target.select()}
+                onChange={e => this.setTextValue(key, e.target.value)} />;
+        }
+
         return <TextField
             style={{ margin: 4 }} label={key} key={key}
             type={this.getEditorType(key)}

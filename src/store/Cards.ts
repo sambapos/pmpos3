@@ -145,8 +145,27 @@ function resetCurrentCard(state: StateRecord) {
 
 export const actionCreators = {
     addCard: (cardType: CardTypeRecord, tags: ICardTag[]):
-        IAppThunkAction<KnownActions> => (dispatch, getState) => {
-            TerminalManager.createCard('', cardType.reference, tags)
+        IAppThunkAction<any> => (dispatch, getState) => {
+            const handleCanEdit = actionRecord => cardOperations.canEdit(actionRecord);
+            const handleEdit = (action) => {
+                return new Promise<ActionRecord>((resolve, reject) => {
+                    const editor = OperationEditor.getEditor(
+                        action.actionType,
+                        new CardRecord(),
+                        (at, d) => {
+                            dispatch({ type: 'SET_MODAL_STATE', visible: false });
+                            const result = action.set('data', d);
+                            resolve(result);
+                        },
+                        () => {
+                            dispatch({ type: 'SET_MODAL_STATE', visible: false });
+                            reject();
+                        },
+                        action.data);
+                    dispatch({ type: 'SET_MODAL_COMPONENT', component: editor });
+                });
+            };
+            TerminalManager.createCard('', cardType.reference, tags, handleCanEdit, handleEdit)
                 .then(card =>
                     dispatch({
                         type: 'SET_CURRENT_CARD',

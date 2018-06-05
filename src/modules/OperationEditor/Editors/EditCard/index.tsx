@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, DialogContent, DialogActions, DialogTitle } from '@material-ui/core';
+import { Button, DialogContent, DialogActions } from '@material-ui/core';
 import IEditorProperties from '../editorProperties';
 import { CardRecord, CardManager, ConfigManager, RuleManager } from 'pmpos-core';
 import { extractSections } from '../CardExtractor';
@@ -8,6 +8,7 @@ import { ValueSelection } from '../SectionComponent/ValueSelection';
 import { Sections } from '../SectionComponent/Sections';
 import { SelectedValues } from '../SectionComponent/SelectedValues';
 import { Section } from '../SectionComponent/Section';
+import Tags from '../../../../containers/CardPage/Tags';
 
 type IProps = IEditorProperties<{}>;
 
@@ -16,12 +17,12 @@ interface IState {
 }
 
 export default class EditCard extends React.Component<IProps, IState> {
-    private baseCard: CardRecord | undefined;
+    private baseCard: CardRecord;
     private baseSections = new Sections()
 
     constructor(props: IProps) {
         super(props);
-        this.baseCard = this.getBaseCard(props.card);
+        this.baseCard = this.getBaseCard(props.card) || new CardRecord();
         if (this.baseCard) {
             this.baseSections = extractSections(this.baseCard);
             this.baseSections = this.setSelectedItems(this.baseSections, props.card);
@@ -32,7 +33,6 @@ export default class EditCard extends React.Component<IProps, IState> {
     public render() {
         return (
             <>
-                <DialogTitle>Edit Card</DialogTitle>
                 <DialogContent>
                     {/* {this.props.card.id}
                     <hr />
@@ -40,8 +40,12 @@ export default class EditCard extends React.Component<IProps, IState> {
                     <hr />
                     {this.baseCard && this.baseCard.name}
                     <hr /> */}
-                    {this.baseCard && this.baseCard.display}
-                    <hr />
+                    <div style={{ border: '1px solid lightgray', borderRadius: 4, background: 'whitesmoke', paddingLeft: 8 }}>
+                        <Tags
+                            card={this.props.card}
+                            parentCard={this.props.card}
+                            handleCardClick={(e) => e} />
+                    </div>
                     {this.getSections()}
                 </DialogContent>
                 <DialogActions>
