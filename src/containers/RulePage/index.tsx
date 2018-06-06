@@ -9,8 +9,8 @@ import TopBar from '../TopBar';
 import AceEditor from 'react-ace';
 import * as beautify from 'js-beautify';
 
-import 'brace/mode/drools';
-import 'brace/theme/github';
+import 'brace/mode/ruby';
+import 'brace/theme/xcode';
 import 'brace/ext/language_tools';
 import 'brace/snippets/drools';
 import { RuleRecord } from 'pmpos-core';
@@ -88,10 +88,9 @@ export class RulePage extends React.Component<PageProps, { rule: RuleRecord }> {
                             rule: this.state.rule.set('name', e.target.value)
                         })}
                     />
-
                     <AceEditor
-                        mode="drools"
-                        theme="github"
+                        mode="ruby"
+                        theme="xcode"
                         name="jsonEdit"
                         height="auto"
                         width="auto"
@@ -103,7 +102,7 @@ export class RulePage extends React.Component<PageProps, { rule: RuleRecord }> {
                             $blockScrolling: Infinity
                         }}
                         fontSize={14}
-                        showPrintMargin={true}
+                        showPrintMargin={false}
                         showGutter={true}
                         highlightActiveLine={true}
                         value={this.state.rule.content}
@@ -111,7 +110,7 @@ export class RulePage extends React.Component<PageProps, { rule: RuleRecord }> {
                             enableBasicAutocompletion: true,
                             enableLiveAutocompletion: true,
                             enableSnippets: true,
-                            showLineNumbers: false,
+                            showLineNumbers: true,
                             tabSize: 2,
                         }} />
                 </Paper >

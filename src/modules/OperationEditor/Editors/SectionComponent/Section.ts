@@ -29,7 +29,7 @@ export class Section {
         const val = this.values.find(x => x.ref === tag.ref);
         if (val) {
             val.tagName = tag.name;
-            val.quantity = tag.quantity;
+            val.quantity = Math.max(tag.quantity || 1, 1);
             val.amount = tag.amount;
         }
         this.originalSelection.push(new ValueSelection(val));

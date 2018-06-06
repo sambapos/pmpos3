@@ -8,6 +8,7 @@ export interface IStyle {
     textField: any;
     buttonContainer: any;
     selectionButton: any;
+    selectionButtonSelected: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
@@ -18,6 +19,15 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     selectionButton: {
         flexGrow: 1,
         minWidth: '22%',
+        boxShadow: 'none',
+        textTransform: 'unset',
+        margin: spacing.unit / 2
+    },
+    selectionButtonSelected: {
+        border: '1px solid transparent',
+        flexGrow: 1,
+        minWidth: '22%',
+        boxShadow: 'none',
         textTransform: 'unset',
         margin: spacing.unit / 2
     },

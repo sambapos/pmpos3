@@ -35,13 +35,13 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         flex: '1 1 auto',
         margin: 2,
         maxWidth: 'calc(50% - 4px)',
-        maxHeight: 'calc(50% - 4px)',
+        maxHeight: 'calc(50% - 8px)',
         boxShadow: 'none',
         border: '1px solid #ccc',
         [breakpoints.up('sm')]: {
             margin: 4,
-            minWidth: 100,
-            maxWidth: 'calc(25% - 8px)'
+            minWidth: 'calc(20% - 8px)',
+            maxWidth: 'calc(50% - 8px)',
         },
     },
     highlightedButton: {

@@ -4,7 +4,7 @@ import { Record, Map as IMap } from 'immutable';
 import { IAppThunkAction } from './appThunkAction';
 import { ConfigManager, CardTypeRecord, TagTypeRecord, RuleRecord } from 'pmpos-core';
 
-interface IConfigState {
+export interface IConfigState {
     currentCardType: CardTypeRecord;
     currentTagType: TagTypeRecord;
     currentRule: RuleRecord;
@@ -13,6 +13,7 @@ interface IConfigState {
     rootCardTypes: string[];
     tagTypes: IMap<string, TagTypeRecord>;
     rules: IMap<string, RuleRecord>;
+    lastUpdateTime: number;
 }
 
 export class ConfigStateRecord extends Record<IConfigState>({
@@ -23,7 +24,8 @@ export class ConfigStateRecord extends Record<IConfigState>({
     cardTypes: IMap<string, CardTypeRecord>(),
     rootCardTypes: [],
     tagTypes: IMap<string, TagTypeRecord>(),
-    rules: IMap<string, RuleRecord>()
+    rules: IMap<string, RuleRecord>(),
+    lastUpdateTime: 0
 }) { }
 
 interface IConfigReceivedAction {
@@ -130,6 +132,7 @@ export const reducer: Reducer<ConfigStateRecord> = (
     switch (action.type) {
         case 'CONFIG_RECEIVED': {
             return state
+                .set('lastUpdateTime', new Date().getTime())
                 .set('cardTypes', ConfigManager.getCardTypes())
                 .set('rootCardTypes', ConfigManager.getRootCardTypes())
                 .set('tagTypes', ConfigManager.getTagTypes())

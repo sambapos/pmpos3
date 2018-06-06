@@ -12,12 +12,13 @@ export interface IStateButtonProps {
 
 class StateButton extends React.Component<IStateButtonProps & WithStyles<keyof IStyle>> {
     public render() {
+        const selected = this.props.isSelected(this.props.value);
         return (
             <Button
                 size="small"
-                color={this.props.isSelected(this.props.value) ? 'secondary' : 'default'}
-                variant="raised"
-                className={this.props.classes.selectionButton}
+                color="primary"
+                variant={selected ? 'raised' : 'outlined'}
+                className={selected ? this.props.classes.selectionButtonSelected : this.props.classes.selectionButton}
                 onClick={() => {
                     this.props.onClick(this.props.value);
                 }}

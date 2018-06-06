@@ -53,3 +53,9 @@ if (module.hot) {
 }
 
 registerServiceWorker();
+
+window.addEventListener('beforeinstallprompt', (e: any) => {
+  e.preventDefault();
+  e.prompt();
+});
+

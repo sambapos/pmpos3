@@ -17,6 +17,7 @@ export interface IState {
     failed: boolean;
     tabIndex: number;
     closeCardRequested: boolean;
+    lastCommitTime: number;
 }
 
 export class StateRecord extends Record<IState>({
@@ -28,7 +29,8 @@ export class StateRecord extends Record<IState>({
     showAllCards: false,
     failed: false,
     tabIndex: 0,
-    closeCardRequested: false
+    closeCardRequested: false,
+    lastCommitTime: 0
 }) { }
 
 interface ISetCommitProtocolAction {
@@ -95,7 +97,9 @@ export const reducer: Reducer<StateRecord> = (
     switch (action.type) {
         case 'COMMIT_RECEIVED': {
             CardManager.addCommits(action.values);
-            return state.set('cards', CardManager.getCardsByType(state.currentCardType.id));
+            return state
+                .set('lastCommitTime', new Date().getTime())
+                .set('cards', CardManager.getCardsByType(state.currentCardType.id));
         }
         case 'COMMIT_RECEIVED_SUCCESS': {
             return state.set('cards', CardManager.getCardsByType(state.currentCardType.id));

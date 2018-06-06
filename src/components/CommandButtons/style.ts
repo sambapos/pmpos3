@@ -27,9 +27,10 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
             marginBottom: 4
         },
         [breakpoints.up('md')]: {
-            minWidth: 150,
+            minWidth: 'calc(25% - 8px)',
         },
         [breakpoints.up('lg')]: {
+            minWidth: 'calc(20% - 8px)',
             maxWidth: 'calc(20% - 8px)',
         }
     },

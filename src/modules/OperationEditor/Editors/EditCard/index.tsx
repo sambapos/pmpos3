@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, DialogContent, DialogActions } from '@material-ui/core';
+import { Button, DialogContent, DialogActions, DialogTitle } from '@material-ui/core';
 import IEditorProperties from '../editorProperties';
 import { CardRecord, CardManager, ConfigManager, RuleManager } from 'pmpos-core';
 import { extractSections } from '../CardExtractor';
@@ -8,9 +8,8 @@ import { ValueSelection } from '../SectionComponent/ValueSelection';
 import { Sections } from '../SectionComponent/Sections';
 import { SelectedValues } from '../SectionComponent/SelectedValues';
 import { Section } from '../SectionComponent/Section';
-import Tags from '../../../../containers/CardPage/Tags';
 
-type IProps = IEditorProperties<{}>;
+type IProps = IEditorProperties<{ title: string }>;
 
 interface IState {
     selectedValues: SelectedValues;
@@ -33,6 +32,9 @@ export default class EditCard extends React.Component<IProps, IState> {
     public render() {
         return (
             <>
+                <DialogTitle>
+                    {this.props.current ? this.props.current.title : 'Edit'}
+                </DialogTitle>
                 <DialogContent>
                     {/* {this.props.card.id}
                     <hr />
@@ -40,12 +42,12 @@ export default class EditCard extends React.Component<IProps, IState> {
                     <hr />
                     {this.baseCard && this.baseCard.name}
                     <hr /> */}
-                    <div style={{ border: '1px solid lightgray', borderRadius: 4, background: 'whitesmoke', paddingLeft: 8 }}>
+                    {/* <div style={{ border: '1px solid lightgray', borderRadius: 4, background: 'whitesmoke', paddingLeft: 8 }}>
                         <Tags
                             card={this.props.card}
                             parentCard={this.props.card}
                             handleCardClick={(e) => e} />
-                    </div>
+                    </div> */}
                     {this.getSections()}
                 </DialogContent>
                 <DialogActions>
