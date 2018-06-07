@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core';
 export interface IStyle {
     root: any;
     content: any;
+    card: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints, mixins, transitions }): IStyle => ({
@@ -14,5 +15,8 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
     content: {
         overflowY: 'auto',
         flex: '1 1 auto'
+    },
+    card: {
+        marginBottom: 8
     }
 }));

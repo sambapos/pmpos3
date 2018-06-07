@@ -49,7 +49,7 @@ class CardTypesPage extends React.Component<PageProps, {}> {
     }
 
     private renderCards(cardTypes: CardTypeRecord[]) {
-        return cardTypes.map(cardType => {
+        return cardTypes.sort((c1, c2) => c1.name < c2.name ? -1 : 1).map(cardType => {
             return cardType && (
                 <div key={cardType.id}>
                     <ListItem

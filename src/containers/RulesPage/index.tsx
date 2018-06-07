@@ -47,7 +47,7 @@ class RulesPage extends React.Component<PageProps, {}> {
     }
 
     private renderRules(rules: RuleRecord[]) {
-        return rules.map(rule => {
+        return rules.sort((r1, r2) => r1.name < r2.name ? -1 : 1).map(rule => {
             return rule && (
                 <div key={rule.id}>
                     <ListItem

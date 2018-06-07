@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import { IAppThunkAction } from './appThunkAction';
 import {
     CardManager, cardOperations, TerminalManager, DataBuilder,
-    CardRecord, CardTypeRecord, ActionRecord, ICommit, ICardTag
+    CardRecord, CardTypeRecord, ActionRecord, ICommit, ICardTag, ConfigManager
 } from 'pmpos-core';
 import { List, Record } from 'immutable';
 import OperationEditor from '../modules/OperationEditor';
@@ -84,8 +84,11 @@ interface ISetCurrentCard {
     type: 'SET_CURRENT_CARD',
     card: CardRecord
 }
+interface IConfigReceivedAction {
+    type: 'CONFIG_RECEIVED';
+}
 
-type KnownActions = ICommitCardAction | IRequestCloseCardAction
+type KnownActions = ICommitCardAction | IRequestCloseCardAction | IConfigReceivedAction
     | ICommitReceivedAction | ICommitReceivedSuccessAction | ISetCurrentCard
     | ISetCommitProtocolAction | ISetCurrentCardTypeAction | ISetCardListScrollTopAction |
     ISetSearchValueAction | ISetShowAllCardsAction | ISetTabIndexAction;
@@ -95,6 +98,15 @@ export const reducer: Reducer<StateRecord> = (
     action: KnownActions
 ) => {
     switch (action.type) {
+        case 'CONFIG_RECEIVED': {
+            const ct = ConfigManager.getCardTypes();
+            if (ct.count() > 0 && !state.currentCardType.id) {
+                // Todo: Defaults to Tickets for now. Need to make it configurable
+                const cct = ct.find(x => x.name === 'Tickets') || ct.first() || state.currentCardType;
+                return state.set('currentCardType', cct);
+            }
+            return state;
+        }
         case 'COMMIT_RECEIVED': {
             CardManager.addCommits(action.values);
             return state

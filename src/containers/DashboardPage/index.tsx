@@ -4,7 +4,7 @@ import { IApplicationState } from '../../store';
 import { WithStyles, Card, CardContent, CardHeader } from '@material-ui/core';
 import decorate, { IStyle } from './style';
 import TopBar from '../TopBar';
-import { LineChart, Line, ResponsiveContainer, YAxis, XAxis, Legend } from 'recharts';
+import { LineChart, Line, ResponsiveContainer, YAxis, XAxis, Legend, Tooltip } from 'recharts';
 import { RuleManager, Widget } from 'pmpos-core';
 import { RouteComponentProps } from 'react-router';
 
@@ -64,24 +64,26 @@ class DashboardPage extends React.Component<PageProps, IState> {
     }
 
     private getWidgetContent(widget: Widget) {
-        return (<Card key={widget.title}>
+        return (<Card key={widget.key} className={this.props.classes.card}>
             <CardHeader title={widget.title} />
-            <CardContent>
-                <ResponsiveContainer width="100%" height={200}>
+            {widget.data && <CardContent>
+                <ResponsiveContainer width="100%" height={150}>
                     <LineChart data={widget.data}
                         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                         <XAxis dataKey="name" />
-                        <YAxis width={10} />
+                        <YAxis width={30} />
                         {widget.legends.map(l => (
                             <Line key={l.name} type='monotone'
+                                dot={false}
                                 dataKey={l.name}
                                 stroke={l.color}
                                 strokeWidth={l.thickness} />
                         ))}
+                        <Tooltip />
                         <Legend />
                     </LineChart>
                 </ResponsiveContainer>
-            </CardContent>
+            </CardContent>}
         </Card>)
     }
 }

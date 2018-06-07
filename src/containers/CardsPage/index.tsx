@@ -42,10 +42,11 @@ interface IState {
 class CardsPage extends React.Component<PageProps, IState> {
     constructor(props: PageProps) {
         super(props);
+        const currentCardType = props.currentCardType;
         this.state = {
-            currentCardType: props.currentCardType,
+            currentCardType,
             searchValueText: props.searchValue,
-            tabs: this.getTabValues(props.currentCardType),
+            tabs: this.getTabValues(currentCardType),
         };
     }
 
