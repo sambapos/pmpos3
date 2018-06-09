@@ -38,44 +38,46 @@ class SectionComponent extends React.Component<ISectionComponentProps & WithStyl
             <>
                 <Typography style={{ margin: 4 }} variant="button">{this.props.name + (min - total > 0 ? ` (${min - total})` : '')}</Typography>
                 <div className={this.props.classes.buttonContainer}>
-                    {this.state.values.map(stateValue => (
-                        <StateButton
-                            key={this.props.name + '_' + stateValue.value}
-                            value={stateValue}
-                            isSelected={(value: ValueSelection) => this.isSelected(value)}
-                            onClick={
-                                (value: ValueSelection) => {
-                                    let values = this.state.selectedValues;
-                                    let helpText = '';
-                                    if (this.isSelected(value)) {
-                                        if (value.max && value.max > 1) {
-                                            if ((max === 0 && value.max > value.quantity) || total < max) {
-                                                if (value.quantity === 0) { value.quantity = 1; }
-                                                value.quantity++;
-                                            } else if (total === max || (max === 0 && value.max === value.quantity)) {
-                                                value.quantity = 1;
-                                                helpText = `You can select max ${max} values.`;
-                                            }
-                                        }
-                                        if (value.quantity < 2) { values = values.filter(x => x.value !== value.value); }
-                                    } else if (max === 1) {
-                                        values = [value]
-                                    } else if (max === 0 || total < max) {
-                                        values.push(value);
-                                    } else if (max > 0 && total === max) {
-                                        helpText = `You can select max ${max} values.`;
-                                    }
-                                    this.setState({ selectedValues: values, helpText });
-                                    this.props.onChange(this.props.name, values);
-                                }
-
-                            }
-                        />
-                    ))}
+                    {this.state.values.map(stateValue => this.getSelectionButton(stateValue, max, total))}
                 </div>
                 <Typography style={{ margin: 4 }} variant="caption">{this.state.helpText}</Typography>
             </ >
         );
+    }
+
+    private getSelectionButton(stateValue, max, total) {
+        return <StateButton
+            key={this.props.name + '_' + stateValue.value}
+            value={stateValue}
+            isSelected={(value: ValueSelection) => this.isSelected(value)}
+            onClick={
+                (value: ValueSelection) => {
+                    let values = this.state.selectedValues;
+                    let helpText = '';
+                    if (this.isSelected(value)) {
+                        if (value.max && value.max > 1) {
+                            if ((max === 0 && value.max > value.quantity) || total < max) {
+                                if (value.quantity === 0) { value.quantity = 1; }
+                                value.quantity++;
+                            } else if (total === max || (max === 0 && value.max === value.quantity)) {
+                                value.quantity = 1;
+                                helpText = `You can select max ${max} values.`;
+                            }
+                        }
+                        if (value.quantity < 2) { values = values.filter(x => x.value !== value.value); }
+                    } else if (max === 1) {
+                        values = [value]
+                    } else if (max === 0 || total < max) {
+                        values.push(value);
+                    } else if (max > 0 && total === max) {
+                        helpText = `You can select max ${max} values.`;
+                    }
+                    this.setState({ selectedValues: values, helpText });
+                    this.props.onChange(this.props.name, values);
+                }
+
+            }
+        />
     }
 
     private isSelected(value: ValueSelection) {

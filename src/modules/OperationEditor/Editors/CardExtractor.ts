@@ -3,6 +3,15 @@ import { ValueSelection } from "./SectionComponent/ValueSelection";
 import { Section } from "./SectionComponent/Section";
 import { Sections } from "./SectionComponent/Sections";
 
+export function extractTagEditSections(card: CardRecord): Section[] {
+    const result: Section[] = [];
+    for (const tag of card.allTags) {
+        const value = new ValueSelection(tag);
+        const section = new Section(tag.name, [], [value], 0, 0);
+        result.push(section);
+    }
+    return result;
+}
 
 export function extractSections(card: CardRecord): Sections {
     const result = new Sections();

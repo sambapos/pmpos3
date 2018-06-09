@@ -58,7 +58,7 @@ const getCardList = (
         return searchValue ? List<CardRecord>(CardManager.findCards(cardType, searchValue)) : sourceCards;
     } else if (cardType) {
         if (shortList) {
-            const cardList = CardManager.getCardsByType(cardType.id).sortBy(x => x.name);
+            const cardList = CardManager.getCardsByType(cardType.id).filter(x => !x.isClosed).sortBy(x => x.name);
             return searchValue ? cardList.filter(c => c.includes(searchValue.toLowerCase())) : cardList;
         } else {
             if (searchValue) {

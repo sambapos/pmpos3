@@ -23,21 +23,31 @@ On first run you need to make few configurations to enable features. You can rea
 - [5. Understanding Rules](https://github.com/emreeren/pmpos3/wiki/5.-Understanding-Rules)
 - [6. Misc Products](https://github.com/emreeren/pmpos3/wiki/6.-Misc-Products)
   
+
+## Development Build
+
+```
+$ git clone https://github.com/emreeren/pmpos3.git
+$ cd pmpos3
+$ npm install
+$ npm run start
+```
+
 ## Contribution
 
 PM-POS is a point of sale project started by [SambaPOS](https://sambapos.com) team. Merchants will use PM-POS to manage & operate their businesses. We'll also start a blockchain project to integrate business locations and issue a cryptocurrency to operate the blockchain network. If you are interested you can submit issues, share your ideas or send your PR's.
 
 ## List of projects we used to build PM-POS
 
-| Project                                                          | Description                              |
-| ---------------------------------------------------------------- | ---------------------------------------- |
-| [y-js](http://y-js.org/)                                         | To share card commits with clients       |
-| [react](https://reactjs.org/)                                    | To create UI Components                  |
-| [redux](https://redux.js.org/)                                   | To manage UI State                       |
-| [immutable-js](https://facebook.github.io/immutable-js/)         | To make UI State immutable               |
-| [redux-observable](https://redux-observable.js.org/)             | To watch redux actions and trigger rules |
-| [nools-ts](https://github.com/taoqf/nools-ts)                    | To build and execute rules               |
-| [material-ui](http://www.material-ui.com/)                       | For mobile UI components                 |
-| [typescript](https://www.typescriptlang.org/)                    | To add type safety to JS                 |
-| [blueimp-tmpl](https://github.com/blueimp/JavaScript-Templates)  | To create string templates               |
-| [react-virtualized](https://github.com/bvaughn/react-virtualized)| To create virtual lists                  | 
+| Project                                                           | Description                              |
+| ----------------------------------------------------------------- | ---------------------------------------- |
+| [y-js](http://y-js.org/)                                          | To share card commits with clients       |
+| [react](https://reactjs.org/)                                     | To create UI Components                  |
+| [redux](https://redux.js.org/)                                    | To manage UI State                       |
+| [immutable-js](https://facebook.github.io/immutable-js/)          | To make UI State immutable               |
+| [redux-observable](https://redux-observable.js.org/)              | To watch redux actions and trigger rules |
+| [nools-ts](https://github.com/taoqf/nools-ts)                     | To build and execute rules               |
+| [material-ui](http://www.material-ui.com/)                        | For mobile UI components                 |
+| [typescript](https://www.typescriptlang.org/)                     | To add type safety to JS                 |
+| [blueimp-tmpl](https://github.com/blueimp/JavaScript-Templates)   | To create string templates               |
+| [react-virtualized](https://github.com/bvaughn/react-virtualized) | To create virtual lists                  |  |

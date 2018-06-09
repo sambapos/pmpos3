@@ -92,6 +92,7 @@ class Component extends React.Component<Props, IState> {
                     key={key}
                     name={key}
                     values={value}
+                    max={1}
                     onChange={(name: string, values: ValueSelection[]) =>
                         this.setState({
                             parameterState: this.state.parameterState.set(name, values)

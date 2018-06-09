@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, DialogContent, DialogActions, DialogTitle } from '@material-ui/core';
 import IEditorProperties from '../editorProperties';
 import { CardRecord, CardManager, ConfigManager, RuleManager } from 'pmpos-core';
-import { extractSections } from '../CardExtractor';
+import { extractSections, extractTagEditSections } from '../CardExtractor';
 import SectionComponent from '../SectionComponent';
 import { ValueSelection } from '../SectionComponent/ValueSelection';
 import { Sections } from '../SectionComponent/Sections';
@@ -24,6 +24,7 @@ export default class EditCard extends React.Component<IProps, IState> {
         this.baseCard = this.getBaseCard(props.card) || new CardRecord();
         if (this.baseCard) {
             this.baseSections = extractSections(this.baseCard);
+            this.baseSections.sections.unshift(...extractTagEditSections(this.props.card));
             this.baseSections = this.setSelectedItems(this.baseSections, props.card);
         }
         this.state = { selectedValues: new SelectedValues(this.baseSections) }

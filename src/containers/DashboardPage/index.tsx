@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IApplicationState } from '../../store';
-import { WithStyles, Card, CardContent, CardHeader } from '@material-ui/core';
+import { WithStyles } from '@material-ui/core';
 import decorate, { IStyle } from './style';
 import TopBar from '../TopBar';
-import { LineChart, Line, ResponsiveContainer, YAxis, XAxis, Legend, Tooltip } from 'recharts';
 import { RuleManager, Widget } from 'pmpos-core';
 import { RouteComponentProps } from 'react-router';
+import WidgetComponent from './WidgetComponent';
 
 export type PageProps =
     { lastCommitTime: number, lastConfigUpdateTime: number }
@@ -57,34 +57,10 @@ class DashboardPage extends React.Component<PageProps, IState> {
             <div className={this.props.classes.root}>
                 <TopBar title="Dashboard" />
                 <div className={this.props.classes.content}>
-                    {this.state.widgets.map(x => this.getWidgetContent(x))}
+                    {this.state.widgets.map((widget, index) => <WidgetComponent index={index} key={widget.key} widget={widget} title={widget.title} />)}
                 </div>
             </div>
         );
-    }
-
-    private getWidgetContent(widget: Widget) {
-        return (<Card key={widget.key} className={this.props.classes.card}>
-            <CardHeader title={widget.title} />
-            {widget.data && <CardContent>
-                <ResponsiveContainer width="100%" height={150}>
-                    <LineChart data={widget.data}
-                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                        <XAxis dataKey="name" />
-                        <YAxis width={30} />
-                        {widget.legends.map(l => (
-                            <Line key={l.name} type='monotone'
-                                dot={false}
-                                dataKey={l.name}
-                                stroke={l.color}
-                                strokeWidth={l.thickness} />
-                        ))}
-                        <Tooltip />
-                        <Legend />
-                    </LineChart>
-                </ResponsiveContainer>
-            </CardContent>}
-        </Card>)
     }
 }
 
