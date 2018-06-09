@@ -3,24 +3,22 @@ import { ValueSelection } from "./SectionComponent/ValueSelection";
 import { Section } from "./SectionComponent/Section";
 import { Sections } from "./SectionComponent/Sections";
 
-export function extractTagEditSections(card: CardRecord): Section[] {
-    const result: Section[] = [];
-    for (const tag of card.allTags) {
-        const value = new ValueSelection(tag);
-        const section = new Section(tag.name, [], [value], 0, 0);
-        result.push(section);
-    }
-    return result;
-}
-
-export function extractSections(card: CardRecord): Sections {
-    const result = new Sections();
-    for (const subcard of card.allCardsSorted) {
+export function extractSections(templateCard: CardRecord, valueCard: CardRecord): Sections {
+    let result = new Sections();
+    for (const subcard of templateCard.allCardsSorted) {
         const section = extractSection(subcard);
         if (section && section.values.length > 0) {
             result.add(section);
         }
     }
+    const sectionKeys = result.sections.map(x => x.key);
+    for (const tag of valueCard.allTags.filter(t => sectionKeys.every(sk => t.category !== sk))) {
+        const value = new ValueSelection(tag);
+        const section = new Section(tag.name, [tag.id], [value], 0, 0);
+        result.add(section);
+    }
+    result = setSelectedItems(result, valueCard);
+    console.log('sections', result);
     return result;
 }
 
@@ -63,4 +61,13 @@ function getSectionFromCard(key: string, baseCard: CardRecord, valuesCard: CardR
     const max = Number(baseCard.getTag('Max', 0));
     const min = Number(baseCard.getTag('Min', 0));
     return new Section(key, selected, values, max, min);
+}
+
+function setSelectedItems(sections: Sections, card: CardRecord): Sections {
+    for (const tag of card.allTags) {
+        if (tag.ref) {
+            sections.addSelectedTag(tag);
+        }
+    }
+    return sections;
 }

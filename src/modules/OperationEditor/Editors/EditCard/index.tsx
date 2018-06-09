@@ -2,12 +2,13 @@ import * as React from 'react';
 import { Button, DialogContent, DialogActions, DialogTitle } from '@material-ui/core';
 import IEditorProperties from '../editorProperties';
 import { CardRecord, CardManager, ConfigManager, RuleManager } from 'pmpos-core';
-import { extractSections, extractTagEditSections } from '../CardExtractor';
+import { extractSections } from '../CardExtractor';
 import SectionComponent from '../SectionComponent';
 import { ValueSelection } from '../SectionComponent/ValueSelection';
 import { Sections } from '../SectionComponent/Sections';
 import { SelectedValues } from '../SectionComponent/SelectedValues';
 import { Section } from '../SectionComponent/Section';
+import ValueEditor from '../SectionComponent/ValueEditor';
 
 type IProps = IEditorProperties<{ title: string }>;
 
@@ -23,9 +24,7 @@ export default class EditCard extends React.Component<IProps, IState> {
         super(props);
         this.baseCard = this.getBaseCard(props.card) || new CardRecord();
         if (this.baseCard) {
-            this.baseSections = extractSections(this.baseCard);
-            this.baseSections.sections.unshift(...extractTagEditSections(this.props.card));
-            this.baseSections = this.setSelectedItems(this.baseSections, props.card);
+            this.baseSections = extractSections(this.baseCard, props.card);
         }
         this.state = { selectedValues: new SelectedValues(this.baseSections) }
     }
@@ -37,22 +36,9 @@ export default class EditCard extends React.Component<IProps, IState> {
                     {this.props.current ? this.props.current.title : 'Edit'}
                 </DialogTitle>
                 <DialogContent>
-                    {/* {this.props.card.id}
-                    <hr />
-                    {this.props.card.allTags.map(v => (<div>{v.name},{v.valueDisplay},{v.cardId}</div>))}
-                    <hr />
-                    {this.baseCard && this.baseCard.name}
-                    <hr /> */}
-                    {/* <div style={{ border: '1px solid lightgray', borderRadius: 4, background: 'whitesmoke', paddingLeft: 8 }}>
-                        <Tags
-                            card={this.props.card}
-                            parentCard={this.props.card}
-                            handleCardClick={(e) => e} />
-                    </div> */}
                     {this.getSections()}
                 </DialogContent>
                 <DialogActions>
-                    {/* <Button onClick={() => this.props.cancel()}>Cancel</Button> */}
                     <Button
                         onClick={(e) => {
                             const newValues = this.getNewValues(this.baseSections, this.state.selectedValues);
@@ -75,25 +61,16 @@ export default class EditCard extends React.Component<IProps, IState> {
 
     private getDeletedValues(sections: Sections, selectedValues: SelectedValues) {
         return sections.getDeletedValues(selectedValues);
-        // let resultMap = new Map<string, ValueSelection[]>();
-        // const originalSelection = new SelectedValues(baseSections);
-        // for (const [key, values] of originalSelection.entries) {
-        //     const result = new Array<ValueSelection>();
-        //     const selectedValues = selectedMap.get(key);
-        //     if (selectedValues) {
-        //         for (const value of values) {
-        //             if (selectedValues.every(o => o.ref !== value.ref)) {
-        //                 result.push(value);
-        //             }
-        //         }
-        //     }
-        //     if (result.length > 0) { resultMap = resultMap.set(key, result); }
-        // }
-        // console.log('deleted', resultMap);
-        // return resultMap;
     }
 
     private getSectionComponent(section: Section) {
+        if (section.values.length === 1) {
+            return this.getSectionEditor(section);
+        }
+        return this.getSectionSelectionComponent(section);
+    }
+
+    private getSectionSelectionComponent(section: Section) {
         return <SectionComponent
             key={'Section_' + section.key}
             name={section.key}
@@ -104,6 +81,20 @@ export default class EditCard extends React.Component<IProps, IState> {
             onChange={(name: string, values: ValueSelection[]) =>
                 this.setState({ selectedValues: this.state.selectedValues.set(name, values) })}
         />
+    }
+
+    private getValueEditor(sectionName: string, value: ValueSelection) {
+        return <ValueEditor
+            name={sectionName}
+            value={value}
+            onChange={(name: string, values: ValueSelection[]) =>
+                this.setState({ selectedValues: this.state.selectedValues.set(name, values) })} />
+    }
+
+    private getSectionEditor(section: Section) {
+        return <div>
+            {this.getValueEditor(section.key, section.values[0])}
+        </div>
     }
 
     private getSections() {
@@ -123,14 +114,5 @@ export default class EditCard extends React.Component<IProps, IState> {
             return false;
         });
         return refCard;
-    }
-
-    private setSelectedItems(baseParameters: Sections, card: CardRecord): Sections {
-        for (const tag of card.allTags) {
-            if (tag.ref) {
-                baseParameters.addSelectedTag(tag);
-            }
-        }
-        return baseParameters;
     }
 }

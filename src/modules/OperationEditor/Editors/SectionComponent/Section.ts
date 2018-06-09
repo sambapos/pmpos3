@@ -16,11 +16,10 @@ export class Section {
         this.values = values;
         this.max = max;
         this.min = min;
-        this.originalSelection = [];
+        this.originalSelection = values.length === 1 ? [new ValueSelection(values[0])] : [];
     }
 
     public getSelectedValues(): ValueSelection[] {
-        // return this.values.filter(value => this.selected.some(selected => value.ref === selected));
         return this.originalSelection;
     }
 

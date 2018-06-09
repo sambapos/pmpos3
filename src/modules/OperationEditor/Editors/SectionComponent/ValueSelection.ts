@@ -8,12 +8,25 @@ export class ValueSelection {
     public quantity: number;
     public ref: string;
     public tagName: string;
+    public unit: string;
+    public typeId: string;
+    public category: string;
+    public source: string;
+    public target: string;
+    public func: string;
     constructor(value: any) {
         if (value instanceof CardTagRecord) {
             this.value = value.value;
             this.amount = value.amount;
             this.quantity = Math.max(value.quantity, 1);
-            this.ref = value.id;
+            this.ref = value.ref || value.id;
+            this.unit = value.unit;
+            this.typeId = value.typeId;
+            this.tagName = value.name;
+            this.category = value.category;
+            this.source = value.source;
+            this.target = value.target;
+            this.func = value.func;
         } else if (value instanceof CardRecord) {
             this.value = value.name;
             this.caption = String(value.getTag('Caption', ''));
@@ -29,6 +42,12 @@ export class ValueSelection {
             this.quantity = Math.max(value.quantity || 1, 1);
             this.ref = value.ref;
             this.tagName = value.tagName;
+            this.unit = value.unit;
+            this.typeId = value.typeId;
+            this.category = value.category;
+            this.source = value.source;
+            this.target = value.target;
+            this.func = value.func;
         } else if (typeof value === 'string') {
             this.value = value;
             this.caption = value;

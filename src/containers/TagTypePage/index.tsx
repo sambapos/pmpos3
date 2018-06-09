@@ -23,6 +23,7 @@ interface IPageState {
     tagName: string;
     cardTypeReferenceName: string;
     showValue: boolean;
+    showCategory: boolean;
     showQuantity: boolean;
     showUnit: boolean;
     showAmount: boolean;
@@ -34,6 +35,7 @@ interface IPageState {
     displayFormat: string;
     icon: string;
     defaultValue: string;
+    defaultCategory: string;
     defaultFunction: string;
     defaultQuantity: string;
     defaultUnit: string;
@@ -50,6 +52,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
             tagName: '',
             cardTypeReferenceName: '',
             showValue: true,
+            showCategory: false,
             showQuantity: true,
             showUnit: true,
             showAmount: true,
@@ -59,6 +62,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
             sourceCardTypeReferenceName: '',
             targetCardTypeReferenceName: '',
             defaultValue: '',
+            defaultCategory: '',
             displayFormat: '',
             icon: '',
             defaultFunction: '',
@@ -77,6 +81,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                 tagName: props.tagType.tagName,
                 cardTypeReferenceName: props.tagType.cardTypeReferenceName,
                 showValue: props.tagType.showValue,
+                showCategory: props.tagType.showCategory,
                 showQuantity: props.tagType.showQuantity,
                 showUnit: props.tagType.showUnit,
                 showAmount: props.tagType.showAmount,
@@ -88,6 +93,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                 displayFormat: props.tagType.displayFormat,
                 icon: props.tagType.icon,
                 defaultValue: props.tagType.defaultValue,
+                defaultCategory: props.tagType.defaultCategory,
                 defaultFunction: props.tagType.defaultFunction,
                 defaultQuantity: props.tagType.defaultQuantity !== 0
                     ? String(props.tagType.defaultQuantity)
@@ -109,6 +115,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                 tagName: this.props.tagType.tagName,
                 cardTypeReferenceName: this.props.tagType.cardTypeReferenceName,
                 showValue: this.props.tagType.showValue,
+                showCategory: this.props.tagType.showCategory,
                 showQuantity: this.props.tagType.showQuantity,
                 showUnit: this.props.tagType.showUnit,
                 showAmount: this.props.tagType.showAmount,
@@ -120,6 +127,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                 displayFormat: this.props.tagType.displayFormat,
                 icon: this.props.tagType.icon,
                 defaultValue: this.props.tagType.defaultValue,
+                defaultCategory: this.props.tagType.defaultCategory,
                 defaultFunction: this.props.tagType.defaultFunction,
                 defaultQuantity: this.props.tagType.defaultQuantity !== 0
                     ? String(this.props.tagType.defaultQuantity)
@@ -160,6 +168,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                                     tagName: this.state.tagName,
                                     cardTypeReferenceName: this.state.cardTypeReferenceName,
                                     showValue: this.state.showValue,
+                                    showCategory: this.state.showCategory,
                                     showQuantity: this.state.showQuantity,
                                     showUnit: this.state.showUnit,
                                     showAmount: this.state.showAmount,
@@ -171,6 +180,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                                     displayFormat: this.state.displayFormat,
                                     icon: this.state.icon,
                                     defaultValue: this.state.defaultValue,
+                                    defaultCategory: this.state.defaultCategory,
                                     defaultFunction: this.state.defaultFunction,
                                     defaultQuantity: Number(this.state.defaultQuantity),
                                     defaultUnit: this.state.defaultUnit,
@@ -215,6 +225,13 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                         onChange={e => this.setState({ defaultValue: e.target.value })}
                         onCheckboxClick={() => this.setState({ showValue: !this.state.showValue })}
                         isChecked={this.state.showValue}
+                    />
+                    <InputCheckBox
+                        label="Default Category"
+                        value={this.state.defaultCategory}
+                        onChange={e => this.setState({ defaultCategory: e.target.value })}
+                        onCheckboxClick={() => this.setState({ showCategory: !this.state.showCategory })}
+                        isChecked={this.state.showCategory}
                     />
                     <div className={this.props.classes.grouper}>
                         <InputCheckBox

@@ -13,7 +13,6 @@ export class Sections {
     public get keys() {
         return this.sections.map(section => section.key);
     }
-
     public add(section: Section) {
         this.sections.push(section);
     }
@@ -44,7 +43,7 @@ export class Sections {
                 const originalValues = section.getSelectedValues();
                 for (const finalValue of finalValues) {
                     const ov = originalValues.find(o => o.ref === finalValue.ref);
-                    if (!ov || ov.quantity !== finalValue.quantity) {
+                    if (!ov || ov.quantity !== finalValue.quantity || ov.amount !== finalValue.amount) {
                         result.push(finalValue);
                     }
                 }
@@ -66,20 +65,6 @@ export class Sections {
             }
             if (result.length > 0) { resultMap = resultMap.set(section.key, result); }
         }
-
-        // const originalSelection = this.getSelectedValues();
-        // for (const [key, values] of Array.from(originalSelection.entries())) {
-        //     const result = new Array<ValueSelection>();
-        //     const selectedValues = selectedMap.get(key);
-        //     if (selectedValues) {
-        //         for (const value of values) {
-        //             if (selectedValues.every(o => o.ref !== value.ref)) {
-        //                 result.push(value);
-        //             }
-        //         }
-        //     }
-        //     if (result.length > 0) { resultMap = resultMap.set(key, result); }
-        // }
         return resultMap;
     }
 
