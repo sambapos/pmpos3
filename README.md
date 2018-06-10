@@ -1,12 +1,10 @@
 # PM-POS 3.0
 
-PM-POS is an experimental POS application that aims to solve operational problems on retail, restaurant or similar environments. This project released to discuss how to use latest software tech for the benefit of SambaPOS community. Everything released under this project is PoC grade for now.
+PM-POS is an experimental POS application that aims to solve operational problems on retails, restaurants or similar businesses. This project released to discuss how to use latest software tech for the benefit of SambaPOS community. Everything released under this project is PoC grade for now.
 
 ## More Info
 
 Visit https://github.com/emreeren/pmpos3/wiki to have more information about the project.
-
-Note: _Unlike my previous PM-POS projects this project is a standalone POS application and doesn't need SambaPOS to operate._
 
 ## Demo
 
