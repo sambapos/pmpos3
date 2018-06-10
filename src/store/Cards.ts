@@ -227,6 +227,13 @@ export const actionCreators = {
     removePendingActions: (cardId: string):
         IAppThunkAction<KnownActions> => (dispatch, getState) => {
             const card = TerminalManager.removePendingActions('', '', cardId);
+            if (!card) {
+                TerminalManager.cancelCard('', cardId);
+                dispatch({
+                    type: 'REQUEST_CLOSE_CARD'
+                });
+                return;
+            }
             dispatch({
                 type: 'SET_CURRENT_CARD',
                 card

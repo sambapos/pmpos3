@@ -33,8 +33,6 @@ class DashboardPage extends React.Component<PageProps, IState> {
     }
 
     public render() {
-        console.log('widgets', this.state.widgets);
-
         // const data = [
         //     { name: '08:00', today: 2, yesterday: 1, amt: 2400 },
         //     { name: '09:00', today: 2, yesterday: 2, amt: 2210 },

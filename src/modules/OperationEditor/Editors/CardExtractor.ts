@@ -18,7 +18,6 @@ export function extractSections(templateCard: CardRecord, valueCard: CardRecord)
         result.add(section);
     }
     result = setSelectedItems(result, valueCard);
-    console.log('sections', result);
     return result;
 }
 
