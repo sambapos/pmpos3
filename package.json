@@ -1,6 +1,6 @@
 {
   "name": "pmpos3",
-  "version": "3.0.79",
+  "version": "3.0.80",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^1.2.1",
@@ -13,7 +13,7 @@
     "js-beautify": "^1.7.5",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
-    "pmpos-core": "^1.0.17",
+    "pmpos-core": "^1.0.18",
     "react": "^16.4.0",
     "react-ace": "^5.10.0",
     "react-autosuggest": "^9.3.4",
@@ -33,7 +33,7 @@
     "shortid": "^2.2.8",
     "typeface-roboto": "0.0.45",
     "y-array": "^11.0.0-5",
-    "y-indexeddb": "^9.0.0-5",
+    "y-indexeddb": "^9.0.0-6",
     "y-map": "^11.0.0-1",
     "y-memory": "^9.0.0-1",
     "yjs": "^13.0.0-61"
