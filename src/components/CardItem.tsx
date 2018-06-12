@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { ListItem, ListItemText, Icon } from '@material-ui/core';
+import { ListItem, ListItemText, Icon, Divider } from '@material-ui/core';
 import tmpl from 'blueimp-tmpl';
 import { CardRecord, CardTagRecord, ConfigManager, CardManager, RuleManager } from 'pmpos-core';
+import ValidationIssue from './ValidationIssue';
 
 const getTagDisplay = (card: CardRecord, tag: CardTagRecord) => {
     const tt = ConfigManager.getTagTypeById(tag.typeId);
@@ -24,7 +25,9 @@ const getDefaultContent = (card: CardRecord) => {
     return (
         <>
             <ListItemText
-                primary={<div style={{ fontWeight: 400, fontSize: '1.1em' }}>{card.display}</div>}
+                primary={
+                    <div style={{ fontWeight: 400, fontSize: '1.1em' }}>{card.display}</div>
+                }
                 secondary={card.tags.valueSeq()
                     .sortBy(tag => CardManager.getTagSortIndexByCard(card, tag))
                     .filter(tag => tag.name !== 'Name')
@@ -34,9 +37,10 @@ const getDefaultContent = (card: CardRecord) => {
                             key={tag.name}
                         >
                             {getTagDisplay(card, tag)}
-                        </span>))}
+                        </span>))
+                }
             />
-            <div style={{ float: 'right', right: 10, fontSize: '1.2em' }}>
+            <div style={{ right: 10, fontSize: '1.2em' }}>
                 {card.balanceDisplay}
             </div>
         </>
@@ -124,8 +128,8 @@ export default class extends React.Component<ICardItemProps, { content: JSX.Elem
     }
 
     public render() {
-        return (
-            <ListItem button divider={this.props.template ? false : true}
+        return <>
+            <ListItem button
                 component="div"
                 style={this.props.style}
                 key={this.props.card.id}
@@ -134,6 +138,8 @@ export default class extends React.Component<ICardItemProps, { content: JSX.Elem
                 }>
                 {this.state.content}
             </ListItem >
-        );
+            {<ValidationIssue card={this.props.card} />}
+            {!this.props.template && <Divider />}
+        </>;
     }
 }

@@ -72,3 +72,10 @@ it('sums multiple card balances', () => {
     }));
     expect(c.balance).toEqual(15);
 });
+
+it('can add validation issue', () => {
+    let c = new CardRecord();
+    c = c.addValidationIssue('TEST');
+    const m = c.validationIssues.first();
+    expect(m).toEqual('TEST');
+})
