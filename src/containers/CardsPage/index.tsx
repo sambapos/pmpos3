@@ -75,7 +75,7 @@ class CardsPage extends React.Component<PageProps, IState> {
                 />
                 {this.state.currentCardType && <Paper className={this.props.classes.content}>
                     <CardSelector
-                        sourceCards={this.props.cards.filter(x => !x.isClosed)}
+                        sourceCards={this.props.cards.filter(x => this.props.showAllCards || !x.isClosed)}
                         sourceCardType={this.props.currentCardType}
                         cardType={this.state.tabs[this.props.tabIndex]}
                         scrollTop={this.props.cardListScrollTop}
