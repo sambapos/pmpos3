@@ -1,6 +1,6 @@
 # PM-POS 3.0
 
-PM-POS is an experimental POS application created to demonstrate new ideas to solve operational problems on retails, restaurants or similar businesses. Cloud POS systems is a big achivement on POS industry. However most Cloud POS Applications needs a permanent Internet connection to be able to operate. Even though they supports offline usage, they allows few limited operations when there is no Internet. Permanent server connection requirement leads to serious operational issues for business locations like bars or kitchens. PM-POS built with distributed networking principles to allow smooth communication between terminals. Same principles also works between servers for connecting chains of businesses.
+PM-POS is an experimental POS application created to demonstrate new ideas to solve operational problems on retails, restaurants or similar businesses. Cloud POS systems is a big achivement on POS industry. However most Cloud POS Applications needs a permanent Internet connection to be able to operate. Even though they supports offline usage, they allows few limited operations when there is no Internet. Wireless connection coverage is another issue. Permanent server connection requirement leads to serious operational issues for business locations like tills, bars or kitchens. PM-POS built with distributed networking principles to allow smooth communication between terminals. Same principles also works between servers for connecting chains of businesses.
 
 ## More Info
 
@@ -33,7 +33,7 @@ $ npm run start
 
 ## Contribution
 
-PM-POS is a point of sale project started by [SambaPOS](https://sambapos.com) team. Merchants will use PM-POS to manage & operate their businesses. We'll also start a blockchain project to integrate business locations and issue a cryptocurrency to operate the blockchain network. If you are interested you can submit issues, share your ideas or send your PR's.
+PM-POS is a point of sale project started by [SambaPOS](https://sambapos.com) team. Merchants will use PM-POS to manage & operate their businesses. If you are interested you can submit issues, share your ideas or send your PR's.
 
 ## List of projects we used to build PM-POS
 
