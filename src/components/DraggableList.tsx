@@ -4,6 +4,7 @@ import { Button, Icon, IconButton, List, ListSubheader, Snackbar, WithStyles } f
 import * as React from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { reorder } from './../lib/helpers';
+import RootRef from '@material-ui/core/RootRef';
 import CardItem from './CardItem';
 import * as h from './helpers';
 import decorate, { IStyle } from './style';
@@ -38,8 +39,10 @@ const cardRenderer = (card: any, index: number, onClick: (c: any) => void, templ
 interface IDraggableListProps {
     items: any[];
     template: string;
+    scrollTop: number;
     onClick: (c: any) => void;
     onSaveSortOrder: (items: any[]) => void;
+    debouncedHandleScroll: (x: number) => void;
 }
 
 type Props = IDraggableListProps & WithStyles<keyof IStyle>;
@@ -50,8 +53,10 @@ interface IDraggableListState {
 }
 
 class DraggableList extends React.Component<Props, IDraggableListState> {
+    private listEl: any;
     constructor(props: Props) {
         super(props);
+        this.listEl = React.createRef();
         this.state = { items: this.groupItems(props.items), snackbarOpen: false };
     }
     public groupItems(items: any[]): IMap<string, any[]> {
@@ -65,36 +70,53 @@ class DraggableList extends React.Component<Props, IDraggableListState> {
         if (nextProps.items !== this.props.items) {
             this.setState({ items: this.groupItems(nextProps.items) });
         }
+        if (nextProps.scrollTop !== this.props.scrollTop && nextProps.scrollTop === 0) {
+            if (this.listEl.current) {
+                this.listEl.current.scrollTop = 0;
+            }
+        }
     }
+    public componentDidMount() {
+        if (this.listEl.current) {
+            this.listEl.current.scrollTop = this.props.scrollTop;
+        }
+    }
+    // public shouldComponentUpdate(nextProps: Props) {
+    //     return nextProps.items !== this.props.items;
+    // }
     public render() {
         const displayCategories = this.state.items.count() > 1;
         return <>
-            <List className={this.props.classes.draggableList} subheader={<li />}>
-                {this.state.items.map((values, category) => (
-                    <li key={`section-${category}`}>
-                        <DragDropContext onDragEnd={(r) => this.onDragEnd(category, r)}>
-                            <Droppable droppableId="droppable">
-                                {(provided, snapshot) => (
-                                    <div
-                                        ref={provided.innerRef}
-                                        style={h.getListStyle(snapshot.isDraggingOver)}
-                                    >
-                                        <ul className={this.props.classes.sectionList}>
-                                            {displayCategories && <ListSubheader color="primary">
-                                                {category || 'Other'}
-                                            </ListSubheader>}
-                                            {values.map(
-                                                (item, index) =>
-                                                    cardRenderer(item, index, this.props.onClick, this.props.template))}
-                                        </ul>
-                                        {provided.placeholder}
-                                    </div>
-                                )}
-                            </Droppable>
-                        </DragDropContext>
-                    </li>
-                )).valueSeq().toArray()}
-            </List>
+            <RootRef rootRef={this.listEl}>
+                <List
+                    onScroll={e => this.props.debouncedHandleScroll((e.target as any).scrollTop)}
+                    className={this.props.classes.draggableList} subheader={<li />}>
+                    {this.state.items.map((values, category) => (
+                        <li key={`section-${category}`}>
+                            <DragDropContext onDragEnd={(r) => this.onDragEnd(category, r)}>
+                                <Droppable droppableId="droppable">
+                                    {(provided, snapshot) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            style={h.getListStyle(snapshot.isDraggingOver)}
+                                        >
+                                            <ul className={this.props.classes.sectionList}>
+                                                {displayCategories && <ListSubheader color="primary">
+                                                    {category || 'Other'}
+                                                </ListSubheader>}
+                                                {values.map(
+                                                    (item, index) =>
+                                                        cardRenderer(item, index, this.props.onClick, this.props.template))}
+                                            </ul>
+                                            {provided.placeholder}
+                                        </div>
+                                    )}
+                                </Droppable>
+                            </DragDropContext>
+                        </li>
+                    )).valueSeq().toArray()}
+                </List>
+            </RootRef>
             <Snackbar
                 anchorOrigin={{
                     horizontal: 'right',

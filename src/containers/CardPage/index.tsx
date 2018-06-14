@@ -20,6 +20,7 @@ import { Link } from 'react-router-dom';
 import CommandButtons from '../../components/CommandButtons';
 import { CardRecord, CardTypeRecord, CardOperation, CardManager, TerminalManager, ConfigManager } from 'pmpos-core';
 import { vibrate } from '../../lib/helpers';
+import ValidationIssue from '../../components/ValidationIssue';
 
 interface IPageState {
     disableUpdate: boolean;
@@ -101,6 +102,7 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
                                 <Typography>{moment(this.props.card.time).format('LLL')}</Typography>
                                 <Typography>{this.props.card.isClosed && 'CLOSED!'}</Typography>
                             </div>
+                            <ValidationIssue card={this.props.card} />
                             <CardPageContent
                                 hasPendingActions={false}
                                 card={this.props.card}
@@ -124,7 +126,6 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
                         </Paper >
                         <div className={this.props.classes.footer}>
                             <CardBalance card={this.props.card} />
-                            <Divider />
                         </div>
                     </div>
                     <div className={this.props.classes.commandButtons}>

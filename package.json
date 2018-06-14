@@ -1,6 +1,6 @@
 {
   "name": "pmpos3",
-  "version": "3.0.80",
+  "version": "3.0.82",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^1.2.1",
@@ -47,6 +47,7 @@
     "deploy": "gh-pages -d build"
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.4",
     "@types/enzyme": "^3.1.10",
     "@types/enzyme-adapter-react-16": "^1.0.2",
     "@types/history": "^4.6.2",

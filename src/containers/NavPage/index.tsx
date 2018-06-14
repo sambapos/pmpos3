@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import * as classNames from 'classnames';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import * as React from 'react';
 

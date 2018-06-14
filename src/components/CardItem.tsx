@@ -130,6 +130,8 @@ export default class extends React.Component<ICardItemProps, { content: JSX.Elem
     public render() {
         return <>
             <ListItem button
+                className=''
+                color='secondary'
                 component="div"
                 style={this.props.style}
                 key={this.props.card.id}
@@ -138,7 +140,7 @@ export default class extends React.Component<ICardItemProps, { content: JSX.Elem
                 }>
                 {this.state.content}
             </ListItem >
-            {<ValidationIssue card={this.props.card} />}
+            <ValidationIssue card={this.props.card} />
             {!this.props.template && <Divider />}
         </>;
     }

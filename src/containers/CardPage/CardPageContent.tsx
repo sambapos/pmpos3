@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Tags from './Tags';
 import SubCards from './SubCards';
-import classNames from 'classnames';
+import * as classNames from 'classnames';
 import { WithStyles, Icon } from '@material-ui/core';
 import decorate, { IStyle } from './style';
 import { CardRecord, CardTypeRecord } from 'pmpos-core';

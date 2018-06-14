@@ -4,10 +4,13 @@ export interface IStyle {
     list: any;
     draggableList: any;
     sectionList: any;
-    button: any;
     bigButton: any;
     smallButton: any;
-    highlightedButton: any;
+    button: any;
+    primaryButton: any;
+    secondaryButton: any;
+    errorButton: any;
+    validationIssue: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
@@ -44,7 +47,37 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
             maxWidth: 'calc(50% - 8px)',
         },
     },
-    highlightedButton: {
-
+    primaryButton: {
+        background: palette.primary.main,
+        color: palette.primary.contrastText,
+        '&:hover': {
+            background: palette.primary.dark
+        }
+    },
+    secondaryButton: {
+        background: palette.secondary.main,
+        color: palette.secondary.contrastText,
+        '&:hover': {
+            background: palette.secondary.dark
+        }
+    },
+    errorButton: {
+        background: palette.error.main,
+        color: palette.error.contrastText,
+        '&:hover': {
+            background: palette.error.dark
+        }
+    },
+    validationIssue: {
+        marginLeft: spacing.unit,
+        marginRight: spacing.unit,
+        marginBottom: spacing.unit,
+        padding: spacing.unit,
+        background: palette.error.main,
+        color: palette.error.contrastText,
+        fontSize: '0.9em',
+        border: '1px solid',
+        borderColor: palette.error.main,
+        borderRadius: 4
     }
 }));

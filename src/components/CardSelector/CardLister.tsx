@@ -80,7 +80,15 @@ export default class extends React.Component<ICardListProps, ICardListState> {
         const result = cards
             .skip(startIndex)
             .take(itemCount)
-            .sort((x, y) => x.index - y.index)
+            .sort((a, b) => {
+                if (a.index === b.index) {
+                    if (a.name > b.name) {
+                        return 1;
+                    };
+                    return -1;
+                }
+                return a.index - b.index;
+            })
             .toArray();
         return result;
     }
@@ -93,6 +101,8 @@ export default class extends React.Component<ICardListProps, ICardListState> {
     private getCardList() {
         if (this.props.cards.count() <= this.itemCount) {
             return <DraggableList
+                scrollTop={this.state.scrollTop}
+                debouncedHandleScroll={x => this.debouncedHandleScroll(x)}
                 items={this.state.items}
                 template={this.props.cardType ? this.props.cardType.displayFormat : ''}
                 onClick={c => this.handleOnClick(c)}

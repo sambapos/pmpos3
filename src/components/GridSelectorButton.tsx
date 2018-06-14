@@ -1,5 +1,5 @@
 import * as React from 'react';
-import classNames from 'classnames';
+import * as classNames from 'classnames';
 import { Button } from '@material-ui/core';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import decorate, { IStyle } from './style';
@@ -33,21 +33,30 @@ class GridSelectorButton extends React.Component<Props, IGridSelectorButtonState
         }
     }
 
-    public getButtonColor() {
-        if (this.props.highlight && this.props.card.name === this.props.highlight) {
-            return 'secondary';
-        }
-        return this.state.sourceCards.length > 0 ? 'primary' : 'default'
+    public isPrimary() {
+        return this.state.sourceCards.length > 0;
+    }
+
+    public isSecondary() {
+        return this.props.highlight != null && this.props.highlight === this.props.card.name
+    }
+
+    public isError() {
+        return this.state.sourceCards.some(x => !x.isValid);
     }
 
     public render() {
         return <Button variant="raised"
-            color={this.getButtonColor()}
-            className={classNames(this.props.classes.button, {
-                [this.props.classes.highlightedButton]: this.state.sourceCards.length > 0,
-                [this.props.classes.bigButton]: !this.props.smallButton,
-                [this.props.classes.smallButton]: this.props.smallButton
-            })}
+            className={classNames(this.props.classes.button,
+                {
+                    [this.props.classes.bigButton]: !this.props.smallButton,
+                    [this.props.classes.smallButton]: this.props.smallButton
+                }, {
+                    [this.props.classes.primaryButton]: this.isPrimary(),
+                    [this.props.classes.secondaryButton]: this.isSecondary(),
+                    [this.props.classes.errorButton]: this.isError()
+                }
+            )}
             onClick={() => {
                 if (this.props.onSelectCard) {
                     vibrate([10]);

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { AppBar, Toolbar, Typography, WithStyles } from '@material-ui/core';
-import classNames from 'classnames';
+import * as classNames from 'classnames';
 import decorate, { IStyle } from './style';
 import * as ClientStore from '../../store/Client';
 import { connect } from 'react-redux';
