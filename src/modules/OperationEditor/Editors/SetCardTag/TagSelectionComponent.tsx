@@ -17,12 +17,16 @@ export default (props: IEditorProperties<{ tagType: TagTypeRecord, tag: CardTagR
         <div style={{ margin: 4, overflow: 'auto', flex: 1 }}>
             <CardSelectorPage
                 cardType={tagType.cardTypeReferenceName}
-                onSelectCard={card => {
-                    const data = {
-                        ...tag.toJS(),
-                        name: tagType.tagName, value: card.name, type: tagType.name
-                    };
-                    props.success(props.actionName, data);
+                onSelectCards={selectedCards => {
+                    const cardName = selectedCards.getCardName();
+                    const card = selectedCards.get(tagType.cardTypeReferenceName);
+                    if (card) {
+                        const data = {
+                            ...tag.toJS(),
+                            name: tagType.tagName, value: cardName, typeId: tagType.id, cardId: card.id
+                        };
+                        props.success(props.actionName, data);
+                    }
                 }}
             />
         </div>

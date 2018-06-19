@@ -4,7 +4,7 @@ import CardSelectorPage from '../../../../containers/CardSelectorPage';
 import IEditorProperties from '../editorProperties';
 import { RuleManager } from 'pmpos-core';
 
-type Props = IEditorProperties<{ type: string, selected: string }>;
+type Props = IEditorProperties<{ type: string, selected: string, selectedCards: object }>;
 
 export default (props: Props) => {
     if (!props.current) {
@@ -21,9 +21,15 @@ export default (props: Props) => {
             <CardSelectorPage
                 highlight={props.current ? props.current.selected : ''}
                 cardType={props.current.type}
-                onSelectCard={card => {
+                onSelectCards={selectedCards => {
                     if (props.current) {
-                        RuleManager.setState(props.current.type, card.name);
+                        props.current.selectedCards = selectedCards.items;
+                        for (const type of selectedCards.cardTypes) {
+                            const card = selectedCards.get(type);
+                            if (card) {
+                                RuleManager.setState(type, card.name);
+                            }
+                        }
                     }
                     props.success(props.actionName, props.current);
                 }}

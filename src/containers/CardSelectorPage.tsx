@@ -5,6 +5,7 @@ import * as CardStore from '../store/Cards';
 import CardSelector from '../components/CardSelector';
 import { IApplicationState } from '../store';
 import { CardRecord, CardTypeRecord } from 'pmpos-core';
+import { CardSelection } from '../components/CardSelection';
 
 interface ICardSelectorPageProps {
     cardType: string;
@@ -12,7 +13,7 @@ interface ICardSelectorPageProps {
     currentCardType: CardTypeRecord;
     smallButtons?: boolean;
     highlight?: string;
-    onSelectCard: (card: CardRecord) => void;
+    onSelectCards: (cards: CardSelection) => void;
 }
 
 type CardSelectorPagePropType =
@@ -26,7 +27,11 @@ const CardSelectorPage = (props: CardSelectorPagePropType) => {
         cardType={props.cardType}
         smallButtons={props.smallButtons}
         highlight={props.highlight}
-        onSelectCard={c => props.onSelectCard(c)}
+        onSelectCard={c => {
+            const cs = new CardSelection();
+            cs.set(props.cardType, c);
+            props.onSelectCards(cs);
+        }}
         scrollTop={0}
     />;
 };

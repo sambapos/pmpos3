@@ -6,6 +6,7 @@ import decorate, { IStyle } from './style';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import THead from './THead';
 import { CardTagData } from 'pmpos-core';
+import { ReportView } from './ReportView';
 
 interface IPageProps {
     searchValue: string;
@@ -14,44 +15,63 @@ interface IPageProps {
 
 type Props = IPageProps & WithStyles<keyof IStyle>;
 
-const AccountTable = (props: Props) => {
-    let balance = 0;
-    const firstTag = props.tags.first();
-    if (!firstTag) {
-        return null;
+interface IState {
+    view: ReportView | undefined;
+}
+
+class AccountTable extends React.Component<Props, IState> {
+    constructor(props: Props) {
+        super(props);
+        this.state = { view: undefined }
     }
-    return (
-        <Paper className={props.classes.card}>
-            <table className={props.classes.table}>
-                <THead keys={['Name', 'Debit', 'Credit', 'Balance']} />
-                <tbody>{props.tags
-                    .filter(t => t.getDebitFor(props.searchValue) !== 0 || t.getCreditFor(props.searchValue) !== 0)
-                    .sort((a, b) => a.time - b.time).map(tagData => {
-                        balance += tagData.getBalanceFor(props.searchValue);
-                        return tagData && (
-                            <tr key={tagData.id} className={props.classes.tableRow}>
-                                <td className={props.classes.tableCell}>
-                                    <div>{tagData.display}</div>
-                                    <div className={props.classes.tableSecondary}>
-                                        {tagData.name + ' ' + moment(tagData.time).format('LLL')}
+
+    public componentWillReceiveProps(nextProps: Props) {
+        if (nextProps.tags !== this.props.tags) {
+            this.setState({
+                view: new ReportView(nextProps.tags, nextProps.searchValue)
+            })
+        }
+    }
+    public render() {
+        const firstTag = this.props.tags.first();
+        if (!firstTag) {
+            return null;
+        }
+        if (!this.state.view) { return null };
+        const lines = this.state.view.getLines();
+        return (
+            <Paper className={this.props.classes.card}>
+                <table className={this.props.classes.table}>
+                    <THead type="AccountTable" keys={['Name', 'Debit', 'Credit', 'Balance']} />
+                    <tbody>{lines.map(line => {
+                        return line && (
+                            <tr key={line.id} className={this.props.classes.tableRow}>
+                                <td className={this.props.classes.tableCell}>
+                                    <div>{line.display}</div>
+                                    <div className={this.props.classes.tableSecondary}>
+                                        {line.name + ' ' + moment(line.time).format()}
                                     </div>
+                                    {line.expires && <div className={this.props.classes.tableSecondary}>
+                                        expires: {line.expirationDate}
+                                    </div>}
                                 </td>
-                                <td className={props.classes.tableCellNumber}>
-                                    {tagData.getDebitDisplayFor(props.searchValue)}
+                                <td className={this.props.classes.tableCellNumber}>
+                                    {line.DebitDisplay}
                                 </td>
-                                <td className={props.classes.tableCellNumber}>
-                                    {tagData.getCreditDisplayFor(props.searchValue)}
+                                <td className={this.props.classes.tableCellNumber}>
+                                    {line.CreditDisplay}
                                 </td>
-                                <td className={props.classes.tableCellNumber}>
-                                    {balance !== 0 ? balance.toFixed(2) : ''}
+                                <td className={this.props.classes.tableCellNumber}>
+                                    {line.BalanceDisplay}
                                 </td>
                             </tr>
                         );
                     })}
-                </tbody>
-            </table>
-        </Paper>
-    );
+                    </tbody>
+                </table>
+            </Paper>
+        );
+    }
 };
 
 export default decorate(AccountTable);

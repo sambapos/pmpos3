@@ -14,7 +14,7 @@ export default (props: ICommitItemProps) => {
             <Typography>id:{props.commit.id}</Typography>
             <Typography>terminal:{props.commit.terminalId}</Typography>
             <Typography>user:{props.commit.user}</Typography>
-            <Typography>{moment(props.commit.time).format('LLLL')}</Typography>
+            <Typography>{moment(props.commit.time).format()}</Typography>
             <ActionList actions={props.commit.actions} />
         </Card>
     );

@@ -30,6 +30,7 @@ interface IPageState {
     showSource: boolean;
     showTarget: boolean;
     showFunction: boolean;
+    showValidUntil: boolean;
     sourceCardTypeReferenceName: string;
     targetCardTypeReferenceName: string;
     displayFormat: string;
@@ -42,6 +43,7 @@ interface IPageState {
     defaultAmount: string;
     defaultSource: string;
     defaultTarget: string;
+    defaultValidUntil: string;
 }
 
 export class TagTypePage extends React.Component<PageProps, IPageState> {
@@ -59,6 +61,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
             showSource: true,
             showTarget: true,
             showFunction: false,
+            showValidUntil: false,
             sourceCardTypeReferenceName: '',
             targetCardTypeReferenceName: '',
             defaultValue: '',
@@ -70,7 +73,8 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
             defaultUnit: '',
             defaultAmount: '',
             defaultSource: '',
-            defaultTarget: ''
+            defaultTarget: '',
+            defaultValidUntil: ''
         };
     }
 
@@ -88,6 +92,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                 showSource: props.tagType.showSource,
                 showTarget: props.tagType.showTarget,
                 showFunction: props.tagType.showFunction,
+                showValidUntil: props.tagType.showValidUntil,
                 sourceCardTypeReferenceName: props.tagType.sourceCardTypeReferenceName,
                 targetCardTypeReferenceName: props.tagType.targetCardTypeReferenceName,
                 displayFormat: props.tagType.displayFormat,
@@ -103,7 +108,8 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                     ? String(props.tagType.defaultAmount)
                     : '',
                 defaultSource: props.tagType.defaultSource,
-                defaultTarget: props.tagType.defaultTarget
+                defaultTarget: props.tagType.defaultTarget,
+                defaultValidUntil: props.tagType.defaultValidUntil
             });
         }
     }
@@ -122,6 +128,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                 showSource: this.props.tagType.showSource,
                 showTarget: this.props.tagType.showTarget,
                 showFunction: this.props.tagType.showFunction,
+                showValidUntil: this.props.tagType.showValidUntil,
                 sourceCardTypeReferenceName: this.props.tagType.sourceCardTypeReferenceName,
                 targetCardTypeReferenceName: this.props.tagType.targetCardTypeReferenceName,
                 displayFormat: this.props.tagType.displayFormat,
@@ -137,7 +144,8 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                     ? String(this.props.tagType.defaultAmount)
                     : '',
                 defaultSource: this.props.tagType.defaultSource,
-                defaultTarget: this.props.tagType.defaultTarget
+                defaultTarget: this.props.tagType.defaultTarget,
+                defaultValidUntil: this.props.tagType.defaultValidUntil
             });
         }
     }
@@ -175,6 +183,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                                     showSource: this.state.showSource,
                                     showTarget: this.state.showTarget,
                                     showFunction: this.state.showFunction,
+                                    showValidUntil: this.state.showValidUntil,
                                     sourceCardTypeReferenceName: this.state.sourceCardTypeReferenceName,
                                     targetCardTypeReferenceName: this.state.targetCardTypeReferenceName,
                                     displayFormat: this.state.displayFormat,
@@ -186,7 +195,8 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                                     defaultUnit: this.state.defaultUnit,
                                     defaultAmount: Number(this.state.defaultAmount),
                                     defaultSource: this.state.defaultSource,
-                                    defaultTarget: this.state.defaultTarget
+                                    defaultTarget: this.state.defaultTarget,
+                                    defaultValidUntil: this.state.defaultValidUntil
                                 }));
                                 this.props.history.goBack();
                             }
@@ -251,37 +261,43 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                             isChecked={this.state.showUnit}
                         />
                     </div>
-                    <InputCheckBox
-                        label="Default Amount"
-                        type="number"
-                        value={this.state.defaultAmount}
-                        onChange={e => this.setState({ defaultAmount: e.target.value })}
-                        onCheckboxClick={() => this.setState({ showAmount: !this.state.showAmount })}
-                        isChecked={this.state.showAmount}
-                    />
-                    <InputCheckBox
-                        label="Default Function"
-                        value={this.state.defaultFunction}
-                        onChange={e => this.setState({ defaultFunction: e.target.value })}
-                        onCheckboxClick={() => this.setState({ showFunction: !this.state.showFunction })}
-                        isChecked={this.state.showFunction}
-                    />
-                    <TextField
-                        fullWidth
-                        label="Source Card Type Reference Name"
-                        value={this.state.sourceCardTypeReferenceName}
-                        onChange={(e) => this.setState({
-                            sourceCardTypeReferenceName: e.target.value
-                        })}
-                    />
-                    <TextField
-                        fullWidth
-                        label="Target Card Type Reference Name"
-                        value={this.state.targetCardTypeReferenceName}
-                        onChange={(e) => this.setState({
-                            targetCardTypeReferenceName: e.target.value
-                        })}
-                    />
+                    <div className={this.props.classes.grouper}>
+                        <InputCheckBox
+                            label="Default Amount"
+                            type="number"
+                            value={this.state.defaultAmount}
+                            onChange={e => this.setState({ defaultAmount: e.target.value })}
+                            onCheckboxClick={() => this.setState({ showAmount: !this.state.showAmount })}
+                            isChecked={this.state.showAmount}
+                        />
+                        <div className={this.props.classes.spacer} />
+                        <InputCheckBox
+                            label="Default Function"
+                            value={this.state.defaultFunction}
+                            onChange={e => this.setState({ defaultFunction: e.target.value })}
+                            onCheckboxClick={() => this.setState({ showFunction: !this.state.showFunction })}
+                            isChecked={this.state.showFunction}
+                        />
+                    </div>
+                    <div className={this.props.classes.grouper}>
+                        <TextField
+                            fullWidth
+                            label="Source Card Type Reference Name"
+                            value={this.state.sourceCardTypeReferenceName}
+                            onChange={(e) => this.setState({
+                                sourceCardTypeReferenceName: e.target.value
+                            })}
+                        />
+                        <div className={this.props.classes.spacer} />
+                        <TextField
+                            fullWidth
+                            label="Target Card Type Reference Name"
+                            value={this.state.targetCardTypeReferenceName}
+                            onChange={(e) => this.setState({
+                                targetCardTypeReferenceName: e.target.value
+                            })}
+                        />
+                    </div>
                     <div className={this.props.classes.grouper}>
                         <InputCheckBox
                             label="Default Source"
@@ -299,6 +315,13 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                             isChecked={this.state.showTarget}
                         />
                     </div>
+                    <InputCheckBox
+                        label="Default Valid Until"
+                        value={this.state.defaultValidUntil}
+                        onChange={e => this.setState({ defaultValidUntil: e.target.value })}
+                        onCheckboxClick={() => this.setState({ showValidUntil: !this.state.showValidUntil })}
+                        isChecked={this.state.showValidUntil}
+                    />
                     <TextField
                         fullWidth
                         inputProps={{ className: this.props.classes.fixedEdit }}

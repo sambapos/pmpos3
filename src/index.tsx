@@ -4,12 +4,15 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import * as shortid from 'shortid';
+import * as moment from 'moment';
 import 'typeface-roboto';
 import configureStore from './configureStore';
 import './index.css';
 import './material-icons.css'
 import registerServiceWorker from './registerServiceWorker';
 import * as RoutesModule from './routes';
+import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
+import MomentUtils from 'material-ui-pickers/utils/moment-utils';
 
 let routes = RoutesModule.routes;
 
@@ -27,6 +30,7 @@ if (!networkName) {
   networkName = 'DEMO';
 }
 
+(moment as any).defaultFormat = localStorage.getItem('dateFormat') || 'DD.MM.YYYY HH:mm';
 const branchName = localStorage.getItem('branchName') || '';
 const serverName = localStorage.getItem('serverName') || '';
 
@@ -37,7 +41,9 @@ function renderApp() {
   // and injects the app into a DOM element.
   ReactDOM.render(
     <Provider store={store}>
-      <ConnectedRouter history={history} children={routes} />
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <ConnectedRouter history={history} children={routes} />
+      </MuiPickersUtilsProvider>
     </Provider>,
     document.getElementById('root')
   );

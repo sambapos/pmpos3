@@ -99,7 +99,7 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
                         <Paper className={this.props.classes.content}>
                             <div className={this.props.classes.indexHeader}>
                                 <Typography>{this.props.card.id}</Typography>
-                                <Typography>{moment(this.props.card.time).format('LLL')}</Typography>
+                                <Typography>{moment(this.props.card.time).format()}</Typography>
                                 <Typography>{this.props.card.isClosed && 'CLOSED!'}</Typography>
                             </div>
                             <ValidationIssue card={this.props.card} />
@@ -238,7 +238,7 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
             const ct = ConfigManager.getCardTypes().find(c => c.name === cardTypeName);
             if (ct) {
                 const result: CommandButton[] = [];
-                const sourceCards = CardManager.getCardsByType(ct.id);
+                const sourceCards = CardManager.getCardsByType(ct.id).filter(x => !x.isClosed);
                 let productCategories = ['<' + selectedCategory];
                 if (!selectedCategory) {
                     productCategories = sourceCards.reduce((r, card) => {

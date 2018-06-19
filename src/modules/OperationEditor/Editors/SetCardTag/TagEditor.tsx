@@ -3,6 +3,9 @@ import * as shortid from 'shortid';
 import AutoSuggest from '../../../../components/AutoSuggest';
 import { TextField, DialogContent, DialogActions, Button } from '@material-ui/core';
 import { CardTagRecord, TagTypeRecord, CardManager } from 'pmpos-core';
+import DateTimePicker from 'material-ui-pickers/DateTimePicker';
+import * as moment from 'moment';
+import { Moment } from 'moment';
 
 interface ITagEditorProps {
     tag: CardTagRecord;
@@ -12,9 +15,11 @@ interface ITagEditorProps {
 
 interface ITagEditorState {
     name: string; category: string; value: string; quantity: string; unit: string;
-    amount: string; func: string;
+    amount: string; func: string; validUntil: number | null;
     source: string; target: string; typeId: string;
 }
+
+type dateUnits = "year" | "years" | "y" | "month" | "months" | "M" | "week" | "weeks" | "w" | "day" | "days" | "d" | "hour" | "hours" | "h" | "minute" | "minutes" | "m" | "second" | "seconds" | "s" | "millisecond" | "milliseconds" | "ms" | "quarter" | "quarters" | "Q" | undefined;
 
 export default class TagEditor extends React.Component<ITagEditorProps, ITagEditorState> {
 
@@ -35,6 +40,7 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
         const canEditSource = !this.props.tagType.id || this.props.tagType.showSource;
         const canEditTarget = !this.props.tagType.id || this.props.tagType.showTarget;
         const canEditFunction = !this.props.tagType.id || this.props.tagType.showFunction;
+        const canEditValidUntil = !this.props.tagType.id || this.props.tagType.showValidUntil;
         return (<>
             <DialogContent>
                 {canEditName && <TextField
@@ -101,6 +107,13 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
                     }
                     handleChange={(e, target) => this.setState({ target })}
                 />}
+                {canEditValidUntil && <DateTimePicker
+                    label='Valid Until'
+                    fullWidth
+                    clearable
+                    value={this.state.validUntil}
+                    onChange={(x: Moment) => this.setState({ validUntil: x ? x.toDate().getTime() : null })}
+                />}
             </DialogContent>
             <DialogActions>
                 {/* <Button onClick={() => this.props.cancel()}>Cancel</Button> */}
@@ -116,7 +129,8 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
                         func: this.state.func,
                         source: this.state.source,
                         target: this.state.target,
-                        typeId: this.state.typeId
+                        typeId: this.state.typeId,
+                        validUntil: this.state.validUntil
                     })}
                 >
                     Submit
@@ -137,8 +151,25 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
             amount: String(tag.amount !== 0 ? tag.amount : tagType.defaultAmount),
             func: tag.func || tagType.defaultFunction,
             source: tag.source || tagType.defaultSource,
-            target: tag.target || tagType.defaultTarget
+            target: tag.target || tagType.defaultTarget,
+            validUntil: tag.validUntil || this.generateValidUntil(tagType.defaultValidUntil)
         };
+    }
+
+    private generateValidUntil(template: string): number | null {
+        if (!template) { return null };
+        const parts = template.split(' ');
+        if (parts.length === 1) {
+            return moment().add(parts[0], 'd').toDate().getTime();
+        }
+        if (parts.length === 2) {
+            return moment().add(parts[0], this.getDatePart(parts[1])).toDate().getTime();
+        }
+        return null;
+    }
+
+    private getDatePart(template: string): dateUnits {
+        return template as dateUnits;
     }
 
     private handleTagValueChange(value: string) {
