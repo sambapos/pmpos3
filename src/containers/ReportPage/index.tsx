@@ -76,12 +76,12 @@ class ReportPage extends React.Component<PageProps, {
     }
 
     private handleEnterKey() {
-        const parts = this.state.edit.split(',');
+        const parts = this.state.edit.split(',').map(x => x.toLowerCase());
         const ct = this.getCardType(parts[0]);
         let sv = parts[0];
         let tags = IList<CardTagData>();
         if (ct) {
-            const cardNames = CardManager.getCardsByType(ct.id).map(x => x.name);
+            const cardNames = CardManager.getCardsByType(ct.id).map(x => x.name.toLowerCase());
             tags = CardManager.getTags(cardNames.toArray());
             sv = '';
         } else {

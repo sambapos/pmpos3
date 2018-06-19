@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ListItem, ListItemText, Icon, Divider } from '@material-ui/core';
+import { ListItem, ListItemText, Icon } from '@material-ui/core';
 import tmpl from 'blueimp-tmpl';
 import { CardRecord, CardTagRecord, ConfigManager, CardManager, RuleManager } from 'pmpos-core';
 import ValidationIssue from './ValidationIssue';
@@ -133,6 +133,7 @@ export default class extends React.Component<ICardItemProps, { content: JSX.Elem
                 className=''
                 color='secondary'
                 component="div"
+                divider={!this.props.template}
                 style={this.props.style}
                 key={this.props.card.id}
                 onClick={
@@ -141,7 +142,6 @@ export default class extends React.Component<ICardItemProps, { content: JSX.Elem
                 {this.state.content}
             </ListItem >
             <ValidationIssue card={this.props.card} />
-            {!this.props.template && <Divider />}
         </>;
     }
 }

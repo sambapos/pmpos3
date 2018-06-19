@@ -1,6 +1,6 @@
 {
   "name": "pmpos3",
-  "version": "3.0.83",
+  "version": "3.0.84",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^1.2.2",

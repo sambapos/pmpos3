@@ -8,8 +8,8 @@ export class ReportLine {
     public static summarizeLines(key: string, lines: ReportLine[]): ReportLine {
         const result = new ReportLine();
         result.id = shortid.generate();
-        result.name = key;
-        result.display = key;
+        result.name = lines[0].display.toLowerCase() === lines[0].key ? lines[0].display : key;
+        result.display = lines[0].display.toLowerCase() === lines[0].key ? key : lines[0].display;
         result.time = new Date().getTime();
         result.in = 0;
         result.out = 0;
@@ -32,13 +32,15 @@ export class ReportLine {
         const result = new ReportLine();
         result.id = tag.id;
         result.name = tag.name;
-        result.display = tag.display;
+        result.display = tag.getDisplayFor(filter);
         result.time = tag.time;
         result.expiration = tag.expiration;
         result.in = tag.tag.getInQuantityFor(filter);
         result.out = tag.tag.getOutQuantityFor(filter);
         result.debit = tag.getDebitFor(filter);
         result.credit = tag.getCreditFor(filter);
+        result.location = tag.isSourceAccount(filter) ? tag.tag.source : tag.isTargetAccount(filter) ? tag.tag.target : '';
+        result.key = tag.key;
         return result;
     }
 
@@ -67,6 +69,8 @@ export class ReportLine {
     public debit: number;
     public credit: number;
     public balance: number;
+    public location: string;
+    public key: string;
 
     public get expires(): boolean {
         return this.expiration > 0;

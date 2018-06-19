@@ -38,7 +38,7 @@ class AccountTable extends React.Component<Props, IState> {
             return null;
         }
         if (!this.state.view) { return null };
-        const lines = this.state.view.getLines();
+        const lines = this.state.view.getLines().filter(x => x.credit !== 0 || x.debit !== 0);
         return (
             <Paper className={this.props.classes.card}>
                 <table className={this.props.classes.table}>
