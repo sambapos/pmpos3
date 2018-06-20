@@ -31,8 +31,12 @@ export class ReportLine {
     public static createFromTag(tag: CardTagData, filter: string): ReportLine {
         const result = new ReportLine();
         result.id = tag.id;
-        result.name = tag.name;
+        result.name = tag.name || tag.tagValue;
         result.display = tag.getDisplayFor(filter);
+        if (result.display.toLowerCase() === tag.key.toLowerCase()) {
+            result.display = result.name;
+            result.name = '';
+        };
         result.time = tag.time;
         result.expiration = tag.expiration;
         result.in = tag.tag.getInQuantityFor(filter);
