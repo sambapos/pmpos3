@@ -11,7 +11,6 @@ export class ReportView {
     constructor(tags: IList<CardTagData>, searchValue: string) {
         this.lines = IMap<string, ReportLine[]>();
         for (const tag of tags.sort((a, b) => a.time - b.time).valueSeq().toArray()) {
-            console.log('add tag', tag);
             this.addTag(tag, searchValue || tag.key);
         }
     }
