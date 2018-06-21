@@ -8,9 +8,9 @@ type AccountProps =
     { card: CardRecord }
     & WithStyles<keyof IStyle>;
 
-const reduceCardTags = (card: CardRecord, list: IMap<CardRecord, List<CardTagRecord>>) => {
-    const result = list.set(card, card.tags.valueSeq().toList());
-    return card.cards.reduce((r, c) => reduceCardTags(c, result), result);
+const reduceCardTags = (card: CardRecord, tagMap: IMap<CardRecord, List<CardTagRecord>>) => {
+    const result = tagMap.set(card, card.tags.valueSeq().toList());
+    return card.cards.reduce((r, c) => reduceCardTags(c, r), result);
 };
 
 const Accounts = (props: AccountProps) => {

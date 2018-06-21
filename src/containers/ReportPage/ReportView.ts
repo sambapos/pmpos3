@@ -36,7 +36,7 @@ export class ReportView {
 
     private addTag(tag: CardTagData, searchValue: string): void {
         const line = ReportLine.createFromTag(tag, searchValue);
-        this.lines = this.lines.update(tag.getDisplayFor(searchValue) || '', items => {
+        this.lines = this.lines.update(tag.getGroupingKeyFor(searchValue) || '', items => {
             if (!items) { items = new Array<ReportLine>() }
             items.push(line);
             return items;
