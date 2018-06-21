@@ -18,7 +18,7 @@ export class ValueSelection {
         if (value instanceof CardTagRecord) {
             this.value = value.value;
             this.amount = value.amount;
-            this.quantity = Math.max(value.quantity, 1);
+            this.quantity = value.quantity;
             this.ref = value.ref || value.id;
             this.unit = value.unit;
             this.typeId = value.typeId;
@@ -32,14 +32,14 @@ export class ValueSelection {
             this.caption = String(value.getTag('Caption', ''));
             this.amount = Number(value.getTag('Amount', '') || value.getTag('Price', '')) || 0;
             this.max = Number(value.getTag('Max', 0));
-            this.quantity = Math.max(Number(value.getTag('Quantity', 1)), 1);
+            this.quantity = Number(value.getTag('Quantity', 0));
             this.ref = value.id;
         } else if (value.value) {
             this.value = value.value;
             this.caption = value.caption;
             this.amount = value.amount || 0;
             this.max = value.max || 0;
-            this.quantity = Math.max(value.quantity || 1, 1);
+            this.quantity = value.quantity || 0;
             this.ref = value.ref;
             this.tagName = value.tagName;
             this.unit = value.unit;

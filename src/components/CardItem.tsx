@@ -7,7 +7,7 @@ import ValidationIssue from './ValidationIssue';
 const getTagDisplay = (card: CardRecord, tag: CardTagRecord) => {
     const tt = ConfigManager.getTagTypeById(tag.typeId);
     if (tt && tt.icon) {
-        if (tt.icon === '_') { return tag.valueDisplay; }
+        if (tt.icon === '_') { return tt.getValueDisplay(tag); }
         return (<span style={{ display: 'inline-block' }}>
             <Icon style={{
                 fontSize: '1rem', marginRight: 2, lineHeight: 'unset',
@@ -15,7 +15,7 @@ const getTagDisplay = (card: CardRecord, tag: CardTagRecord) => {
             }}>
                 {tt.icon}
             </Icon>
-            <span>{tag.valueDisplay}</span>
+            <span>{tt.getValueDisplay(tag)}</span>
         </span>);
     }
     return tag.display;

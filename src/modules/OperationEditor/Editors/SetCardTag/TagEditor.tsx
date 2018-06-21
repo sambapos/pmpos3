@@ -6,6 +6,7 @@ import { CardTagRecord, TagTypeRecord, CardManager } from 'pmpos-core';
 import DateTimePicker from 'material-ui-pickers/DateTimePicker';
 import * as moment from 'moment';
 import { Moment } from 'moment';
+import MaskedTextInput from '../../../../components/MaskedTextInput';
 
 interface ITagEditorProps {
     tag: CardTagRecord;
@@ -49,16 +50,7 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
                     value={this.state.name}
                     onChange={e => this.setState({ name: e.target.value })}
                 />}
-                {canEditValue && <AutoSuggest
-                    label={this.props.tagType
-                        && this.props.tagType.tagName
-                        ? this.props.tagType.tagName
-                        : 'Tag Value'}
-                    value={this.state.value}
-                    getSuggestions={value =>
-                        CardManager.getCardSuggestions(this.props.tagType.cardTypeReferenceName, value)}
-                    handleChange={(e, value) => this.handleTagValueChange(value)}
-                />}
+                {canEditValue && this.getValueEditor()}
                 {canEditCategory && <TextField
                     fullWidth
                     label="Tag Category"
@@ -170,6 +162,30 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
 
     private getDatePart(template: string): dateUnits {
         return template as dateUnits;
+    }
+
+    private getValueEditor() {
+        if (this.props.tagType && this.props.tagType.mask) {
+            return <MaskedTextInput
+                mask={this.props.tagType.realMask}
+                label={this.props.tagType
+                    && this.props.tagType.tagName
+                    ? this.props.tagType.tagName
+                    : 'Tag Value'}
+                value={this.state.value}
+                onChange={value => this.handleTagValueChange(value)}
+            />
+        }
+        return <AutoSuggest
+            label={this.props.tagType
+                && this.props.tagType.tagName
+                ? this.props.tagType.tagName
+                : 'Tag Value'}
+            value={this.state.value}
+            getSuggestions={value =>
+                CardManager.getCardSuggestions(this.props.tagType.cardTypeReferenceName, value)}
+            handleChange={(e, value) => this.handleTagValueChange(value)}
+        />
     }
 
     private handleTagValueChange(value: string) {

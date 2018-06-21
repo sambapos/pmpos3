@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { TextField, Button, DialogContent, DialogActions, DialogTitle } from '@material-ui/core';
+import {
+    TextField, Button, DialogContent, DialogActions, DialogTitle
+} from '@material-ui/core';
 import decorate, { IStyle } from './style';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import { Map as IMap } from 'immutable';
@@ -9,6 +11,7 @@ import { vibrate } from '../../../../lib/helpers';
 import SectionComponent from '../SectionComponent';
 import { ValueSelection } from "../SectionComponent/ValueSelection";
 import { extract } from '../CardExtractor';
+import MaskedTextInput from '../../../../components/MaskedTextInput';
 
 interface IState {
     parameters: {};
@@ -27,6 +30,8 @@ class Component extends React.Component<Props, IState> {
             if (this.isArray(value)) {
                 parameterState = parameterState.set(key, '');
             } else if (this.isObject(value)) {
+                parameterState = parameterState.set(key, value.selected)
+            } else if (value && value.mask) {
                 parameterState = parameterState.set(key, value.selected)
             } else {
                 parameterState = parameterState.set(key, value);
@@ -118,6 +123,17 @@ class Component extends React.Component<Props, IState> {
                 />
             );
         }
+        if (value && value.mask) {
+            return <MaskedTextInput key={key}
+                label={key}
+                mask={value.mask}
+                placeholder={value.placeholder}
+                placeholderChar={value.placeholderChar}
+                unmaskRegExp={value.unmaskRegExp}
+                value={this.getTextValue(key)}
+                onChange={v => this.setTextValue(key, v)}
+            />
+        }
         if (this.isObject(value) && value.values.length === 0) {
             return <TextField
                 style={{ margin: 4 }} label={key} key={key}
@@ -127,7 +143,6 @@ class Component extends React.Component<Props, IState> {
                 onFocus={e => e.target.select()}
                 onChange={e => this.setTextValue(key, e.target.value)} />;
         }
-
         return <TextField
             style={{ margin: 4 }} label={key} key={key}
             type={this.getEditorType(key)}

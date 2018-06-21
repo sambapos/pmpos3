@@ -17,6 +17,10 @@ export class Sections {
         this.sections.push(section);
     }
 
+    public insert(section: Section) {
+        this.sections.unshift(section);
+    }
+
     public addSelectedTag(tag: CardTagRecord) {
         const section = this.getSection(tag.category);
         if (section) {
@@ -43,7 +47,7 @@ export class Sections {
                 const originalValues = section.getSelectedValues();
                 for (const finalValue of finalValues) {
                     const ov = originalValues.find(o => o.ref === finalValue.ref);
-                    if (!ov || ov.quantity !== finalValue.quantity || ov.amount !== finalValue.amount) {
+                    if (!ov || ov.quantity !== finalValue.quantity || ov.amount !== finalValue.amount || ov.value !== finalValue.value) {
                         result.push(finalValue);
                     }
                 }

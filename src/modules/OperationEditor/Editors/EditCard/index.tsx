@@ -83,17 +83,18 @@ export default class EditCard extends React.Component<IProps, IState> {
         />
     }
 
-    private getValueEditor(sectionName: string, value: ValueSelection) {
+    private getValueEditor(sectionName: string, value: ValueSelection, mask: any) {
         return <ValueEditor
             name={sectionName}
             value={value}
+            mask={mask}
             onChange={(name: string, values: ValueSelection[]) =>
                 this.setState({ selectedValues: this.state.selectedValues.set(name, values) })} />
     }
 
     private getSectionEditor(section: Section) {
-        return <div>
-            {this.getValueEditor(section.key, section.values[0])}
+        return <div style={{ padding: 4 }}>
+            {this.getValueEditor(section.key, section.values[0], section.mask)}
         </div>
     }
 

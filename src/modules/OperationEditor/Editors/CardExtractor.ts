@@ -12,10 +12,10 @@ export function extractSections(templateCard: CardRecord, valueCard: CardRecord)
         }
     }
     const sectionKeys = result.sections.map(x => x.key);
-    for (const tag of valueCard.allTags.filter(t => sectionKeys.every(sk => t.category !== sk))) {
+    for (const tag of valueCard.allTags.reverse().filter(t => sectionKeys.every(sk => t.category !== sk))) {
         const value = new ValueSelection(tag);
-        const section = new Section(tag.name, [tag.id], [value], 0, 0);
-        result.add(section);
+        const section = new Section(tag.name, [tag.id], [value], 0, 0, ConfigManager.getTagTypeById(tag.typeId));
+        result.insert(section);
     }
     result = setSelectedItems(result, valueCard);
     return result;
@@ -36,7 +36,7 @@ function extractSection(card: CardRecord): Section | undefined {
         return extractSectionFromTag(card, refTag);
     }
     const values = card.allTags.filter(t => t.name !== 'Name').map(t => new ValueSelection(t));
-    return new Section(card.name, [], values, 1, 1);
+    return new Section(card.name, [], values, 1, 1, undefined);
 };
 
 function getReferenceTag(card: CardRecord) {
@@ -59,7 +59,7 @@ function getSectionFromCard(key: string, baseCard: CardRecord, valuesCard: CardR
         .filter(t => t.value);
     const max = Number(baseCard.getTag('Max', 0));
     const min = Number(baseCard.getTag('Min', 0));
-    return new Section(key, selected, values, max, min);
+    return new Section(key, selected, values, max, min, undefined);
 }
 
 function setSelectedItems(sections: Sections, card: CardRecord): Sections {

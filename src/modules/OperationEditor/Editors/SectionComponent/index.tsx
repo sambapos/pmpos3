@@ -55,12 +55,12 @@ class SectionComponent extends React.Component<ISectionComponentProps & WithStyl
                     let values = this.state.selectedValues;
                     let helpText = '';
                     if (this.isSelected(value)) {
+                        if (value.quantity === 0) { value.quantity = 1; }
                         if (value.max && value.max > 1) {
                             if ((max === 0 && value.max > value.quantity) || total < max) {
-                                if (value.quantity === 0) { value.quantity = 1; }
                                 value.quantity++;
                             } else if (total === max || (max === 0 && value.max === value.quantity)) {
-                                value.quantity = 1;
+                                value.quantity = 0;
                                 helpText = `You can select max ${max} values.`;
                             }
                         }
@@ -68,6 +68,7 @@ class SectionComponent extends React.Component<ISectionComponentProps & WithStyl
                     } else if (max === 1) {
                         values = [value]
                     } else if (max === 0 || total < max) {
+                        if (value.quantity === 0) { value.quantity = 1; }
                         values.push(value);
                     } else if (max > 0 && total === max) {
                         helpText = `You can select max ${max} values.`;
@@ -75,7 +76,6 @@ class SectionComponent extends React.Component<ISectionComponentProps & WithStyl
                     this.setState({ selectedValues: values, helpText });
                     this.props.onChange(this.props.name, values);
                 }
-
             }
         />
     }

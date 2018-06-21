@@ -35,6 +35,7 @@ interface IPageState {
     targetCardTypeReferenceName: string;
     displayFormat: string;
     icon: string;
+    mask: string;
     defaultValue: string;
     defaultCategory: string;
     defaultFunction: string;
@@ -68,6 +69,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
             defaultCategory: '',
             displayFormat: '',
             icon: '',
+            mask: '',
             defaultFunction: '',
             defaultQuantity: '',
             defaultUnit: '',
@@ -97,6 +99,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                 targetCardTypeReferenceName: props.tagType.targetCardTypeReferenceName,
                 displayFormat: props.tagType.displayFormat,
                 icon: props.tagType.icon,
+                mask: props.tagType.mask,
                 defaultValue: props.tagType.defaultValue,
                 defaultCategory: props.tagType.defaultCategory,
                 defaultFunction: props.tagType.defaultFunction,
@@ -133,6 +136,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                 targetCardTypeReferenceName: this.props.tagType.targetCardTypeReferenceName,
                 displayFormat: this.props.tagType.displayFormat,
                 icon: this.props.tagType.icon,
+                mask: this.props.tagType.mask,
                 defaultValue: this.props.tagType.defaultValue,
                 defaultCategory: this.props.tagType.defaultCategory,
                 defaultFunction: this.props.tagType.defaultFunction,
@@ -188,6 +192,7 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                                     targetCardTypeReferenceName: this.state.targetCardTypeReferenceName,
                                     displayFormat: this.state.displayFormat,
                                     icon: this.state.icon,
+                                    mask: this.state.mask,
                                     defaultValue: this.state.defaultValue,
                                     defaultCategory: this.state.defaultCategory,
                                     defaultFunction: this.state.defaultFunction,
@@ -339,6 +344,14 @@ export class TagTypePage extends React.Component<PageProps, IPageState> {
                         value={this.state.icon}
                         onChange={(e) => this.setState({
                             icon: e.target.value
+                        })}
+                    />
+                    <TextField
+                        fullWidth
+                        label="Mask"
+                        value={this.state.mask}
+                        onChange={(e) => this.setState({
+                            mask: e.target.value
                         })}
                     />
                 </Paper >

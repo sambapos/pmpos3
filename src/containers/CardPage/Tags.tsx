@@ -41,15 +41,15 @@ const getCustomDisplay = (template: string, tag: CardTagWrapper, classes: Record
 const getTagDisplay = (card: CardRecord, tag: CardTagRecord, iconClass: string) => {
     const tt = ConfigManager.getTagTypeById(tag.typeId);
     if (tt && tt.icon) {
-        if (tt.icon === '_') { return tag.valueDisplay; }
+        if (tt.icon === '_') { return tt.getValueDisplay(tag); }
         return (<span >
             <Icon className={iconClass}>
                 {tt.icon}
             </Icon>
-            <span>{tag.valueDisplay}</span>
+            <span>{tt.getValueDisplay(tag)}</span>
         </span>);
     }
-    return tag.name !== 'Name' ? tag.display : tag.valueDisplay;
+    return tag.name !== 'Name' ? tag.display : tag.getValueDisplay();
 };
 
 const getPriceDisplay = (tag: CardTagRecord) => {
@@ -59,20 +59,19 @@ const getPriceDisplay = (tag: CardTagRecord) => {
 const getDefaultDisplay = (card: CardRecord, tag: CardTagRecord, classes: Record<keyof IStyle, string>) => {
     const tagTotal = card.getTagTotal(tag);
     const st = tag.locationDisplay;
-    return (
-        <>
-            <div className={classes.tagItemContent}>
-                <div>{getTagDisplay(card, tag, classes.icon)}</div>
-                {st && <div className={classes.tagLocation}>
-                    {tag.source}<Icon style={{
-                        fontSize: '1.2em', verticalAlign: 'bottom', fontWeight: 'bold'
-                    }}>keyboard_arrow_right</Icon>{tag.target}
-                </div>}
-            </div>
-            <div className={classes.tagBalance}>
-                {tagTotal !== 0 ? Math.abs(tagTotal).toFixed(2) : getPriceDisplay(tag)}
-            </div>
-        </>);
+    return <>
+        <div className={classes.tagItemContent}>
+            <div>{getTagDisplay(card, tag, classes.icon)}</div>
+            {st && <div className={classes.tagLocation}>
+                {tag.source}<Icon style={{
+                    fontSize: '1.2em', verticalAlign: 'bottom', fontWeight: 'bold'
+                }}>keyboard_arrow_right</Icon>{tag.target}
+            </div>}
+        </div>
+        <div className={classes.tagBalance}>
+            {tagTotal !== 0 ? Math.abs(tagTotal).toFixed(2) : getPriceDisplay(tag)}
+        </div>
+    </>
 };
 
 const getDisplayFor = (
