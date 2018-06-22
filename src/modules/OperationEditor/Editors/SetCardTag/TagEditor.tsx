@@ -4,7 +4,6 @@ import AutoSuggest from '../../../../components/AutoSuggest';
 import { TextField, DialogContent, DialogActions, Button } from '@material-ui/core';
 import { CardTagRecord, TagTypeRecord, CardManager } from 'pmpos-core';
 import DateTimePicker from 'material-ui-pickers/DateTimePicker';
-import * as moment from 'moment';
 import { Moment } from 'moment';
 import MaskedTextInput from '../../../../components/MaskedTextInput';
 
@@ -19,8 +18,6 @@ interface ITagEditorState {
     amount: string; func: string; validUntil: number | null;
     source: string; target: string; typeId: string;
 }
-
-type dateUnits = "year" | "years" | "y" | "month" | "months" | "M" | "week" | "weeks" | "w" | "day" | "days" | "d" | "hour" | "hours" | "h" | "minute" | "minutes" | "m" | "second" | "seconds" | "s" | "millisecond" | "milliseconds" | "ms" | "quarter" | "quarters" | "Q" | undefined;
 
 export default class TagEditor extends React.Component<ITagEditorProps, ITagEditorState> {
 
@@ -144,24 +141,8 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
             func: tag.func || tagType.defaultFunction,
             source: tag.source || tagType.defaultSource,
             target: tag.target || tagType.defaultTarget,
-            validUntil: tag.validUntil || this.generateValidUntil(tagType.defaultValidUntil)
+            validUntil: tag.validUntil || tagType.generateValidUntil() || null
         };
-    }
-
-    private generateValidUntil(template: string): number | null {
-        if (!template) { return null };
-        const parts = template.split(' ');
-        if (parts.length === 1) {
-            return moment().add(parts[0], 'd').toDate().getTime();
-        }
-        if (parts.length === 2) {
-            return moment().add(parts[0], this.getDatePart(parts[1])).toDate().getTime();
-        }
-        return null;
-    }
-
-    private getDatePart(template: string): dateUnits {
-        return template as dateUnits;
     }
 
     private getValueEditor() {

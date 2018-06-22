@@ -1,7 +1,8 @@
-import { CardRecord, CardTagRecord, ConfigManager, CardManager } from "pmpos-core";
+import { CardRecord, CardTagRecord, ConfigManager, CardManager, TagTypeRecord } from "pmpos-core";
 import { ValueSelection } from "./SectionComponent/ValueSelection";
 import { Section } from "./SectionComponent/Section";
 import { Sections } from "./SectionComponent/Sections";
+import * as shortid from 'shortid';
 
 export function extractSections(templateCard: CardRecord, valueCard: CardRecord): Sections {
     let result = new Sections();
@@ -12,7 +13,8 @@ export function extractSections(templateCard: CardRecord, valueCard: CardRecord)
         }
     }
     const sectionKeys = result.sections.map(x => x.key);
-    for (const tag of valueCard.allTags.reverse().filter(t => sectionKeys.every(sk => t.category !== sk))) {
+
+    for (const tag of getCardTagsAndDefaults(valueCard).reverse().filter(t => sectionKeys.every(sk => t.category !== sk))) {
         const value = new ValueSelection(tag);
         const section = new Section(tag.name, [tag.id], [value], 0, 0, ConfigManager.getTagTypeById(tag.typeId));
         result.insert(section);
@@ -69,4 +71,30 @@ function setSelectedItems(sections: Sections, card: CardRecord): Sections {
         }
     }
     return sections;
+}
+
+function getCardTagsAndDefaults(card: CardRecord) {
+    const result = new Array<CardTagRecord>();
+    const currentTags = [...card.allTags];
+    const ct = ConfigManager.getCardTypeById(card.typeId);
+    if (ct) {
+        const tagTypes = ct.tagTypes.reduce((r, id) => {
+            const tagType = ConfigManager.getTagTypeById(id);
+            if (tagType) { r.push(tagType) };
+            return r;
+        }, new Array<TagTypeRecord>());
+        for (const tt of tagTypes) {
+            const currentTagIndex = currentTags.findIndex(c => c.typeId === tt.id);
+            if (currentTagIndex > -1) {
+                result.push(currentTags[currentTagIndex]);
+                currentTags.splice(currentTagIndex, 1);
+            } else {
+                const newTag = tt.createDefaultTag();
+                newTag.id = shortid.generate();
+                result.push(new CardTagRecord(newTag));
+            }
+        }
+    }
+    result.push(...currentTags);
+    return result;
 }

@@ -125,6 +125,7 @@ class Component extends React.Component<Props, IState> {
         }
         if (value && value.mask) {
             return <MaskedTextInput key={key}
+                style={{ margin: 4 }}
                 label={key}
                 mask={value.mask}
                 placeholder={value.placeholder}

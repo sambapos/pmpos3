@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, DialogContent, DialogActions, DialogTitle } from '@material-ui/core';
 import IEditorProperties from '../editorProperties';
-import { CardRecord, CardManager, ConfigManager, RuleManager } from 'pmpos-core';
+import { CardRecord, CardManager, ConfigManager, RuleManager, CardTypeRecord } from 'pmpos-core';
 import { extractSections } from '../CardExtractor';
 import SectionComponent from '../SectionComponent';
 import { ValueSelection } from '../SectionComponent/ValueSelection';
@@ -10,10 +10,11 @@ import { SelectedValues } from '../SectionComponent/SelectedValues';
 import { Section } from '../SectionComponent/Section';
 import ValueEditor from '../SectionComponent/ValueEditor';
 
-type IProps = IEditorProperties<{ title: string }>;
+type IProps = IEditorProperties<{ card: CardRecord, title: string }>;
 
 interface IState {
     selectedValues: SelectedValues;
+    cardType: CardTypeRecord | undefined;
 }
 
 export default class EditCard extends React.Component<IProps, IState> {
@@ -22,18 +23,22 @@ export default class EditCard extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
-        this.baseCard = this.getBaseCard(props.card) || new CardRecord();
+        const card = props.current && props.current.card ? props.current.card : props.card;
+        this.baseCard = this.getBaseCard(card) || new CardRecord();
         if (this.baseCard) {
-            this.baseSections = extractSections(this.baseCard, props.card);
+            this.baseSections = extractSections(this.baseCard, card);
         }
-        this.state = { selectedValues: new SelectedValues(this.baseSections) }
+        this.state = {
+            selectedValues: new SelectedValues(this.baseSections),
+            cardType: ConfigManager.getCardTypeById(card.typeId)
+        }
     }
 
     public render() {
         return (
             <>
                 <DialogTitle>
-                    {this.props.current ? this.props.current.title : 'Edit'}
+                    {this.props.current ? this.props.current.title : 'Edit ' + (this.state.cardType ? this.state.cardType.reference : '')}
                 </DialogTitle>
                 <DialogContent>
                     {this.getSections()}

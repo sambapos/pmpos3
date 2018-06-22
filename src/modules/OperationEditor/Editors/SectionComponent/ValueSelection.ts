@@ -34,7 +34,7 @@ export class ValueSelection {
             this.max = Number(value.getTag('Max', 0));
             this.quantity = Number(value.getTag('Quantity', 0));
             this.ref = value.id;
-        } else if (value.value) {
+        } else if (value.value != null) {
             this.value = value.value;
             this.caption = value.caption;
             this.amount = value.amount || 0;

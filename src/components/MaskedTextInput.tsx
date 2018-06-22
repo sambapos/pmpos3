@@ -9,20 +9,20 @@ export interface IProps {
     unmaskRegExp?: RegExp;
     label: string;
     value: any;
+    style?: any;
     onChange: (value: string) => void;
 }
 
 export default class extends React.Component<IProps> {
     public render() {
-        const mask = this.props.mask;
         return <MaskedInput
-            mask={mask}
+            mask={this.props.mask}
             placeholder={this.props.placeholder}
             placeholderChar={this.props.placeholderChar}
             value={this.props.value}
             onChange={e => this.props.onChange(this.unMask(e.target.value, this.props.unmaskRegExp))}
             render={(ref, props) => (
-                <FormControl fullWidth>
+                <FormControl fullWidth style={this.props.style}>
                     <InputLabel>{this.props.label}</InputLabel>
                     <Input
                         fullWidth
