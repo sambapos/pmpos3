@@ -181,7 +181,10 @@ export const actionCreators = {
                     dispatch({ type: 'SET_MODAL_COMPONENT', component: editor });
                 });
             };
-            TerminalManager.createCard('', cardType.reference, tags, handleCanEdit, handleEdit)
+            const handleClose = () => {
+                dispatch({ type: 'REQUEST_CLOSE_CARD' });
+            };
+            TerminalManager.createCard('', cardType.reference, tags, handleCanEdit, handleEdit, handleClose)
                 .then(card =>
                     dispatch({
                         type: 'SET_CURRENT_CARD',
@@ -224,21 +227,21 @@ export const actionCreators = {
                     })
                 });
         },
-    removePendingActions: (cardId: string):
-        IAppThunkAction<KnownActions> => (dispatch, getState) => {
-            const card = TerminalManager.removePendingActions('', '', cardId);
-            if (!card) {
-                TerminalManager.cancelCard('', cardId);
-                dispatch({
-                    type: 'REQUEST_CLOSE_CARD'
-                });
-                return;
-            }
-            dispatch({
-                type: 'SET_CURRENT_CARD',
-                card
-            });
-        },
+    // removePendingActions: (cardId: string):
+    //     IAppThunkAction<KnownActions> => (dispatch, getState) => {
+    //         const card = TerminalManager.removePendingActions('', '', cardId);
+    //         if (!card) {
+    //             TerminalManager.cancelCard('', cardId);
+    //             dispatch({
+    //                 type: 'REQUEST_CLOSE_CARD'
+    //             });
+    //             return;
+    //         }
+    //         dispatch({
+    //             type: 'SET_CURRENT_CARD',
+    //             card
+    //         });
+    //     },
     deleteCards: (cardTypeId: string): IAppThunkAction<KnownActions> => (dispatch, getState) => {
         CardManager.deleteCards(cardTypeId);
     },

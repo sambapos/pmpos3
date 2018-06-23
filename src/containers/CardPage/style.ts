@@ -37,8 +37,7 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         flex: 1
     },
     leaf: {
-        backgroundColor: palette.common.white,
-        paddingLeft: spacing.unit,
+        paddingLeft: spacing.unit
     },
     subCards: {
         overflow: 'auto',
@@ -55,7 +54,7 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         backgroundColor: palette.divider,
         borderRadius: 4,
         padding: spacing.unit / 2,
-        marginRight: spacing.unit / 2,
+        marginLeft: spacing.unit / 2,
         marginBottom: spacing.unit / 2
     },
     tagItemAmount: {
@@ -82,6 +81,7 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         display: 'flex',
         flexWrap: 'wrap',
         minHeight: 30,
+        backgroundColor: palette.common.white,
         borderBottom: '1px solid ' + palette.divider,
     },
     selectedCardLine: {
@@ -93,6 +93,7 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     },
     cardLineIcon: {
         marginTop: spacing.unit,
+        marginRight: -spacing.unit / 2,
         fontSize: 26
     },
     card: {
@@ -106,9 +107,11 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     },
     indexHeader: {
         padding: spacing.unit,
+        paddingLeft: spacing.unit * 2,
         borderBottom: '1px solid ' + palette.divider,
     },
     content: {
+        marginLeft: -spacing.unit,
         height: '100%',
         display: 'flex',
         flexFlow: 'column',

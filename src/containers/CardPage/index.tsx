@@ -82,8 +82,8 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
             );
         }
 
-        const hasPendingUpdates = this.state.anchorEl && TerminalManager.getPendingActions('', this.props.card.id)
-            .some(a => a.relatesToCard(this.state.selectedCard.id));
+        // const hasPendingUpdates = this.state.anchorEl && TerminalManager.getPendingActions('', this.props.card.id)
+        //     .some(a => a.relatesToCard(this.state.selectedCard.id));
 
         return (
             <div className={this.props.classes.root}>
@@ -93,6 +93,10 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
                     onClose={() => {
                         this.setState({ disableUpdate: true });
                         this.props.addPendingAction(this.props.card, 'COMMIT_CARD', { id: 1 });
+                    }}
+                    onCancel={() => {
+                        this.setState({ disableUpdate: true });
+                        this.props.addPendingAction(this.props.card, 'CANCEL_CARD_ACTIONS', {});
                     }} />
                 <div className={this.props.classes.container}>
                     <div className={this.props.classes.cardView}>
@@ -148,13 +152,6 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
                         },
                     }}
                 >
-                    {hasPendingUpdates && <><MenuItem
-                        onClick={e => {
-                            this.props.removePendingActions(this.state.selectedCard.id);
-                            this.handleMenuClose();
-                        }}
-                    >Cancel</MenuItem>
-                        <Divider /></>}
                     <TagMenuItems
                         selectedCard={this.state.selectedCard}
                         handleOperation={(op, data) =>
