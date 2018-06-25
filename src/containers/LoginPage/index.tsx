@@ -43,7 +43,7 @@ class LoginPage extends React.Component<PageProps, IState> {
                     title={`Login (${this.state.networkName}${loggedInUser ? '/' : ''}${loggedInUser})`}
                     secondaryCommands={[
                         {
-                            icon: 'home',
+                            icon: 'settings',
                             onClick: () => {
                                 this.setState({ networkDialogShown: true });
                                 this.props.SetModalComponent(this.getDialog());

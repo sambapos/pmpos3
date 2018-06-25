@@ -21,30 +21,33 @@ type PageProps = ICardContentProps & WithStyles<keyof IStyle>;
 const CardPageContent = (props: PageProps) => {
     const drawIcon = props.card.id === props.selectedCardId;
     return (
-        <div
-            className={props.card.cards.count() > 0 ? props.classes.node : props.classes.leaf} >
-            <div
-                className={classNames(
-                    props.classes.cardLine, {
-                        [props.classes.selectedCardLine]: props.selectedCardId === props.card.id,
-                        [props.classes.pendingCardLine]: props.hasPendingActions
-                    }
-                )}>
-                {drawIcon && <Icon
-                    onClick={e => props.onClick(props.card, e.target)}
-                    color="primary"
-                    className={props.classes.cardLineIcon}
-                >
-                    more_vert
+        <div className={props.classes.nodeContent}>
+            <div className={props.classes.spacer}
+                style={{ backgroundColor: props.cardType ? props.cardType.color : 'transparent' }} />
+            <div className={props.card.cards.count() > 0 ? props.classes.node : props.classes.leaf}>
+                <div
+                    className={classNames(
+                        props.classes.cardLine, {
+                            [props.classes.selectedCardLine]: props.selectedCardId === props.card.id,
+                            [props.classes.pendingCardLine]: props.hasPendingActions
+                        }
+                    )}>
+                    {drawIcon && <Icon
+                        onClick={e => props.onClick(props.card, e.target)}
+                        color="primary"
+                        className={props.classes.cardLineIcon}
+                    >
+                        more_vert
                 </Icon>}
-                <Tags card={props.card} parentCard={props.parentCard} handleCardClick={props.handleCardClick} />
+                    <Tags card={props.card} parentCard={props.parentCard} handleCardClick={props.handleCardClick} />
+                </div>
+                <SubCards
+                    card={props.card}
+                    selectedCardId={props.selectedCardId}
+                    onClick={props.onClick}
+                    handleCardClick={props.handleCardClick}
+                />
             </div>
-            <SubCards
-                card={props.card}
-                selectedCardId={props.selectedCardId}
-                onClick={props.onClick}
-                handleCardClick={props.handleCardClick}
-            />
         </div >
     );
 };

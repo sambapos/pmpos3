@@ -49,7 +49,7 @@ const getTagDisplay = (card: CardRecord, tag: CardTagRecord, iconClass: string) 
             <span>{tt.getValueDisplay(tag)}</span>
         </span>);
     }
-    return tag.name !== 'Name' ? tag.display : tag.getValueDisplay();
+    return tag.name !== 'Name' ? tag.display : tag.getFormattedValueDisplay(tag.unit, tag.quantity, tag.formattedValue || tag.value);
 };
 
 const getPriceDisplay = (tag: CardTagRecord) => {
@@ -92,6 +92,17 @@ const getTagItemClassName = (
 };
 
 const Tags = (props: ITagsProps & WithStyles<keyof IStyle>) => {
+    if (props.card.tags.count() === 0) {
+        const ct = ConfigManager.getCardTypeById(props.card.typeId);
+        const type = ct ? ct.reference : 'Card';
+        return <div
+            className={props.classes.newCard}
+            onClick={() => {
+                props.handleCardClick(props.card);
+            }}>
+            New {type}
+        </div>
+    }
     return (
         <div className={props.classes.tagSection}
             onClick={() => {

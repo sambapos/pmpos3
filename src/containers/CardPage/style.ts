@@ -25,19 +25,27 @@ export interface IStyle {
     indexHeader: any;
     subCards: any;
     icon: any;
+    newCard: any;
+    spacer: any;
+    nodeContent: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
+    newCard: {
+        flex: 1,
+        margin: spacing.unit,
+        fontStyle: 'italic',
+        color: palette.text.disabled
+    },
     node: {
         borderColor: palette.divider,
-        backgroundColor: palette.background.default,
         display: 'flex',
         flexFlow: 'column',
-        paddingLeft: spacing.unit,
         flex: 1
     },
     leaf: {
-        paddingLeft: spacing.unit
+        display: 'flex',
+        flex: 1
     },
     subCards: {
         overflow: 'auto',
@@ -77,12 +85,22 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         alignSelf: 'center'
     },
     cardLine: {
-        flex: 'none',
+        flex: '1 0 auto',
         display: 'flex',
         flexWrap: 'wrap',
         minHeight: 30,
+        paddingLeft: 2,
         backgroundColor: palette.common.white,
         borderBottom: '1px solid ' + palette.divider,
+        boxShadow: '0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12)',
+    },
+    nodeContent: {
+        display: 'flex',
+        overflow: 'hidden'
+    },
+    spacer: {
+        backgroundColor: palette.divider,
+        width: 4
     },
     selectedCardLine: {
         backgroundColor: palette.grey['200']
@@ -93,7 +111,6 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     },
     cardLineIcon: {
         marginTop: spacing.unit,
-        marginRight: -spacing.unit / 2,
         fontSize: 26
     },
     card: {
@@ -111,20 +128,22 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         borderBottom: '1px solid ' + palette.divider,
     },
     content: {
-        marginLeft: -spacing.unit,
         height: '100%',
         display: 'flex',
         flexFlow: 'column',
+        overflow: 'hidden',
+        marginLeft: -4,
+        backgroundColor: palette.background.default,
         [breakpoints.up('sm')]: {
             maxWidth: '600px',
-            width: '100%',
-            alignSelf: 'center'
+            width: '100%'
         },
     },
     cardView: {
         display: 'flex',
         flexFlow: 'column',
         flex: '1',
+        overflow: 'hidden',
         [breakpoints.up('sm')]: {
             minWidth: 330
         },

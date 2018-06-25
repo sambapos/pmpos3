@@ -162,6 +162,10 @@ function resetCurrentCard(state: StateRecord) {
 export const actionCreators = {
     addCard: (cardType: CardTypeRecord, tags: ICardTag[]):
         IAppThunkAction<any> => (dispatch, getState) => {
+            dispatch({
+                type: 'SET_CURRENT_CARD',
+                card: new CardRecord({ typeId: cardType.id })
+            })
             const handleCanEdit = actionRecord => cardOperations.canEdit(actionRecord);
             const handleEdit = (action) => {
                 return new Promise<ActionRecord>((resolve, reject) => {

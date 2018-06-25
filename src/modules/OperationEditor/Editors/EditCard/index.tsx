@@ -10,7 +10,7 @@ import { SelectedValues } from '../SectionComponent/SelectedValues';
 import { Section } from '../SectionComponent/Section';
 import ValueEditor from '../SectionComponent/ValueEditor';
 
-type IProps = IEditorProperties<{ card: CardRecord, title: string, newValues: any, deletedValues: any }>;
+type IProps = IEditorProperties<{ card: CardRecord, title: string, newValues: Map<string, ValueSelection[]>, deletedValues: Map<string, ValueSelection[]> }>;
 
 interface IState {
     selectedValues: SelectedValues;
@@ -50,11 +50,10 @@ export default class EditCard extends React.Component<IProps, IState> {
                             const deletedValues = this.getDeletedValues(this.baseSections, this.state.selectedValues);
                             RuleManager.setState('newValues', newValues);
                             RuleManager.setState('deletedValues', deletedValues);
-                            if (this.props.current) {
-                                this.props.current.newValues = newValues;
-                                this.props.current.deletedValues = deletedValues;
-                            }
-                            this.props.success(this.props.actionName, this.props.current);
+                            const current: any = this.props.current || {};
+                            current.newValues = newValues;
+                            current.deletedValues = deletedValues;
+                            this.props.success(this.props.actionName, current);
                         }}
                     >
                         Submit

@@ -2,19 +2,25 @@ import withStyles from '@material-ui/core/styles/withStyles';
 
 export interface IStyle {
     content: any;
+    tabContent: any;
     paper: any;
     root: any;
     fixedEdit: any;
     subHeader: any;
     dynamicRow: any;
     fixedRow: any;
+    cardBody: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     root: {
         display: 'flex',
         flexFlow: 'column',
-        flex: '1 1 auto'
+        flex: '1 1 auto',
+        width: '100%'
+    },
+    cardBody: {
+        padding: spacing.unit
     },
     subHeader: {
         flex: 1,
@@ -23,19 +29,23 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         padding: spacing.unit
     },
     content: {
-        height: '100%',
+        flex: 1,
         display: 'flex',
         overflowX: 'auto',
         flexFlow: 'column',
-        padding: spacing.unit,
         marginTop: spacing.unit,
         [breakpoints.up('sm')]: {
             maxWidth: 600,
             width: '100%',
-            alignSelf: 'center',
-            padding: spacing.unit * 3,
-            marginTop: spacing.unit * 3
+            alignSelf: 'center'
         },
+    },
+    tabContent: {
+        flex: 1,
+        display: 'flex',
+        overflowX: 'auto',
+        flexFlow: 'column',
+        padding: spacing.unit * 2
     },
     dynamicRow: {
         display: 'flex',
@@ -72,6 +82,7 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         width: '100%'
     },
     fixedEdit: {
+        lineHeight: '1.18em',
         fontFamily: `Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Courier New, monospace`
     }
 }));

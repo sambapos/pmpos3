@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import * as ConfigStore from '../../store/Config';
 import * as ClientStore from '../../store/Client';
 import { RouteComponentProps } from 'react-router';
-import { CardActions, Typography, WithStyles, TextField, Paper, Button } from '@material-ui/core';
+import SwipeableViews from 'react-swipeable-views';
+import { CardActions, Typography, WithStyles, TextField, Paper, Button, AppBar, Tabs, Tab } from '@material-ui/core';
 import * as Extender from '../../lib/Extender';
 import decorate, { IStyle } from './style';
 import { IApplicationState } from '../../store/index';
@@ -30,6 +31,16 @@ interface IPageState {
     commands: string;
     tagTypes: string[];
     subCardTypes: string[];
+    tabIndex: number;
+    color: string;
+}
+
+function TabContainer({ children, classes }) {
+    return (
+        <div className={classes.tabContent}>
+            {children}
+        </div>
+    );
 }
 
 export class CardTypePage extends React.Component<PageProps, IPageState> {
@@ -42,7 +53,9 @@ export class CardTypePage extends React.Component<PageProps, IPageState> {
             commands: '',
             displayFormat: '',
             tagTypes: [],
-            subCardTypes: []
+            subCardTypes: [],
+            tabIndex: 0,
+            color: ''
         };
     }
 
@@ -55,7 +68,8 @@ export class CardTypePage extends React.Component<PageProps, IPageState> {
                 displayFormat: props.cardType.displayFormat,
                 commands: props.cardType.commands.join('\n'),
                 tagTypes: props.cardType.tagTypes,
-                subCardTypes: props.cardType.subCardTypes
+                subCardTypes: props.cardType.subCardTypes,
+                color: props.cardType.color
             });
         }
     }
@@ -69,7 +83,8 @@ export class CardTypePage extends React.Component<PageProps, IPageState> {
                 displayFormat: this.props.cardType.displayFormat,
                 commands: this.props.cardType.commands.join('\n'),
                 tagTypes: this.props.cardType.tagTypes,
-                subCardTypes: this.props.cardType.subCardTypes
+                subCardTypes: this.props.cardType.subCardTypes,
+                color: this.props.cardType.color
             });
         }
     }
@@ -102,7 +117,8 @@ export class CardTypePage extends React.Component<PageProps, IPageState> {
                                     displayFormat: this.state.displayFormat,
                                     commands: this.state.commands.split('\n'),
                                     tagTypes: this.state.tagTypes,
-                                    subCardTypes: this.state.subCardTypes
+                                    subCardTypes: this.state.subCardTypes,
+                                    color: this.state.color
                                 }));
                                 this.props.history.goBack();
                             }
@@ -126,66 +142,100 @@ export class CardTypePage extends React.Component<PageProps, IPageState> {
                             })}
                         />
                         <TextField
-                            inputProps={{ className: this.props.classes.fixedEdit }}
-                            multiline
-                            rowsMax={6}
-                            label="Display Format"
-                            value={this.state.displayFormat}
-                            onChange={(e) => this.setState({
-                                displayFormat: e.target.value
-                            })}
-                        />
-                        <TextField
                             label="Network"
                             value={this.state.network}
                             onChange={(e) => this.setState({
                                 network: e.target.value
                             })}
                         />
-                        <TextField
-                            inputProps={{ className: this.props.classes.fixedEdit }}
-                            multiline
-                            rows={3}
-                            rowsMax={6}
-                            label="Commands"
-                            value={this.state.commands}
-                            onChange={(e) => this.setState({
-                                commands: e.target.value
-                            })}
-                        />
                     </Paper >
                 </div>
-                <div className={this.props.classes.dynamicRow}>
-                    <Paper className={this.props.classes.content}>
-                        <Typography variant="title">Sub Card Types</Typography>
-                        {this.getSubCardTypeList()}
-                        <CardActions>
-                            <Button
-                                color="secondary"
-                                style={{ float: 'right' }}
-                                onClick={e => this.showCardSelectionDialog()}
-                            >
-                                Select Card Types
-                        </Button>
-                        </CardActions>
-                    </Paper>
-                    <Paper className={this.props.classes.content}>
-                        <Typography variant="title">Tag Types</Typography>
-                        {this.getTagTypeList()}
-                        <CardActions>
-                            <Button
-                                color="secondary"
-                                style={{ float: 'right' }}
-                                onClick={e => this.showTagSelectionDialog()}
-                            >
-                                Select Tag Types
-                        </Button>
-                        </CardActions>
-                    </Paper>
-                </div>
+                <Paper className={this.props.classes.content}>
+                    <AppBar position="static" color="default">
+                        <Tabs
+                            value={this.state.tabIndex}
+                            onChange={(e, v) => this.handleChangeIndex(v)}
+                            indicatorColor="primary"
+                            textColor="primary"
+                            fullWidth
+                        >
+                            <Tab label="Appearance" />
+                            <Tab label="Card Types" />
+                            <Tab label="Tag Types" />
+                        </Tabs>
+                    </AppBar>
+                    <SwipeableViews
+                        containerStyle={{ width: '100%' }}
+                        slideStyle={{ display: 'flex' }}
+                        style={{ display: 'flex', flex: 1 }}
+                        index={this.state.tabIndex}
+                        onChangeIndex={this.handleChangeIndex}
+                    >
+                        <TabContainer classes={this.props.classes}>
+                            <TextField
+                                inputProps={{ className: this.props.classes.fixedEdit }}
+                                multiline
+                                rowsMax={4}
+                                fullWidth
+                                label="Commands"
+                                value={this.state.commands}
+                                onChange={(e) => this.setState({
+                                    commands: e.target.value
+                                })}
+                            />
+                            <TextField
+                                inputProps={{ className: this.props.classes.fixedEdit }}
+                                multiline
+                                rowsMax={8}
+                                label="Display Format"
+                                value={this.state.displayFormat}
+                                onChange={(e) => this.setState({
+                                    displayFormat: e.target.value
+                                })}
+                            />
+                            <TextField
+                                label="Color"
+                                value={this.state.color}
+                                onChange={(e) => this.setState({
+                                    color: e.target.value
+                                })}
+                            />
+                        </TabContainer>
+                        <TabContainer classes={this.props.classes}>
+                            <Typography variant="title">Sub Card Types</Typography>
+                            {this.getSubCardTypeList()}
+                            <CardActions>
+                                <Button
+                                    color="secondary"
+                                    style={{ float: 'right' }}
+                                    onClick={e => this.showCardSelectionDialog()}
+                                >
+                                    Select Card Types
+                                    </Button>
+                            </CardActions>
+                        </TabContainer>
+                        <TabContainer classes={this.props.classes}>
+                            <Typography variant="title">Tag Types</Typography>
+                            {this.getTagTypeList()}
+                            <CardActions>
+                                <Button
+                                    color="secondary"
+                                    style={{ float: 'right' }}
+                                    onClick={e => this.showTagSelectionDialog()}
+                                >
+                                    Select Tag Types
+                                </Button>
+                            </CardActions>
+                        </TabContainer>
+                    </SwipeableViews>
+                </Paper>
             </div>
         );
     }
+
+    private handleChangeIndex = index => {
+        this.setState({ tabIndex: index });
+    };
 
     private getTitle() {
         return this.props.cardType.name ? `Card Type (${this.props.cardType.name})` : 'New Card Type';

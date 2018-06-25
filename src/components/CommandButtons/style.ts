@@ -6,11 +6,14 @@ export interface IStyle {
     highlightedButton: any;
 }
 
-export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
+export default withStyles(({ spacing, breakpoints }): IStyle => ({
     commandButtonsContainer: {
         flex: 'none',
         display: 'flex',
         flexWrap: 'wrap',
+        [breakpoints.down('xs')]: {
+            margin: 2,
+        },
         [breakpoints.up('sm')]: {
             marginLeft: (spacing.unit * 2) - 4
         }
@@ -18,6 +21,9 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     button: {
         flex: 1,
         margin: 2,
+        [breakpoints.down('xs')]: {
+            boxShadow: 'none',
+        },
         [breakpoints.up('sm')]: {
             margin: 4,
             fontSize: '1.2em',

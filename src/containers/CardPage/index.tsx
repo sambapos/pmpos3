@@ -6,7 +6,7 @@ import { extend } from '../../lib/Extender';
 import * as CardStore from '../../store/Cards';
 import * as ClientStore from '../../store/Client';
 import { IApplicationState } from '../../store/index';
-import { Typography, Menu, MenuItem, Paper, Divider } from '@material-ui/core';
+import { Typography, Menu, MenuItem, Divider, Paper } from '@material-ui/core';
 import decorate from './style';
 import TopBar from '../TopBar';
 import OperationEditor from '../../modules/OperationEditor';
