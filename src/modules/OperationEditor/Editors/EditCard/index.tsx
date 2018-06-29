@@ -72,7 +72,7 @@ export default class EditCard extends React.Component<IProps, IState> {
     }
 
     private getSectionComponent(section: Section) {
-        if (section.values.length === 1) {
+        if (section.values.length === 1 && !section.values[0].tagName.startsWith('_')) {
             return this.getSectionEditor(section);
         }
         return this.getSectionSelectionComponent(section);

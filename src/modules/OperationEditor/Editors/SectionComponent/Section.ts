@@ -30,15 +30,16 @@ export class Section {
     }
 
     public addSelectedTag(tag: CardTagRecord) {
-        this.selected.push(tag.ref);
+        const ref = tag.ref || tag.id;
+        this.selected.push(ref);
         if (this.values.length > 1) {
-            const val = this.values.find(x => x.ref === tag.ref);
+            const val = this.values.find(x => x.ref === ref);
             if (val) {
                 val.tagName = tag.name;
                 val.quantity = tag.quantity ? tag.quantity : 1;
                 val.amount = tag.amount;
+                this.originalSelection.push(new ValueSelection(val));
             }
-            this.originalSelection.push(new ValueSelection(val));
         }
     }
 }

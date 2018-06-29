@@ -14,7 +14,21 @@ export function extractSections(templateCard: CardRecord, valueCard: CardRecord)
     }
     const sectionKeys = result.sections.map(x => x.key);
 
-    for (const tag of getCardTagsAndDefaults(valueCard).reverse().filter(t => sectionKeys.every(sk => t.category !== sk))) {
+    let tags = getCardTagsAndDefaults(valueCard).reverse().filter(t => sectionKeys.every(sk => t.category !== sk));
+
+    const modifierTags = tags.filter(x => x.name.startsWith('_'));
+    if (modifierTags.length > 0) {
+        const modifierValues = modifierTags.map(x => new ValueSelection(x));
+        const modifierSection = new Section('Modifiers', [], modifierValues, 0, 0, undefined);
+        for (const anonTag of modifierTags) {
+            modifierSection.addSelectedTag(anonTag);
+        }
+        result.insert(modifierSection);
+    }
+
+    tags = tags.filter(x => !x.name.startsWith('_'));
+
+    for (const tag of tags) {
         const value = new ValueSelection(tag);
         const section = new Section(tag.name, [tag.id], [value], 0, 0, ConfigManager.getTagTypeById(tag.typeId));
         result.insert(section);

@@ -61,7 +61,7 @@ class SectionComponent extends React.Component<ISectionComponentProps & WithStyl
                                 value.quantity++;
                             } else if (total === max || (max === 0 && value.max === value.quantity)) {
                                 value.quantity = 0;
-                                helpText = `You can select max ${max} values.`;
+                                // helpText = `You can select max ${max} values.`;
                             }
                         }
                         if (value.quantity < 2) { values = values.filter(x => x.value !== value.value); }

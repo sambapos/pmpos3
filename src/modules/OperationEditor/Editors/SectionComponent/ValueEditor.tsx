@@ -17,33 +17,37 @@ interface IState {
     amount: string;
     value: string;
     refType: string;
+    showQuantity: boolean;
+    showAmount: boolean;
 }
 
 export default class extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            quantity: props.value ? String(props.value.quantity) : '',
-            amount: props.value ? String(props.value.amount) : '',
+            quantity: props.value ? this.getNumberStr(props.value.quantity) : '',
+            amount: props.value ? this.getNumberStr(props.value.amount) : '',
             value: props.value ? props.value.value : '',
-            refType: this.getCardRefById(props.value)
+            refType: this.getCardRefById(props.value),
+            showQuantity: props.value.quantity > 0,
+            showAmount: props.value.amount > 0 || Boolean(props.value.func)
         }
     }
 
     public componentWillReceiveProps(nextProps: IProps) {
         if (nextProps.value !== this.props.value && nextProps.value) {
             this.setState({
-                quantity: String(nextProps.value.quantity),
-                amount: String(nextProps.value.quantity),
+                quantity: nextProps.value.quantity !== 0 ? String(nextProps.value.quantity) : '',
+                amount: nextProps.value.amount !== 0 ? String(nextProps.value.amount) : '',
                 value: nextProps.value.value,
-                refType: this.getCardRefById(nextProps.value)
+                refType: this.getCardRefById(nextProps.value),
+                showQuantity: nextProps.value.quantity > 0,
+                showAmount: nextProps.value.amount > 0 || Boolean(nextProps.value.func)
             })
         }
     }
 
     public render() {
-        const showQuantity = this.props.value.quantity > 0;
-        const showAmount = this.props.value.amount > 0 || this.props.value.func;
         if (this.props.mask) {
             return <MaskedTextInput
                 label={this.props.value.tagName}
@@ -57,7 +61,7 @@ export default class extends React.Component<IProps, IState> {
             />
         }
 
-        if (!showQuantity && !showAmount) {
+        if (!this.state.showQuantity && !this.state.showAmount) {
             if (this.state.refType) {
                 return <AutoSuggest
                     label={this.props.value.tagName}
@@ -85,7 +89,7 @@ export default class extends React.Component<IProps, IState> {
         return <>
             <Typography variant='button'>{this.props.value.value} </Typography>
             <div style={{ display: 'flex', flex: 1, marginTop: 8, marginBottom: 8 }}>
-                {showQuantity && <TextField style={{ flex: 1, marginRight: 8 }}
+                {this.state.showQuantity && <TextField style={{ flex: 1, marginRight: 8 }}
                     type="number" label="Quantity"
                     value={this.state.quantity}
                     onChange={e => {
@@ -93,7 +97,7 @@ export default class extends React.Component<IProps, IState> {
                         this.props.value.quantity = Number(e.target.value);
                         this.props.onChange(this.props.name, [this.props.value]);
                     }} />}
-                {showAmount && <TextField style={{ flex: 2 }}
+                {this.state.showAmount && <TextField style={{ flex: 2 }}
                     type="number" label="Amount"
                     value={this.state.amount}
                     onChange={e => {
@@ -103,6 +107,10 @@ export default class extends React.Component<IProps, IState> {
                     }} />}
             </div>
         </>
+    }
+
+    private getNumberStr(value): string {
+        return value !== 0 ? String(value) : '';
     }
 
     private getCardRefById(tagValue: ValueSelection): string {

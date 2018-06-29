@@ -85,10 +85,11 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         alignSelf: 'center'
     },
     cardLine: {
+        width: '100%',
         flex: '1 0 auto',
         display: 'flex',
         flexWrap: 'wrap',
-        minHeight: 30,
+        minHeight: 36,
         paddingLeft: 2,
         backgroundColor: palette.common.white,
         borderBottom: '1px solid ' + palette.divider,
@@ -110,7 +111,7 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         color: 'darkslategray'
     },
     cardLineIcon: {
-        marginTop: spacing.unit,
+        marginTop: '1.6%',
         fontSize: 26
     },
     card: {

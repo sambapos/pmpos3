@@ -135,9 +135,9 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
             name: tag.name || tagType.tagName || tagType.cardTypeReferenceName,
             category: tag.category || tagType.defaultCategory,
             value: tag.value || tagType.defaultValue,
-            quantity: String(tag.quantity !== 0 ? tag.quantity : tagType.defaultQuantity),
+            quantity: tag.quantity !== 0 ? String(tag.quantity) : this.getNumberStr(tagType.defaultQuantity),
             unit: tag.unit || tagType.defaultUnit,
-            amount: String(tag.amount !== 0 ? tag.amount : tagType.defaultAmount),
+            amount: tag.amount !== 0 ? String(tag.amount) : this.getNumberStr(tagType.defaultAmount),
             func: tag.func || tagType.defaultFunction,
             source: tag.source || tagType.defaultSource,
             target: tag.target || tagType.defaultTarget,
@@ -187,5 +187,9 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
                 }
             }
         }
+    }
+
+    private getNumberStr(value): string {
+        return value !== 0 ? String(value) : '';
     }
 }
