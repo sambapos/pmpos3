@@ -9,15 +9,20 @@ import { Sections } from '../SectionComponent/Sections';
 import { SelectedValues } from '../SectionComponent/SelectedValues';
 import { Section } from '../SectionComponent/Section';
 import ValueEditor from '../SectionComponent/ValueEditor';
+import decorate, { IStyle } from './style';
+import { WithStyles } from '@material-ui/core/styles/withStyles';
 
-type IProps = IEditorProperties<{ card: CardRecord, title: string, newValues: Map<string, ValueSelection[]>, deletedValues: Map<string, ValueSelection[]> }>;
+
+type IProps =
+    IEditorProperties<{ card: CardRecord, title: string, newValues: Map<string, ValueSelection[]>, deletedValues: Map<string, ValueSelection[]> }>
+    & WithStyles<keyof IStyle>;
 
 interface IState {
     selectedValues: SelectedValues;
     cardType: CardTypeRecord | undefined;
 }
 
-export default class EditCard extends React.Component<IProps, IState> {
+export class EditCard extends React.Component<IProps, IState> {
     private baseCard: CardRecord;
     private baseSections = new Sections()
 
@@ -35,12 +40,13 @@ export default class EditCard extends React.Component<IProps, IState> {
     }
 
     public render() {
+        const displayTitle = this.props.current && this.props.current.title;
         return (
             <>
-                <DialogTitle>
+                {displayTitle && <DialogTitle classes={{ root: this.props.classes.contentTitle }}>
                     {this.props.current ? this.props.current.title : 'Edit ' + (this.state.cardType ? this.state.cardType.reference : '')}
-                </DialogTitle>
-                <DialogContent>
+                </DialogTitle>}
+                <DialogContent classes={{ root: this.props.classes.contentRoot }}>
                     {this.getSections()}
                 </DialogContent>
                 <DialogActions>
@@ -72,14 +78,14 @@ export default class EditCard extends React.Component<IProps, IState> {
     }
 
     private getSectionComponent(section: Section) {
-        if (section.values.length === 1 && !section.values[0].tagName.startsWith('_')) {
+        if (section.values.length === 1 && !(section.values[0].isModifier)) {
             return this.getSectionEditor(section);
         }
         return this.getSectionSelectionComponent(section);
     }
 
     private getSectionSelectionComponent(section: Section) {
-        return <SectionComponent
+        return <div className={this.props.classes.section}><SectionComponent
             key={'Section_' + section.key}
             name={section.key}
             values={section.values}
@@ -88,7 +94,7 @@ export default class EditCard extends React.Component<IProps, IState> {
             max={section.max}
             onChange={(name: string, values: ValueSelection[]) =>
                 this.setState({ selectedValues: this.state.selectedValues.set(name, values) })}
-        />
+        /></div>
     }
 
     private getValueEditor(sectionName: string, value: ValueSelection, mask: any) {
@@ -101,7 +107,7 @@ export default class EditCard extends React.Component<IProps, IState> {
     }
 
     private getSectionEditor(section: Section) {
-        return <div style={{ padding: 4 }}>
+        return <div className={this.props.classes.section}>
             {this.getValueEditor(section.key, section.values[0], section.mask)}
         </div>
     }
@@ -125,3 +131,5 @@ export default class EditCard extends React.Component<IProps, IState> {
         return refCard;
     }
 }
+
+export default decorate(EditCard)

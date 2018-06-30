@@ -36,7 +36,7 @@ class SectionComponent extends React.Component<ISectionComponentProps & WithStyl
 
         return (
             <>
-                <Typography style={{ margin: 4 }} variant="button">{this.props.name + (min - total > 0 ? ` (${min - total})` : '')}</Typography>
+                <Typography className={this.props.classes.sectionHeader} variant="button">{this.props.name + (min - total > 0 ? ` (${min - total})` : '')}</Typography>
                 <div className={this.props.classes.buttonContainer}>
                     {this.state.values.map(stateValue => this.getSelectionButton(stateValue, max, total))}
                 </div>

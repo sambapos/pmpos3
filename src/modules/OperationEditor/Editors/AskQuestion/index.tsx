@@ -43,8 +43,8 @@ class Component extends React.Component<Props, IState> {
     public render() {
         return (
             <>
-                <DialogTitle>{this.props.current && this.props.current.question}</DialogTitle>
-                <DialogContent style={{ display: 'flex', flexFlow: 'column', overflow: 'auto' }}>
+                <DialogTitle classes={{ root: this.props.classes.contentTitle }}>{this.props.current && this.props.current.question}</DialogTitle>
+                <DialogContent classes={{ root: this.props.classes.contentRoot }}>
                     {Object.keys(this.state.parameters)
                         .map(key => this.getParamEditor(key, this.state.parameters[key]))}
                 </DialogContent>

@@ -67,6 +67,10 @@ export class ValueSelection {
         return this.caption ? this.caption : this.valueDisplay;
     }
 
+    public get isModifier(): boolean {
+        return this.tagName.startsWith('_') && this.amount === 0;
+    }
+
     private get valueDisplay(): string {
         return this.value + (this.amount !== 0 ? ` (${this.amount.toFixed(2)})` : '');
     }

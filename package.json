@@ -1,9 +1,9 @@
 {
   "name": "pmpos3",
-  "version": "3.0.94",
+  "version": "3.0.97",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^1.2.3",
+    "@material-ui/core": "^1.3.0",
     "autosuggest-highlight": "^3.1.1",
     "blueimp-tmpl": "^3.11.0",
     "expr-eval": "^1.2.1",
@@ -14,7 +14,7 @@
     "lodash": "^4.17.10",
     "material-ui-pickers": "^1.0.0-rc.10",
     "moment": "^2.22.2",
-    "pmpos-core": "^1.0.20",
+    "pmpos-core": "^1.0.21",
     "react": "^16.4.1",
     "react-ace": "^5.10.0",
     "react-autosuggest": "^9.3.4",
@@ -27,7 +27,7 @@
     "react-scripts-ts": "^2.16.0",
     "react-swipeable-views": "^0.12.14",
     "react-text-mask": "^5.4.2",
-    "react-virtualized": "^9.19.1",
+    "react-virtualized": "^9.20.0",
     "recharts": "^1.0.0-beta.10",
     "redux": "^3.7.2",
     "redux-raven-middleware": "^1.2.0",
@@ -38,7 +38,7 @@
     "y-indexeddb": "^9.0.0-6",
     "y-map": "^11.0.0-1",
     "y-memory": "^9.0.0-1",
-    "yjs": "^13.0.0-62"
+    "yjs": "^13.0.0-63"
   },
   "scripts": {
     "start": "cross-env REACT_APP_VERSION=$npm_package_version react-scripts-ts start",
@@ -50,12 +50,12 @@
   },
   "devDependencies": {
     "@types/classnames": "^2.2.4",
-    "@types/enzyme": "^3.1.10",
+    "@types/enzyme": "^3.1.11",
     "@types/enzyme-adapter-react-16": "^1.0.2",
     "@types/history": "^4.6.2",
     "@types/jest": "^21.1.10",
     "@types/node": "^8.10.20",
-    "@types/react": "^16.4.1",
+    "@types/react": "^16.4.6",
     "@types/react-dom": "^16.0.6",
     "@types/react-redux": "^5.0.20",
     "@types/react-router-dom": "^4.2.7",
@@ -63,7 +63,7 @@
     "@types/react-test-renderer": "^16.0.1",
     "@types/react-virtualized": "^9.18.3",
     "@types/shortid": "0.0.29",
-    "@types/webpack": "^3.8.12",
+    "@types/webpack": "^3.8.13",
     "@types/webpack-env": "^1.13.6",
     "cross-env": "^5.2.0",
     "enzyme": "^3.3.0",

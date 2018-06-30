@@ -9,16 +9,20 @@ export interface IStyle {
     buttonContainer: any;
     selectionButton: any;
     selectionButtonSelected: any;
+    sectionHeader: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     buttonContainer: {
         display: 'flex',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        marginTop: spacing.unit / 2,
+        marginRight: -spacing.unit / 2,
+        marginLeft: -spacing.unit / 2,
     },
     selectionButton: {
         flexGrow: 1,
-        minWidth: '22%',
+        width: '24%',
         boxShadow: 'none',
         textTransform: 'unset',
         margin: spacing.unit / 2
@@ -26,7 +30,7 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     selectionButtonSelected: {
         border: '1px solid transparent',
         flexGrow: 1,
-        minWidth: '22%',
+        width: '24%',
         boxShadow: 'none',
         textTransform: 'unset',
         margin: spacing.unit / 2
@@ -53,4 +57,9 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     textField: {
         width: '100%',
     },
+    sectionHeader: {
+        paddingTop: spacing.unit,
+        paddingBottom: spacing.unit / 2,
+        color: palette.secondary.dark
+    }
 }));

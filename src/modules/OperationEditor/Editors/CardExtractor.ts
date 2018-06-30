@@ -16,17 +16,17 @@ export function extractSections(templateCard: CardRecord, valueCard: CardRecord)
 
     let tags = getCardTagsAndDefaults(valueCard).reverse().filter(t => sectionKeys.every(sk => t.category !== sk));
 
-    const modifierTags = tags.filter(x => x.name.startsWith('_'));
+    const modifierTags = tags.filter(x => x.name.startsWith('_') && x.amount === 0);
     if (modifierTags.length > 0) {
         const modifierValues = modifierTags.map(x => new ValueSelection(x));
         const modifierSection = new Section('Modifiers', [], modifierValues, 0, 0, undefined);
-        for (const anonTag of modifierTags) {
-            modifierSection.addSelectedTag(anonTag);
+        for (const modifierTag of modifierTags) {
+            modifierSection.addSelectedTag(modifierTag);
         }
         result.insert(modifierSection);
     }
 
-    tags = tags.filter(x => !x.name.startsWith('_'));
+    tags = tags.filter(x => !(x.name.startsWith('_') && x.amount === 0));
 
     for (const tag of tags) {
         const value = new ValueSelection(tag);

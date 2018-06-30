@@ -8,6 +8,8 @@ export interface IStyle {
     textField: any;
     buttonContainer: any;
     selectionButton: any;
+    contentRoot: any;
+    contentTitle: any;
 }
 
 export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
@@ -43,4 +45,23 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
     textField: {
         width: '100%',
     },
+    contentRoot: {
+        display: 'flex',
+        flexFlow: 'column',
+        overflow: 'auto',
+        [breakpoints.down('xs')]: {
+            '&:first-child': {
+                paddingTop: spacing.unit
+            },
+            paddingTop: 0,
+            paddingLeft: spacing.unit,
+            paddingRight: spacing.unit,
+            paddingBottom: spacing.unit,
+        },
+    },
+    contentTitle: {
+        [breakpoints.down('xs')]: {
+            padding: spacing.unit
+        },
+    }
 }));

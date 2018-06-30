@@ -4,6 +4,8 @@ import { Typography, TextField } from "@material-ui/core";
 import MaskedTextInput from "../../../../components/MaskedTextInput";
 import { ConfigManager, CardManager } from "pmpos-core";
 import AutoSuggest from "../../../../components/AutoSuggest";
+import decorate, { IStyle } from './style';
+import { WithStyles } from '@material-ui/core/styles/withStyles';
 
 interface IProps {
     name: string;
@@ -21,8 +23,8 @@ interface IState {
     showAmount: boolean;
 }
 
-export default class extends React.Component<IProps, IState> {
-    constructor(props: IProps) {
+class ValueEditor extends React.Component<IProps & WithStyles<keyof IStyle>, IState> {
+    constructor(props: IProps & WithStyles<keyof IStyle>) {
         super(props);
         this.state = {
             quantity: props.value ? this.getNumberStr(props.value.quantity) : '',
@@ -87,8 +89,8 @@ export default class extends React.Component<IProps, IState> {
             />
         }
         return <>
-            <Typography variant='button'>{this.props.value.value} </Typography>
-            <div style={{ display: 'flex', flex: 1, marginTop: 8, marginBottom: 8 }}>
+            <Typography className={this.props.classes.sectionHeader} variant='button'>{this.props.value.value} </Typography>
+            <div style={{ display: 'flex', flex: 1 }}>
                 {this.state.showQuantity && <TextField style={{ flex: 1, marginRight: 8 }}
                     type="number" label="Quantity"
                     value={this.state.quantity}
@@ -118,3 +120,5 @@ export default class extends React.Component<IProps, IState> {
         return tt ? tt.cardTypeReferenceName : '';
     }
 }
+
+export default decorate(ValueEditor)
