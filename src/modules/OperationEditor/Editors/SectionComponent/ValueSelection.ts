@@ -30,10 +30,12 @@ export class ValueSelection {
             this.max = value.quantity > 1 ? value.quantity : 1;
         } else if (value instanceof CardRecord) {
             this.value = value.name;
-            this.caption = String(value.getTag('Caption', ''));
-            this.amount = Number(value.getTag('Amount', '') || value.getTag('Price', '')) || 0;
-            this.max = Number(value.getTag('Max', 0));
-            this.quantity = Number(value.getTag('Quantity', 0));
+            this.caption = String(value.getTagValue('Caption', ''));
+            this.amount = Number(value.getTagValue('Amount', '') || value.getTagValue('Price', '')) || value.getTagAmount('Name') || 0;
+            this.max = Number(value.getTagValue('Max', 0));
+            this.quantity = Number(value.getTagValue('Quantity', 0));
+            this.source = String(value.getTagValue('Source', '')) || value.getTagSource('Name');
+            this.target = String(value.getTagValue('Target', '')) || value.getTagTarget('Name');
             this.ref = value.id;
         } else if (value.value != null) {
             this.value = value.value;

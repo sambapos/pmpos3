@@ -239,7 +239,7 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
                 let productCategories = ['<' + selectedCategory];
                 if (!selectedCategory) {
                     productCategories = sourceCards.reduce((r, card) => {
-                        const categoryName = card.getTag(groupByName, '') as string;
+                        const categoryName = card.getTagValue(groupByName, '') as string;
                         if (categoryName && r.indexOf(categoryName) === -1) {
                             r.push(categoryName);
                         }
@@ -249,7 +249,7 @@ export class CardPage extends React.Component<CardPageProps, IPageState> {
                 const categoryButtons = productCategories.map(c => new CommandButton(c + '=$SwitchCategory', 'secondary'));
                 result.push(...categoryButtons);
                 const productButtons = sourceCards
-                    .filter(card => !groupByName || card.getTag(groupByName, '') === selectedCategory || card.getTag(groupByName, '') === '')
+                    .filter(card => !groupByName || card.getTagValue(groupByName, '') === selectedCategory || card.getTagValue(groupByName, '') === '')
                     .sortBy(x => x.index).map(c =>
                         new CommandButton(`${c.name}=${parts[0]}:${
                             c.tags.reduce((r, t) => r + (r ? ',' : '') + `${t.name}=${t.value}`, '')

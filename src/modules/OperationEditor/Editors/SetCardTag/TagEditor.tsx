@@ -175,15 +175,15 @@ export default class TagEditor extends React.Component<ITagEditorProps, ITagEdit
             const card = CardManager.getCardByName(this.props.tagType.cardTypeReferenceName, value);
             if (card) {
                 if (Number(this.state.amount) === 0) {
-                    let price = card.getTag('Amount', '');
-                    if (!price) { price = card.getTag('Price', '') }
+                    let price = card.getTagValue('Amount', '');
+                    if (!price) { price = card.getTagValue('Price', '') }
                     this.setState({ amount: String(price) });
                 }
                 if (!this.state.source) {
-                    this.setState({ source: String(card.getTag('Source', '')) });
+                    this.setState({ source: String(card.getTagValue('Source', '')) });
                 }
                 if (!this.state.target) {
-                    this.setState({ target: String(card.getTag('Target', '')) });
+                    this.setState({ target: String(card.getTagValue('Target', '')) });
                 }
             }
         }

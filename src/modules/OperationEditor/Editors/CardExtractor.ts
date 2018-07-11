@@ -73,8 +73,8 @@ function getSectionFromCard(key: string, baseCard: CardRecord, valuesCard: CardR
     const values = valuesCard.allCardsSorted
         .map(t => new ValueSelection(t))
         .filter(t => t.value);
-    const max = Number(baseCard.getTag('Max', 0));
-    const min = Number(baseCard.getTag('Min', 0));
+    const max = Number(baseCard.getTagValue('Max', 0));
+    const min = Number(baseCard.getTagValue('Min', 0));
     return new Section(key, selected, values, max, min, undefined);
 }
 
@@ -83,6 +83,10 @@ function setSelectedItems(sections: Sections, card: CardRecord): Sections {
         if (tag.ref) {
             sections.addSelectedTag(tag);
         }
+    }
+
+    for (const subCard of card.allCardsSorted) {
+        setSelectedItems(sections, subCard);
     }
     return sections;
 }
