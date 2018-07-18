@@ -36,6 +36,7 @@ export default withStyles(({ palette, spacing, breakpoints, mixins, transitions 
         margin: spacing.unit / 2,
         fontSize: 24,
         lineHeight: 1,
+        minWidth: 90,
         padding: spacing.unit * 2
     },
     redButton: {
