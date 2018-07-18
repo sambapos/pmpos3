@@ -85,8 +85,8 @@ const getDisplayFor = (
 
 const getTagItemClassName = (
     tag: CardTagRecord, tagType: TagTypeRecord | undefined, classes: Record<keyof IStyle, string>) => {
-    if (!tagType) { return tag.amount !== 0 || !tag.name.startsWith('_') ? classes.tagItemAmount : classes.tagItem; }
-    return !tagType.icon || tagType.icon === '_' || tag.amount > 0
+    if (!tagType) { return (tag.amount !== 0 && !tag.isModifier) || !tag.name.startsWith('_') ? classes.tagItemAmount : classes.tagItem; }
+    return !tagType.icon || tagType.icon === '_' || (tag.amount > 0 && !tag.isModifier)
         ? classes.tagItemAmount
         : classes.tagItem;
 };

@@ -66,6 +66,9 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         marginBottom: spacing.unit / 2
     },
     tagItemAmount: {
+        '& $tagBalance': {
+            fontSize: '1.2em',
+        },
         display: 'inline-flex',
         width: '100%',
         paddingBottom: spacing.unit / 2
@@ -80,8 +83,8 @@ export default withStyles(({ palette, spacing, breakpoints }): IStyle => ({
         color: palette.text.secondary
     },
     tagBalance: {
-        fontSize: '1.2em',
-        paddingRight: 8,
+        paddingRight: spacing.unit,
+        paddingLeft: spacing.unit / 2,
         alignSelf: 'center'
     },
     cardLine: {
