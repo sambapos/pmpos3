@@ -3,7 +3,7 @@ import tmpl from 'blueimp-tmpl';
 import decorate, { IStyle } from './style';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import { Icon } from '@material-ui/core';
-import { CardRecord, CardTagRecord, TagTypeRecord, CardManager, ConfigManager } from 'pmpos-core';
+import { CardRecord, CardTagRecord, TagTypeRecord, ConfigManager } from 'pmpos-core';
 
 class CardTagWrapper {
     private tag: CardTagRecord;
@@ -111,7 +111,7 @@ const Tags = (props: ITagsProps & WithStyles<keyof IStyle>) => {
             {
                 props.card.tags.entrySeq()
                     .filter(x => props.parentCard || props.card.tags.count() === 1 || x[1].name !== 'Name')
-                    .sortBy(x => CardManager.getTagSortIndexByCard(props.card, x[1]))
+                    .sortBy(x => x[1].index)
                     .map(([key, tag]) => {
                         const tagType = ConfigManager.getTagTypeById(tag.typeId);
                         return (

@@ -25,7 +25,7 @@ export class InventoryTable extends React.Component<Props, IState> {
     }
 
     public componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.searchValue !== this.props.searchValue) {
+        if (nextProps.tags !== this.props.tags) {
             this.setState({ view: new ReportView(nextProps.tags, nextProps.searchValue) })
         }
     }

@@ -2,14 +2,18 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { WithStyles, TextField } from '@material-ui/core';
 import decorate, { IStyle } from './style';
+import { connect } from 'react-redux';
+import * as CardStore from '../../store/Cards';
 import { List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import InventoryTable from './InventoryTable';
 import AccountTable from './AccountTable';
 import { CardTagData, CardTypeRecord, CardManager, ConfigManager } from 'pmpos-core';
+import { IApplicationState } from '../../store';
 
-type PageProps =
-    WithStyles<keyof IStyle>
+type PageProps = { lastCommitTime: any }
+    & typeof CardStore.actionCreators
+    & WithStyles<keyof IStyle>
     & RouteComponentProps<{}>;
 
 class ReportPage extends React.Component<PageProps, {
@@ -27,6 +31,12 @@ class ReportPage extends React.Component<PageProps, {
         };
     }
 
+    public componentWillReceiveProps(nextProps: PageProps) {
+        if (nextProps.lastCommitTime !== this.props.lastCommitTime) {
+            this.state.tags.clear();
+            this.handleEnterKey();
+        }
+    }
 
     public render() {
         return (
@@ -99,4 +109,11 @@ class ReportPage extends React.Component<PageProps, {
     }
 }
 
-export default decorate(ReportPage);
+const mapStateToProps = (state: IApplicationState) => ({
+    lastCommitTime: state.cards.lastCommitTime,
+});
+
+export default decorate(connect(
+    mapStateToProps,
+    CardStore.actionCreators
+)(ReportPage));
