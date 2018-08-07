@@ -3,7 +3,7 @@ import { IStyle } from './style';
 import { RouteComponentProps } from 'react-router';
 import * as CardStore from '../../store/Cards';
 import * as ClientStore from '../../store/Client';
-import { CardRecord } from 'pmpos-core';
+import { CardRecord } from 'sambadna-core';
 
 export type CardPageProps =
     {

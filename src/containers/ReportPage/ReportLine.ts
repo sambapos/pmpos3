@@ -1,4 +1,4 @@
-import { CardTagData } from "pmpos-core";
+import { CardTagData } from "sambadna-core";
 import * as moment from 'moment';
 import * as shortid from 'shortid';
 import { IExpiringItem } from "./IExpiringItem";

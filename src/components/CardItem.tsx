@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ListItem, ListItemText, Icon } from '@material-ui/core';
 import tmpl from 'blueimp-tmpl';
-import { CardRecord, CardTagRecord, ConfigManager, CardManager, RuleManager } from 'pmpos-core';
+import { CardRecord, CardTagRecord, ConfigManager, CardManager, RuleManager } from 'sambadna-core';
 import ValidationIssue from './ValidationIssue';
 
 const getTagDisplay = (card: CardRecord, tag: CardTagRecord) => {

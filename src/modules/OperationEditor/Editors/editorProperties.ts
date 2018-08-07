@@ -1,4 +1,4 @@
-import { CardRecord } from 'pmpos-core';
+import { CardRecord } from 'sambadna-core';
 
 export default interface IEditorProperties<TData> {
     card: CardRecord;

@@ -2,7 +2,7 @@ import * as React from "react";
 import { WithStyles, Card, CardContent, CardHeader, Slide } from '@material-ui/core';
 import { LineChart, Line, ResponsiveContainer, YAxis, XAxis, Legend, Tooltip } from 'recharts';
 import decorate, { IStyle } from './style';
-import { Widget } from "pmpos-core";
+import { Widget } from "sambadna-core";
 
 type WidgetComponentProps = {
     title: string;

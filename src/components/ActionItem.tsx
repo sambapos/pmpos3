@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ActionRecord } from 'pmpos-core';
+import { ActionRecord } from 'sambadna-core';
 import { Divider, Typography } from '@material-ui/core';
 
 interface IActionItemProps {

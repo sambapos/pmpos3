@@ -5,7 +5,7 @@ import Expander from './expander';
 import NestedListItem from './nestedListItem';
 import IconListItem from './iconListItem';
 import { List, Divider } from '@material-ui/core';
-import { DataBuilder, ConfigManager, CardManager } from 'pmpos-core';
+import { DataBuilder, ConfigManager, CardManager } from 'sambadna-core';
 
 interface INavListProps {
     loggedInUser: string;

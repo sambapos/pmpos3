@@ -4,7 +4,7 @@ import SubCards from './SubCards';
 import * as classNames from 'classnames';
 import { WithStyles, Icon } from '@material-ui/core';
 import decorate, { IStyle } from './style';
-import { CardRecord, CardTypeRecord } from 'pmpos-core';
+import { CardRecord, CardTypeRecord } from 'sambadna-core';
 
 interface ICardContentProps {
     card: CardRecord;

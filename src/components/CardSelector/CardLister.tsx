@@ -4,7 +4,7 @@ import { List } from 'immutable';
 import { CellMeasurerCache } from 'react-virtualized';
 import VirtualList from '../VirtualList';
 import DraggableList from '../DraggableList';
-import { CardRecord, CardTypeRecord } from 'pmpos-core';
+import { CardRecord, CardTypeRecord } from 'sambadna-core';
 
 interface ICardListProps {
     cards: List<CardRecord>;

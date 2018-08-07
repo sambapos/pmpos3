@@ -1,7 +1,7 @@
 import { IExpiringItem } from "./IExpiringItem";
 
 import { List as IList, Map as IMap } from 'immutable';
-import { CardTagData } from 'pmpos-core';
+import { CardTagData } from 'sambadna-core';
 import { ReportLine } from './ReportLine';
 import { IBalance } from "./IBalance";
 

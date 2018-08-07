@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DialogTitle, DialogActions, Button } from '@material-ui/core';
 import CardSelectorPage from '../../../../containers/CardSelectorPage';
-import { TagTypeRecord, CardTagRecord } from 'pmpos-core';
+import { TagTypeRecord, CardTagRecord } from 'sambadna-core';
 import IEditorProperties from '../editorProperties';
 
 export default (props: IEditorProperties<{ tagType: TagTypeRecord, tag: CardTagRecord }>) => {

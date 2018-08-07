@@ -1,4 +1,4 @@
-import { CardRecord } from "pmpos-core";
+import { CardRecord } from "sambadna-core";
 import { Map as IMap } from 'immutable';
 
 export interface ISelectedCard {

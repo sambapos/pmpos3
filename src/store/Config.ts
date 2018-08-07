@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import * as shortid from 'shortid';
 import { Record, Map as IMap } from 'immutable';
 import { IAppThunkAction } from './appThunkAction';
-import { ConfigManager, CardTypeRecord, TagTypeRecord, RuleRecord } from 'pmpos-core';
+import { ConfigManager, CardTypeRecord, TagTypeRecord, RuleRecord } from 'sambadna-core';
 
 export interface IConfigState {
     currentCardType: CardTypeRecord;

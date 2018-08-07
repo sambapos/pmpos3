@@ -1,5 +1,5 @@
 import { Section } from "./Section";
-import { CardTagRecord } from "pmpos-core";
+import { CardTagRecord } from "sambadna-core";
 import { SelectedValues } from "./SelectedValues";
 import { ValueSelection } from "./ValueSelection";
 

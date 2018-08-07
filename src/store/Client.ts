@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import * as React from 'react';
 import { IAppThunkAction } from './appThunkAction';
-import { ProtocolManager, ConfigManager, TerminalManager } from 'pmpos-core';
+import { ProtocolManager, ConfigManager, TerminalManager } from 'sambadna-core';
 
 export interface IClientState {
     languageName: string;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CardPageProps } from './CardPageProps';
 import { MenuItem, Divider } from '@material-ui/core';
-import { CardRecord, TagTypeRecord, CardTypeRecord, ConfigManager, CardOperation, cardOperations } from 'pmpos-core';
+import { CardRecord, TagTypeRecord, CardTypeRecord, ConfigManager, CardOperation, cardOperations } from 'sambadna-core';
 
 interface ITagMenuItemsProps {
     selectedCard: CardRecord;

@@ -4,7 +4,7 @@ import { IApplicationState } from '../../store';
 import { WithStyles } from '@material-ui/core';
 import decorate, { IStyle } from './style';
 import TopBar from '../TopBar';
-import { RuleManager, Widget } from 'pmpos-core';
+import { RuleManager, Widget } from 'sambadna-core';
 import { RouteComponentProps } from 'react-router';
 import WidgetComponent from './WidgetComponent';
 

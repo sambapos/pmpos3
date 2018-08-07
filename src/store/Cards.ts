@@ -3,7 +3,7 @@ import { IAppThunkAction } from './appThunkAction';
 import {
     CardManager, cardOperations, TerminalManager, DataBuilder,
     CardRecord, CardTypeRecord, ActionRecord, ICommit, ICardTag, ConfigManager
-} from 'pmpos-core';
+} from 'sambadna-core';
 import { List, Record } from 'immutable';
 import OperationEditor from '../modules/OperationEditor';
 

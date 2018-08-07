@@ -1,7 +1,7 @@
 import { List } from 'immutable';
 import * as React from 'react';
 import ActionItem from './ActionItem';
-import { ActionRecord } from 'pmpos-core';
+import { ActionRecord } from 'sambadna-core';
 
 interface IActionListProps {
     actions: List<ActionRecord>;

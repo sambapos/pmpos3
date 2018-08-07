@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { List } from 'immutable';
 import CommitItem from './CommitItem';
-import { CommitRecord } from 'pmpos-core';
+import { CommitRecord } from 'sambadna-core';
 
 interface ICommitListProps {
     commits: List<CommitRecord>;

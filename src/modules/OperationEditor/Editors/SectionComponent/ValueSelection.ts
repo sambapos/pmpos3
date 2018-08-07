@@ -1,4 +1,4 @@
-import { CardTagRecord, CardRecord } from "pmpos-core";
+import { CardTagRecord, CardRecord } from "sambadna-core";
 
 export class ValueSelection {
     public value: string;

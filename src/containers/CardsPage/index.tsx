@@ -14,7 +14,7 @@ import { IApplicationState } from '../../store/index';
 import { Map as IMap, List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import CardSelector from '../../components/CardSelector';
-import { CardRecord, CardTypeRecord, ICardTag, CardTagRecord, ConfigManager, TerminalManager } from 'pmpos-core';
+import { CardRecord, CardTypeRecord, ICardTag, CardTagRecord, ConfigManager, TerminalManager } from 'sambadna-core';
 
 type PageProps =
     {

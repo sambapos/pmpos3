@@ -18,7 +18,7 @@ import TagMenuItems from './TagMenuItems';
 import { CardPageProps } from './CardPageProps';
 import { Link } from 'react-router-dom';
 import CommandButtons from '../../components/CommandButtons';
-import { CardRecord, CardTypeRecord, CardOperation, CardManager, TerminalManager, ConfigManager } from 'pmpos-core';
+import { CardRecord, CardTypeRecord, CardOperation, CardManager, TerminalManager, ConfigManager } from 'sambadna-core';
 import { vibrate } from '../../lib/helpers';
 import ValidationIssue from '../../components/ValidationIssue';
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Typography, ListItem } from '@material-ui/core';
-import { CardRecord } from 'pmpos-core';
+import { CardRecord } from 'sambadna-core';
 
 interface ICardBalanceProps {
     card: CardRecord;

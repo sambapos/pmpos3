@@ -11,7 +11,7 @@ import { IApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
 import DraggableItemList from '../../components/DraggableItemList';
 import ItemSelectionDialog from '../../components/ItemSelectionDialog';
-import { CardTypeRecord, TagTypeRecord, ConfigManager } from 'pmpos-core';
+import { CardTypeRecord, TagTypeRecord, ConfigManager } from 'sambadna-core';
 
 type PageProps =
     {

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CardRecord } from "pmpos-core";
+import { CardRecord } from "sambadna-core";
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import decorate, { IStyle } from './style';
 import { Icon } from "@material-ui/core";

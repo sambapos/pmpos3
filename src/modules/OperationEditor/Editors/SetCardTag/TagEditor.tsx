@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as shortid from 'shortid';
 import AutoSuggest from '../../../../components/AutoSuggest';
 import { TextField, DialogContent, DialogActions, Button } from '@material-ui/core';
-import { CardTagRecord, TagTypeRecord, CardManager } from 'pmpos-core';
+import { CardTagRecord, TagTypeRecord, CardManager } from 'sambadna-core';
 import DateTimePicker from 'material-ui-pickers/DateTimePicker';
 import { Moment } from 'moment';
 import MaskedTextInput from '../../../../components/MaskedTextInput';

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, DialogContent, DialogActions, DialogTitle } from '@material-ui/core';
 import IEditorProperties from '../editorProperties';
-import { CardRecord, CardManager, ConfigManager, RuleManager, CardTypeRecord } from 'pmpos-core';
+import { CardRecord, CardManager, ConfigManager, RuleManager, CardTypeRecord } from 'sambadna-core';
 import { extractSections } from '../CardExtractor';
 import SectionComponent from '../SectionComponent';
 import { ValueSelection } from '../SectionComponent/ValueSelection';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import GridSelectorButton from './GridSelectorButton';
-import { CardTypeRecord, CardRecord } from 'pmpos-core';
+import { CardTypeRecord, CardRecord } from 'sambadna-core';
 
 interface IGridSelectorProps {
     items: CardRecord[];

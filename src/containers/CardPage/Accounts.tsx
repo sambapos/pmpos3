@@ -2,7 +2,7 @@ import * as React from 'react';
 import { WithStyles, Card, Typography } from '@material-ui/core';
 import decorate, { IStyle } from './style';
 import { Map as IMap, List } from 'immutable';
-import { CardRecord, CardTagRecord } from 'pmpos-core';
+import { CardRecord, CardTagRecord } from 'sambadna-core';
 
 type AccountProps =
     { card: CardRecord }

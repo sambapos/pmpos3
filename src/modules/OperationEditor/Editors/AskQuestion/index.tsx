@@ -6,7 +6,7 @@ import decorate, { IStyle } from './style';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import { Map as IMap } from 'immutable';
 import IEditorProperties from '../editorProperties';
-import { RuleManager, CardRecord } from 'pmpos-core';
+import { RuleManager, CardRecord } from 'sambadna-core';
 import { vibrate } from '../../../../lib/helpers';
 import SectionComponent from '../SectionComponent';
 import { ValueSelection } from "../SectionComponent/ValueSelection";

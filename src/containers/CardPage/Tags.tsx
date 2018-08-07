@@ -3,7 +3,7 @@ import tmpl from 'blueimp-tmpl';
 import decorate, { IStyle } from './style';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import { Icon } from '@material-ui/core';
-import { CardRecord, CardTagRecord, TagTypeRecord, ConfigManager } from 'pmpos-core';
+import { CardRecord, CardTagRecord, TagTypeRecord, ConfigManager } from 'sambadna-core';
 
 class CardTagWrapper {
     private tag: CardTagRecord;

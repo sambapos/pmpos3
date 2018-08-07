@@ -2,7 +2,7 @@ import * as React from "react";
 import { ValueSelection } from "./ValueSelection";
 import { Typography, TextField } from "@material-ui/core";
 import MaskedTextInput from "../../../../components/MaskedTextInput";
-import { ConfigManager, CardManager } from "pmpos-core";
+import { ConfigManager, CardManager } from "sambadna-core";
 import AutoSuggest from "../../../../components/AutoSuggest";
 import decorate, { IStyle } from './style';
 import { WithStyles } from '@material-ui/core/styles/withStyles';

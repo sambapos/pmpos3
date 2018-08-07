@@ -7,7 +7,7 @@ import decorate, { IStyle } from './style';
 import { IApplicationState } from '../../store/index';
 import { Map as IMap } from 'immutable';
 import TopBar from '../TopBar';
-import { CardTypeRecord } from 'pmpos-core';
+import { CardTypeRecord } from 'sambadna-core';
 
 type PageProps =
     { cardTypes: IMap<string, CardTypeRecord> }

@@ -7,7 +7,7 @@ import decorate, { IStyle } from './style';
 import { IApplicationState } from '../../store/index';
 import { Map as IMap } from 'immutable';
 import TopBar from '../TopBar';
-import { RuleRecord } from 'pmpos-core';
+import { RuleRecord } from 'sambadna-core';
 
 type PageProps =
     { rules: IMap<string, RuleRecord> }

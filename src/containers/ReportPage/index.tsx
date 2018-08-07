@@ -8,7 +8,7 @@ import { List as IList } from 'immutable';
 import TopBar from '../TopBar';
 import InventoryTable from './InventoryTable';
 import AccountTable from './AccountTable';
-import { CardTagData, CardTypeRecord, CardManager, ConfigManager } from 'pmpos-core';
+import { CardTagData, CardTypeRecord, CardManager, ConfigManager } from 'sambadna-core';
 import { IApplicationState } from '../../store';
 
 type PageProps = { lastCommitTime: any }

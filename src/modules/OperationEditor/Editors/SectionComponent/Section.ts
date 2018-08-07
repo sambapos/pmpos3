@@ -1,5 +1,5 @@
 import { ValueSelection } from "./ValueSelection";
-import { CardTagRecord, TagTypeRecord } from "pmpos-core";
+import { CardTagRecord, TagTypeRecord } from "sambadna-core";
 
 export class Section {
     public key: string;

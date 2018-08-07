@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DialogActions, DialogTitle, Button } from '@material-ui/core';
 import CardSelectorPage from '../../../../containers/CardSelectorPage';
 import IEditorProperties from '../editorProperties';
-import { RuleManager } from 'pmpos-core';
+import { RuleManager } from 'sambadna-core';
 
 type Props = IEditorProperties<{ type: string, selected: string, selectedCards: object }>;
 

@@ -7,7 +7,7 @@ import decorate, { IStyle } from './style';
 import { IApplicationState } from '../../store/index';
 import TopBar from '../TopBar';
 import InputCheckBox from './InputCheckBox';
-import { TagTypeRecord } from 'pmpos-core';
+import { TagTypeRecord } from 'sambadna-core';
 
 type PageProps =
     {

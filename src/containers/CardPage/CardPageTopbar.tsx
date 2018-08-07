@@ -3,7 +3,7 @@ import { DialogContent, DialogActions, Button } from '@material-ui/core';
 import Accounts from './Accounts';
 import TopBar from '../TopBar';
 import Commits from './Commits';
-import { CardRecord, ActionRecord, CommitRecord, ConfigManager } from 'pmpos-core';
+import { CardRecord, ActionRecord, CommitRecord, ConfigManager } from 'sambadna-core';
 import { CardPageProps } from './CardPageProps';
 import { List } from 'immutable';
 import { vibrate } from '../../lib/helpers';

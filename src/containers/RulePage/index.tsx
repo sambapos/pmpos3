@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import * as ConfigStore from '../../store/Config';
+import { RuleRecord } from 'sambadna-core';
 import { RouteComponentProps } from 'react-router';
 import { WithStyles, TextField, Paper } from '@material-ui/core';
 import decorate, { IStyle } from './style';
@@ -13,7 +14,6 @@ import 'brace/mode/ruby';
 import 'brace/theme/xcode';
 import 'brace/ext/language_tools';
 import 'brace/snippets/drools';
-import { RuleRecord } from 'pmpos-core';
 
 type PageProps =
     {

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
 import decorate, { IStyle } from './style';
 import SearchEdit from '../SearchEdit';
-import { CardRecord, CardTypeRecord, CardManager, ConfigManager } from 'pmpos-core';
+import { CardRecord, CardTypeRecord, CardManager, ConfigManager } from 'sambadna-core';
 import { List } from 'immutable';
 import CardLister from './CardLister';
 import GridSelector from '../GridSelector';

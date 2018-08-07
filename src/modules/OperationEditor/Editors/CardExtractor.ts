@@ -1,4 +1,4 @@
-import { CardRecord, CardTagRecord, ConfigManager, CardManager, TagTypeRecord } from "pmpos-core";
+import { CardRecord, CardTagRecord, ConfigManager, CardManager, TagTypeRecord } from "sambadna-core";
 import { ValueSelection } from "./SectionComponent/ValueSelection";
 import { Section } from "./SectionComponent/Section";
 import { Sections } from "./SectionComponent/Sections";
